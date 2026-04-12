@@ -3,6 +3,7 @@ import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
 import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus } from "lucide-react";
 import CompletedTaskItem from "../components/CompletedTaskItem";
+import QuickNav from "../components/QuickNav";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { awardPoints } from "@/utils/gamification";
 import PointsToast from "../components/PointsToast";
@@ -89,6 +90,8 @@ export default function Dashboard() {
         <StatCard icon={Clock} label="Due Soon" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" />
         <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks })} />
       </div>
+
+      <QuickNav />
 
       <div>
         <h2 className="font-heading font-semibold text-lg mb-3">Needs Attention</h2>
