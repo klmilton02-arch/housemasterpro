@@ -109,15 +109,15 @@ export default function Family() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3 max-w-xs mx-auto px-1">
       {/* Avatars row */}
       {members.length > 0 && (
-        <div className="flex gap-3 overflow-x-auto pb-1">
+       <div className="flex gap-2 overflow-x-auto pb-1">
           {members.map(m => {
             const c = colorMap[m.avatar_color] || colorMap.blue;
             return (
-              <div key={m.id} className="flex flex-col items-center gap-1 shrink-0">
-                <div className={cn("w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold font-heading", c.bg, c.text)}>
+              <div key={m.id} className="flex flex-col items-center gap-0.5 shrink-0">
+                <div className={cn("w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold font-heading", c.bg, c.text)}>
                   {m.name.charAt(0).toUpperCase()}
                 </div>
                 <span className="text-xs text-muted-foreground font-medium">{m.name.split(' ')[0]}</span>
@@ -127,36 +127,36 @@ export default function Family() {
         </div>
       )}
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-2">
         <div>
-          <h1 className="font-heading text-2xl font-bold">Manage Household</h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <h1 className="font-heading text-lg font-bold">Manage Household</h1>
+          <p className="text-xs text-muted-foreground mt-0.5">
             {currentUser.account_type === "family" && familyGroup
               ? `${familyGroup.name} · Family Account`
               : "Solo Account"}
           </p>
         </div>
-        <Button onClick={() => setDialogOpen(true)} className="gap-2">
-          <Plus className="w-4 h-4" /> Add Member
+        <Button onClick={() => setDialogOpen(true)} size="sm" className="gap-1 w-full text-xs">
+          <Plus className="w-3 h-3" /> Add Member
         </Button>
       </div>
 
       {/* Family invite code banner */}
       {currentUser.account_type === "family" && familyGroup && (
-        <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 flex items-center justify-between gap-4">
+        <div className="bg-primary/5 border border-primary/20 rounded-lg p-2 flex flex-col gap-2">
           <div>
-            <p className="text-xs text-muted-foreground uppercase tracking-wider mb-0.5">Family Invite Code</p>
-            <p className="font-heading font-bold text-xl tracking-[0.2em]">{familyGroup.invite_code}</p>
+            <p className="text-xs text-muted-foreground uppercase tracking-wider mb-0.5">Family Code</p>
+            <p className="font-heading font-bold text-lg tracking-widest">{familyGroup.invite_code}</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={copyCode} className="gap-2">
-              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-              {copied ? "Copied!" : "Copy"}
+            <Button variant="outline" size="sm" onClick={copyCode} className="gap-1 flex-1 text-xs">
+              {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+              {copied ? "Copied" : "Copy"}
             </Button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground">
-                  <LogOut className="w-3.5 h-3.5" /> Leave
+                <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground text-xs">
+                  <LogOut className="w-3 h-3" /> Leave
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -176,46 +176,46 @@ export default function Family() {
 
       {/* Switch account type if solo */}
       {currentUser.account_type === "solo" && (
-        <div className="bg-muted/50 border border-border rounded-xl p-4 flex items-center justify-between gap-4">
+        <div className="bg-muted/50 border border-border rounded-lg p-2 flex flex-col gap-2">
           <div>
-            <p className="font-medium text-sm">Running solo?</p>
-            <p className="text-xs text-muted-foreground">Switch to a family account to share tasks with others.</p>
+            <p className="font-medium text-xs">Running solo?</p>
+            <p className="text-xs text-muted-foreground">Switch to family account to share.</p>
           </div>
-          <Button variant="outline" size="sm" onClick={handleJoinFamily}>
-            Join a Family
+          <Button variant="outline" size="sm" onClick={handleJoinFamily} className="w-full text-xs">
+            Join Family
           </Button>
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-2">
         {members.map(m => {
           const c = colorMap[m.avatar_color] || colorMap.blue;
           const stats = getMemberStats(m.id);
           return (
-            <div key={m.id} className="bg-card border border-border rounded-xl p-5 group relative">
+            <div key={m.id} className="bg-card border border-border rounded-lg p-2 group relative">
               <button
                 onClick={() => handleDelete(m.id)}
-                className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500"
+                className="absolute top-1 right-1 p-0.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500"
               >
-                <Trash2 className="w-3.5 h-3.5" />
+                <Trash2 className="w-3 h-3" />
               </button>
-              <div className="flex items-center gap-3 mb-4">
-                <div className={cn("w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold font-heading", c.bg, c.text)}>
+              <div className="flex items-center gap-2 mb-2">
+                <div className={cn("w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold font-heading", c.bg, c.text)}>
                   {m.name.charAt(0).toUpperCase()}
                 </div>
-                <h3 className="font-heading font-semibold text-lg">{m.name}</h3>
+                <h3 className="font-heading font-semibold text-sm">{m.name}</h3>
               </div>
-              <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="bg-muted rounded-lg py-2">
-                  <p className="text-lg font-bold font-heading">{stats.total}</p>
+              <div className="grid grid-cols-3 gap-1 text-center">
+                <div className="bg-muted rounded-md py-1">
+                  <p className="text-sm font-bold font-heading">{stats.total}</p>
                   <p className="text-xs text-muted-foreground">Tasks</p>
                 </div>
-                <div className="bg-muted rounded-lg py-2">
-                  <p className="text-lg font-bold font-heading text-red-600">{stats.overdue}</p>
+                <div className="bg-muted rounded-md py-1">
+                  <p className="text-sm font-bold font-heading text-red-600">{stats.overdue}</p>
                   <p className="text-xs text-muted-foreground">Overdue</p>
                 </div>
-                <div className="bg-muted rounded-lg py-2">
-                  <p className="text-lg font-bold font-heading text-green-600">{stats.completed}</p>
+                <div className="bg-muted rounded-md py-1">
+                  <p className="text-sm font-bold font-heading text-green-600">{stats.completed}</p>
                   <p className="text-xs text-muted-foreground">Done</p>
                 </div>
               </div>
@@ -224,10 +224,10 @@ export default function Family() {
         })}
       </div>
 
-      <div className="pt-4 border-t border-border flex justify-center">
+      <div className="pt-2 border-t border-border flex justify-center">
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="outline" size="sm" className="text-xs text-destructive border-destructive/30 hover:bg-destructive/10">Delete My Account</Button>
+            <Button variant="outline" size="sm" className="text-xs text-destructive border-destructive/30 hover:bg-destructive/10 w-full">Delete My Account</Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
