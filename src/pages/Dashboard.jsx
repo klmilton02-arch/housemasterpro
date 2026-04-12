@@ -75,10 +75,10 @@ export default function Dashboard() {
           <h1 className="font-heading text-2xl font-bold text-foreground">Dashboard</h1>
           <p className="text-sm text-muted-foreground mt-1">Your household at a glance</p>
         </div>
-        <div className="flex gap-2 shrink-0">
+        <div className="flex gap-1 shrink-0">
           <SyncCalendarButton />
-          <Button onClick={() => setDialogOpen(true)} className="gap-2">
-            <Plus className="w-4 h-4" /> Add Task
+          <Button onClick={() => setDialogOpen(true)} className="gap-1 sm:gap-2 px-2 sm:px-4">
+            <Plus className="w-4 h-4" /> <span className="hidden sm:inline">Add Task</span>
           </Button>
         </div>
       </div>
