@@ -64,6 +64,10 @@
       "type": "number",
       "title": "Overdue Grace Days",
       "default": 3
+    },
+    "calendar_event_id": {
+      "type": "string",
+      "title": "Google Calendar Event ID"
     }
   },
   "required": [

@@ -11,6 +11,7 @@ import { differenceInDays, parseISO } from "date-fns";
 import StatCard from "../components/StatCard";
 import TaskCard, { getStatusInfo } from "../components/TaskCard";
 import AddTaskDialog from "../components/AddTaskDialog";
+import SyncCalendarButton from "../components/SyncCalendarButton";
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState([]);
@@ -78,9 +79,12 @@ export default function Dashboard() {
           <h1 className="font-heading text-2xl font-bold text-foreground">Dashboard</h1>
           <p className="text-sm text-muted-foreground mt-1">Your household at a glance</p>
         </div>
-        <Button onClick={() => setDialogOpen(true)} className="gap-2">
-          <Plus className="w-4 h-4" /> Add Task
-        </Button>
+        <div className="flex gap-2">
+          <SyncCalendarButton />
+          <Button onClick={() => setDialogOpen(true)} className="gap-2">
+            <Plus className="w-4 h-4" /> Add Task
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
