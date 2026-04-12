@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatFrequency } from "./TaskCard";
 import { format } from "date-fns";
 
-export default function AddTaskDialog({ open, onOpenChange, onTaskAdded }) {
+export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initialPreset = null }) {
   const [presets, setPresets] = useState([]);
   const [familyMembers, setFamilyMembers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -45,9 +45,16 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded }) {
       ]).then(([p, f]) => {
         setPresets(p);
         setFamilyMembers(f);
+        if (initialPreset) {
+          setSelectedPreset(initialPreset);
+          setTab("preset");
+          if (initialPreset.frequency_days % 30 === 0) { setFreqValue(String(initialPreset.frequency_days / 30)); setFreqUnit("months"); }
+          else if (initialPreset.frequency_days % 7 === 0) { setFreqValue(String(initialPreset.frequency_days / 7)); setFreqUnit("weeks"); }
+          else { setFreqValue(String(initialPreset.frequency_days)); setFreqUnit("days"); }
+        }
       });
     }
-  }, [open]);
+  }, [open, initialPreset]);
 
   const categories = [...new Set(presets.map(p => p.category))];
   const filteredPresets = categoryFilter === "all" ? presets : presets.filter(p => p.category === categoryFilter);

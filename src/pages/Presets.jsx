@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Sparkles, Search } from "lucide-react";
+import AddTaskDialog from "../components/AddTaskDialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +13,13 @@ export default function Presets() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [selectedPreset, setSelectedPreset] = useState(null);
+
+  function handlePresetClick(preset) {
+    setSelectedPreset(preset);
+    setAddDialogOpen(true);
+  }
 
   useEffect(() => {
     base44.entities.PresetTask.list("name", 500).then(p => {
@@ -84,7 +92,7 @@ export default function Presets() {
             <h2 className="font-heading font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-3">{cat}</h2>
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {items.map(p => (
-                <div key={p.id} className="bg-card border border-border rounded-xl p-4 hover:shadow-sm transition-shadow">
+                <div key={p.id} onClick={() => handlePresetClick(p)} className="bg-card border border-border rounded-xl p-4 hover:shadow-md hover:border-primary/30 transition-all cursor-pointer active:scale-95">
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <h3 className="font-heading font-semibold text-sm">{p.name}</h3>
                     <Badge variant={p.task_type === "Deep Cleaning" ? "secondary" : "outline"} className="shrink-0 text-xs">
@@ -106,6 +114,7 @@ export default function Presets() {
           </div>
         ))
       )}
+      <AddTaskDialog open={addDialogOpen} onOpenChange={setAddDialogOpen} initialPreset={selectedPreset} />
     </div>
   );
 }
