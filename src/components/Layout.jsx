@@ -49,7 +49,7 @@ export default function Layout() {
 
       {/* Mobile Header */}
       <div
-        className="md:hidden fixed top-0 left-0 right-0 bg-card border-b border-border flex items-center px-4 z-40 gap-3"
+        className="md:hidden fixed top-0 left-0 right-0 bg-card border-b border-border flex items-center px-2 z-40 gap-2"
         style={{ paddingTop: 'env(safe-area-inset-top)', height: 'calc(3.5rem + env(safe-area-inset-top))' }}
       >
         {!isRootPath ? (
