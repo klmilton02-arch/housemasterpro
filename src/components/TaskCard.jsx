@@ -1,4 +1,6 @@
-import { Check, Clock, AlertTriangle, Calendar } from "lucide-react";
+import { useState, useRef } from "react";
+import { Check, Clock, AlertTriangle, Calendar, Pencil } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays, parseISO } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -41,9 +43,20 @@ function formatFrequency(days) {
 
 export { getStatusInfo, formatFrequency };
 
-export default function TaskCard({ task, onComplete }) {
+export default function TaskCard({ task, onComplete, onRenamed }) {
   const status = getStatusInfo(task);
   const StatusIcon = status.icon;
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState(task.name);
+  const inputRef = useRef(null);
+
+  async function saveName() {
+    const trimmed = name.trim();
+    if (!trimmed || trimmed === task.name) { setEditing(false); setName(task.name); return; }
+    await base44.entities.Task.update(task.id, { name: trimmed });
+    setEditing(false);
+    onRenamed?.();
+  }
 
   return (
     <div className={cn(
@@ -61,7 +74,27 @@ export default function TaskCard({ task, onComplete }) {
               <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-medium">Deep</span>
             )}
           </div>
-          <h3 className="font-heading font-semibold text-sm text-foreground truncate">{task.name}</h3>
+          {editing ? (
+            <input
+              ref={inputRef}
+              autoFocus
+              value={name}
+              onChange={e => setName(e.target.value)}
+              onBlur={saveName}
+              onKeyDown={e => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') { setEditing(false); setName(task.name); } }}
+              className="font-heading font-semibold text-sm text-foreground w-full border border-primary rounded px-1 py-0.5 outline-none bg-background"
+            />
+          ) : (
+            <div className="flex items-center gap-1 group/name">
+              <h3 className="font-heading font-semibold text-sm text-foreground truncate">{name}</h3>
+              <button
+                onClick={e => { e.stopPropagation(); setEditing(true); }}
+                className="opacity-0 group-hover/name:opacity-100 transition-opacity p-0.5 rounded hover:bg-muted"
+              >
+                <Pencil className="w-3 h-3 text-muted-foreground" />
+              </button>
+            </div>
+          )}
           <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
               <Calendar className="w-3 h-3" />
