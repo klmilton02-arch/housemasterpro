@@ -98,7 +98,7 @@ export default function Dashboard() {
             <p className="text-sm text-muted-foreground">All caught up! No urgent tasks.</p>
           </div>
         ) : (
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-2 sm:grid-cols-2">
             {urgentTasks.map(task => (
               <TaskCard key={task.id} task={task} onComplete={handleComplete} />
             ))}
