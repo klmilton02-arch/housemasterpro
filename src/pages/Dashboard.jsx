@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
 import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, X } from "lucide-react";
+import CompletedTaskItem from "../components/CompletedTaskItem";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { awardPoints } from "@/utils/gamification";
 import PointsToast from "../components/PointsToast";
@@ -115,7 +116,9 @@ export default function Dashboard() {
           </DialogHeader>
           <div className="space-y-2 mt-2">
             {taskListModal?.tasks?.map(task => (
-              <TaskCard key={task.id} task={task} onComplete={handleComplete} />
+              taskListModal.title === 'Completed Tasks'
+                ? <CompletedTaskItem key={task.id} task={task} />
+                : <TaskCard key={task.id} task={task} onComplete={handleComplete} />
             ))}
             {taskListModal?.tasks?.length === 0 && (
               <p className="text-center text-muted-foreground py-8 text-sm">No tasks here.</p>
