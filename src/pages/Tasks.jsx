@@ -124,7 +124,7 @@ export default function Tasks() {
               <TaskCard task={task} onComplete={handleComplete} className="w-full"/>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <button className="absolute top-1 right-1 p-1 rounded-lg bg-card/80 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500">
+                  <button className="absolute top-1 right-12 p-1 rounded-lg bg-card/80 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500">
                     <Trash2 className="w-3 h-3" />
                   </button>
                 </AlertDialogTrigger>
