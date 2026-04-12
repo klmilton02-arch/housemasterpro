@@ -12,15 +12,6 @@ export default function Dashboard() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-
-  const handleRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await loadTasks();
-    setRefreshing(false);
-  }, [loadTasks]);
-
-  usePullToRefresh(handleRefresh);
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);
@@ -29,6 +20,8 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => { loadTasks(); }, [loadTasks]);
+
+  usePullToRefresh(loadTasks);
 
   async function handleComplete(task) {
     const today = new Date();
