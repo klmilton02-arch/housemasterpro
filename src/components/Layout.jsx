@@ -61,7 +61,7 @@ export default function Layout() {
 
       {/* Main content */}
       <main className="flex-1 md:ml-64 pt-14 md:pt-0" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
-        <div className="p-4 md:p-8 max-w-6xl mx-auto md:pb-8">
+        <div className="p-4 md:p-6 max-w-3xl mx-auto md:pb-8">
           <Outlet />
         </div>
       </main>
