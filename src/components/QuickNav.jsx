@@ -12,7 +12,7 @@ const navItems = [
 
 export default function QuickNav() {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 max-w-2xl">
       {navItems.map(({ to, label, icon: Icon }, idx) => (
         <Link
           key={to}
