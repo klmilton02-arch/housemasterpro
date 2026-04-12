@@ -87,5 +87,12 @@
 
   body {
     @apply bg-background text-foreground;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  button, a, nav *, [role="button"] {
+    user-select: none;
+    -webkit-user-select: none;
   }
 }

@@ -26,18 +26,26 @@ export default function Tasks() {
     const today = new Date();
     const nextDue = new Date(today);
     nextDue.setDate(nextDue.getDate() + task.frequency_days);
-
-    await base44.entities.Task.update(task.id, {
+    const updated = {
+      ...task,
       status: "Completed",
       last_completed_date: today.toISOString().split("T")[0],
       next_due_date: nextDue.toISOString().split("T")[0],
+    };
+    // Optimistic update
+    setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
+    await base44.entities.Task.update(task.id, {
+      status: "Completed",
+      last_completed_date: updated.last_completed_date,
+      next_due_date: updated.next_due_date,
     });
     loadTasks();
   }
 
   async function handleDelete(task) {
+    // Optimistic update
+    setTasks(prev => prev.filter(t => t.id !== task.id));
     await base44.entities.Task.delete(task.id);
-    loadTasks();
   }
 
   const categories = [...new Set(tasks.map(t => t.category).filter(Boolean))];

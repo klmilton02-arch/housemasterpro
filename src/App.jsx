@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
+import { AnimatePresence, motion } from 'framer-motion';
 import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
@@ -10,6 +12,23 @@ import Dashboard from './pages/Dashboard';
 import Tasks from './pages/Tasks';
 import Presets from './pages/Presets';
 import Family from './pages/Family';
+
+const pageVariants = {
+  initial: { opacity: 0, x: 20 },
+  animate: { opacity: 1, x: 0, transition: { duration: 0.2 } },
+  exit: { opacity: 0, x: -20, transition: { duration: 0.15 } },
+};
+
+function DarkModeSync() {
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const apply = (e) => document.documentElement.classList.toggle('dark', e.matches);
+    apply(mq);
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
+  }, []);
+  return null;
+}
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -36,15 +55,19 @@ const AuthenticatedApp = () => {
 
   // Render the main app
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/tasks" element={<Tasks />} />
-        <Route path="/presets" element={<Presets />} />
-        <Route path="/family" element={<Family />} />
-        <Route path="*" element={<PageNotFound />} />
-      </Route>
-    </Routes>
+    <AnimatePresence mode="wait">
+      <Routes>
+        <Route element={<Layout />}>
+          {[{ path: "/", el: <Dashboard /> }, { path: "/tasks", el: <Tasks /> }, { path: "/presets", el: <Presets /> }, { path: "/family", el: <Family /> }, { path: "*", el: <PageNotFound /> }].map(({ path, el }) => (
+            <Route key={path} path={path} element={
+              <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+                {el}
+              </motion.div>
+            } />
+          ))}
+        </Route>
+      </Routes>
+    </AnimatePresence>
   );
 };
 
@@ -54,13 +77,14 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
+        <DarkModeSync />
         <Router>
           <AuthenticatedApp />
         </Router>
         <Toaster />
       </QueryClientProvider>
     </AuthProvider>
-  )
+  );
 }
 
 export default App
