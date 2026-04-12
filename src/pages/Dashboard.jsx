@@ -93,22 +93,6 @@ export default function Dashboard() {
 
       <QuickNav />
 
-      <div>
-        <h2 className="font-heading font-semibold text-lg mb-3">Needs Attention</h2>
-        {urgentTasks.length === 0 ? (
-          <div className="bg-card border border-border rounded-xl p-8 text-center">
-            <CheckCircle className="w-10 h-10 text-green-500 mx-auto mb-2" />
-            <p className="text-sm text-muted-foreground">All caught up! No urgent tasks.</p>
-          </div>
-        ) : (
-          <div className="grid gap-2 sm:grid-cols-2">
-            {urgentTasks.map(task => (
-              <TaskCard key={task.id} task={task} onComplete={handleComplete} />
-            ))}
-          </div>
-        )}
-      </div>
-
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
 
