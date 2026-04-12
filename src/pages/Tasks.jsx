@@ -76,23 +76,23 @@ export default function Tasks() {
   }
 
   return (
-    <div className="space-y-6 max-w-sm">
-      <div className="flex flex-col gap-3">
+    <div className="space-y-4 max-w-sm mx-auto px-2">
+      <div className="flex flex-col gap-2">
         <div>
           <h1 className="font-heading text-2xl font-bold">All Tasks</h1>
           <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
         </div>
-        <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full sm:w-auto">
+        <Button onClick={() => setDialogOpen(true)} size="sm" className="gap-2 w-full">
           <Plus className="w-4 h-4" /> Add Task
         </Button>
       </div>
 
-      <div className="flex flex-wrap gap-2 w-full">
+      <div className="flex gap-2 w-full flex-col sm:flex-row">
         <MobileSelect
           value={statusFilter}
           onValueChange={setStatusFilter}
           title="Filter by Status"
-          triggerClassName="flex-1 min-w-[120px]"
+          triggerClassName="flex-1 min-w-0 text-xs"
           options={[
             { value: "all", label: "All Status" },
             { value: "pending", label: "Pending" },
@@ -105,7 +105,7 @@ export default function Tasks() {
           value={categoryFilter}
           onValueChange={setCategoryFilter}
           title="Filter by Category"
-          triggerClassName="flex-1 min-w-[140px]"
+          triggerClassName="flex-1 min-w-0 text-xs"
           options={[
             { value: "all", label: "All Categories" },
             ...categories.map(c => ({ value: c, label: c })),
