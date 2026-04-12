@@ -1,7 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
 import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus } from "lucide-react";
+import { awardPoints } from "@/utils/gamification";
+import PointsToast from "../components/PointsToast";
 import { Button } from "@/components/ui/button";
 import { differenceInDays, parseISO } from "date-fns";
 import StatCard from "../components/StatCard";
@@ -12,6 +14,7 @@ export default function Dashboard() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [reward, setReward] = useState(null);
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);
@@ -33,13 +36,14 @@ export default function Dashboard() {
       last_completed_date: today.toISOString().split("T")[0],
       next_due_date: nextDue.toISOString().split("T")[0],
     };
-    // Optimistic update
     setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
     await base44.entities.Task.update(task.id, {
       status: "Completed",
       last_completed_date: updated.last_completed_date,
       next_due_date: updated.next_due_date,
     });
+    const result = await awardPoints(task);
+    if (result) setReward(result);
     loadTasks();
   }
 
@@ -100,6 +104,7 @@ export default function Dashboard() {
       </div>
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
+      <PointsToast reward={reward} onDismiss={() => setReward(null)} />
     </div>
   );
 }

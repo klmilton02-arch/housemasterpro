@@ -1,0 +1,41 @@
+{
+  "name": "CompletionHistory",
+  "type": "object",
+  "properties": {
+    "family_member_id": {
+      "type": "string",
+      "title": "Family Member ID"
+    },
+    "family_member_name": {
+      "type": "string",
+      "title": "Family Member Name"
+    },
+    "task_id": {
+      "type": "string",
+      "title": "Task ID"
+    },
+    "task_name": {
+      "type": "string",
+      "title": "Task Name"
+    },
+    "points_earned": {
+      "type": "number",
+      "title": "Points Earned"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Completed Date"
+    },
+    "is_overdue": {
+      "type": "boolean",
+      "title": "Was Overdue"
+    }
+  },
+  "required": [
+    "family_member_id",
+    "task_name",
+    "points_earned",
+    "completed_date"
+  ]
+}

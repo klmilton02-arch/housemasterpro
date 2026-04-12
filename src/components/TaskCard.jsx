@@ -2,6 +2,7 @@ import { Check, Clock, AlertTriangle, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays, parseISO } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { getTaskPoints } from "@/utils/gamification";
 
 function getStatusInfo(task) {
   const today = new Date();
@@ -72,6 +73,7 @@ export default function TaskCard({ task, onComplete }) {
           {task.assigned_to_name && (
             <p className="text-xs text-muted-foreground mt-1">Assigned to <span className="font-medium text-foreground">{task.assigned_to_name}</span></p>
           )}
+          <p className="text-xs font-semibold text-primary mt-1">+{getTaskPoints(task)} XP</p>
         </div>
         {status.label !== "Completed" && (
           <Button

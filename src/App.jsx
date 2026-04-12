@@ -12,6 +12,7 @@ import Dashboard from './pages/Dashboard';
 import Tasks from './pages/Tasks';
 import Presets from './pages/Presets';
 import Family from './pages/Family';
+import Leaderboard from './pages/Leaderboard';
 
 const pageVariants = {
   initial: { opacity: 0, x: 20 },
@@ -58,7 +59,7 @@ const AuthenticatedApp = () => {
     <AnimatePresence mode="wait">
       <Routes>
         <Route element={<Layout />}>
-          {[{ path: "/", el: <Dashboard /> }, { path: "/tasks", el: <Tasks /> }, { path: "/presets", el: <Presets /> }, { path: "/family", el: <Family /> }, { path: "*", el: <PageNotFound /> }].map(({ path, el }) => (
+          {[{ path: "/", el: <Dashboard /> }, { path: "/tasks", el: <Tasks /> }, { path: "/presets", el: <Presets /> }, { path: "/family", el: <Family /> }, { path: "/leaderboard", el: <Leaderboard /> }, { path: "*", el: <PageNotFound /> }].map(({ path, el }) => (
             <Route key={path} path={path} element={
               <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
                 {el}

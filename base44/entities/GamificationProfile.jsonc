@@ -1,0 +1,51 @@
+{
+  "name": "GamificationProfile",
+  "type": "object",
+  "properties": {
+    "family_member_id": {
+      "type": "string",
+      "title": "Family Member ID"
+    },
+    "family_member_name": {
+      "type": "string",
+      "title": "Family Member Name"
+    },
+    "total_xp": {
+      "type": "number",
+      "title": "Total XP",
+      "default": 0
+    },
+    "level": {
+      "type": "number",
+      "title": "Level",
+      "default": 1
+    },
+    "badges": {
+      "type": "array",
+      "title": "Badges",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "total_completions": {
+      "type": "number",
+      "title": "Total Completions",
+      "default": 0
+    },
+    "deep_cleaning_completions": {
+      "type": "number",
+      "title": "Deep Cleaning Completions",
+      "default": 0
+    },
+    "overdue_completions": {
+      "type": "number",
+      "title": "Overdue Task Completions",
+      "default": 0
+    }
+  },
+  "required": [
+    "family_member_id",
+    "family_member_name"
+  ]
+}

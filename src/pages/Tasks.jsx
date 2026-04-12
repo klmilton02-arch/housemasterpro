@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { Plus, Filter, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
+import { awardPoints } from "@/utils/gamification";
+import PointsToast from "../components/PointsToast";
 import { Button } from "@/components/ui/button";
 import MobileSelect from "../components/MobileSelect";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -14,8 +16,7 @@ export default function Tasks() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
-
-  usePullToRefresh(loadTasks);
+  const [reward, setReward] = useState(null);
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);
@@ -24,6 +25,8 @@ export default function Tasks() {
   }, []);
 
   useEffect(() => { loadTasks(); }, [loadTasks]);
+
+  usePullToRefresh(loadTasks);
 
   async function handleComplete(task) {
     const today = new Date();
@@ -35,13 +38,14 @@ export default function Tasks() {
       last_completed_date: today.toISOString().split("T")[0],
       next_due_date: nextDue.toISOString().split("T")[0],
     };
-    // Optimistic update
     setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
     await base44.entities.Task.update(task.id, {
       status: "Completed",
       last_completed_date: updated.last_completed_date,
       next_due_date: updated.next_due_date,
     });
+    const result = await awardPoints(task);
+    if (result) setReward(result);
     loadTasks();
   }
 
@@ -141,6 +145,7 @@ export default function Tasks() {
       )}
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
+      <PointsToast reward={reward} onDismiss={() => setReward(null)} />
     </div>
   );
 }
