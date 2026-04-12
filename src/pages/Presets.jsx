@@ -9,6 +9,36 @@ import { formatFrequency } from "../components/TaskCard";
 import EditPresetDialog from "../components/EditPresetDialog";
 import { Button } from "@/components/ui/button";
 
+const CLEANING_SUBCATEGORIES = ["Kitchen Cleaning", "Bathroom Cleaning", "Bedroom Cleaning", "Living Areas", "Floors", "Deep Cleaning"];
+
+function PresetCard({ p, onEdit, onDelete, onClick }) {
+  return (
+    <div className="bg-card border border-border rounded-xl p-4 hover:shadow-md hover:border-primary/30 transition-all group relative">
+      <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+        <button onClick={e => onEdit(e, p)} className="p-1 rounded hover:bg-muted"><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+        <button onClick={e => onDelete(e, p)} className="p-1 rounded hover:bg-red-50"><Trash2 className="w-3.5 h-3.5 text-red-400" /></button>
+      </div>
+      <div onClick={() => onClick(p)} className="cursor-pointer">
+        <div className="flex items-start justify-between gap-2 mb-2 pr-14">
+          <h3 className="font-heading font-semibold text-sm">{p.name}</h3>
+          <Badge variant={p.task_type === "Deep Cleaning" ? "secondary" : "outline"} className="shrink-0 text-xs">
+            {p.task_type}
+          </Badge>
+        </div>
+        <p className="text-xs text-muted-foreground mb-2">{p.description}</p>
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+            {formatFrequency(p.frequency_days)}
+          </span>
+          {p.floor_type_note && (
+            <span className="text-xs text-muted-foreground italic">{p.floor_type_note}</span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Presets() {
   const [presets, setPresets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,18 +75,24 @@ export default function Presets() {
     });
   }, []);
 
-  const categories = [...new Set(presets.map(p => p.category))];
+  // For category filter dropdown: cleaning subcategories shown as "Cleaning"
+  const displayCategories = [...new Set(presets.map(p =>
+    CLEANING_SUBCATEGORIES.includes(p.category) ? "Cleaning" : p.category
+  ))];
 
   const filtered = presets.filter(p => {
     if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
-    if (categoryFilter !== "all" && p.category !== categoryFilter) return false;
+    const displayCat = CLEANING_SUBCATEGORIES.includes(p.category) ? "Cleaning" : p.category;
+    if (categoryFilter !== "all" && displayCat !== categoryFilter) return false;
     if (typeFilter !== "all" && p.task_type !== typeFilter) return false;
     return true;
   });
 
+  // Top-level grouping: cleaning subcategories merged under "Cleaning"
   const grouped = filtered.reduce((acc, p) => {
-    if (!acc[p.category]) acc[p.category] = [];
-    acc[p.category].push(p);
+    const displayCat = CLEANING_SUBCATEGORIES.includes(p.category) ? "Cleaning" : p.category;
+    if (!acc[displayCat]) acc[displayCat] = [];
+    acc[displayCat].push(p);
     return acc;
   }, {});
 
@@ -91,7 +127,7 @@ export default function Presets() {
           <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
-            {categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+            {displayCategories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
           </SelectContent>
         </Select>
         <Select value={typeFilter} onValueChange={setTypeFilter}>
@@ -112,36 +148,35 @@ export default function Presets() {
         Object.entries(grouped).map(([cat, items]) => (
           <div key={cat}>
             <h2 className="font-heading font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-3">{cat}</h2>
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {items.map(p => (
-                <div key={p.id} className="bg-card border border-border rounded-xl p-4 hover:shadow-md hover:border-primary/30 transition-all group relative">
-                  <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                    <button onClick={e => handleEdit(e, p)} className="p-1 rounded hover:bg-muted"><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
-                    <button onClick={e => handleDelete(e, p)} className="p-1 rounded hover:bg-red-50"><Trash2 className="w-3.5 h-3.5 text-red-400" /></button>
-                  </div>
-                  <div onClick={() => handlePresetClick(p)} className="cursor-pointer">
-                    <div className="flex items-start justify-between gap-2 mb-2 pr-14">
-                      <h3 className="font-heading font-semibold text-sm">{p.name}</h3>
-                      <Badge variant={p.task_type === "Deep Cleaning" ? "secondary" : "outline"} className="shrink-0 text-xs">
-                        {p.task_type}
-                      </Badge>
-                    </div>
-                    <p className="text-xs text-muted-foreground mb-2">{p.description}</p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-                        {formatFrequency(p.frequency_days)}
-                      </span>
-                      {p.floor_type_note && (
-                        <span className="text-xs text-muted-foreground italic">{p.floor_type_note}</span>
-                      )}
-                    </div>
+            {cat === "Cleaning" ? (
+              // Cleaning: show subcategory headers
+              Object.entries(
+                items.reduce((acc, p) => {
+                  if (!acc[p.category]) acc[p.category] = [];
+                  acc[p.category].push(p);
+                  return acc;
+                }, {})
+              ).map(([subcat, subItems]) => (
+                <div key={subcat} className="mb-5">
+                  <h3 className="font-heading font-medium text-xs text-muted-foreground/70 uppercase tracking-wider mb-2 pl-2 border-l-2 border-primary/30">{subcat}</h3>
+                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    {subItems.map(p => (
+                      <PresetCard key={p.id} p={p} onEdit={handleEdit} onDelete={handleDelete} onClick={handlePresetClick} />
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
+              ))
+            ) : (
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {items.map(p => (
+                  <PresetCard key={p.id} p={p} onEdit={handleEdit} onDelete={handleDelete} onClick={handlePresetClick} />
+                ))}
+              </div>
+            )}
           </div>
         ))
       )}
+
       <AddTaskDialog open={addDialogOpen} onOpenChange={setAddDialogOpen} initialPreset={selectedPreset} />
       <EditPresetDialog
         open={editDialogOpen}
