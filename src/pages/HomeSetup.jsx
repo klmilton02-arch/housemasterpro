@@ -1,0 +1,242 @@
+import { useState, useEffect } from "react";
+import { base44 } from "@/api/base44Client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Home, Sparkles, CheckCircle, BedDouble, Bath, ChefHat, Sofa, UtensilsCrossed, Car, Shirt } from "lucide-react";
+import { format } from "date-fns";
+
+const ROOM_CATEGORY_MAP = {
+  bedroom: "Bedroom Cleaning",
+  bathroom: "Bathroom Cleaning",
+  kitchen: "Kitchen Cleaning",
+  living_room: "Living Areas",
+  dining_room: "Living Areas",
+  garage: "Car Maintenance",
+  laundry: "House Maintenance",
+  floors: "Floors",
+};
+
+export default function HomeSetup() {
+  const [config, setConfig] = useState({
+    bedrooms: 2,
+    full_bathrooms: 1,
+    half_bathrooms: 0,
+    has_kitchen: true,
+    has_living_room: true,
+    has_dining_room: false,
+    has_garage: false,
+    has_laundry_room: false,
+  });
+  const [setupId, setSetupId] = useState(null);
+  const [generating, setGenerating] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [generated, setGenerated] = useState(null);
+
+  useEffect(() => {
+    base44.entities.HomeSetup.list().then(records => {
+      if (records.length > 0) {
+        const r = records[0];
+        setSetupId(r.id);
+        setConfig({
+          bedrooms: r.bedrooms ?? 2,
+          full_bathrooms: r.full_bathrooms ?? 1,
+          half_bathrooms: r.half_bathrooms ?? 0,
+          has_kitchen: r.has_kitchen ?? true,
+          has_living_room: r.has_living_room ?? true,
+          has_dining_room: r.has_dining_room ?? false,
+          has_garage: r.has_garage ?? false,
+          has_laundry_room: r.has_laundry_room ?? false,
+        });
+      }
+    });
+  }, []);
+
+  async function saveConfig() {
+    setSaving(true);
+    if (setupId) {
+      await base44.entities.HomeSetup.update(setupId, config);
+    } else {
+      const record = await base44.entities.HomeSetup.create(config);
+      setSetupId(record.id);
+    }
+    setSaving(false);
+  }
+
+  async function generateTasks() {
+    setGenerating(true);
+    const today = format(new Date(), "yyyy-MM-dd");
+
+    // Save config first
+    if (setupId) {
+      await base44.entities.HomeSetup.update(setupId, config);
+    } else {
+      const record = await base44.entities.HomeSetup.create(config);
+      setSetupId(record.id);
+    }
+
+    const presets = await base44.entities.PresetTask.list();
+    const tasksToCreate = [];
+
+    function presetsForCategory(cat) {
+      return presets.filter(p => p.category === cat);
+    }
+
+    // Bedrooms
+    for (let i = 1; i <= config.bedrooms; i++) {
+      const label = config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i}`;
+      for (const p of presetsForCategory("Bedroom Cleaning")) {
+        tasksToCreate.push({ ...p, name: `${label} – ${p.name}` });
+      }
+    }
+
+    // Full bathrooms
+    for (let i = 1; i <= config.full_bathrooms; i++) {
+      const label = config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i}`;
+      for (const p of presetsForCategory("Bathroom Cleaning")) {
+        tasksToCreate.push({ ...p, name: `${label} – ${p.name}` });
+      }
+    }
+
+    // Half bathrooms
+    for (let i = 1; i <= config.half_bathrooms; i++) {
+      const label = config.half_bathrooms === 1 ? "Half Bath" : `Half Bath ${i}`;
+      const halfPresets = presetsForCategory("Bathroom Cleaning").filter(
+        p => p.task_type !== "Deep Cleaning"
+      );
+      for (const p of halfPresets) {
+        tasksToCreate.push({ ...p, name: `${label} – ${p.name}` });
+      }
+    }
+
+    // Single-instance rooms
+    const singleRooms = [
+      { key: "has_kitchen", label: "Kitchen", category: "Kitchen Cleaning" },
+      { key: "has_living_room", label: "Living Room", category: "Living Areas" },
+      { key: "has_dining_room", label: "Dining Room", category: "Living Areas" },
+      { key: "has_garage", label: "Garage", category: "Car Maintenance" },
+      { key: "has_laundry_room", label: "Laundry Room", category: "House Maintenance" },
+    ];
+
+    for (const room of singleRooms) {
+      if (config[room.key]) {
+        for (const p of presetsForCategory(room.category)) {
+          tasksToCreate.push({ ...p, name: `${room.label} – ${p.name}` });
+        }
+      }
+    }
+
+    // Floors (if any rooms selected)
+    const hasRooms = config.bedrooms > 0 || config.has_living_room || config.has_dining_room;
+    if (hasRooms) {
+      for (const p of presetsForCategory("Floors")) {
+        tasksToCreate.push({ ...p, name: p.name });
+      }
+    }
+
+    // Create all tasks
+    const created = await Promise.all(
+      tasksToCreate.map(t =>
+        base44.entities.Task.create({
+          name: t.name,
+          category: t.category,
+          task_type: t.task_type || "Regular",
+          frequency_days: t.frequency_days,
+          description: t.description || "",
+          start_date: today,
+          next_due_date: today,
+          status: "Pending",
+          overdue_grace_days: 3,
+        })
+      )
+    );
+
+    setGenerated(created.length);
+    setGenerating(false);
+  }
+
+  function NumberInput({ label, icon: Icon, field }) {
+    return (
+      <div className="flex items-center justify-between p-4 bg-card border border-border rounded-xl">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Icon className="w-5 h-5 text-primary" />
+          </div>
+          <span className="font-medium text-sm">{label}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors text-lg"
+            onClick={() => setConfig(c => ({ ...c, [field]: Math.max(0, (c[field] || 0) - 1) }))}
+          >−</button>
+          <span className="w-6 text-center font-semibold">{config[field] || 0}</span>
+          <button
+            className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors text-lg"
+            onClick={() => setConfig(c => ({ ...c, [field]: (c[field] || 0) + 1 }))}
+          >+</button>
+        </div>
+      </div>
+    );
+  }
+
+  function ToggleRoom({ label, icon: Icon, field }) {
+    const active = config[field];
+    return (
+      <button
+        className={`flex items-center gap-3 p-4 rounded-xl border transition-all text-left ${
+          active ? "bg-primary/10 border-primary/30 text-primary" : "bg-card border-border text-muted-foreground"
+        }`}
+        onClick={() => setConfig(c => ({ ...c, [field]: !c[field] }))}
+      >
+        <Icon className="w-5 h-5 shrink-0" />
+        <span className="text-sm font-medium">{label}</span>
+        {active && <CheckCircle className="w-4 h-4 ml-auto shrink-0" />}
+      </button>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="font-heading text-2xl font-bold">Home Setup</h1>
+        <p className="text-sm text-muted-foreground mt-1">Configure your rooms to auto-generate cleaning tasks</p>
+      </div>
+
+      <div className="space-y-3">
+        <h2 className="font-heading font-semibold text-base">Rooms with multiple instances</h2>
+        <NumberInput label="Bedrooms" icon={BedDouble} field="bedrooms" />
+        <NumberInput label="Full Bathrooms" icon={Bath} field="full_bathrooms" />
+        <NumberInput label="Half Bathrooms" icon={Bath} field="half_bathrooms" />
+      </div>
+
+      <div className="space-y-3">
+        <h2 className="font-heading font-semibold text-base">Other rooms</h2>
+        <div className="grid grid-cols-2 gap-2">
+          <ToggleRoom label="Kitchen" icon={ChefHat} field="has_kitchen" />
+          <ToggleRoom label="Living Room" icon={Sofa} field="has_living_room" />
+          <ToggleRoom label="Dining Room" icon={UtensilsCrossed} field="has_dining_room" />
+          <ToggleRoom label="Garage" icon={Car} field="has_garage" />
+          <ToggleRoom label="Laundry Room" icon={Shirt} field="has_laundry_room" />
+        </div>
+      </div>
+
+      {generated !== null && (
+        <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3 text-green-700">
+          <CheckCircle className="w-5 h-5 shrink-0" />
+          <p className="text-sm font-medium">Successfully generated {generated} tasks! Check your Tasks page.</p>
+        </div>
+      )}
+
+      <div className="flex gap-3">
+        <Button variant="outline" onClick={saveConfig} disabled={saving} className="flex-1">
+          {saving ? "Saving..." : "Save Config"}
+        </Button>
+        <Button onClick={generateTasks} disabled={generating} className="flex-1 gap-2">
+          <Sparkles className="w-4 h-4" />
+          {generating ? "Generating..." : "Generate Tasks"}
+        </Button>
+      </div>
+      <p className="text-xs text-muted-foreground text-center">Generating tasks will add new tasks based on your presets library. Existing tasks won't be removed.</p>
+    </div>
+  );
+}

@@ -1,0 +1,47 @@
+{
+  "name": "HomeSetup",
+  "type": "object",
+  "properties": {
+    "bedrooms": {
+      "type": "number",
+      "title": "Bedrooms",
+      "default": 0
+    },
+    "full_bathrooms": {
+      "type": "number",
+      "title": "Full Bathrooms",
+      "default": 0
+    },
+    "half_bathrooms": {
+      "type": "number",
+      "title": "Half Bathrooms",
+      "default": 0
+    },
+    "has_kitchen": {
+      "type": "boolean",
+      "title": "Kitchen",
+      "default": true
+    },
+    "has_living_room": {
+      "type": "boolean",
+      "title": "Living Room",
+      "default": true
+    },
+    "has_dining_room": {
+      "type": "boolean",
+      "title": "Dining Room",
+      "default": false
+    },
+    "has_garage": {
+      "type": "boolean",
+      "title": "Garage",
+      "default": false
+    },
+    "has_laundry_room": {
+      "type": "boolean",
+      "title": "Laundry Room",
+      "default": false
+    }
+  },
+  "required": []
+}
