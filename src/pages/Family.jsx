@@ -123,10 +123,10 @@ export default function Family() {
         })}
       </div>
 
-      <div className="pt-4 border-t border-border">
+      <div className="pt-4 border-t border-border flex justify-center">
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive" size="sm">Delete My Account</Button>
+            <Button variant="outline" size="sm" className="text-xs text-destructive border-destructive/30 hover:bg-destructive/10">Delete My Account</Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
