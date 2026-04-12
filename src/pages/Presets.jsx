@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Sparkles, Search } from "lucide-react";
+import { Sparkles, Search, Plus, Pencil, Trash2 } from "lucide-react";
 import AddTaskDialog from "../components/AddTaskDialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { formatFrequency } from "../components/TaskCard";
+import EditPresetDialog from "../components/EditPresetDialog";
+import { Button } from "@/components/ui/button";
 
 export default function Presets() {
   const [presets, setPresets] = useState([]);
@@ -15,10 +17,25 @@ export default function Presets() {
   const [typeFilter, setTypeFilter] = useState("all");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingPreset, setEditingPreset] = useState(null);
 
   function handlePresetClick(preset) {
     setSelectedPreset(preset);
     setAddDialogOpen(true);
+  }
+
+  function handleEdit(e, preset) {
+    e.stopPropagation();
+    setEditingPreset(preset);
+    setEditDialogOpen(true);
+  }
+
+  async function handleDelete(e, preset) {
+    e.stopPropagation();
+    if (!confirm(`Delete preset "${preset.name}"?`)) return;
+    await base44.entities.PresetTask.delete(preset.id);
+    setPresets(prev => prev.filter(p => p.id !== preset.id));
   }
 
   useEffect(() => {
@@ -53,11 +70,16 @@ export default function Presets() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-2xl font-bold flex items-center gap-2">
-          <Sparkles className="w-6 h-6 text-accent" /> Preset Library
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1">Browse {presets.length} preset tasks with recommended frequencies</p>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="font-heading text-2xl font-bold flex items-center gap-2">
+            <Sparkles className="w-6 h-6 text-accent" /> Preset Library
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">Browse {presets.length} preset tasks with recommended frequencies</p>
+        </div>
+        <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} className="gap-2 shrink-0">
+          <Plus className="w-4 h-4" /> New Preset
+        </Button>
       </div>
 
       <div className="flex flex-wrap gap-3">
@@ -92,21 +114,27 @@ export default function Presets() {
             <h2 className="font-heading font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-3">{cat}</h2>
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {items.map(p => (
-                <div key={p.id} onClick={() => handlePresetClick(p)} className="bg-card border border-border rounded-xl p-4 hover:shadow-md hover:border-primary/30 transition-all cursor-pointer active:scale-95">
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className="font-heading font-semibold text-sm">{p.name}</h3>
-                    <Badge variant={p.task_type === "Deep Cleaning" ? "secondary" : "outline"} className="shrink-0 text-xs">
-                      {p.task_type}
-                    </Badge>
+                <div key={p.id} className="bg-card border border-border rounded-xl p-4 hover:shadow-md hover:border-primary/30 transition-all group relative">
+                  <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                    <button onClick={e => handleEdit(e, p)} className="p-1 rounded hover:bg-muted"><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                    <button onClick={e => handleDelete(e, p)} className="p-1 rounded hover:bg-red-50"><Trash2 className="w-3.5 h-3.5 text-red-400" /></button>
                   </div>
-                  <p className="text-xs text-muted-foreground mb-2">{p.description}</p>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-                      {formatFrequency(p.frequency_days)}
-                    </span>
-                    {p.floor_type_note && (
-                      <span className="text-xs text-muted-foreground italic">{p.floor_type_note}</span>
-                    )}
+                  <div onClick={() => handlePresetClick(p)} className="cursor-pointer">
+                    <div className="flex items-start justify-between gap-2 mb-2 pr-14">
+                      <h3 className="font-heading font-semibold text-sm">{p.name}</h3>
+                      <Badge variant={p.task_type === "Deep Cleaning" ? "secondary" : "outline"} className="shrink-0 text-xs">
+                        {p.task_type}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-2">{p.description}</p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+                        {formatFrequency(p.frequency_days)}
+                      </span>
+                      {p.floor_type_note && (
+                        <span className="text-xs text-muted-foreground italic">{p.floor_type_note}</span>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -115,6 +143,12 @@ export default function Presets() {
         ))
       )}
       <AddTaskDialog open={addDialogOpen} onOpenChange={setAddDialogOpen} initialPreset={selectedPreset} />
+      <EditPresetDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        preset={editingPreset}
+        onSaved={() => base44.entities.PresetTask.list("name", 500).then(setPresets)}
+      />
     </div>
   );
 }
