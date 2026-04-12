@@ -83,7 +83,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5 sm:gap-3">
         <StatCard icon={ListChecks} label="Total Tasks" value={tasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'All Tasks', tasks })} />
         <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" />
         <StatCard icon={Clock} label="Due Soon" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" />
