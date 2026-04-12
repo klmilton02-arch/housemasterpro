@@ -74,11 +74,26 @@ export default function Family() {
 
   return (
     <div className="space-y-6">
+      {/* Family member avatars row */}
+      {members.length > 0 && (
+        <div className="flex gap-3 overflow-x-auto pb-1">
+          {members.map(m => {
+            const c = colorMap[m.avatar_color] || colorMap.blue;
+            return (
+              <div key={m.id} className="flex flex-col items-center gap-1 shrink-0">
+                <div className={cn("w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold font-heading", c.bg, c.text)}>
+                  {m.name.charAt(0).toUpperCase()}
+                </div>
+                <span className="text-xs text-muted-foreground font-medium">{m.name.split(' ')[0]}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-heading text-2xl font-bold flex items-center gap-2">
-            <Users className="w-6 h-6" /> Family Members
-          </h1>
+          <h1 className="font-heading text-2xl font-bold">Manage Household</h1>
           <p className="text-sm text-muted-foreground mt-1">Manage your household members</p>
         </div>
         <Button onClick={() => setDialogOpen(true)} className="gap-2">
