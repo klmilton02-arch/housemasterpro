@@ -118,7 +118,7 @@ export default function Tasks() {
           <p className="text-muted-foreground">No tasks match your filters.</p>
         </div>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="space-y-3">
           {filtered.map(task => (
             <div key={task.id} className="relative group">
               <TaskCard task={task} onComplete={handleComplete} />
