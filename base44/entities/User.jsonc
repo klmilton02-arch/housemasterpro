@@ -1,0 +1,28 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "title": "Role",
+      "enum": [
+        "admin",
+        "user"
+      ],
+      "default": "user"
+    },
+    "account_type": {
+      "type": "string",
+      "title": "Account Type",
+      "enum": [
+        "solo",
+        "family"
+      ],
+      "default": null
+    },
+    "family_group_id": {
+      "type": "string",
+      "title": "Family Group ID"
+    }
+  }
+}

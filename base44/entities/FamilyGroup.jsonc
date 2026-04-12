@@ -1,0 +1,23 @@
+{
+  "name": "FamilyGroup",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Family Name"
+    },
+    "invite_code": {
+      "type": "string",
+      "title": "Invite Code"
+    },
+    "owner_email": {
+      "type": "string",
+      "title": "Owner Email"
+    }
+  },
+  "required": [
+    "name",
+    "invite_code",
+    "owner_email"
+  ]
+}
