@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
-import { Users, Plus, Trash2, Copy, Check, LogOut } from "lucide-react";
+import { Plus, Trash2, Copy, Check, LogOut } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,7 @@ export default function Family() {
   const [name, setName] = useState("");
   const [color, setColor] = useState("blue");
   const [copied, setCopied] = useState(false);
+  const [setupStep, setSetupStep] = useState("choose");
   const { deleteAccount } = useAuth();
 
   const loadData = useCallback(async () => {
@@ -72,6 +73,12 @@ export default function Family() {
     loadData();
   }
 
+  async function handleJoinFamily() {
+    setSetupStep("family-choice");
+    await base44.auth.updateMe({ account_type: null });
+    loadData();
+  }
+
   function copyCode() {
     navigator.clipboard.writeText(familyGroup.invite_code);
     setCopied(true);
@@ -98,7 +105,7 @@ export default function Family() {
 
   // Show onboarding if account type not yet set
   if (!currentUser?.account_type) {
-    return <AccountSetup currentUser={currentUser} onDone={loadData} />;
+    return <AccountSetup currentUser={currentUser} onDone={loadData} initialStep={setupStep} />;
   }
 
   return (
@@ -174,7 +181,7 @@ export default function Family() {
             <p className="font-medium text-sm">Running solo?</p>
             <p className="text-xs text-muted-foreground">Switch to a family account to share tasks with others.</p>
           </div>
-          <Button variant="outline" size="sm" onClick={() => base44.auth.updateMe({ account_type: null }).then(loadData)}>
+          <Button variant="outline" size="sm" onClick={handleJoinFamily}>
             Join a Family
           </Button>
         </div>

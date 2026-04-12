@@ -10,8 +10,8 @@ function generateCode() {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 
-export default function AccountSetup({ currentUser, onDone }) {
-  const [step, setStep] = useState("choose"); // choose | create-family | join-family | created
+export default function AccountSetup({ currentUser, onDone, initialStep = "choose" }) {
+  const [step, setStep] = useState(initialStep); // choose | create-family | join-family | created
   const [familyName, setFamilyName] = useState("");
   const [joinCode, setJoinCode] = useState("");
   const [createdCode, setCreatedCode] = useState("");
