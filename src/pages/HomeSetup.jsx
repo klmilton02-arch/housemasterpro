@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Home, Sparkles, CheckCircle, BedDouble, Bath, ChefHat, Sofa, UtensilsCrossed, Car, Shirt } from "lucide-react";
+import { Link } from "react-router-dom";
 import { format } from "date-fns";
 
 const ROOM_CATEGORY_MAP = {
@@ -221,9 +222,14 @@ export default function HomeSetup() {
       </div>
 
       {generated !== null && (
-        <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3 text-green-700">
-          <CheckCircle className="w-5 h-5 shrink-0" />
-          <p className="text-sm font-medium">Successfully generated {generated} tasks! Check your Tasks page.</p>
+        <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center justify-between gap-3 text-green-700">
+          <div className="flex items-center gap-3">
+            <CheckCircle className="w-5 h-5 shrink-0" />
+            <p className="text-sm font-medium">Successfully generated {generated} tasks!</p>
+          </div>
+          <Link to="/tasks">
+            <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white shrink-0">View Tasks</Button>
+          </Link>
         </div>
       )}
 
