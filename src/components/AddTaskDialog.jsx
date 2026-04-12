@@ -22,7 +22,15 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded }) {
   // Common fields
   const [assignedTo, setAssignedTo] = useState("");
   const [startDate, setStartDate] = useState(format(new Date(), "yyyy-MM-dd"));
-  const [customFrequency, setCustomFrequency] = useState("");
+  const [freqValue, setFreqValue] = useState("");
+  const [freqUnit, setFreqUnit] = useState("days");
+
+  function toDays(val, unit) {
+    const n = parseInt(val) || 1;
+    if (unit === "weeks") return n * 7;
+    if (unit === "months") return n * 30;
+    return n;
+  }
 
   // Custom form
   const [customName, setCustomName] = useState("");
@@ -48,19 +56,21 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded }) {
     setLoading(true);
     const member = familyMembers.find(m => m.id === assignedTo);
 
+    const freqDays = freqValue ? toDays(freqValue, freqUnit) : (selectedPreset?.frequency_days || 30);
+
     const taskData = tab === "preset" && selectedPreset
       ? {
           name: selectedPreset.name,
           category: selectedPreset.category,
           task_type: selectedPreset.task_type,
-          frequency_days: customFrequency ? parseInt(customFrequency) : selectedPreset.frequency_days,
+          frequency_days: freqDays,
           description: selectedPreset.description,
         }
       : {
           name: customName,
           category: customCategory,
           task_type: "Regular",
-          frequency_days: parseInt(customFrequency) || 30,
+          frequency_days: freqDays,
           description: customDescription,
         };
 
@@ -77,7 +87,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded }) {
     setLoading(false);
     setSelectedPreset(null);
     setCustomName("");
-    setCustomFrequency("");
+    setFreqValue("");
+    setFreqUnit("days");
     setAssignedTo("");
     onOpenChange(false);
     onTaskAdded?.();
@@ -119,7 +130,10 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded }) {
                   }`}
                   onClick={() => {
                     setSelectedPreset(p);
-                    setCustomFrequency(String(p.frequency_days));
+    // Set frequency display from preset
+    if (p.frequency_days % 30 === 0) { setFreqValue(String(p.frequency_days / 30)); setFreqUnit("months"); }
+    else if (p.frequency_days % 7 === 0) { setFreqValue(String(p.frequency_days / 7)); setFreqUnit("weeks"); }
+    else { setFreqValue(String(p.frequency_days)); setFreqUnit("days"); }
                   }}
                 >
                   <div className="font-medium">{p.name}</div>
@@ -156,16 +170,27 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded }) {
 
         <div className="space-y-4 mt-4 pt-4 border-t border-border">
           <div>
-            <Label className="text-xs font-medium text-muted-foreground">Frequency (days)</Label>
-            <Input
-              type="number"
-              value={customFrequency}
-              onChange={e => setCustomFrequency(e.target.value)}
-              placeholder="e.g., 30 for monthly"
-              className="mt-1"
-            />
-            {customFrequency && (
-              <p className="text-xs text-muted-foreground mt-1">{formatFrequency(parseInt(customFrequency))}</p>
+            <Label className="text-xs font-medium text-muted-foreground">Frequency</Label>
+            <div className="flex gap-2 mt-1">
+              <Input
+                type="number"
+                min="1"
+                value={freqValue}
+                onChange={e => setFreqValue(e.target.value)}
+                placeholder={selectedPreset ? String(tab === 'preset' ? (freqValue || '—') : '') : 'e.g., 2'}
+                className="flex-1"
+              />
+              <Select value={freqUnit} onValueChange={setFreqUnit}>
+                <SelectTrigger className="w-28"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="days">Days</SelectItem>
+                  <SelectItem value="weeks">Weeks</SelectItem>
+                  <SelectItem value="months">Months</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {freqValue && (
+              <p className="text-xs text-muted-foreground mt-1">{formatFrequency(toDays(freqValue, freqUnit))}</p>
             )}
           </div>
 
