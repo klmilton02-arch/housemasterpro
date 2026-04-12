@@ -1,13 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, X } from "lucide-react";
+import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus } from "lucide-react";
 import CompletedTaskItem from "../components/CompletedTaskItem";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { awardPoints } from "@/utils/gamification";
 import PointsToast from "../components/PointsToast";
 import { Button } from "@/components/ui/button";
-import { differenceInDays, parseISO } from "date-fns";
 import StatCard from "../components/StatCard";
 import TaskCard, { getStatusInfo } from "../components/TaskCard";
 import AddTaskDialog from "../components/AddTaskDialog";
@@ -18,7 +17,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [reward, setReward] = useState(null);
-  const [taskListModal, setTaskListModal] = useState(null); // { title, tasks }
+  const [taskListModal, setTaskListModal] = useState(null);
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);
@@ -51,9 +50,6 @@ export default function Dashboard() {
     loadTasks();
   }
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
   const overdueTasks = tasks.filter(t => {
     const s = getStatusInfo(t);
     return s.label === "Overdue" || s.label === "Past Due";
@@ -74,12 +70,12 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
           <h1 className="font-heading text-2xl font-bold text-foreground">Dashboard</h1>
           <p className="text-sm text-muted-foreground mt-1">Your household at a glance</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 shrink-0">
           <SyncCalendarButton />
           <Button onClick={() => setDialogOpen(true)} className="gap-2">
             <Plus className="w-4 h-4" /> Add Task
