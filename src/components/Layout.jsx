@@ -1,4 +1,5 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
+import { ChevronLeft } from "lucide-react";
 import { LayoutDashboard, ListChecks, Sparkles, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -9,8 +10,13 @@ const navItems = [
   { path: "/family", label: "Family", icon: Users },
 ];
 
+const rootPaths = ["/", "/tasks", "/presets", "/family"];
+
 export default function Layout() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const isRootPath = rootPaths.includes(location.pathname);
+  const currentNav = navItems.find(n => location.pathname.startsWith(n.path === "/" ? "/" : n.path)) || navItems[0];
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -41,10 +47,15 @@ export default function Layout() {
 
       {/* Mobile Header */}
       <div
-        className="md:hidden fixed top-0 left-0 right-0 bg-card border-b border-border flex items-center px-4 z-40"
+        className="md:hidden fixed top-0 left-0 right-0 bg-card border-b border-border flex items-center px-4 z-40 gap-3"
         style={{ paddingTop: 'env(safe-area-inset-top)', height: 'calc(3.5rem + env(safe-area-inset-top))' }}
       >
-        <h1 className="font-heading text-lg font-bold">HomeFlow</h1>
+        {!isRootPath ? (
+          <button onClick={() => navigate(-1)} className="p-1 -ml-1 text-muted-foreground">
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+        ) : null}
+        <h1 className="font-heading text-lg font-bold">{isRootPath ? "HomeFlow" : currentNav.label}</h1>
       </div>
 
       {/* Main content */}
@@ -59,21 +70,26 @@ export default function Layout() {
         className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border flex z-40"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
-        {navItems.map(({ path, label, icon: Icon }) => (
-          <Link
-            key={path}
-            to={path}
-            className={cn(
-              "flex-1 flex flex-col items-center justify-center py-2 gap-0.5 select-none transition-colors",
-              location.pathname === path
-                ? "text-primary"
-                : "text-muted-foreground"
-            )}
-          >
-            <Icon className="w-5 h-5" />
-            <span className="text-[10px] font-medium">{label}</span>
-          </Link>
-        ))}
+        {navItems.map(({ path, label, icon: Icon }) => {
+          const isActive = path === "/" ? location.pathname === "/" : location.pathname.startsWith(path);
+          return (
+            <Link
+              key={path}
+              to={path}
+              onClick={e => {
+                if (isActive && location.pathname === path) return; // already at root, do nothing
+                if (isActive) { e.preventDefault(); navigate(path, { replace: true }); }
+              }}
+              className={cn(
+                "flex-1 flex flex-col items-center justify-center py-2 gap-0.5 select-none transition-colors",
+                isActive ? "text-primary" : "text-muted-foreground"
+              )}
+            >
+              <Icon className="w-5 h-5" />
+              <span className="text-[10px] font-medium">{label}</span>
+            </Link>
+          );
+        })}
       </nav>
     </div>
   );

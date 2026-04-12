@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
+import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
 import { Plus, Filter, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import MobileSelect from "../components/MobileSelect";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import TaskCard, { getStatusInfo } from "../components/TaskCard";
 import AddTaskDialog from "../components/AddTaskDialog";
@@ -13,6 +14,8 @@ export default function Tasks() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
+
+  usePullToRefresh(loadTasks);
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);
@@ -81,23 +84,29 @@ export default function Tasks() {
       </div>
 
       <div className="flex flex-wrap gap-3">
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-40"><Filter className="w-3 h-3 mr-2" /><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="overdue">Overdue</SelectItem>
-            <SelectItem value="due_soon">Due Soon</SelectItem>
-            <SelectItem value="completed">Completed</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            {categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-          </SelectContent>
-        </Select>
+        <MobileSelect
+          value={statusFilter}
+          onValueChange={setStatusFilter}
+          title="Filter by Status"
+          triggerClassName="w-40"
+          options={[
+            { value: "all", label: "All Status" },
+            { value: "pending", label: "Pending" },
+            { value: "overdue", label: "Overdue" },
+            { value: "due_soon", label: "Due Soon" },
+            { value: "completed", label: "Completed" },
+          ]}
+        />
+        <MobileSelect
+          value={categoryFilter}
+          onValueChange={setCategoryFilter}
+          title="Filter by Category"
+          triggerClassName="w-48"
+          options={[
+            { value: "all", label: "All Categories" },
+            ...categories.map(c => ({ value: c, label: c })),
+          ]}
+        />
       </div>
 
       {filtered.length === 0 ? (

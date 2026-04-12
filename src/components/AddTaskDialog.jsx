@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import MobileSelect from "./MobileSelect";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatFrequency } from "./TaskCard";
 import { format } from "date-fns";
@@ -110,13 +110,13 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded }) {
           <TabsContent value="preset" className="space-y-4 mt-4">
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Category</Label>
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-                </SelectContent>
-              </Select>
+              <MobileSelect
+                value={categoryFilter}
+                onValueChange={setCategoryFilter}
+                title="Filter by Category"
+                triggerClassName="mt-1"
+                options={[{ value: "all", label: "All Categories" }, ...categories.map(c => ({ value: c, label: c }))]}
+              />
             </div>
 
             <div className="max-h-48 overflow-y-auto space-y-1 border border-border rounded-lg p-2">
@@ -152,14 +152,13 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded }) {
             </div>
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Category</Label>
-              <Select value={customCategory} onValueChange={setCustomCategory}>
-                <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {["Kitchen Cleaning", "Bathroom Cleaning", "Bedroom Cleaning", "Living Areas", "Floors", "Deep Cleaning", "Car Maintenance", "House Maintenance", "Bill Schedules"].map(c => (
-                    <SelectItem key={c} value={c}>{c}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <MobileSelect
+                value={customCategory}
+                onValueChange={setCustomCategory}
+                title="Select Category"
+                triggerClassName="mt-1"
+                options={["Kitchen Cleaning","Bathroom Cleaning","Bedroom Cleaning","Living Areas","Floors","Deep Cleaning","Car Maintenance","House Maintenance","Bill Schedules"].map(c => ({ value: c, label: c }))}
+              />
             </div>
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Description</Label>
@@ -180,29 +179,17 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded }) {
                 placeholder={selectedPreset ? String(tab === 'preset' ? (freqValue || '—') : '') : 'e.g., 2'}
                 className="flex-1"
               />
-              <Select value={freqUnit} onValueChange={setFreqUnit}>
-                <SelectTrigger className="w-28"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="days">Days</SelectItem>
-                  <SelectItem value="weeks">Weeks</SelectItem>
-                  <SelectItem value="months">Months</SelectItem>
-                </SelectContent>
-              </Select>
+              <MobileSelect
+                value={freqUnit}
+                onValueChange={setFreqUnit}
+                title="Frequency Unit"
+                triggerClassName="w-28"
+                options={[{ value: "days", label: "Days" }, { value: "weeks", label: "Weeks" }, { value: "months", label: "Months" }]}
+              />
             </div>
             {freqValue && (
               <p className="text-xs text-muted-foreground mt-1">{formatFrequency(toDays(freqValue, freqUnit))}</p>
             )}
-          </div>
-
-          <div>
-            <Label className="text-xs font-medium text-muted-foreground">Assign To</Label>
-            <Select value={assignedTo} onValueChange={setAssignedTo}>
-              <SelectTrigger className="mt-1"><SelectValue placeholder="Unassigned" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Unassigned</SelectItem>
-                {familyMembers.map(m => <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>)}
-              </SelectContent>
-            </Select>
           </div>
 
           <div>
