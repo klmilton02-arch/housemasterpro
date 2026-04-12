@@ -71,16 +71,16 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6 px-2 sm:px-0">
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4">
-        <div className="min-w-0">
+      <div className="flex flex-col gap-3">
+        <div>
           <h1 className="font-heading text-2xl font-bold text-foreground">Dashboard</h1>
           <p className="text-sm text-muted-foreground mt-1">Your household at a glance</p>
         </div>
-        <div className="flex gap-1 shrink-0">
-          <SyncCalendarButton />
-          <Button onClick={() => setDialogOpen(true)} className="gap-2 px-4 flex-1 sm:flex-none">
+        <div className="flex gap-2">
+          <Button onClick={() => setDialogOpen(true)} className="gap-2 flex-1">
             <Plus className="w-4 h-4" /> Add Task
           </Button>
+          <SyncCalendarButton />
         </div>
       </div>
 
