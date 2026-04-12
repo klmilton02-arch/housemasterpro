@@ -77,8 +77,8 @@ export default function Dashboard() {
         </div>
         <div className="flex gap-1 shrink-0">
           <SyncCalendarButton />
-          <Button onClick={() => setDialogOpen(true)} className="gap-1 sm:gap-2 px-2 sm:px-4">
-            <Plus className="w-4 h-4" /> <span className="hidden sm:inline">Add Task</span>
+          <Button onClick={() => setDialogOpen(true)} className="gap-2 px-4 flex-1 sm:flex-none">
+            <Plus className="w-4 h-4" /> Add Task
           </Button>
         </div>
       </div>
