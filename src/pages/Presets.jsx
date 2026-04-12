@@ -105,7 +105,7 @@ export default function Presets() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-4xl">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h1 className="font-heading text-2xl font-bold flex items-center gap-2">
@@ -159,7 +159,7 @@ export default function Presets() {
               ).map(([subcat, subItems]) => (
                 <div key={subcat} className="mb-5">
                   <h3 className="font-heading font-medium text-xs text-muted-foreground/70 uppercase tracking-wider mb-2 pl-2 border-l-2 border-primary/30">{subcat}</h3>
-                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="grid gap-2 sm:grid-cols-2">
                     {subItems.map(p => (
                       <PresetCard key={p.id} p={p} onEdit={handleEdit} onDelete={handleDelete} onClick={handlePresetClick} />
                     ))}
@@ -167,7 +167,7 @@ export default function Presets() {
                 </div>
               ))
             ) : (
-              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-2 sm:grid-cols-2">
                 {items.map(p => (
                   <PresetCard key={p.id} p={p} onEdit={handleEdit} onDelete={handleDelete} onClick={handlePresetClick} />
                 ))}
