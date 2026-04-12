@@ -76,23 +76,23 @@ export default function Tasks() {
   }
 
   return (
-    <div className="space-y-4 max-w-sm mx-auto px-2">
+    <div className="space-y-3 max-w-xs mx-auto px-1">
       <div className="flex flex-col gap-2">
         <div>
           <h1 className="font-heading text-2xl font-bold">All Tasks</h1>
           <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
         </div>
-        <Button onClick={() => setDialogOpen(true)} size="sm" className="gap-2 w-full">
-          <Plus className="w-4 h-4" /> Add Task
+        <Button onClick={() => setDialogOpen(true)} size="sm" className="gap-1 w-full text-xs">
+          <Plus className="w-3 h-3" /> Add Task
         </Button>
       </div>
 
-      <div className="flex gap-2 w-full flex-col sm:flex-row">
+      <div className="flex gap-1 w-full flex-col">
         <MobileSelect
           value={statusFilter}
           onValueChange={setStatusFilter}
           title="Filter by Status"
-          triggerClassName="flex-1 min-w-0 text-xs"
+          triggerClassName="flex-1 min-w-0 text-xs h-8"
           options={[
             { value: "all", label: "All Status" },
             { value: "pending", label: "Pending" },
@@ -114,18 +114,18 @@ export default function Tasks() {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="bg-card border border-border rounded-xl p-12 text-center">
-          <p className="text-muted-foreground">No tasks match your filters.</p>
+        <div className="bg-card border border-border rounded-lg p-6 text-center">
+          <p className="text-xs text-muted-foreground">No tasks match your filters.</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {filtered.map(task => (
-            <div key={task.id} className="relative group">
-              <TaskCard task={task} onComplete={handleComplete} />
+            <div key={task.id} className="relative group w-full">
+              <TaskCard task={task} onComplete={handleComplete} className="w-full"/>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <button className="absolute top-2 right-2 p-1.5 rounded-lg bg-card/80 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500">
-                    <Trash2 className="w-3.5 h-3.5" />
+                  <button className="absolute top-1 right-1 p-1 rounded-lg bg-card/80 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500">
+                    <Trash2 className="w-3 h-3" />
                   </button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>

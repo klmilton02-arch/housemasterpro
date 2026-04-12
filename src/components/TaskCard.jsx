@@ -60,7 +60,7 @@ export default function TaskCard({ task, onComplete, onRenamed }) {
 
   return (
     <div className={cn(
-      "bg-card border border-border rounded-xl p-3 sm:p-4 hover:shadow-md transition-all group max-w-md",
+      "bg-card border border-border rounded-lg p-2 sm:p-3 hover:shadow-md transition-all group w-full",
       status.priority === 0 && "border-red-200 bg-red-50/30"
     )}>
       <div className="flex items-start justify-between gap-3">
