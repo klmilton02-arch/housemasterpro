@@ -1,0 +1,75 @@
+{
+  "name": "Task",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Task Name"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category"
+    },
+    "task_type": {
+      "type": "string",
+      "title": "Task Type",
+      "enum": [
+        "Regular",
+        "Deep Cleaning"
+      ],
+      "default": "Regular"
+    },
+    "assigned_to": {
+      "type": "string",
+      "title": "Assigned To (Family Member ID)"
+    },
+    "assigned_to_name": {
+      "type": "string",
+      "title": "Assigned To Name"
+    },
+    "frequency_days": {
+      "type": "number",
+      "title": "Frequency (Days)"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Start Date"
+    },
+    "next_due_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Next Due Date"
+    },
+    "last_completed_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Last Completed Date"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "Pending",
+        "Completed",
+        "Overdue"
+      ],
+      "default": "Pending"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "overdue_grace_days": {
+      "type": "number",
+      "title": "Overdue Grace Days",
+      "default": 3
+    }
+  },
+  "required": [
+    "name",
+    "frequency_days",
+    "next_due_date",
+    "status"
+  ]
+}

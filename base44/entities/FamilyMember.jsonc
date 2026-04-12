@@ -1,0 +1,26 @@
+{
+  "name": "FamilyMember",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Name"
+    },
+    "avatar_color": {
+      "type": "string",
+      "title": "Avatar Color",
+      "enum": [
+        "blue",
+        "green",
+        "purple",
+        "orange",
+        "pink",
+        "teal"
+      ],
+      "default": "blue"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

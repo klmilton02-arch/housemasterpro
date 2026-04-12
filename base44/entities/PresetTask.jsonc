@@ -1,0 +1,51 @@
+{
+  "name": "PresetTask",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Task Name"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "enum": [
+        "Kitchen Cleaning",
+        "Bathroom Cleaning",
+        "Bedroom Cleaning",
+        "Living Areas",
+        "Floors",
+        "Deep Cleaning",
+        "Car Maintenance",
+        "House Maintenance",
+        "Bill Schedules"
+      ]
+    },
+    "frequency_days": {
+      "type": "number",
+      "title": "Frequency (Days)"
+    },
+    "task_type": {
+      "type": "string",
+      "title": "Task Type",
+      "enum": [
+        "Regular",
+        "Deep Cleaning"
+      ],
+      "default": "Regular"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "floor_type_note": {
+      "type": "string",
+      "title": "Floor Type Note"
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "frequency_days"
+  ]
+}

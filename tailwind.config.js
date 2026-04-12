@@ -4,6 +4,10 @@ module.exports = {
     content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
   	extend: {
+  		fontFamily: {
+  			heading: ['var(--font-heading)'],
+  			body: ['var(--font-body)']
+  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
@@ -63,20 +67,12 @@ module.exports = {
   		},
   		keyframes: {
   			'accordion-down': {
-  				from: {
-  					height: '0'
-  				},
-  				to: {
-  					height: 'var(--radix-accordion-content-height)'
-  				}
+  				from: { height: '0' },
+  				to: { height: 'var(--radix-accordion-content-height)' }
   			},
   			'accordion-up': {
-  				from: {
-  					height: 'var(--radix-accordion-content-height)'
-  				},
-  				to: {
-  					height: '0'
-  				}
+  				from: { height: 'var(--radix-accordion-content-height)' },
+  				to: { height: '0' }
   			}
   		},
   		animation: {
@@ -86,4 +82,12 @@ module.exports = {
   	}
   },
   plugins: [require("tailwindcss-animate")],
+  safelist: [
+    'bg-blue-100', 'text-blue-700', 'bg-blue-500',
+    'bg-green-100', 'text-green-700', 'bg-green-500',
+    'bg-purple-100', 'text-purple-700', 'bg-purple-500',
+    'bg-orange-100', 'text-orange-700', 'bg-orange-500',
+    'bg-pink-100', 'text-pink-700', 'bg-pink-500',
+    'bg-teal-100', 'text-teal-700', 'bg-teal-500',
+  ]
 }
