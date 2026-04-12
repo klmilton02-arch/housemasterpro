@@ -13,14 +13,14 @@ const CLEANING_SUBCATEGORIES = ["Kitchen Cleaning", "Bathroom Cleaning", "Bedroo
 
 function PresetCard({ p, onEdit, onDelete, onClick }) {
   return (
-    <div className="bg-card border border-border rounded-xl p-4 hover:shadow-md hover:border-primary/30 transition-all group relative">
-      <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-        <button onClick={e => onEdit(e, p)} className="p-1 rounded hover:bg-muted"><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
-        <button onClick={e => onDelete(e, p)} className="p-1 rounded hover:bg-red-50"><Trash2 className="w-3.5 h-3.5 text-red-400" /></button>
+    <div className="bg-card border border-border rounded-lg p-2 hover:shadow-md hover:border-primary/30 transition-all group relative">
+      <div className="absolute top-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+        <button onClick={e => onEdit(e, p)} className="p-0.5 rounded hover:bg-muted"><Pencil className="w-3 h-3 text-muted-foreground" /></button>
+        <button onClick={e => onDelete(e, p)} className="p-0.5 rounded hover:bg-red-50"><Trash2 className="w-3 h-3 text-red-400" /></button>
       </div>
       <div onClick={() => onClick(p)} className="cursor-pointer">
-        <div className="flex items-start justify-between gap-2 mb-2 pr-14">
-          <h3 className="font-heading font-semibold text-sm">{p.name}</h3>
+        <div className="flex items-start justify-between gap-2 mb-1 pr-10">
+          <h3 className="font-heading font-semibold text-xs">{p.name}</h3>
           <Badge variant={p.task_type === "Deep Cleaning" ? "secondary" : "outline"} className="shrink-0 text-xs">
             {p.task_type}
           </Badge>
@@ -105,49 +105,51 @@ export default function Presets() {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
-      <div className="flex items-start justify-between gap-3">
+    <div className="space-y-4 max-w-xs mx-auto px-1">
+      <div className="flex flex-col gap-2">
         <div>
-          <h1 className="font-heading text-2xl font-bold flex items-center gap-2">
-            <Sparkles className="w-6 h-6 text-accent" /> Preset Library
+          <h1 className="font-heading text-lg font-bold flex items-center gap-1">
+            <Sparkles className="w-4 h-4 text-accent" /> Preset Library
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">Browse {presets.length} preset tasks with recommended frequencies</p>
+          <p className="text-xs text-muted-foreground mt-0.5">{presets.length} presets</p>
         </div>
-        <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} className="gap-2 shrink-0">
-          <Plus className="w-4 h-4" /> New Preset
+        <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} size="sm" className="gap-1 w-full text-xs">
+          <Plus className="w-3 h-3" /> New Preset
         </Button>
       </div>
 
-      <div className="flex flex-wrap gap-3">
-        <div className="relative flex-1 min-w-48">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search presets..." className="pl-9" />
+      <div className="flex flex-col gap-2">
+        <div className="relative">
+          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground" />
+          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." className="pl-7 text-xs h-8" />
         </div>
+        <div className="flex gap-2">
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="flex-1 text-xs h-8"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
             {displayCategories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
           </SelectContent>
         </Select>
         <Select value={typeFilter} onValueChange={setTypeFilter}>
-          <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="flex-1 text-xs h-8"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Types</SelectItem>
             <SelectItem value="Regular">Regular</SelectItem>
             <SelectItem value="Deep Cleaning">Deep Cleaning</SelectItem>
           </SelectContent>
-        </Select>
-      </div>
+          </Select>
+          </div>
+          </div>
 
       {Object.keys(grouped).length === 0 ? (
-        <div className="bg-card border border-border rounded-xl p-12 text-center">
-          <p className="text-muted-foreground">No presets match your search.</p>
+        <div className="bg-card border border-border rounded-lg p-4 text-center">
+          <p className="text-xs text-muted-foreground">No presets match your search.</p>
         </div>
       ) : (
         Object.entries(grouped).map(([cat, items]) => (
           <div key={cat}>
-            <h2 className="font-heading font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-3">{cat}</h2>
+            <h2 className="font-heading font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-2">{cat}</h2>
             {cat === "Cleaning" ? (
               // Cleaning: show subcategory headers
               Object.entries(
@@ -158,8 +160,8 @@ export default function Presets() {
                 }, {})
               ).map(([subcat, subItems]) => (
                 <div key={subcat} className="mb-5">
-                  <h3 className="font-heading font-medium text-xs text-muted-foreground/70 uppercase tracking-wider mb-2 pl-2 border-l-2 border-primary/30">{subcat}</h3>
-                  <div className="grid gap-2 sm:grid-cols-2">
+                  <h3 className="font-heading font-medium text-xs text-muted-foreground/70 uppercase tracking-wider mb-1 pl-1.5 border-l-2 border-primary/30">{subcat}</h3>
+                  <div className="grid gap-1.5">
                     {subItems.map(p => (
                       <PresetCard key={p.id} p={p} onEdit={handleEdit} onDelete={handleDelete} onClick={handlePresetClick} />
                     ))}
@@ -167,7 +169,7 @@ export default function Presets() {
                 </div>
               ))
             ) : (
-              <div className="grid gap-2 sm:grid-cols-2">
+              <div className="grid gap-1.5">
                 {items.map(p => (
                   <PresetCard key={p.id} p={p} onEdit={handleEdit} onDelete={handleDelete} onClick={handlePresetClick} />
                 ))}
