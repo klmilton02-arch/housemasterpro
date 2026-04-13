@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, CheckSquare } from "lucide-react";
 import { awardPoints } from "@/utils/gamification";
 import PointsToast from "../components/PointsToast";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import MobileSelect from "../components/MobileSelect";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import TaskCard, { getStatusInfo } from "../components/TaskCard";
 import AddTaskDialog from "../components/AddTaskDialog";
+import BatchToolbar from "../components/BatchToolbar";
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
@@ -17,6 +18,9 @@ export default function Tasks() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [reward, setReward] = useState(null);
+  const [batchMode, setBatchMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [familyMembers, setFamilyMembers] = useState([]);
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);
@@ -25,6 +29,10 @@ export default function Tasks() {
   }, []);
 
   useEffect(() => { loadTasks(); }, [loadTasks]);
+
+  useEffect(() => {
+    base44.entities.FamilyMember.list().then(setFamilyMembers);
+  }, []);
 
   usePullToRefresh(loadTasks);
 
@@ -60,6 +68,52 @@ export default function Tasks() {
     await base44.entities.Task.delete(task.id);
   }
 
+  function toggleSelect(id) {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
+  async function handleBatchComplete() {
+    const today = new Date();
+    const selected = tasks.filter(t => selectedIds.has(t.id));
+    await Promise.all(selected.map(task => {
+      const nextDue = new Date(today);
+      nextDue.setDate(nextDue.getDate() + task.frequency_days);
+      return base44.entities.Task.update(task.id, {
+        status: "Completed",
+        last_completed_date: today.toISOString().split("T")[0],
+        next_due_date: nextDue.toISOString().split("T")[0],
+      });
+    }));
+    setBatchMode(false);
+    setSelectedIds(new Set());
+    loadTasks();
+  }
+
+  async function handleBatchDelete() {
+    const selected = [...selectedIds];
+    await Promise.all(selected.map(id => base44.entities.Task.delete(id)));
+    setBatchMode(false);
+    setSelectedIds(new Set());
+    loadTasks();
+  }
+
+  async function handleBatchReassign(member) {
+    const selected = tasks.filter(t => selectedIds.has(t.id));
+    await Promise.all(selected.map(task =>
+      base44.entities.Task.update(task.id, {
+        assigned_to: member?.id || null,
+        assigned_to_name: member?.name || null,
+      })
+    ));
+    setBatchMode(false);
+    setSelectedIds(new Set());
+    loadTasks();
+  }
+
   const categories = [...new Set(tasks.map(t => t.category).filter(Boolean))];
 
   const filtered = tasks.filter(t => {
@@ -87,9 +141,19 @@ export default function Tasks() {
           <h1 className="font-heading text-2xl font-bold">All Tasks</h1>
           <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
         </div>
-        <Button onClick={() => setDialogOpen(true)} size="sm" className="gap-1 w-full text-xs">
-          <Plus className="w-3 h-3" /> Add Task
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => setDialogOpen(true)} size="sm" className="gap-1 flex-1 text-xs">
+            <Plus className="w-3 h-3" /> Add Task
+          </Button>
+          <Button
+            size="sm"
+            variant={batchMode ? "default" : "outline"}
+            className="gap-1 text-xs"
+            onClick={() => { setBatchMode(b => !b); setSelectedIds(new Set()); }}
+          >
+            <CheckSquare className="w-3 h-3" /> Select
+          </Button>
+        </div>
       </div>
 
       <div className="flex gap-1 w-full flex-col">
@@ -125,25 +189,41 @@ export default function Tasks() {
       ) : (
         <div className="space-y-2">
           {filtered.map(task => (
-            <div key={task.id} className="relative group w-full">
-              <TaskCard task={task} onComplete={handleComplete} className="w-full"/>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <button className="absolute top-10 right-2 p-1 rounded-lg bg-card/80 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500">
-                    <Trash2 className="w-3 h-3" />
-                  </button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Delete Task</AlertDialogTitle>
-                    <AlertDialogDescription>Are you sure you want to delete "{task.name}"? This cannot be undone.</AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => handleDelete(task)} className="bg-destructive text-destructive-foreground">Delete</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+            <div key={task.id} className="relative group w-full flex items-center gap-2">
+              {batchMode && (
+                <button
+                  onClick={() => toggleSelect(task.id)}
+                  className={`shrink-0 h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                    selectedIds.has(task.id)
+                      ? "border-primary bg-primary"
+                      : "border-muted-foreground/40 bg-transparent"
+                  }`}
+                >
+                  {selectedIds.has(task.id) && <CheckSquare className="w-3 h-3 text-white" />}
+                </button>
+              )}
+              <div className="flex-1 min-w-0" onClick={batchMode ? () => toggleSelect(task.id) : undefined}>
+                <TaskCard task={task} onComplete={batchMode ? undefined : handleComplete} />
+              </div>
+              {!batchMode && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <button className="absolute top-10 right-2 p-1 rounded-lg bg-card/80 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete Task</AlertDialogTitle>
+                      <AlertDialogDescription>Are you sure you want to delete "{task.name}"? This cannot be undone.</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleDelete(task)} className="bg-destructive text-destructive-foreground">Delete</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
             </div>
           ))}
         </div>
@@ -151,6 +231,14 @@ export default function Tasks() {
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
+      <BatchToolbar
+        selectedCount={selectedIds.size}
+        familyMembers={familyMembers}
+        onComplete={handleBatchComplete}
+        onDelete={handleBatchDelete}
+        onReassign={handleBatchReassign}
+        onCancel={() => { setBatchMode(false); setSelectedIds(new Set()); }}
+      />
     </div>
   );
 }
