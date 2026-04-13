@@ -13,6 +13,7 @@ import TaskCard, { getStatusInfo } from "../components/TaskCard";
 import AddTaskDialog from "../components/AddTaskDialog";
 import LeaderboardSummary from "../components/LeaderboardSummary";
 import SyncCalendarButton from "../components/SyncCalendarButton";
+import TaskDetailModal from "../components/TaskDetailModal";
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState([]);
@@ -20,6 +21,7 @@ export default function Dashboard() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [reward, setReward] = useState(null);
   const [taskListModal, setTaskListModal] = useState(null);
+  const [selectedTask, setSelectedTask] = useState(null);
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);
@@ -114,6 +116,7 @@ export default function Dashboard() {
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
+      <TaskDetailModal task={selectedTask} open={!!selectedTask} onOpenChange={(open) => { if (!open) setSelectedTask(null); }} />
 
       <Drawer open={!!taskListModal} onOpenChange={() => setTaskListModal(null)}>
         <DrawerContent className="max-h-[85vh]">
@@ -124,7 +127,7 @@ export default function Dashboard() {
             {taskListModal?.tasks?.map(task => (
               taskListModal.title === 'Completed Tasks'
                 ? <CompletedTaskItem key={task.id} task={task} />
-                : <TaskCard key={task.id} task={task} onComplete={handleComplete} />
+                : <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
             ))}
             {taskListModal?.tasks?.length === 0 && (
               <p className="text-center text-muted-foreground py-8 text-sm">No tasks here.</p>

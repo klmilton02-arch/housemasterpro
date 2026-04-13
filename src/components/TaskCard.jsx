@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Check, Clock, AlertTriangle, Calendar, Pencil, Flame } from "lucide-react";
+import { Check, Clock, AlertTriangle, Calendar, Pencil, Flame, ChevronRight } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays, parseISO } from "date-fns";
@@ -43,7 +43,7 @@ function formatFrequency(days) {
 
 export { getStatusInfo, formatFrequency };
 
-export default function TaskCard({ task, onComplete, onRenamed }) {
+export default function TaskCard({ task, onComplete, onRenamed, onViewDetails }) {
   const isCompleted = task.status === "Completed";
   const [optimisticChecked, setOptimisticChecked] = useState(isCompleted);
   const status = getStatusInfo(task);
@@ -82,9 +82,9 @@ export default function TaskCard({ task, onComplete, onRenamed }) {
 
   return (
     <div className={cn(
-      "border rounded-lg px-2.5 py-1.5 hover:shadow-md transition-all group w-full",
+      "border rounded-lg px-2.5 py-1.5 hover:shadow-md transition-all group w-full cursor-pointer",
       cardBg
-    )}>
+    )} onClick={() => onViewDetails?.(task)}>
       <div className="flex items-center justify-between gap-2">
         <div className="flex-1 min-w-0">
           {editing ? (
@@ -126,17 +126,26 @@ export default function TaskCard({ task, onComplete, onRenamed }) {
             )}
           </div>
         </div>
-        <button
-          className={`shrink-0 h-8 w-8 flex items-center justify-center rounded-md border-2 transition-all ${
-            optimisticChecked
-              ? "border-green-500 bg-green-500"
-              : "border-muted-foreground/40 hover:border-primary bg-transparent"
-          }`}
-          onClick={handleCheckboxClick}
-          title={optimisticChecked ? "Mark incomplete" : "Mark complete"}
-        >
-          <Check className={`w-4 h-4 transition-opacity ${optimisticChecked ? "text-white opacity-100" : "opacity-0"}`} />
-        </button>
+        <div className="flex items-center gap-1 shrink-0">
+          <button
+            className={`h-8 w-8 flex items-center justify-center rounded-md border-2 transition-all ${
+              optimisticChecked
+                ? "border-green-500 bg-green-500"
+                : "border-muted-foreground/40 hover:border-primary bg-transparent"
+            }`}
+            onClick={e => { e.stopPropagation(); handleCheckboxClick(); }}
+            title={optimisticChecked ? "Mark incomplete" : "Mark complete"}
+          >
+            <Check className={`w-4 h-4 transition-opacity ${optimisticChecked ? "text-white opacity-100" : "opacity-0"}`} />
+          </button>
+          <button
+            onClick={e => { e.stopPropagation(); onViewDetails?.(task); }}
+            className="p-1 rounded hover:bg-muted opacity-0 group-hover:opacity-100 transition-opacity"
+            title="View details"
+          >
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          </button>
+        </div>
       </div>
     </div>
   );

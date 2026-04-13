@@ -10,6 +10,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import TaskCard, { getStatusInfo } from "../components/TaskCard";
 import AddTaskDialog from "../components/AddTaskDialog";
 import BatchToolbar from "../components/BatchToolbar";
+import TaskDetailModal from "../components/TaskDetailModal";
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
@@ -22,6 +23,7 @@ export default function Tasks() {
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [familyMembers, setFamilyMembers] = useState([]);
   const [groupBy, setGroupBy] = useState("none");
+  const [selectedTask, setSelectedTask] = useState(null);
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);
@@ -266,7 +268,7 @@ export default function Tasks() {
                       </button>
                     )}
                     <div className="flex-1 min-w-0" onClick={batchMode ? () => toggleSelect(task.id) : undefined}>
-                      <TaskCard task={task} onComplete={batchMode ? undefined : handleComplete} />
+                      <TaskCard task={task} onComplete={batchMode ? undefined : handleComplete} onViewDetails={batchMode ? undefined : setSelectedTask} />
                     </div>
                     {!batchMode && (
                       <AlertDialog>
@@ -297,6 +299,7 @@ export default function Tasks() {
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
+      <TaskDetailModal task={selectedTask} open={!!selectedTask} onOpenChange={(open) => { if (!open) setSelectedTask(null); }} />
       <BatchToolbar
         selectedCount={selectedIds.size}
         familyMembers={familyMembers}

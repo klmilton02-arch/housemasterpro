@@ -1,0 +1,23 @@
+{
+  "name": "Subtask",
+  "type": "object",
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "title": "Parent Task ID"
+    },
+    "title": {
+      "type": "string",
+      "title": "Subtask Title"
+    },
+    "completed": {
+      "type": "boolean",
+      "title": "Completed",
+      "default": false
+    }
+  },
+  "required": [
+    "task_id",
+    "title"
+  ]
+}
