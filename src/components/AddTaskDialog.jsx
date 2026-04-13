@@ -29,7 +29,6 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     const n = parseInt(val) || 1;
     if (unit === "weeks") return n * 7;
     if (unit === "months") return n * 30;
-    if (unit === "miles") return 365;
     return n;
   }
 
@@ -37,7 +36,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   const [customName, setCustomName] = useState("");
   const [customCategory, setCustomCategory] = useState("Living Areas");
 
-  const isCarMaintenance = (tab === "preset" && selectedPreset?.category === "Car Maintenance") || (tab === "custom" && customCategory === "Car Maintenance");
+  const isCarMaintenance = false;
   const [customDescription, setCustomDescription] = useState("");
 
   useEffect(() => {
@@ -171,7 +170,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                 onValueChange={setCustomCategory}
                 title="Select Category"
                 triggerClassName="mt-1"
-                options={["Kitchen Cleaning","Bathroom Cleaning","Bedroom Cleaning","Living Areas","Floors","Deep Cleaning","Car Maintenance","House Maintenance","Bill Schedules"].map(c => ({ value: c, label: c }))}
+                options={["Kitchen Cleaning","Bathroom Cleaning","Bedroom Cleaning","Living Areas","Floors","Deep Cleaning","House Maintenance","Bill Schedules"].map(c => ({ value: c, label: c }))}
               />
             </div>
             <div>

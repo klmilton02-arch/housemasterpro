@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 const CATEGORIES = [
   "Kitchen Cleaning", "Bathroom Cleaning", "Bedroom Cleaning",
-  "Living Areas", "Floors", "Deep Cleaning", "Car Maintenance",
+  "Living Areas", "Floors", "Deep Cleaning",
   "House Maintenance", "Bill Schedules",
 ];
 
@@ -57,12 +57,10 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
     }
   }, [open, preset]);
 
-  const isCarMaintenance = category === "Car Maintenance";
-  const freqDays = isCarMaintenance ? 365 : (freqChoice === "custom" ? parseInt(customDays) || 0 : parseInt(freqChoice));
+  const freqDays = freqChoice === "custom" ? parseInt(customDays) || 0 : parseInt(freqChoice);
 
   async function handleSave() {
-    if (!name.trim()) return;
-    if (!isCarMaintenance && !freqDays) return;
+    if (!name.trim() || !freqDays) return;
     setLoading(true);
     const data = {
       name: name.trim(),
@@ -70,7 +68,6 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
       difficulty,
       description,
       frequency_days: freqDays,
-      frequency_miles: isCarMaintenance ? (parseInt(miles) || undefined) : undefined,
     };
     if (isNew) {
       await base44.entities.PresetTask.create(data);
@@ -115,12 +112,6 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
               </SelectContent>
             </Select>
           </div>
-          {isCarMaintenance ? (
-            <div>
-              <Label className="text-xs text-muted-foreground">Every (miles)</Label>
-              <Input type="number" min="1" value={miles} onChange={e => setMiles(e.target.value)} placeholder="e.g., 5000" className="mt-1" />
-            </div>
-          ) : (
           <div>
             <Label className="text-xs text-muted-foreground">Frequency</Label>
             <Select value={freqChoice} onValueChange={setFreqChoice}>
@@ -141,7 +132,6 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
               />
             )}
           </div>
-          )}
           <div>
             <Label className="text-xs text-muted-foreground">Description (optional)</Label>
             <Input value={description} onChange={e => setDescription(e.target.value)} placeholder="Brief description" className="mt-1" />
