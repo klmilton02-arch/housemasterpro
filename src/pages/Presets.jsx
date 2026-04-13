@@ -108,10 +108,8 @@ export default function Presets() {
     <div className="space-y-4 max-w-xs mx-auto px-1">
       <div className="flex flex-col gap-2">
         <div>
-          <h1 className="font-heading text-lg font-bold flex items-center gap-1">
-            <Sparkles className="w-4 h-4 text-accent" /> Preset Library
-          </h1>
-          <p className="text-xs text-muted-foreground mt-0.5">{presets.length} presets</p>
+          <h1 className="font-heading text-2xl font-bold">Preset Library</h1>
+          <p className="text-sm text-muted-foreground mt-1">{presets.length} presets</p>
         </div>
         <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} size="sm" className="gap-1 w-full text-xs">
           <Plus className="w-3 h-3" /> New Preset

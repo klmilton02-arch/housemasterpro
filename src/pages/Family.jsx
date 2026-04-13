@@ -129,8 +129,8 @@ export default function Family() {
 
       <div className="flex flex-col gap-2">
         <div>
-          <h1 className="font-heading text-lg font-bold">Manage Household</h1>
-          <p className="text-xs text-muted-foreground mt-0.5">
+          <h1 className="font-heading text-2xl font-bold">Manage Household</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             {currentUser.account_type === "family" && familyGroup
               ? `${familyGroup.name} · Family Account`
               : "Solo Account"}
