@@ -25,6 +25,10 @@
       "type": "number",
       "title": "Frequency (Days)"
     },
+    "frequency_miles": {
+      "type": "number",
+      "title": "Frequency (Miles)"
+    },
     "difficulty": {
       "type": "string",
       "title": "Difficulty",

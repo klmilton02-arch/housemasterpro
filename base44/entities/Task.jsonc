@@ -34,6 +34,10 @@
       "type": "number",
       "title": "Frequency (Days)"
     },
+    "frequency_miles": {
+      "type": "number",
+      "title": "Frequency (Miles)"
+    },
     "start_date": {
       "type": "string",
       "format": "date",

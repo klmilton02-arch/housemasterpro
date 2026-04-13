@@ -109,7 +109,7 @@ export default function TaskCard({ task, onComplete, onRenamed }) {
               {format(parseISO(task.next_due_date), "MMM d, yyyy")}
             </span>
             <span>·</span>
-            <span>{formatFrequency(task.frequency_days)}</span>
+            <span>{task.frequency_miles ? `Every ${task.frequency_miles.toLocaleString()} mi` : formatFrequency(task.frequency_days)}</span>
           </div>
           {task.assigned_to_name && (
             <p className="text-xs text-muted-foreground mt-1">Assigned to <span className="font-medium text-foreground">{task.assigned_to_name}</span></p>

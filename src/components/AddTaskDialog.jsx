@@ -24,13 +24,17 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   const [startDate, setStartDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [freqValue, setFreqValue] = useState("");
   const [freqUnit, setFreqUnit] = useState("days");
+  const [approxDays, setApproxDays] = useState("");
 
   function toDays(val, unit) {
     const n = parseInt(val) || 1;
     if (unit === "weeks") return n * 7;
     if (unit === "months") return n * 30;
+    if (unit === "miles") return parseInt(approxDays) || 30;
     return n;
   }
+
+  const isCarMaintenance = (tab === "preset" && selectedPreset?.category === "Car Maintenance") || (tab === "custom" && customCategory === "Car Maintenance");
 
   // Custom form
   const [customName, setCustomName] = useState("");
@@ -65,12 +69,15 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
     const freqDays = freqValue ? toDays(freqValue, freqUnit) : (selectedPreset?.frequency_days || 30);
 
+    const freqMiles = freqUnit === "miles" ? (parseInt(freqValue) || undefined) : undefined;
+
     const taskData = tab === "preset" && selectedPreset
       ? {
-        name: selectedPreset.name,
-        category: selectedPreset.category,
-        difficulty: selectedPreset.difficulty,
+          name: selectedPreset.name,
+          category: selectedPreset.category,
+          difficulty: selectedPreset.difficulty,
           frequency_days: freqDays,
+          frequency_miles: freqMiles,
           description: selectedPreset.description,
         }
       : {
@@ -78,6 +85,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
           category: customCategory,
           difficulty: "Easy",
           frequency_days: freqDays,
+          frequency_miles: freqMiles,
           description: customDescription,
         };
 
@@ -191,10 +199,27 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                 onValueChange={setFreqUnit}
                 title="Frequency Unit"
                 triggerClassName="w-28"
-                options={[{ value: "days", label: "Days" }, { value: "weeks", label: "Weeks" }, { value: "months", label: "Months" }]}
+                options={[
+                  { value: "days", label: "Days" },
+                  { value: "weeks", label: "Weeks" },
+                  { value: "months", label: "Months" },
+                  ...(isCarMaintenance ? [{ value: "miles", label: "Miles" }] : []),
+                ]}
               />
             </div>
-            {freqValue && (
+            {freqUnit === "miles" && (
+              <div className="mt-2">
+                <p className="text-xs text-muted-foreground mb-1">Approximate interval (days)</p>
+                <Input
+                  type="number" min="1"
+                  value={approxDays}
+                  onChange={e => setApproxDays(e.target.value)}
+                  placeholder="e.g., 180"
+                />
+                {approxDays && <p className="text-xs text-muted-foreground mt-1">≈ {formatFrequency(parseInt(approxDays))}</p>}
+              </div>
+            )}
+            {freqValue && freqUnit !== "miles" && (
               <p className="text-xs text-muted-foreground mt-1">{formatFrequency(toDays(freqValue, freqUnit))}</p>
             )}
           </div>
