@@ -112,6 +112,21 @@ export default function Dashboard() {
 
       <LeaderboardSummary />
 
+      <div className="bg-card border border-border rounded-lg p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-heading font-semibold text-foreground">All Tasks</h2>
+          <span className="text-sm text-muted-foreground">{tasks.length} total</span>
+        </div>
+        <div className="space-y-2 max-h-64 overflow-y-auto">
+          {tasks.slice(0, 10).map(task => (
+            <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
+          ))}
+          {tasks.length > 10 && (
+            <p className="text-center text-xs text-muted-foreground py-2">+{tasks.length - 10} more tasks</p>
+          )}
+        </div>
+      </div>
+
       <QuickNav />
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
