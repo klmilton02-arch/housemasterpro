@@ -21,9 +21,9 @@ function PresetCard({ p, onEdit, onDelete, onClick }) {
       <div onClick={() => onClick(p)} className="cursor-pointer">
         <div className="flex items-start justify-between gap-2 mb-1 pr-10">
           <h3 className="font-heading font-semibold text-xs">{p.name}</h3>
-          <Badge variant={p.task_type === "Deep Cleaning" ? "secondary" : "outline"} className="shrink-0 text-xs">
-            {p.task_type}
-          </Badge>
+          {p.difficulty && (
+            <Badge variant="outline" className="shrink-0 text-xs">{p.difficulty}</Badge>
+          )}
         </div>
         <p className="text-xs text-muted-foreground mb-2">{p.description}</p>
         <div className="flex items-center gap-2">
@@ -44,7 +44,7 @@ export default function Presets() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [typeFilter, setTypeFilter] = useState("all");
+  const [difficultyFilter, setDifficultyFilter] = useState("all");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -84,7 +84,7 @@ export default function Presets() {
     if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
     const displayCat = CLEANING_SUBCATEGORIES.includes(p.category) ? "Cleaning" : p.category;
     if (categoryFilter !== "all" && displayCat !== categoryFilter) return false;
-    if (typeFilter !== "all" && p.task_type !== typeFilter) return false;
+    if (difficultyFilter !== "all" && p.difficulty !== difficultyFilter) return false;
     return true;
   });
 
@@ -131,12 +131,15 @@ export default function Presets() {
             {displayCategories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
           </SelectContent>
         </Select>
-        <Select value={typeFilter} onValueChange={setTypeFilter}>
+        <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
           <SelectTrigger className="flex-1 text-xs h-8"><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Types</SelectItem>
-            <SelectItem value="Regular">Regular</SelectItem>
-            <SelectItem value="Deep Cleaning">Deep Cleaning</SelectItem>
+            <SelectItem value="all">All Difficulties</SelectItem>
+            <SelectItem value="Trivial">Trivial</SelectItem>
+            <SelectItem value="Easy">Easy</SelectItem>
+            <SelectItem value="Medium">Medium</SelectItem>
+            <SelectItem value="Hard">Hard</SelectItem>
+            <SelectItem value="Very Hard">Very Hard</SelectItem>
           </SelectContent>
           </Select>
           </div>

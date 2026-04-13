@@ -67,16 +67,16 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
     const taskData = tab === "preset" && selectedPreset
       ? {
-          name: selectedPreset.name,
-          category: selectedPreset.category,
-          task_type: selectedPreset.task_type,
+        name: selectedPreset.name,
+        category: selectedPreset.category,
+        difficulty: selectedPreset.difficulty,
           frequency_days: freqDays,
           description: selectedPreset.description,
         }
       : {
           name: customName,
           category: customCategory,
-          task_type: "Regular",
+          difficulty: "Easy",
           frequency_days: freqDays,
           description: customDescription,
         };

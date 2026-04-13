@@ -10,14 +10,17 @@
       "type": "string",
       "title": "Category"
     },
-    "task_type": {
+    "difficulty": {
       "type": "string",
-      "title": "Task Type",
+      "title": "Difficulty",
       "enum": [
-        "Regular",
-        "Deep Cleaning"
+        "Trivial",
+        "Easy",
+        "Medium",
+        "Hard",
+        "Very Hard"
       ],
-      "default": "Regular"
+      "default": "Easy"
     },
     "assigned_to": {
       "type": "string",

@@ -25,14 +25,17 @@
       "type": "number",
       "title": "Frequency (Days)"
     },
-    "task_type": {
+    "difficulty": {
       "type": "string",
-      "title": "Task Type",
+      "title": "Difficulty",
       "enum": [
-        "Regular",
-        "Deep Cleaning"
+        "Trivial",
+        "Easy",
+        "Medium",
+        "Hard",
+        "Very Hard"
       ],
-      "default": "Regular"
+      "default": "Easy"
     },
     "description": {
       "type": "string",

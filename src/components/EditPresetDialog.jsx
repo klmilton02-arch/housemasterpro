@@ -28,7 +28,7 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
   const isNew = !preset?.id;
   const [name, setName] = useState("");
   const [category, setCategory] = useState("Living Areas");
-  const [taskType, setTaskType] = useState("Regular");
+  const [difficulty, setDifficulty] = useState("Easy");
   const [description, setDescription] = useState("");
   const [freqChoice, setFreqChoice] = useState("30");
   const [customDays, setCustomDays] = useState("");
@@ -38,7 +38,7 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
     if (open) {
       setName(preset?.name || "");
       setCategory(preset?.category || "Living Areas");
-      setTaskType(preset?.task_type || "Regular");
+      setDifficulty(preset?.difficulty || "Easy");
       setDescription(preset?.description || "");
       const days = preset?.frequency_days;
       const match = FREQ_PRESETS.find(f => f.days === days);
@@ -63,7 +63,7 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
     const data = {
       name: name.trim(),
       category,
-      task_type: taskType,
+      difficulty,
       description,
       frequency_days: freqDays,
     };
@@ -98,12 +98,15 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
             </Select>
           </div>
           <div>
-            <Label className="text-xs text-muted-foreground">Type</Label>
-            <Select value={taskType} onValueChange={setTaskType}>
+            <Label className="text-xs text-muted-foreground">Difficulty</Label>
+            <Select value={difficulty} onValueChange={setDifficulty}>
               <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="Regular">Regular</SelectItem>
-                <SelectItem value="Deep Cleaning">Deep Cleaning</SelectItem>
+                <SelectItem value="Trivial">Trivial</SelectItem>
+                <SelectItem value="Easy">Easy</SelectItem>
+                <SelectItem value="Medium">Medium</SelectItem>
+                <SelectItem value="Hard">Hard</SelectItem>
+                <SelectItem value="Very Hard">Very Hard</SelectItem>
               </SelectContent>
             </Select>
           </div>

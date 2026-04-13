@@ -78,8 +78,8 @@ export default function TaskCard({ task, onComplete, onRenamed }) {
               <StatusIcon className="w-3 h-3" />
               {status.label}
             </span>
-            {task.task_type === "Deep Cleaning" && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-medium">Deep</span>
+            {task.difficulty && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-medium">{task.difficulty}</span>
             )}
           </div>
           {editing ? (
