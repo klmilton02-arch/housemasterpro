@@ -4,9 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus } from "lucide-react";
 import CompletedTaskItem from "../components/CompletedTaskItem";
 import QuickNav from "../components/QuickNav";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { awardPoints } from "@/utils/gamification";
 import PointsToast from "../components/PointsToast";
 import { Button } from "@/components/ui/button";
@@ -22,7 +20,6 @@ export default function Dashboard() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [reward, setReward] = useState(null);
   const [taskListModal, setTaskListModal] = useState(null);
-  const isMobile = useIsMobile();
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);
@@ -102,43 +99,23 @@ export default function Dashboard() {
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
 
-      {isMobile ? (
-        <Drawer open={!!taskListModal} onOpenChange={() => setTaskListModal(null)}>
-          <DrawerContent className="max-h-[85vh]">
-            <DrawerHeader>
-              <DrawerTitle className="font-heading">{taskListModal?.title} ({taskListModal?.tasks?.length})</DrawerTitle>
-            </DrawerHeader>
-            <div className="space-y-2 px-4 pb-6 overflow-y-auto">
-              {taskListModal?.tasks?.map(task => (
-                taskListModal.title === 'Completed Tasks'
-                  ? <CompletedTaskItem key={task.id} task={task} />
-                  : <TaskCard key={task.id} task={task} onComplete={handleComplete} />
-              ))}
-              {taskListModal?.tasks?.length === 0 && (
-                <p className="text-center text-muted-foreground py-8 text-sm">No tasks here.</p>
-              )}
-            </div>
-          </DrawerContent>
-        </Drawer>
-      ) : (
-        <Dialog open={!!taskListModal} onOpenChange={() => setTaskListModal(null)}>
-          <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle className="font-heading">{taskListModal?.title} ({taskListModal?.tasks?.length})</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-2 mt-2">
-              {taskListModal?.tasks?.map(task => (
-                taskListModal.title === 'Completed Tasks'
-                  ? <CompletedTaskItem key={task.id} task={task} />
-                  : <TaskCard key={task.id} task={task} onComplete={handleComplete} />
-              ))}
-              {taskListModal?.tasks?.length === 0 && (
-                <p className="text-center text-muted-foreground py-8 text-sm">No tasks here.</p>
-              )}
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
+      <Drawer open={!!taskListModal} onOpenChange={() => setTaskListModal(null)}>
+        <DrawerContent className="max-h-[85vh]">
+          <DrawerHeader>
+            <DrawerTitle className="font-heading">{taskListModal?.title} ({taskListModal?.tasks?.length})</DrawerTitle>
+          </DrawerHeader>
+          <div className="space-y-2 px-4 pb-6 overflow-y-auto">
+            {taskListModal?.tasks?.map(task => (
+              taskListModal.title === 'Completed Tasks'
+                ? <CompletedTaskItem key={task.id} task={task} />
+                : <TaskCard key={task.id} task={task} onComplete={handleComplete} />
+            ))}
+            {taskListModal?.tasks?.length === 0 && (
+              <p className="text-center text-muted-foreground py-8 text-sm">No tasks here.</p>
+            )}
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }
