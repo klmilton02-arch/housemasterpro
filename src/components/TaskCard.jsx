@@ -78,12 +78,14 @@ export default function TaskCard({ task, onComplete, onRenamed }) {
         "Due Soon": "border-yellow-300 bg-yellow-50/60 dark:border-yellow-800 dark:bg-yellow-950/30",
       }[status.label] || "border-border bg-card";
 
+  const showDate = ["Overdue", "Past Due", "Due Soon"].includes(status.label);
+
   return (
     <div className={cn(
-      "border rounded-lg p-2 sm:p-3 hover:shadow-md transition-all group w-full",
+      "border rounded-lg px-2.5 py-1.5 hover:shadow-md transition-all group w-full",
       cardBg
     )}>
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-center justify-between gap-2">
         <div className="flex-1 min-w-0">
           {editing ? (
             <input
@@ -106,30 +108,21 @@ export default function TaskCard({ task, onComplete, onRenamed }) {
               </button>
             </div>
           )}
-          <div className="flex items-center gap-2 mt-1 mb-1.5">
-            <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium", status.color)}>
+          <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+            <span className={cn("inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-medium", status.color)}>
               <StatusIcon className="w-3 h-3" />
               {status.label}
             </span>
-            {task.difficulty && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-medium">{task.difficulty}</span>
+            {showDate && (
+              <span className="text-xs text-muted-foreground">{format(parseISO(task.next_due_date), "MMM d")}</span>
+            )}
+            {task.assigned_to_name && (
+              <span className="text-xs text-muted-foreground">· {task.assigned_to_name}</span>
             )}
           </div>
-          <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <Calendar className="w-3 h-3" />
-              {format(parseISO(task.next_due_date), "MMM d, yyyy")}
-            </span>
-            <span>·</span>
-            <span>{task.frequency_miles ? `Every ${task.frequency_miles.toLocaleString()} mi` : formatFrequency(task.frequency_days)}</span>
-          </div>
-          {task.assigned_to_name && (
-            <p className="text-xs text-muted-foreground mt-1">Assigned to <span className="font-medium text-foreground">{task.assigned_to_name}</span></p>
-          )}
-          <p className="text-xs font-semibold text-primary mt-1">+{getTaskPoints(task)} XP</p>
         </div>
         <button
-          className={`shrink-0 h-9 w-9 flex items-center justify-center rounded-md border-2 transition-all ${
+          className={`shrink-0 h-8 w-8 flex items-center justify-center rounded-md border-2 transition-all ${
             optimisticChecked
               ? "border-green-500 bg-green-500"
               : "border-muted-foreground/40 hover:border-primary bg-transparent"
