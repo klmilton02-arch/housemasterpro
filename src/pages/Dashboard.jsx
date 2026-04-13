@@ -93,7 +93,7 @@ export default function Dashboard() {
       <div className="flex flex-col gap-3">
         <div>
           <h1 className="font-heading text-2xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-sm text-muted-foreground mt-1">Your household at a glance</p>
+          <p className="text-sm text-muted-foreground mt-1">Your home maintenance at a glance</p>
         </div>
         <div className="flex gap-2">
           <Button onClick={() => setDialogOpen(true)} className="gap-2 flex-1">

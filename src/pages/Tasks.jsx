@@ -185,7 +185,7 @@ export default function Tasks() {
     <div className="space-y-3 max-w-xs mx-auto px-1 pt-6">
       <div className="flex flex-col gap-2">
         <div>
-          <h1 className="font-heading text-2xl font-bold">All Tasks</h1>
+          <h1 className="font-heading text-2xl font-bold">Home Tasks</h1>
           <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
         </div>
         <div className="flex gap-2">

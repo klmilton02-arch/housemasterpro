@@ -7,7 +7,7 @@ const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
   { path: "/tasks", label: "Tasks", icon: ListChecks },
   { path: "/presets", label: "Presets", icon: Sparkles },
-  { path: "/family", label: "Family", icon: Users },
+  { path: "/family", label: "People", icon: Users },
   { path: "/leaderboard", label: "Scores", icon: Trophy },
   { path: "/home-setup", label: "Setup", icon: Home },
 ];
@@ -26,7 +26,7 @@ export default function Layout() {
       <aside className="hidden md:flex w-64 flex-col border-r border-border bg-card fixed inset-y-0 left-0 z-30">
         <div className="p-6 border-b border-border" style={{ paddingTop: 'calc(1.5rem + env(safe-area-inset-top))' }}>
           <h1 className="font-heading text-xl font-bold tracking-tight text-foreground">HomeFlow</h1>
-          <p className="text-xs text-muted-foreground mt-1">Family Task Manager</p>
+          <p className="text-xs text-muted-foreground mt-1">Home Task Manager</p>
         </div>
         <nav className="flex-1 p-4 space-y-1">
           {navItems.map(({ path, label, icon: Icon }) => (

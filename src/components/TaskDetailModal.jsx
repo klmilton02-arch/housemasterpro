@@ -60,7 +60,7 @@ export default function TaskDetailModal({ task, open, onOpenChange }) {
           <div className="space-y-2 text-sm">
             {task?.assigned_to_name && (
               <div>
-                <span className="text-muted-foreground">Assigned to:</span> {task.assigned_to_name}
+                <span className="text-muted-foreground">Person:</span> {task.assigned_to_name}
               </div>
             )}
             {task?.next_due_date && (

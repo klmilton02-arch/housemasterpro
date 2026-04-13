@@ -112,7 +112,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="font-heading text-lg">Add New Task</DialogTitle>
+          <DialogTitle className="font-heading text-lg">Add Home Task</DialogTitle>
         </DialogHeader>
 
         <Tabs value={tab} onValueChange={setTab} className="mt-2">
@@ -162,7 +162,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
           <TabsContent value="custom" className="space-y-4 mt-4">
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Task Name</Label>
-              <Input value={customName} onChange={e => setCustomName(e.target.value)} placeholder="e.g., Clean garage" className="mt-1" />
+              <Input value={customName} onChange={e => setCustomName(e.target.value)} placeholder="e.g., Deep clean kitchen" className="mt-1" />
             </div>
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Category</Label>
