@@ -89,11 +89,11 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6 max-w-xs mx-auto px-1 pt-6">
+    <div className="space-y-6 max-w-xs mx-auto px-2 sm:px-1 pt-6">
       <div className="flex flex-col gap-3">
         <div>
-          <h1 className="font-heading text-2xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-sm text-muted-foreground mt-1">Your home maintenance at a glance</p>
+          <h1 className="font-heading text-3xl sm:text-2xl font-bold text-foreground">Dashboard</h1>
+          <p className="text-base sm:text-sm text-muted-foreground mt-1">Your home maintenance at a glance</p>
         </div>
         <div className="flex gap-2">
           <Button onClick={() => setDialogOpen(true)} className="gap-2 flex-1">
@@ -103,7 +103,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5 sm:gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
         <StatCard icon={ListChecks} label="Due" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'Due Tasks', tasks: dueTasks })} />
         <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks })} />
         <StatCard icon={Clock} label="Due Soon" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" onClick={() => setTaskListModal({ title: 'Due Soon', tasks: dueSoonTasks })} />
