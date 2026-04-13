@@ -24,13 +24,12 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   const [startDate, setStartDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [freqValue, setFreqValue] = useState("");
   const [freqUnit, setFreqUnit] = useState("days");
-  const [approxDays, setApproxDays] = useState("");
 
   function toDays(val, unit) {
     const n = parseInt(val) || 1;
     if (unit === "weeks") return n * 7;
     if (unit === "months") return n * 30;
-    if (unit === "miles") return parseInt(approxDays) || 30;
+    if (unit === "miles") return 365;
     return n;
   }
 
@@ -207,18 +206,6 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                 ]}
               />
             </div>
-            {freqUnit === "miles" && (
-              <div className="mt-2">
-                <p className="text-xs text-muted-foreground mb-1">Approximate interval (days)</p>
-                <Input
-                  type="number" min="1"
-                  value={approxDays}
-                  onChange={e => setApproxDays(e.target.value)}
-                  placeholder="e.g., 180"
-                />
-                {approxDays && <p className="text-xs text-muted-foreground mt-1">≈ {formatFrequency(parseInt(approxDays))}</p>}
-              </div>
-            )}
             {freqValue && freqUnit !== "miles" && (
               <p className="text-xs text-muted-foreground mt-1">{formatFrequency(toDays(freqValue, freqUnit))}</p>
             )}

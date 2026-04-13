@@ -33,7 +33,6 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
   const [freqChoice, setFreqChoice] = useState("30");
   const [customDays, setCustomDays] = useState("");
   const [miles, setMiles] = useState("");
-  const [approxDays, setApproxDays] = useState("");
   const [useMiles, setUseMiles] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -45,7 +44,6 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
       setDescription(preset?.description || "");
       setUseMiles(!!preset?.frequency_miles);
       setMiles(preset?.frequency_miles ? String(preset.frequency_miles) : "");
-      setApproxDays(preset?.frequency_miles && preset?.frequency_days ? String(preset.frequency_days) : "");
       const days = preset?.frequency_days;
       const match = FREQ_PRESETS.find(f => f.days === days);
       if (match && match.days !== null) {
@@ -61,7 +59,7 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
     }
   }, [open, preset]);
 
-  const freqDays = useMiles ? (parseInt(approxDays) || 0) : (freqChoice === "custom" ? parseInt(customDays) || 0 : parseInt(freqChoice));
+  const freqDays = useMiles ? 365 : (freqChoice === "custom" ? parseInt(customDays) || 0 : parseInt(freqChoice));
 
   async function handleSave() {
     if (!name.trim() || !freqDays) return;
@@ -127,8 +125,6 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
             <div className="space-y-2">
               <Label className="text-xs text-muted-foreground">Every (miles)</Label>
               <Input type="number" min="1" value={miles} onChange={e => setMiles(e.target.value)} placeholder="e.g., 5000" />
-              <Label className="text-xs text-muted-foreground">Approximate interval (days)</Label>
-              <Input type="number" min="1" value={approxDays} onChange={e => setApproxDays(e.target.value)} placeholder="e.g., 180" />
             </div>
           ) : (
           <div>
