@@ -53,11 +53,15 @@ export default function Layout() {
         style={{ paddingTop: 'env(safe-area-inset-top)', height: 'calc(3.5rem + env(safe-area-inset-top))' }}
       >
         {!isRootPath ? (
-          <button onClick={() => navigate(-1)} className="p-1 -ml-1 text-muted-foreground">
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-        ) : null}
-        <h1 className="font-heading text-lg font-bold">{currentNav.label}</h1>
+          <>
+            <button onClick={() => navigate(-1)} className="p-1 -ml-1 text-muted-foreground">
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            <h1 className="font-heading text-lg font-bold">{currentNav.label}</h1>
+          </>
+        ) : (
+          <h1 className="font-heading text-lg font-bold">HomeFlow</h1>
+        )}
       </div>
 
       {/* Main content */}
