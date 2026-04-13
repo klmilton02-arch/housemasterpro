@@ -117,11 +117,15 @@ export default function TaskCard({ task, onComplete, onRenamed }) {
           <p className="text-xs font-semibold text-primary mt-1">+{getTaskPoints(task)} XP</p>
         </div>
         <button
-          className="shrink-0 h-8 w-8 flex items-center justify-center rounded border-2 border-slate-300 hover:border-slate-400 transition-colors"
+          className={`shrink-0 h-9 w-9 flex items-center justify-center rounded-full border-2 transition-all ${
+            task.status === "Completed"
+              ? "border-green-500 bg-green-500"
+              : "border-muted-foreground/40 hover:border-primary bg-transparent"
+          }`}
           onClick={handleCheckboxClick}
           title={task.status === "Completed" ? "Mark incomplete" : "Mark complete"}
         >
-          {task.status === "Completed" && <Check className="w-4 h-4 text-green-600" />}
+          {task.status === "Completed" && <Check className="w-4 h-4 text-white" />}
         </button>
       </div>
     </div>
