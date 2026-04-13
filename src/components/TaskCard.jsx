@@ -58,6 +58,14 @@ export default function TaskCard({ task, onComplete, onRenamed }) {
     onRenamed?.();
   }
 
+  function handleCheckboxClick() {
+    if (task.status === "Completed") {
+      onComplete({ ...task, status: "Pending" });
+    } else {
+      onComplete(task);
+    }
+  }
+
   return (
     <div className={cn(
       "bg-card border border-border rounded-lg p-2 sm:p-3 hover:shadow-md transition-all group w-full",
@@ -108,16 +116,13 @@ export default function TaskCard({ task, onComplete, onRenamed }) {
           )}
           <p className="text-xs font-semibold text-primary mt-1">+{getTaskPoints(task)} XP</p>
         </div>
-        {status.label !== "Completed" && (
-          <Button
-            size="sm"
-            variant="outline"
-            className="shrink-0 h-8 w-8 p-0 rounded-full border-green-300 text-green-600 hover:bg-green-50 hover:text-green-700 hover:border-green-400"
-            onClick={() => onComplete(task)}
-          >
-            <Check className="w-4 h-4" />
-          </Button>
-        )}
+        <button
+          className="shrink-0 h-8 w-8 flex items-center justify-center rounded border-2 border-slate-300 hover:border-slate-400 transition-colors"
+          onClick={handleCheckboxClick}
+          title={task.status === "Completed" ? "Mark incomplete" : "Mark complete"}
+        >
+          {task.status === "Completed" && <Check className="w-4 h-4 text-green-600" />}
+        </button>
       </div>
     </div>
   );

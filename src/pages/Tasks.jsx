@@ -29,28 +29,33 @@ export default function Tasks() {
   usePullToRefresh(loadTasks);
 
   async function handleComplete(task) {
-    const today = new Date();
-    const nextDue = new Date(today);
-    nextDue.setDate(nextDue.getDate() + task.frequency_days);
-    const updated = {
-      ...task,
-      status: "Completed",
-      last_completed_date: today.toISOString().split("T")[0],
-      next_due_date: nextDue.toISOString().split("T")[0],
-    };
-    setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
-    await base44.entities.Task.update(task.id, {
-      status: "Completed",
-      last_completed_date: updated.last_completed_date,
-      next_due_date: updated.next_due_date,
-    });
-    const result = await awardPoints(task);
-    if (result) setReward(result);
-    loadTasks();
+    if (task.status === "Pending") {
+      const today = new Date();
+      const nextDue = new Date(today);
+      nextDue.setDate(nextDue.getDate() + task.frequency_days);
+      const updated = {
+        ...task,
+        status: "Completed",
+        last_completed_date: today.toISOString().split("T")[0],
+        next_due_date: nextDue.toISOString().split("T")[0],
+      };
+      setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
+      await base44.entities.Task.update(task.id, {
+        status: "Completed",
+        last_completed_date: updated.last_completed_date,
+        next_due_date: updated.next_due_date,
+      });
+      const result = await awardPoints(task);
+      if (result) setReward(result);
+      loadTasks();
+    } else {
+      setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: task.status } : t));
+      await base44.entities.Task.update(task.id, { status: task.status });
+      loadTasks();
+    }
   }
 
   async function handleDelete(task) {
-    // Optimistic update
     setTasks(prev => prev.filter(t => t.id !== task.id));
     await base44.entities.Task.delete(task.id);
   }
@@ -124,7 +129,7 @@ export default function Tasks() {
               <TaskCard task={task} onComplete={handleComplete} className="w-full"/>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <button className="absolute top-1 right-12 p-1 rounded-lg bg-card/80 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500">
+                  <button className="absolute top-10 right-2 p-1 rounded-lg bg-card/80 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500">
                     <Trash2 className="w-3 h-3" />
                   </button>
                 </AlertDialogTrigger>
