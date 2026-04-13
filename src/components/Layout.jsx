@@ -47,25 +47,10 @@ export default function Layout() {
         </nav>
       </aside>
 
-      {/* Mobile Header */}
-      <div
-        className="md:hidden fixed top-0 left-0 right-0 bg-card border-b border-border flex items-center px-2 z-40 gap-2"
-        style={{ paddingTop: 'env(safe-area-inset-top)', height: 'calc(3.5rem + env(safe-area-inset-top))' }}
-      >
-        {!isRootPath ? (
-          <>
-            <button onClick={() => navigate(-1)} className="p-1 -ml-1 text-muted-foreground">
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            <h1 className="font-heading text-lg font-bold">{currentNav.label}</h1>
-          </>
-        ) : (
-          <h1 className="font-heading text-lg font-bold">HomeFlow</h1>
-        )}
-      </div>
+
 
       {/* Main content */}
-      <main className="flex-1 md:ml-64 md:pt-0" style={{ paddingTop: 'calc(3.5rem + env(safe-area-inset-top))', paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
+      <main className="flex-1 md:ml-64 md:pt-0" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
         <div className="w-full max-w-3xl mx-auto md:pb-8">
           <Outlet />
         </div>
