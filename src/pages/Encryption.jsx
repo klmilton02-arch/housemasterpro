@@ -62,6 +62,96 @@ export default function Encryption() {
             If you discover a security vulnerability, please report it responsibly. Contact us at support@homeflow.app with details of the issue.
           </p>
         </section>
+
+        <section className="space-y-3">
+          <h2 className="font-heading text-xl font-semibold">App Store Encryption Declaration</h2>
+          <div className="space-y-3 text-sm text-muted-foreground">
+            <p>
+              HomeFlow complies with Apple's encryption requirements for app distribution on the App Store. Our app uses HTTPS with TLS 1.2+ for all data transmission, which is considered standard encryption exempt from disclosure requirements.
+            </p>
+            <div className="bg-muted/50 border border-border rounded-lg p-3 space-y-2">
+              <h3 className="font-semibold text-foreground text-xs">Info.plist Declaration:</h3>
+              <code className="text-xs bg-card p-2 rounded block overflow-x-auto">
+                &lt;key&gt;ITSAppUsesNonExemptEncryption&lt;/key&gt;{'\n'}
+                &lt;false/&gt;
+              </code>
+            </div>
+            <p>
+              This key is set to <code className="bg-muted px-1.5 py-0.5 rounded text-xs">false</code> because HomeFlow only uses standard, exempt encryption methods provided by the operating system (TLS/SSL for HTTPS connections).
+            </p>
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="font-heading text-xl font-semibold">Encryption Standards Used</h2>
+          <ul className="text-sm text-muted-foreground space-y-2">
+            <li className="flex gap-2">
+              <span className="text-primary">✓</span>
+              <span><strong>TLS 1.2/1.3:</strong> Industry-standard protocol for secure data transmission</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-primary">✓</span>
+              <span><strong>HTTPS:</strong> Standard encryption for web communications</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-primary">✓</span>
+              <span><strong>At-Rest Encryption:</strong> Server-side encryption using standard algorithms</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-primary">✓</span>
+              <span><strong>No Proprietary Encryption:</strong> We do not use custom or non-standard encryption algorithms</span>
+            </li>
+          </ul>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="font-heading text-xl font-semibold">Encryption Documentation Requirements</h2>
+          <p className="text-sm text-muted-foreground">
+            Documentation is required if your app contains:
+          </p>
+          <ul className="text-sm text-muted-foreground space-y-2">
+            <li className="flex gap-2">
+              <span>•</span>
+              <span>Proprietary or non-standard encryption algorithms</span>
+            </li>
+            <li className="flex gap-2">
+              <span>•</span>
+              <span>Standard encryption in addition to OS-provided encryption</span>
+            </li>
+            <li className="flex gap-2">
+              <span>•</span>
+              <span>Custom key management outside system frameworks</span>
+            </li>
+          </ul>
+          <p className="text-sm text-muted-foreground mt-3">
+            HomeFlow does not fall into any of these categories, as we rely exclusively on standard, Apple-approved encryption methods.
+          </p>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="font-heading text-xl font-semibold">App Store Compliance</h2>
+          <p className="text-sm text-muted-foreground">
+            All encryption used in HomeFlow is compliant with:
+          </p>
+          <ul className="text-sm text-muted-foreground space-y-2">
+            <li className="flex gap-2">
+              <span>✓</span>
+              <span>U.S. Export Control Regulations</span>
+            </li>
+            <li className="flex gap-2">
+              <span>✓</span>
+              <span>Apple App Store Review Guidelines</span>
+            </li>
+            <li className="flex gap-2">
+              <span>✓</span>
+              <span>International standards (IEEE, IETF, ITU)</span>
+            </li>
+            <li className="flex gap-2">
+              <span>✓</span>
+              <span>GDPR and privacy regulations</span>
+            </li>
+          </ul>
+        </section>
       </div>
     </div>
   );
