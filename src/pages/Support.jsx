@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Support() {
   return (
-    <div className="space-y-6 max-w-xs mx-auto px-1 pt-6 pb-10">
+    <div className="space-y-6 max-w-xs mx-auto px-1 pt-2 pb-10 md:pt-6 md:pb-8">
       <div>
         <h1 className="text-4xl font-heading font-bold mb-4">Support Center</h1>
         <p className="text-lg text-muted-foreground mb-12">We're here to help. Get in touch with us.</p>

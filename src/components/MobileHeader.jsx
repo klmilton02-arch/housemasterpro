@@ -22,8 +22,8 @@ export default function MobileHeader() {
     >
       {isRoot ? (
         <div>
-          <h1 className="font-heading text-lg font-bold leading-tight text-foreground">HouseMasterPro</h1>
-          <p className="text-[10px] text-muted-foreground leading-tight">Family Task Manager</p>
+          <h1 className="font-heading text-lg font-bold leading-tight text-foreground">HomeFlow</h1>
+          <p className="text-[10px] text-muted-foreground leading-tight">Home Task Manager</p>
         </div>
       ) : (
         <div className="flex items-center gap-2">
