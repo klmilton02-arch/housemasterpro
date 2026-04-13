@@ -66,22 +66,19 @@ export default function TaskCard({ task, onComplete, onRenamed }) {
     }
   }
 
+  const cardBg = {
+    "Overdue": "border-red-300 bg-red-50/60 dark:border-red-800 dark:bg-red-950/30",
+    "Past Due": "border-orange-300 bg-orange-50/60 dark:border-orange-800 dark:bg-orange-950/30",
+    "Due Soon": "border-yellow-300 bg-yellow-50/60 dark:border-yellow-800 dark:bg-yellow-950/30",
+  }[status.label] || "border-border bg-card";
+
   return (
     <div className={cn(
-      "bg-card border border-border rounded-lg p-2 sm:p-3 hover:shadow-md transition-all group w-full",
-      status.priority === 0 && "border-red-200 bg-red-50/30"
+      "border rounded-lg p-2 sm:p-3 hover:shadow-md transition-all group w-full",
+      cardBg
     )}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium", status.color)}>
-              <StatusIcon className="w-3 h-3" />
-              {status.label}
-            </span>
-            {task.difficulty && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-medium">{task.difficulty}</span>
-            )}
-          </div>
           {editing ? (
             <input
               ref={inputRef}
@@ -103,7 +100,16 @@ export default function TaskCard({ task, onComplete, onRenamed }) {
               </button>
             </div>
           )}
-          <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
+          <div className="flex items-center gap-2 mt-1 mb-1.5">
+            <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium", status.color)}>
+              <StatusIcon className="w-3 h-3" />
+              {status.label}
+            </span>
+            {task.difficulty && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-medium">{task.difficulty}</span>
+            )}
+          </div>
+          <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
               <Calendar className="w-3 h-3" />
               {format(parseISO(task.next_due_date), "MMM d, yyyy")}
