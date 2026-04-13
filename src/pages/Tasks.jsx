@@ -182,28 +182,27 @@ export default function Tasks() {
   }
 
   return (
-    <div className="space-y-3 max-w-xs mx-auto px-1 pt-6">
-      <div className="flex flex-col gap-2">
+    <div className="space-y-3 max-w-xs md:max-w-2xl mx-auto px-2 sm:px-1 pt-6">
+      <div className="flex flex-col gap-3">
         <div>
-          <h1 className="font-heading text-2xl font-bold">Home Tasks</h1>
-          <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
+          <h1 className="font-heading text-3xl sm:text-2xl font-bold">Home Tasks</h1>
+          <p className="text-base sm:text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={() => setDialogOpen(true)} size="sm" className="gap-1 flex-1 text-xs">
-            <Plus className="w-3 h-3" /> Add Task
+          <Button onClick={() => setDialogOpen(true)} className="gap-2 flex-1">
+            <Plus className="w-4 h-4" /> Add Task
           </Button>
           <Button
-            size="sm"
             variant={batchMode ? "default" : "outline"}
-            className="gap-1 text-xs"
+            className="gap-2"
             onClick={() => { setBatchMode(b => !b); setSelectedIds(new Set()); }}
           >
-            <CheckSquare className="w-3 h-3" /> Select
+            <CheckSquare className="w-4 h-4" /> Select
           </Button>
         </div>
       </div>
 
-      <div className="flex gap-1 w-full flex-col">
+      <div className="flex gap-2 w-full flex-col md:flex-row md:max-w-xs mx-auto md:mx-0">
         <MobileSelect
           value={statusFilter}
           onValueChange={setStatusFilter}
