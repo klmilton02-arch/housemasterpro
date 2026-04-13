@@ -1,6 +1,7 @@
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { LayoutDashboard, ListChecks, Sparkles, Users, Trophy, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
+import MobileHeader from "./MobileHeader";
 
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -48,8 +49,10 @@ export default function Layout() {
 
 
 
+      <MobileHeader />
+
       {/* Main content */}
-      <main className="flex-1 md:ml-64 md:pt-0 md:pb-8" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
+      <main className="flex-1 md:ml-64 md:pt-0 md:pb-8" style={{ paddingTop: 'calc(3.5rem + env(safe-area-inset-top))', paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
         <div className="w-full max-w-3xl mx-auto md:pb-8">
           <Outlet />
         </div>
@@ -67,8 +70,14 @@ export default function Layout() {
               key={path}
               to={path}
               onClick={e => {
-                if (isActive && location.pathname === path) return; // already at root, do nothing
-                if (isActive) { e.preventDefault(); navigate(path, { replace: true }); }
+                if (isActive) {
+                  e.preventDefault();
+                  if (location.pathname !== path) {
+                    navigate(path, { replace: true });
+                  } else {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }
+                }
               }}
               className={cn(
                 "flex-1 flex flex-col items-center justify-center py-2 gap-0.5 select-none transition-colors",

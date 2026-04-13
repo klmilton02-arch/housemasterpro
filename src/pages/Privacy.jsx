@@ -1,7 +1,7 @@
 export default function Privacy() {
   return (
-    <div className="min-h-screen bg-background py-12 px-4">
-      <div className="max-w-3xl mx-auto">
+    <div className="space-y-6 max-w-xs mx-auto px-1 pt-6 pb-10">
+      <div>
         <h1 className="text-4xl font-heading font-bold mb-8">Privacy Policy</h1>
         <p className="text-muted-foreground mb-6"><strong>Effective Date:</strong> April 12, 2026</p>
 
