@@ -81,6 +81,7 @@ export default function Presets() {
   ))];
 
   const filtered = presets.filter(p => {
+    if (p.category === "Car Maintenance") return false;
     if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
     const displayCat = CLEANING_SUBCATEGORIES.includes(p.category) ? "Cleaning" : p.category;
     if (categoryFilter !== "all" && displayCat !== categoryFilter) return false;
