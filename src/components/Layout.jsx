@@ -57,7 +57,7 @@ export default function Layout() {
             <ChevronLeft className="w-6 h-6" />
           </button>
         ) : null}
-        <h1 className="font-heading text-lg font-bold">{isRootPath ? "HomeFlow" : currentNav.label}</h1>
+        <h1 className="font-heading text-lg font-bold">{currentNav.label}</h1>
       </div>
 
       {/* Main content */}
