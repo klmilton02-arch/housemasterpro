@@ -106,35 +106,35 @@ export default function Presets() {
   }
 
   return (
-    <div className="space-y-3 max-w-xs mx-auto px-1 pt-6">
-      <div className="flex flex-col gap-2">
+    <div className="space-y-3 max-w-xs md:max-w-2xl mx-auto px-2 sm:px-1 pt-6">
+      <div className="flex flex-col gap-3">
         <div>
-          <h1 className="font-heading text-2xl font-bold">Preset Library</h1>
-          <p className="text-sm text-muted-foreground mt-1">{presets.length} presets</p>
+          <h1 className="font-heading text-3xl sm:text-2xl font-bold">Preset Library</h1>
+          <p className="text-base sm:text-sm text-muted-foreground mt-1">{presets.length} presets</p>
         </div>
-        <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} size="sm" className="gap-1 w-full text-xs">
-          <Plus className="w-3 h-3" /> New Preset
+        <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} className="gap-2">
+          <Plus className="w-4 h-4" /> New Preset
         </Button>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="relative">
+      <div className="flex flex-col gap-2 md:flex-row md:max-w-xs mx-auto md:mx-0">
+        <div className="relative flex-1">
           <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground" />
-          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." className="pl-7 text-xs h-8" />
+          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." className="pl-7" />
         </div>
         <div className="flex gap-2">
           <MobileSelect
             value={categoryFilter}
             onValueChange={setCategoryFilter}
             title="Filter by Category"
-            triggerClassName="flex-1 text-xs h-8"
+            triggerClassName="flex-1"
             options={[{ value: "all", label: "All Categories" }, ...displayCategories.map(c => ({ value: c, label: c }))]}
           />
           <MobileSelect
             value={difficultyFilter}
             onValueChange={setDifficultyFilter}
             title="Filter by Difficulty"
-            triggerClassName="flex-1 text-xs h-8"
+            triggerClassName="flex-1"
             options={[
               { value: "all", label: "All Difficulties" },
               { value: "Trivial", label: "Trivial" },
@@ -145,7 +145,7 @@ export default function Presets() {
             ]}
           />
         </div>
-          </div>
+        </div>
 
       {Object.keys(grouped).length === 0 ? (
         <div className="bg-card border border-border rounded-lg p-4 text-center">
