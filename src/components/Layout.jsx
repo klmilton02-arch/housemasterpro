@@ -23,7 +23,7 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex w-56 flex-col border-r border-border bg-card fixed inset-y-0 left-0 z-30">
+      <aside className="hidden md:flex w-64 flex-col border-r border-border bg-card fixed inset-y-0 left-0 z-30">
         <div className="p-6 border-b border-border" style={{ paddingTop: 'calc(1.5rem + env(safe-area-inset-top))' }}>
           <h1 className="font-heading text-xl font-bold tracking-tight text-foreground">HomeFlow</h1>
           <p className="text-xs text-muted-foreground mt-1">Home Task Manager</p>
@@ -52,8 +52,8 @@ export default function Layout() {
       <MobileHeader />
 
       {/* Main content */}
-      <main className="flex-1 md:ml-56 md:pt-0 md:pb-8" style={{ paddingTop: 'calc(3.5rem + env(safe-area-inset-top))', paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
-        <div className="w-full max-w-sm mx-auto md:pb-8">
+      <main className="flex-1 md:ml-64 md:pt-0 md:pb-8" style={{ paddingTop: 'calc(3.5rem + env(safe-area-inset-top))', paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
+        <div className="w-full max-w-sm md:max-w-4xl mx-auto md:pb-8">
           <Outlet />
         </div>
       </main>
