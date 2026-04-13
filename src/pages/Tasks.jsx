@@ -81,7 +81,7 @@ export default function Tasks() {
   }
 
   return (
-    <div className="space-y-3 max-w-xs mx-auto px-1">
+    <div className="space-y-3 max-w-xs mx-auto px-1 pt-6">
       <div className="flex flex-col gap-2">
         <div>
           <h1 className="font-heading text-2xl font-bold">All Tasks</h1>
