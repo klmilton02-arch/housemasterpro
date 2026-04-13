@@ -58,8 +58,9 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     }
   }, [open, initialPreset]);
 
-  const categories = [...new Set(presets.map(p => p.category))];
-  const filteredPresets = categoryFilter === "all" ? presets : presets.filter(p => p.category === categoryFilter);
+  const allPresets = presets.filter(p => p.category !== "Car Maintenance");
+  const categories = [...new Set(allPresets.map(p => p.category))];
+  const filteredPresets = categoryFilter === "all" ? allPresets : allPresets.filter(p => p.category === categoryFilter);
 
   async function handleSubmit() {
     setLoading(true);
