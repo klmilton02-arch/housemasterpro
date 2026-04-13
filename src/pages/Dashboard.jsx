@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import StatCard from "../components/StatCard";
 import TaskCard, { getStatusInfo } from "../components/TaskCard";
 import AddTaskDialog from "../components/AddTaskDialog";
+import LeaderboardSummary from "../components/LeaderboardSummary";
 import SyncCalendarButton from "../components/SyncCalendarButton";
 
 export default function Dashboard() {
@@ -90,6 +91,8 @@ export default function Dashboard() {
         <StatCard icon={Clock} label="Due Soon" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" />
         <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks })} />
       </div>
+
+      <LeaderboardSummary />
 
       <QuickNav />
 
