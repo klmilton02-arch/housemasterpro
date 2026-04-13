@@ -50,8 +50,8 @@ const AuthenticatedApp = () => {
     );
   }
 
-  // Handle authentication errors
-  if (authError) {
+  // Handle authentication errors (but allow public pages)
+  if (authError && !window.location.pathname.startsWith('/encryption')) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
@@ -65,8 +65,16 @@ const AuthenticatedApp = () => {
   return (
     <AnimatePresence mode="wait">
       <Routes>
+        {/* Public routes - no auth required */}
+        <Route path="/encryption" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+            <Encryption />
+          </motion.div>
+        } />
+        
+        {/* Protected routes */}
         <Route element={<Layout />}>
-          {[{ path: "/", el: <Dashboard /> }, { path: "/tasks", el: <Tasks /> }, { path: "/needs-attention", el: <NeedsAttention /> }, { path: "/presets", el: <Presets /> }, { path: "/family", el: <Family /> }, { path: "/leaderboard", el: <Leaderboard /> }, { path: "/home-setup", el: <HomeSetup /> }, { path: "/profile", el: <Profile /> }, { path: "/privacy", el: <Privacy /> }, { path: "/support", el: <Support /> }, { path: "/encryption", el: <Encryption /> }, { path: "*", el: <PageNotFound /> }].map(({ path, el }) => (
+          {[{ path: "/", el: <Dashboard /> }, { path: "/tasks", el: <Tasks /> }, { path: "/needs-attention", el: <NeedsAttention /> }, { path: "/presets", el: <Presets /> }, { path: "/family", el: <Family /> }, { path: "/leaderboard", el: <Leaderboard /> }, { path: "/home-setup", el: <HomeSetup /> }, { path: "/profile", el: <Profile /> }, { path: "/privacy", el: <Privacy /> }, { path: "/support", el: <Support /> }, { path: "*", el: <PageNotFound /> }].map(({ path, el }) => (
             <Route key={path} path={path} element={
               <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
                 {el}
