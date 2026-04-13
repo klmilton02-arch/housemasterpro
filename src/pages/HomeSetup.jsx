@@ -184,20 +184,20 @@ export default function HomeSetup() {
     const active = config[field];
     return (
       <button
-        className={`flex items-center gap-3 p-4 rounded-xl border transition-all text-left ${
+        className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all text-center ${
           active ? "bg-primary/10 border-primary/30 text-primary" : "bg-card border-border text-muted-foreground"
         }`}
         onClick={() => setConfig(c => ({ ...c, [field]: !c[field] }))}
       >
-        <Icon className="w-5 h-5 shrink-0" />
-        <span className="text-sm font-medium">{label}</span>
-        {active && <CheckCircle className="w-4 h-4 ml-auto shrink-0" />}
+        <Icon className="w-5 h-5" />
+        <span className="text-xs font-medium">{label}</span>
+        {active && <CheckCircle className="w-3 h-3" />}
       </button>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-sm mx-auto px-2">
       <div>
         <h1 className="font-heading text-2xl font-bold">Home Setup</h1>
         <p className="text-sm text-muted-foreground mt-1">Configure your rooms to auto-generate cleaning tasks</p>
