@@ -1,18 +1,19 @@
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
-import { LayoutDashboard, ListChecks, Sparkles, Users, Trophy, Home } from "lucide-react";
+import { LayoutDashboard, ListChecks, Sparkles, Users, Trophy, Home, Car } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
   { path: "/tasks", label: "Tasks", icon: ListChecks },
+  { path: "/car", label: "Car", icon: Car },
   { path: "/presets", label: "Presets", icon: Sparkles },
   { path: "/family", label: "Family", icon: Users },
   { path: "/leaderboard", label: "Scores", icon: Trophy },
   { path: "/home-setup", label: "Setup", icon: Home },
 ];
 
-const rootPaths = ["/", "/tasks", "/presets", "/family", "/leaderboard", "/home-setup"];
+const rootPaths = ["/", "/tasks", "/car", "/presets", "/family", "/leaderboard", "/home-setup"];
 
 export default function Layout() {
   const location = useLocation();
