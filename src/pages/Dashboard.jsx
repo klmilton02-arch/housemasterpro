@@ -14,6 +14,8 @@ import AddTaskDialog from "../components/AddTaskDialog";
 import LeaderboardSummary from "../components/LeaderboardSummary";
 import SyncCalendarButton from "../components/SyncCalendarButton";
 import TaskDetailModal from "../components/TaskDetailModal";
+import BadgeDisplay from "../components/BadgeDisplay";
+import { getEarnedBadges } from "@/utils/badges";
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState([]);
@@ -22,6 +24,7 @@ export default function Dashboard() {
   const [reward, setReward] = useState(null);
   const [taskListModal, setTaskListModal] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [profile, setProfile] = useState(null);
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);
@@ -29,7 +32,23 @@ export default function Dashboard() {
     setLoading(false);
   }, []);
 
-  useEffect(() => { loadTasks(); }, [loadTasks]);
+  const loadProfile = useCallback(async () => {
+    try {
+      const me = await base44.auth.me();
+      if (me) {
+        const profiles = await base44.entities.GamificationProfile.filter({
+          family_member_name: me.full_name
+        });
+        if (profiles.length > 0) {
+          setProfile(profiles[0]);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load profile:", err);
+    }
+  }, []);
+
+  useEffect(() => { loadTasks(); loadProfile(); }, [loadTasks, loadProfile]);
 
   usePullToRefresh(loadTasks);
 
@@ -111,6 +130,13 @@ export default function Dashboard() {
       </div>
 
       <LeaderboardSummary />
+
+      {profile && getEarnedBadges(profile).length > 0 && (
+        <div className="bg-card border border-border rounded-lg p-4">
+          <h2 className="font-heading font-semibold text-foreground mb-3">Your Badges</h2>
+          <BadgeDisplay badges={getEarnedBadges(profile)} size="sm" />
+        </div>
+      )}
 
       <div className="bg-card border border-border rounded-lg p-4">
         <div className="flex items-center justify-between mb-3">

@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, ListChecks, Sparkles, Users, Trophy, Home } from "lucide-react";
+import { LayoutDashboard, ListChecks, Sparkles, Users, Trophy, Home, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import MobileHeader from "./MobileHeader";
 
@@ -45,6 +45,20 @@ export default function Layout() {
             </Link>
           ))}
         </nav>
+        <div className="border-t border-border p-4">
+          <Link
+            to="/profile"
+            className={cn(
+              "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all select-none",
+              location.pathname === "/profile"
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            )}
+          >
+            <User className="w-4 h-4" />
+            Profile
+          </Link>
+        </div>
       </aside>
 
 
