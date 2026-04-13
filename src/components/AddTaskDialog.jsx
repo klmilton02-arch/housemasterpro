@@ -217,7 +217,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                 />
               </div>
             )}
-            {freqValue && freqUnit !== "miles" && (
+            {freqValue && !isCarMaintenance && freqUnit !== "miles" && (
               <p className="text-xs text-muted-foreground mt-1">{formatFrequency(toDays(freqValue, freqUnit))}</p>
             )}
           </div>
