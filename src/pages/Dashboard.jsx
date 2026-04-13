@@ -58,6 +58,10 @@ export default function Dashboard() {
   });
   const dueSoonTasks = tasks.filter(t => getStatusInfo(t).label === "Due Soon");
   const completedTasks = tasks.filter(t => getStatusInfo(t).label === "Completed");
+  const dueTasks = tasks.filter(t => {
+    const s = getStatusInfo(t);
+    return s.label === "Overdue" || s.label === "Past Due" || s.label === "Due Soon" || s.label === "Upcoming";
+  });
   const urgentTasks = [...overdueTasks, ...dueSoonTasks].sort((a, b) =>
     new Date(a.next_due_date) - new Date(b.next_due_date)
   ).slice(0, 8);
@@ -86,7 +90,7 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5 sm:gap-3">
-        <StatCard icon={ListChecks} label="Total Tasks" value={tasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'All Tasks', tasks })} />
+        <StatCard icon={ListChecks} label="Due" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'Due Tasks', tasks: dueTasks })} />
         <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks })} />
         <StatCard icon={Clock} label="Due Soon" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" onClick={() => setTaskListModal({ title: 'Due Soon', tasks: dueSoonTasks })} />
         <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks })} />
