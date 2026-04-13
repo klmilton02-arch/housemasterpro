@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { User, LogOut } from "lucide-react";
+import { User, LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BadgeDisplay from "../components/BadgeDisplay";
 import { getEarnedBadges } from "@/utils/badges";
@@ -108,6 +109,15 @@ export default function Profile() {
         <div className="bg-card border border-border rounded-lg p-6">
           <BadgeDisplay badges={earnedBadges} size="md" />
         </div>
+      </div>
+
+      {/* Info Links */}
+      <div className="space-y-2">
+        <Link to="/encryption">
+          <Button variant="outline" className="w-full gap-2 justify-start">
+            <Shield className="w-4 h-4" /> Encryption & Security
+          </Button>
+        </Link>
       </div>
 
       {/* Logout */}
