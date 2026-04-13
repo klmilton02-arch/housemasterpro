@@ -104,7 +104,7 @@ export default function Dashboard() {
           <DrawerHeader>
             <DrawerTitle className="font-heading">{taskListModal?.title} ({taskListModal?.tasks?.length})</DrawerTitle>
           </DrawerHeader>
-          <div className="space-y-2 px-4 pb-6 overflow-y-auto">
+          <div className="space-y-2 px-4 pb-6 overflow-y-auto max-w-xs mx-auto w-full">
             {taskListModal?.tasks?.map(task => (
               taskListModal.title === 'Completed Tasks'
                 ? <CompletedTaskItem key={task.id} task={task} />
