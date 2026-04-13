@@ -71,7 +71,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6 px-2 sm:px-0">
+    <div className="space-y-6 max-w-xs mx-auto px-1 pt-6">
       <div className="flex flex-col gap-3">
         <div>
           <h1 className="font-heading text-2xl font-bold text-foreground">Dashboard</h1>
