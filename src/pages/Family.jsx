@@ -109,7 +109,7 @@ export default function Family() {
   }
 
   return (
-    <div className="space-y-3 max-w-xs mx-auto px-1">
+    <div className="space-y-3 max-w-xs mx-auto px-1 pt-6">
       {/* Avatars row */}
       {members.length > 0 && (
        <div className="flex gap-2 overflow-x-auto pb-1">
