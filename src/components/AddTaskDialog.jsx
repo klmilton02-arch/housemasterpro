@@ -33,11 +33,11 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     return n;
   }
 
-  const isCarMaintenance = (tab === "preset" && selectedPreset?.category === "Car Maintenance") || (tab === "custom" && customCategory === "Car Maintenance");
-
   // Custom form
   const [customName, setCustomName] = useState("");
   const [customCategory, setCustomCategory] = useState("Living Areas");
+
+  const isCarMaintenance = (tab === "preset" && selectedPreset?.category === "Car Maintenance") || (tab === "custom" && customCategory === "Car Maintenance");
   const [customDescription, setCustomDescription] = useState("");
 
   useEffect(() => {
@@ -144,8 +144,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                   }`}
                   onClick={() => {
                     setSelectedPreset(p);
-    // Set frequency display from preset
-    if (p.frequency_days % 30 === 0) { setFreqValue(String(p.frequency_days / 30)); setFreqUnit("months"); }
+    if (p.category === "Car Maintenance") { setFreqValue(p.frequency_miles ? String(p.frequency_miles) : ""); setFreqUnit("miles"); }
+    else if (p.frequency_days % 30 === 0) { setFreqValue(String(p.frequency_days / 30)); setFreqUnit("months"); }
     else if (p.frequency_days % 7 === 0) { setFreqValue(String(p.frequency_days / 7)); setFreqUnit("weeks"); }
     else { setFreqValue(String(p.frequency_days)); setFreqUnit("days"); }
                   }}
@@ -183,29 +183,40 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
         <div className="space-y-4 mt-4 pt-4 border-t border-border">
           <div>
-            <Label className="text-xs font-medium text-muted-foreground">Frequency</Label>
-            <div className="flex gap-2 mt-1">
+            <Label className="text-xs font-medium text-muted-foreground">
+              {isCarMaintenance ? "Every (miles)" : "Frequency"}
+            </Label>
+            {isCarMaintenance ? (
               <Input
-                type="number"
-                min="1"
+                type="number" min="1"
                 value={freqValue}
                 onChange={e => setFreqValue(e.target.value)}
-                placeholder={selectedPreset ? String(tab === 'preset' ? (freqValue || '—') : '') : 'e.g., 2'}
-                className="flex-1"
+                placeholder="e.g., 5000"
+                className="mt-1"
               />
-              <MobileSelect
-                value={freqUnit}
-                onValueChange={setFreqUnit}
-                title="Frequency Unit"
-                triggerClassName="w-28"
-                options={[
-                  { value: "days", label: "Days" },
-                  { value: "weeks", label: "Weeks" },
-                  { value: "months", label: "Months" },
-                  ...(isCarMaintenance ? [{ value: "miles", label: "Miles" }] : []),
-                ]}
-              />
-            </div>
+            ) : (
+              <div className="flex gap-2 mt-1">
+                <Input
+                  type="number"
+                  min="1"
+                  value={freqValue}
+                  onChange={e => setFreqValue(e.target.value)}
+                  placeholder="e.g., 2"
+                  className="flex-1"
+                />
+                <MobileSelect
+                  value={freqUnit}
+                  onValueChange={setFreqUnit}
+                  title="Frequency Unit"
+                  triggerClassName="w-28"
+                  options={[
+                    { value: "days", label: "Days" },
+                    { value: "weeks", label: "Weeks" },
+                    { value: "months", label: "Months" },
+                  ]}
+                />
+              </div>
+            )}
             {freqValue && freqUnit !== "miles" && (
               <p className="text-xs text-muted-foreground mt-1">{formatFrequency(toDays(freqValue, freqUnit))}</p>
             )}

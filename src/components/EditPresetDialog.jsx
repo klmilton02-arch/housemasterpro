@@ -33,7 +33,6 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
   const [freqChoice, setFreqChoice] = useState("30");
   const [customDays, setCustomDays] = useState("");
   const [miles, setMiles] = useState("");
-  const [useMiles, setUseMiles] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -42,7 +41,6 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
       setCategory(preset?.category || "Living Areas");
       setDifficulty(preset?.difficulty || "Easy");
       setDescription(preset?.description || "");
-      setUseMiles(!!preset?.frequency_miles);
       setMiles(preset?.frequency_miles ? String(preset.frequency_miles) : "");
       const days = preset?.frequency_days;
       const match = FREQ_PRESETS.find(f => f.days === days);
@@ -59,10 +57,12 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
     }
   }, [open, preset]);
 
-  const freqDays = useMiles ? 365 : (freqChoice === "custom" ? parseInt(customDays) || 0 : parseInt(freqChoice));
+  const isCarMaintenance = category === "Car Maintenance";
+  const freqDays = isCarMaintenance ? 365 : (freqChoice === "custom" ? parseInt(customDays) || 0 : parseInt(freqChoice));
 
   async function handleSave() {
-    if (!name.trim() || !freqDays) return;
+    if (!name.trim()) return;
+    if (!isCarMaintenance && !freqDays) return;
     setLoading(true);
     const data = {
       name: name.trim(),
@@ -70,7 +70,7 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
       difficulty,
       description,
       frequency_days: freqDays,
-      frequency_miles: useMiles ? (parseInt(miles) || undefined) : undefined,
+      frequency_miles: isCarMaintenance ? (parseInt(miles) || undefined) : undefined,
     };
     if (isNew) {
       await base44.entities.PresetTask.create(data);
@@ -115,16 +115,10 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
               </SelectContent>
             </Select>
           </div>
-          {category === "Car Maintenance" && (
-            <div className="flex items-center gap-2">
-              <input type="checkbox" id="useMiles" checked={useMiles} onChange={e => setUseMiles(e.target.checked)} className="rounded" />
-              <Label htmlFor="useMiles" className="text-xs text-muted-foreground cursor-pointer">Set frequency by miles</Label>
-            </div>
-          )}
-          {useMiles && category === "Car Maintenance" ? (
-            <div className="space-y-2">
+          {isCarMaintenance ? (
+            <div>
               <Label className="text-xs text-muted-foreground">Every (miles)</Label>
-              <Input type="number" min="1" value={miles} onChange={e => setMiles(e.target.value)} placeholder="e.g., 5000" />
+              <Input type="number" min="1" value={miles} onChange={e => setMiles(e.target.value)} placeholder="e.g., 5000" className="mt-1" />
             </div>
           ) : (
           <div>
