@@ -100,7 +100,7 @@ export default function Dashboard() {
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
 
       <Dialog open={!!taskListModal} onOpenChange={() => setTaskListModal(null)}>
-        <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto !top-8 !translate-y-0">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-lg max-h-[80vh] overflow-y-auto !top-8 !translate-y-0">
           <DialogHeader>
             <DialogTitle className="font-heading">{taskListModal?.title} ({taskListModal?.tasks?.length})</DialogTitle>
           </DialogHeader>
