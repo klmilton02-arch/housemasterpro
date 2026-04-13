@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import MobileSelect from "./MobileSelect";
 
 const CATEGORIES = [
   "Kitchen Cleaning", "Bathroom Cleaning", "Bedroom Cleaning",
@@ -92,36 +92,39 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
           </div>
           <div>
             <Label className="text-xs text-muted-foreground">Category</Label>
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-              </SelectContent>
-            </Select>
+            <MobileSelect
+              value={category}
+              onValueChange={setCategory}
+              title="Select Category"
+              triggerClassName="mt-1 w-full"
+              options={CATEGORIES.map(c => ({ value: c, label: c }))}
+            />
           </div>
           <div>
             <Label className="text-xs text-muted-foreground">Difficulty</Label>
-            <Select value={difficulty} onValueChange={setDifficulty}>
-              <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Trivial">Trivial</SelectItem>
-                <SelectItem value="Easy">Easy</SelectItem>
-                <SelectItem value="Medium">Medium</SelectItem>
-                <SelectItem value="Hard">Hard</SelectItem>
-                <SelectItem value="Very Hard">Very Hard</SelectItem>
-              </SelectContent>
-            </Select>
+            <MobileSelect
+              value={difficulty}
+              onValueChange={setDifficulty}
+              title="Select Difficulty"
+              triggerClassName="mt-1 w-full"
+              options={[
+                { value: "Trivial", label: "Trivial" },
+                { value: "Easy", label: "Easy" },
+                { value: "Medium", label: "Medium" },
+                { value: "Hard", label: "Hard" },
+                { value: "Very Hard", label: "Very Hard" },
+              ]}
+            />
           </div>
           <div>
             <Label className="text-xs text-muted-foreground">Frequency</Label>
-            <Select value={freqChoice} onValueChange={setFreqChoice}>
-              <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {FREQ_PRESETS.map(f => (
-                  <SelectItem key={f.label} value={f.days !== null ? String(f.days) : "custom"}>{f.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <MobileSelect
+              value={freqChoice}
+              onValueChange={setFreqChoice}
+              title="Select Frequency"
+              triggerClassName="mt-1 w-full"
+              options={FREQ_PRESETS.map(f => ({ value: f.days !== null ? String(f.days) : "custom", label: f.label }))}
+            />
             {freqChoice === "custom" && (
               <Input
                 type="number" min="1"

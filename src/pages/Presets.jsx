@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Sparkles, Search, Plus, Pencil, Trash2 } from "lucide-react";
 import AddTaskDialog from "../components/AddTaskDialog";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import MobileSelect from "../components/MobileSelect";
 import { Badge } from "@/components/ui/badge";
 import { formatFrequency } from "../components/TaskCard";
 import EditPresetDialog from "../components/EditPresetDialog";
@@ -15,8 +15,8 @@ function PresetCard({ p, onEdit, onDelete, onClick }) {
   return (
     <div className="bg-card border border-border rounded-lg p-2 hover:shadow-md hover:border-primary/30 transition-all group relative">
       <div className="absolute top-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-        <button onClick={e => onEdit(e, p)} className="p-0.5 rounded hover:bg-muted"><Pencil className="w-3 h-3 text-muted-foreground" /></button>
-        <button onClick={e => onDelete(e, p)} className="p-0.5 rounded hover:bg-red-50"><Trash2 className="w-3 h-3 text-red-400" /></button>
+        <button onClick={e => onEdit(e, p)} className="w-11 h-11 flex items-center justify-center rounded hover:bg-muted"><Pencil className="w-4 h-4 text-muted-foreground" /></button>
+        <button onClick={e => onDelete(e, p)} className="w-11 h-11 flex items-center justify-center rounded hover:bg-red-50"><Trash2 className="w-4 h-4 text-red-400" /></button>
       </div>
       <div onClick={() => onClick(p)} className="cursor-pointer">
         <div className="flex items-start justify-between gap-2 mb-1 pr-10">
@@ -123,25 +123,28 @@ export default function Presets() {
           <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." className="pl-7 text-xs h-8" />
         </div>
         <div className="flex gap-2">
-        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="flex-1 text-xs h-8"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            {displayCategories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-          </SelectContent>
-        </Select>
-        <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
-          <SelectTrigger className="flex-1 text-xs h-8"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Difficulties</SelectItem>
-            <SelectItem value="Trivial">Trivial</SelectItem>
-            <SelectItem value="Easy">Easy</SelectItem>
-            <SelectItem value="Medium">Medium</SelectItem>
-            <SelectItem value="Hard">Hard</SelectItem>
-            <SelectItem value="Very Hard">Very Hard</SelectItem>
-          </SelectContent>
-          </Select>
-          </div>
+          <MobileSelect
+            value={categoryFilter}
+            onValueChange={setCategoryFilter}
+            title="Filter by Category"
+            triggerClassName="flex-1 text-xs h-8"
+            options={[{ value: "all", label: "All Categories" }, ...displayCategories.map(c => ({ value: c, label: c }))]}
+          />
+          <MobileSelect
+            value={difficultyFilter}
+            onValueChange={setDifficultyFilter}
+            title="Filter by Difficulty"
+            triggerClassName="flex-1 text-xs h-8"
+            options={[
+              { value: "all", label: "All Difficulties" },
+              { value: "Trivial", label: "Trivial" },
+              { value: "Easy", label: "Easy" },
+              { value: "Medium", label: "Medium" },
+              { value: "Hard", label: "Hard" },
+              { value: "Very Hard", label: "Very Hard" },
+            ]}
+          />
+        </div>
           </div>
 
       {Object.keys(grouped).length === 0 ? (
