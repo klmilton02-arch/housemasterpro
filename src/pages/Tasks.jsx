@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
 import { Plus, Trash2, CheckSquare } from "lucide-react";
-import { awardPoints } from "@/utils/gamification";
+import { awardPoints, getTaskPoints } from "@/utils/gamification";
 import PointsToast from "../components/PointsToast";
 import { Button } from "@/components/ui/button";
 import MobileSelect from "../components/MobileSelect";
@@ -21,6 +21,7 @@ export default function Tasks() {
   const [batchMode, setBatchMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [familyMembers, setFamilyMembers] = useState([]);
+  const [groupBy, setGroupBy] = useState("none");
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);
@@ -126,6 +127,38 @@ export default function Tasks() {
     return true;
   }).sort((a, b) => new Date(a.next_due_date) - new Date(b.next_due_date));
 
+  function getXpBucket(task) {
+    const xp = getTaskPoints(task);
+    if (xp >= 40) return "High XP (40+)";
+    if (xp >= 20) return "Medium XP (20–39)";
+    return "Low XP (< 20)";
+  }
+
+  function getFreqBucket(task) {
+    const d = task.frequency_days;
+    if (!d) return "Other";
+    if (d <= 3) return "Daily / Every few days";
+    if (d <= 7) return "Weekly";
+    if (d <= 14) return "Bi-weekly";
+    if (d <= 31) return "Monthly";
+    return "Less than Monthly";
+  }
+
+  function groupTasks(tasks) {
+    if (groupBy === "none") return [{ label: null, tasks }];
+    const map = {};
+    tasks.forEach(t => {
+      const key = groupBy === "category" ? (t.category || "Uncategorized")
+        : groupBy === "xp" ? getXpBucket(t)
+        : getFreqBucket(t);
+      if (!map[key]) map[key] = [];
+      map[key].push(t);
+    });
+    return Object.entries(map).map(([label, tasks]) => ({ label, tasks }));
+  }
+
+  const groups = groupTasks(filtered);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -180,6 +213,18 @@ export default function Tasks() {
             ...categories.map(c => ({ value: c, label: c })),
           ]}
         />
+        <MobileSelect
+          value={groupBy}
+          onValueChange={setGroupBy}
+          title="Group By"
+          triggerClassName="flex-1 min-w-0 text-xs"
+          options={[
+            { value: "none", label: "No Grouping" },
+            { value: "category", label: "Group by Category" },
+            { value: "xp", label: "Group by XP" },
+            { value: "frequency", label: "Group by Frequency" },
+          ]}
+        />
       </div>
 
       {filtered.length === 0 ? (
@@ -187,43 +232,52 @@ export default function Tasks() {
           <p className="text-xs text-muted-foreground">No tasks match your filters.</p>
         </div>
       ) : (
-        <div className="space-y-2">
-          {filtered.map(task => (
-            <div key={task.id} className="relative group w-full flex items-center gap-2">
-              {batchMode && (
-                <button
-                  onClick={() => toggleSelect(task.id)}
-                  className={`shrink-0 h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all ${
-                    selectedIds.has(task.id)
-                      ? "border-primary bg-primary"
-                      : "border-muted-foreground/40 bg-transparent"
-                  }`}
-                >
-                  {selectedIds.has(task.id) && <CheckSquare className="w-3 h-3 text-white" />}
-                </button>
+        <div className="space-y-4">
+          {groups.map(({ label, tasks: groupTasks }) => (
+            <div key={label || "all"}>
+              {label && (
+                <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5 px-0.5">{label}</h2>
               )}
-              <div className="flex-1 min-w-0" onClick={batchMode ? () => toggleSelect(task.id) : undefined}>
-                <TaskCard task={task} onComplete={batchMode ? undefined : handleComplete} />
+              <div className="space-y-2">
+                {groupTasks.map(task => (
+                  <div key={task.id} className="relative group w-full flex items-center gap-2">
+                    {batchMode && (
+                      <button
+                        onClick={() => toggleSelect(task.id)}
+                        className={`shrink-0 h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                          selectedIds.has(task.id)
+                            ? "border-primary bg-primary"
+                            : "border-muted-foreground/40 bg-transparent"
+                        }`}
+                      >
+                        {selectedIds.has(task.id) && <CheckSquare className="w-3 h-3 text-white" />}
+                      </button>
+                    )}
+                    <div className="flex-1 min-w-0" onClick={batchMode ? () => toggleSelect(task.id) : undefined}>
+                      <TaskCard task={task} onComplete={batchMode ? undefined : handleComplete} />
+                    </div>
+                    {!batchMode && (
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <button className="absolute top-10 right-2 p-1 rounded-lg bg-card/80 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500">
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Delete Task</AlertDialogTitle>
+                            <AlertDialogDescription>Are you sure you want to delete "{task.name}"? This cannot be undone.</AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDelete(task)} className="bg-destructive text-destructive-foreground">Delete</AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    )}
+                  </div>
+                ))}
               </div>
-              {!batchMode && (
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <button className="absolute top-10 right-2 p-1 rounded-lg bg-card/80 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Delete Task</AlertDialogTitle>
-                      <AlertDialogDescription>Are you sure you want to delete "{task.name}"? This cannot be undone.</AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => handleDelete(task)} className="bg-destructive text-destructive-foreground">Delete</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              )}
             </div>
           ))}
         </div>
