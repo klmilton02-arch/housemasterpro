@@ -40,19 +40,31 @@ export default function Tasks() {
   async function handleComplete(task) {
     if (task.status !== "Completed") {
       const today = new Date();
+      const todayStr = today.toISOString().split("T")[0];
       const nextDue = new Date(today);
       nextDue.setDate(nextDue.getDate() + task.frequency_days);
+
+      // Streak: increment if last completed within 2x frequency window (daily tasks only), else reset to 1
+      let newStreak = 1;
+      if (task.frequency_days <= 1 && task.last_completed_date) {
+        const { differenceInDays, parseISO } = await import("date-fns");
+        const daysSinceLast = differenceInDays(today, parseISO(task.last_completed_date));
+        newStreak = daysSinceLast <= 2 ? (task.streak || 0) + 1 : 1;
+      }
+
       const updated = {
         ...task,
         status: "Completed",
-        last_completed_date: today.toISOString().split("T")[0],
+        last_completed_date: todayStr,
         next_due_date: nextDue.toISOString().split("T")[0],
+        streak: newStreak,
       };
       setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
       await base44.entities.Task.update(task.id, {
         status: "Completed",
         last_completed_date: updated.last_completed_date,
         next_due_date: updated.next_due_date,
+        streak: newStreak,
       });
       const result = await awardPoints(task);
       if (result) setReward(result);

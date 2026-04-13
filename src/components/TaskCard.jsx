@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Check, Clock, AlertTriangle, Calendar, Pencil } from "lucide-react";
+import { Check, Clock, AlertTriangle, Calendar, Pencil, Flame } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays, parseISO } from "date-fns";
@@ -115,6 +115,11 @@ export default function TaskCard({ task, onComplete, onRenamed }) {
             </span>
             {showDate && (
               <span className="text-xs text-muted-foreground">{format(parseISO(task.next_due_date), "MMM d")}</span>
+            )}
+            {task.streak > 0 && (
+              <span className="inline-flex items-center gap-0.5 text-xs font-medium text-orange-500">
+                <Flame className="w-3 h-3" />{task.streak}
+              </span>
             )}
             {task.assigned_to_name && (
               <span className="text-xs text-muted-foreground">· {task.assigned_to_name}</span>
