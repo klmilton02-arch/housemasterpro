@@ -27,7 +27,7 @@ export default function SyncCalendarButton() {
       variant="outline"
       onClick={handleSync}
       disabled={status === "loading"}
-      className="gap-2"
+      className="gap-2 flex-1"
     >
       {status === "loading" ? (
         <Loader2 className="w-4 h-4 animate-spin" />
