@@ -44,6 +44,8 @@ function formatFrequency(days) {
 export { getStatusInfo, formatFrequency };
 
 export default function TaskCard({ task, onComplete, onRenamed }) {
+  const isCompleted = task.status === "Completed";
+  const [optimisticChecked, setOptimisticChecked] = useState(isCompleted);
   const status = getStatusInfo(task);
   const StatusIcon = status.icon;
   const [editing, setEditing] = useState(false);
@@ -59,18 +61,22 @@ export default function TaskCard({ task, onComplete, onRenamed }) {
   }
 
   function handleCheckboxClick() {
-    if (task.status === "Completed") {
+    const nowChecked = !optimisticChecked;
+    setOptimisticChecked(nowChecked);
+    if (!nowChecked) {
       onComplete({ ...task, status: "Pending" });
     } else {
       onComplete(task);
     }
   }
 
-  const cardBg = {
-    "Overdue": "border-red-300 bg-red-50/60 dark:border-red-800 dark:bg-red-950/30",
-    "Past Due": "border-orange-300 bg-orange-50/60 dark:border-orange-800 dark:bg-orange-950/30",
-    "Due Soon": "border-yellow-300 bg-yellow-50/60 dark:border-yellow-800 dark:bg-yellow-950/30",
-  }[status.label] || "border-border bg-card";
+  const cardBg = optimisticChecked
+    ? "border-green-400 bg-green-50/60 dark:border-green-700 dark:bg-green-950/30"
+    : {
+        "Overdue": "border-red-300 bg-red-50/60 dark:border-red-800 dark:bg-red-950/30",
+        "Past Due": "border-orange-300 bg-orange-50/60 dark:border-orange-800 dark:bg-orange-950/30",
+        "Due Soon": "border-yellow-300 bg-yellow-50/60 dark:border-yellow-800 dark:bg-yellow-950/30",
+      }[status.label] || "border-border bg-card";
 
   return (
     <div className={cn(
@@ -124,14 +130,14 @@ export default function TaskCard({ task, onComplete, onRenamed }) {
         </div>
         <button
           className={`shrink-0 h-9 w-9 flex items-center justify-center rounded-md border-2 transition-all ${
-            task.status === "Completed"
+            optimisticChecked
               ? "border-green-500 bg-green-500"
               : "border-muted-foreground/40 hover:border-primary bg-transparent"
           }`}
           onClick={handleCheckboxClick}
-          title={task.status === "Completed" ? "Mark incomplete" : "Mark complete"}
+          title={optimisticChecked ? "Mark incomplete" : "Mark complete"}
         >
-          <Check className={`w-4 h-4 transition-opacity ${task.status === "Completed" ? "text-white opacity-100" : "opacity-0"}`} />
+          <Check className={`w-4 h-4 transition-opacity ${optimisticChecked ? "text-white opacity-100" : "opacity-0"}`} />
         </button>
       </div>
     </div>
