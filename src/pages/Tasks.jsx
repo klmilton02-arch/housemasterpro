@@ -37,7 +37,7 @@ export default function Tasks() {
   usePullToRefresh(loadTasks);
 
   async function handleComplete(task) {
-    if (task.status === "Pending") {
+    if (task.status !== "Completed") {
       const today = new Date();
       const nextDue = new Date(today);
       nextDue.setDate(nextDue.getDate() + task.frequency_days);
@@ -57,8 +57,8 @@ export default function Tasks() {
       if (result) setReward(result);
       loadTasks();
     } else {
-      setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: task.status } : t));
-      await base44.entities.Task.update(task.id, { status: task.status });
+      setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Pending" } : t));
+      await base44.entities.Task.update(task.id, { status: "Pending" });
       loadTasks();
     }
   }
