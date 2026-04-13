@@ -18,6 +18,7 @@ import HomeSetup from './pages/HomeSetup';
 import Privacy from './pages/Privacy';
 import Support from './pages/Support';
 import Encryption from './pages/Encryption';
+import DigitalServicesAct from './pages/DigitalServicesAct';
 import Profile from './pages/Profile';
 
 
@@ -51,7 +52,7 @@ const AuthenticatedApp = () => {
   }
 
   // Handle authentication errors (but allow public pages)
-  if (authError && !window.location.pathname.startsWith('/encryption')) {
+  if (authError && !window.location.pathname.startsWith('/encryption') && !window.location.pathname.startsWith('/digital-services-act')) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
@@ -69,6 +70,11 @@ const AuthenticatedApp = () => {
         <Route path="/encryption" element={
           <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
             <Encryption />
+          </motion.div>
+        } />
+        <Route path="/digital-services-act" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+            <DigitalServicesAct />
           </motion.div>
         } />
         
