@@ -62,7 +62,7 @@ export default function Layout() {
       </div>
 
       {/* Main content */}
-      <main className="flex-1 md:ml-64 pt-14 md:pt-0" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
+      <main className="flex-1 md:ml-64 md:pt-0" style={{ paddingTop: 'calc(3.5rem + env(safe-area-inset-top))', paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
         <div className="w-full max-w-3xl mx-auto md:pb-8">
           <Outlet />
         </div>
