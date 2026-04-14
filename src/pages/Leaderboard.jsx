@@ -5,6 +5,7 @@ import { Trophy } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { startOfWeek, startOfMonth, parseISO, isAfter } from "date-fns";
+import HorseRace from "@/components/HorseRace";
 
 const RANK_COLORS = ["text-amber-500", "text-slate-400", "text-orange-600"];
 const RANK_ICONS = ["🥇", "🥈", "🥉"];
@@ -105,6 +106,11 @@ export default function Leaderboard() {
           <h1 className="font-heading text-2xl font-bold">Leaderboard</h1>
           <p className="text-sm text-muted-foreground">Family rankings</p>
         </div>
+      </div>
+
+      <div className="bg-card border border-border rounded-xl p-4">
+        <h2 className="font-heading font-semibold text-foreground mb-3 flex items-center gap-2">🏇 Horse Race</h2>
+        <HorseRace />
       </div>
 
       <Tabs defaultValue="alltime">
