@@ -22,6 +22,7 @@ import DigitalServicesAct from './pages/DigitalServicesAct';
 import Copyright from './pages/Copyright';
 import Profile from './pages/Profile';
 import Stable from './pages/Stable';
+import Landing from './pages/Landing';
 
 
 const pageVariants = {
@@ -69,6 +70,11 @@ const AuthenticatedApp = () => {
     <AnimatePresence mode="wait">
       <Routes>
         {/* Public routes - no auth required */}
+        <Route path="/landing" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+            <Landing />
+          </motion.div>
+        } />
         <Route path="/encryption" element={
           <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
             <Encryption />
