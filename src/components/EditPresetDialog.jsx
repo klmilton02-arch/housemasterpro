@@ -18,17 +18,30 @@ const ROOMS = [
   "Whole House", "Any",
 ];
 
-const FREQ_PRESETS = [
-  { label: "Daily", days: 1 },
-  { label: "Every 3 days", days: 3 },
-  { label: "Weekly", days: 7 },
-  { label: "Bi-weekly", days: 14 },
-  { label: "Monthly", days: 30 },
-  { label: "Quarterly", days: 90 },
-  { label: "Every 6 months", days: 180 },
-  { label: "Annually", days: 365 },
-  { label: "Custom", days: null },
+const FREQ_UNITS = [
+  { value: "days", label: "Days" },
+  { value: "weeks", label: "Weeks" },
+  { value: "months", label: "Months" },
+  { value: "quarterly", label: "Quarterly" },
+  { value: "yearly", label: "Yearly" },
 ];
+
+function toDays(val, unit) {
+  const n = parseInt(val) || 1;
+  if (unit === "weeks") return n * 7;
+  if (unit === "months") return n * 30;
+  if (unit === "quarterly") return n * 90;
+  if (unit === "yearly") return n * 365;
+  return n;
+}
+
+function fromDays(days) {
+  if (days % 365 === 0) return { val: String(days / 365), unit: "yearly" };
+  if (days % 90 === 0) return { val: String(days / 90), unit: "quarterly" };
+  if (days % 30 === 0) return { val: String(days / 30), unit: "months" };
+  if (days % 7 === 0) return { val: String(days / 7), unit: "weeks" };
+  return { val: String(days), unit: "days" };
+}
 
 export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }) {
   const isNew = !preset?.id;
@@ -36,8 +49,8 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
   const [category, setCategory] = useState("Living Areas");
   const [difficulty, setDifficulty] = useState("Easy");
   const [description, setDescription] = useState("");
-  const [freqChoice, setFreqChoice] = useState("30");
-  const [customDays, setCustomDays] = useState("");
+  const [freqValue, setFreqValue] = useState("1");
+  const [freqUnit, setFreqUnit] = useState("months");
   const [miles, setMiles] = useState("");
   const [room, setRoom] = useState("");
   const [loading, setLoading] = useState(false);
@@ -51,21 +64,18 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
       setRoom(preset?.room || "");
       setMiles(preset?.frequency_miles ? String(preset.frequency_miles) : "");
       const days = preset?.frequency_days;
-      const match = FREQ_PRESETS.find(f => f.days === days);
-      if (match && match.days !== null) {
-        setFreqChoice(String(match.days));
-        setCustomDays("");
-      } else if (days) {
-        setFreqChoice("custom");
-        setCustomDays(String(days));
+      if (days) {
+        const { val, unit } = fromDays(days);
+        setFreqValue(val);
+        setFreqUnit(unit);
       } else {
-        setFreqChoice("30");
-        setCustomDays("");
+        setFreqValue("1");
+        setFreqUnit("months");
       }
     }
   }, [open, preset]);
 
-  const freqDays = freqChoice === "custom" ? parseInt(customDays) || 0 : parseInt(freqChoice);
+  const freqDays = toDays(freqValue, freqUnit);
 
   async function handleSave() {
     if (!name.trim() || !freqDays) return;
@@ -127,22 +137,22 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
           </div>
           <div>
             <Label className="text-xs text-muted-foreground">Frequency</Label>
-            <MobileSelect
-              value={freqChoice}
-              onValueChange={setFreqChoice}
-              title="Select Frequency"
-              triggerClassName="mt-1 w-full"
-              options={FREQ_PRESETS.map(f => ({ value: f.days !== null ? String(f.days) : "custom", label: f.label }))}
-            />
-            {freqChoice === "custom" && (
+            <div className="flex gap-2 mt-1">
               <Input
                 type="number" min="1"
-                value={customDays}
-                onChange={e => setCustomDays(e.target.value)}
-                placeholder="Number of days"
-                className="mt-2"
+                value={freqValue}
+                onChange={e => setFreqValue(e.target.value)}
+                placeholder="e.g., 2"
+                className="flex-1"
               />
-            )}
+              <MobileSelect
+                value={freqUnit}
+                onValueChange={setFreqUnit}
+                title="Frequency Unit"
+                triggerClassName="w-32"
+                options={FREQ_UNITS}
+              />
+            </div>
           </div>
           <div>
             <Label className="text-xs text-muted-foreground">Room (optional)</Label>
