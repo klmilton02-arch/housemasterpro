@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ListTodo, Layout, Users, Trophy, Home, AlertTriangle } from "lucide-react";
+import { ListTodo, Layout, Users, Trophy, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -7,7 +7,7 @@ const navItems = [
   { to: "/presets", label: "Presets", icon: Layout },
   { to: "/family", label: "Family", icon: Users },
   { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
-  { to: "/home-setup", label: "Home Setup", icon: Home },
+  { to: "/stable", label: "My Stable", icon: Home },
 ];
 
 export default function QuickNav() {

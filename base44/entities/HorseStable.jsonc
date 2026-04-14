@@ -1,0 +1,48 @@
+{
+  "name": "HorseStable",
+  "type": "object",
+  "properties": {
+    "family_member_id": {
+      "type": "string",
+      "title": "Family Member ID"
+    },
+    "family_member_name": {
+      "type": "string",
+      "title": "Family Member Name"
+    },
+    "jockey_color": {
+      "type": "string",
+      "title": "Jockey Color",
+      "default": "red"
+    },
+    "horse_skin": {
+      "type": "string",
+      "title": "Horse Skin",
+      "default": "brown"
+    },
+    "saddle": {
+      "type": "string",
+      "title": "Saddle Equipped",
+      "default": "none"
+    },
+    "shoes": {
+      "type": "string",
+      "title": "Shoes Equipped",
+      "default": "none"
+    },
+    "armor": {
+      "type": "string",
+      "title": "Armor Equipped",
+      "default": "none"
+    },
+    "accessory": {
+      "type": "string",
+      "title": "Accessory Equipped",
+      "default": "none"
+    }
+  },
+  "required": [
+    "family_member_id",
+    "family_member_name"
+  ]
+}

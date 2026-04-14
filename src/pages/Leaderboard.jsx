@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { getLevelInfo, ACHIEVEMENT_BADGES } from "@/utils/gamification";
 import { Trophy } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { startOfWeek, startOfMonth, parseISO, isAfter } from "date-fns";
@@ -109,7 +110,10 @@ export default function Leaderboard() {
       </div>
 
       <div className="bg-card border border-border rounded-xl p-4">
-        <h2 className="font-heading font-semibold text-foreground mb-3 flex items-center gap-2">🏇 Horse Race</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-heading font-semibold text-foreground flex items-center gap-2">🏇 Horse Race</h2>
+          <Link to="/stable" className="text-xs text-primary font-medium hover:underline">⚙️ My Stable →</Link>
+        </div>
         <HorseRace />
       </div>
 
