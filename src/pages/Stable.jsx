@@ -214,7 +214,7 @@ export default function Stable() {
 
       {/* Saddle */}
       <section>
-        <h2 className="font-heading font-semibold text-sm mb-2 text-muted-foreground uppercase tracking-wide">🪑 Saddle</h2>
+        <h2 className="font-heading font-semibold text-sm mb-2 text-muted-foreground uppercase tracking-wide">🏇 Saddle</h2>
         <ItemGrid items={SADDLES} equipped={stable?.saddle} onEquip={v => update("saddle", v)} level={level} />
       </section>
 
