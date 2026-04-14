@@ -53,7 +53,16 @@ function checkNewBadges(profile) {
 }
 
 export async function awardPoints(task) {
-  if (!task.assigned_to || !task.assigned_to_name) return null;
+  // Use assigned member, or fall back to the logged-in user
+  let memberId = task.assigned_to;
+  let memberName = task.assigned_to_name;
+
+  if (!memberId || !memberName) {
+    const me = await base44.auth.me();
+    if (!me) return null;
+    memberId = me.id;
+    memberName = me.full_name;
+  }
 
   const today = new Date();
   const todayStr = today.toISOString().split("T")[0];
@@ -67,13 +76,13 @@ export async function awardPoints(task) {
   const totalPoints = basePoints + bonusPoints;
 
   // Find or create profile
-  const profiles = await base44.entities.GamificationProfile.filter({ family_member_id: task.assigned_to });
+  const profiles = await base44.entities.GamificationProfile.filter({ family_member_id: memberId });
   let profile = profiles[0];
 
   if (!profile) {
     profile = await base44.entities.GamificationProfile.create({
-      family_member_id: task.assigned_to,
-      family_member_name: task.assigned_to_name,
+      family_member_id: memberId,
+      family_member_name: memberName,
       total_xp: 0,
       level: 1,
       badges: [],
@@ -107,12 +116,12 @@ export async function awardPoints(task) {
     total_completions: updatedProfile.total_completions,
     deep_cleaning_completions: updatedProfile.deep_cleaning_completions,
     overdue_completions: updatedProfile.overdue_completions,
-    family_member_name: task.assigned_to_name,
+    family_member_name: memberName,
   });
 
   await base44.entities.CompletionHistory.create({
-    family_member_id: task.assigned_to,
-    family_member_name: task.assigned_to_name,
+    family_member_id: memberId,
+    family_member_name: memberName,
     task_id: task.id,
     task_name: task.name,
     points_earned: totalPoints,
