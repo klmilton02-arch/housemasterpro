@@ -9,6 +9,7 @@ const FEATURES = [
   { icon: Users, title: "Family Collaboration", desc: "Assign tasks to family members and see who's keeping up." },
   { icon: Trophy, title: "Gamification & Streaks", desc: "Earn XP, level up, unlock badges, and compete on the family leaderboard." },
   { icon: Zap, title: "Google Calendar Sync", desc: "Sync tasks directly to your Google Calendar for reminders." },
+
 ];
 
 export default function Landing() {
