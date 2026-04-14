@@ -83,10 +83,10 @@ export default function Landing() {
           Home management, reimagined
         </span>
         <h1 className="font-heading text-4xl sm:text-5xl font-bold leading-tight mb-5">
-          Run your home with <span className="text-primary">HouseMasterPro</span>
+          Run your home like a <span className="text-primary">pro</span>
         </h1>
         <p className="text-muted-foreground text-lg mb-8 max-w-xl mx-auto">
-          Smart household management for families. Stay on top of chores, maintenance, and bills with automated scheduling, gamified rewards, and calendar sync that actually works.
+          HomeLifeFocus helps families stay on top of chores, maintenance, and bills — with smart scheduling, gamified rewards, and calendar sync that actually works.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link to="/">
@@ -100,7 +100,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Screenshot / preview strip */}
+      {/* Stats */}
       <section className="bg-primary/5 border-y border-border py-10 px-6">
         <div className="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
           {[
