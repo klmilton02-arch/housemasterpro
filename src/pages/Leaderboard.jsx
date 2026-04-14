@@ -2,11 +2,9 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { getLevelInfo, ACHIEVEMENT_BADGES } from "@/utils/gamification";
 import { Trophy } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { startOfWeek, startOfMonth, parseISO, isAfter } from "date-fns";
-import HorseRace from "@/components/HorseRace";
 
 const RANK_COLORS = ["text-amber-500", "text-slate-400", "text-orange-600"];
 const RANK_ICONS = ["🥇", "🥈", "🥉"];
@@ -107,14 +105,6 @@ export default function Leaderboard() {
           <h1 className="font-heading text-2xl font-bold">Leaderboard</h1>
           <p className="text-sm text-muted-foreground">Family rankings</p>
         </div>
-      </div>
-
-      <div className="bg-card border border-border rounded-xl p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-heading font-semibold text-foreground flex items-center gap-2">🏇 Horse Race</h2>
-          <Link to="/stable" className="text-xs text-primary font-medium hover:underline">⚙️ My Stable →</Link>
-        </div>
-        <HorseRace />
       </div>
 
       <Tabs defaultValue="alltime">
