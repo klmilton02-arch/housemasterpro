@@ -20,7 +20,7 @@ export const HORSE_SKINS = [
 
 export const SADDLES = [
   { id: "none",    label: "None",         emoji: "",   bonus: 0,  unlockLevel: 1 },
-  { id: "basic",   label: "Basic Saddle", emoji: "🪑", bonus: 5,  unlockLevel: 1 },
+  { id: "basic",   label: "Basic Saddle", emoji: "🏅", bonus: 5,  unlockLevel: 1 },
   { id: "leather", label: "Leather",      emoji: "🟤", bonus: 10, unlockLevel: 2 },
   { id: "silver",  label: "Silver",       emoji: "⚪", bonus: 18, unlockLevel: 3 },
   { id: "golden",  label: "Golden",       emoji: "🟡", bonus: 28, unlockLevel: 4 },
