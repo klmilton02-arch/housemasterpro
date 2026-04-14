@@ -36,7 +36,7 @@
     },
     "frequency_days": {
       "type": "number",
-      "title": "Frequency (Days)"
+      "title": "Frequency"
     },
     "difficulty": {
       "type": "string",
