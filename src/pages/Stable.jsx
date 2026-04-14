@@ -159,19 +159,30 @@ export default function Stable() {
       <div className="bg-card border border-border rounded-2xl p-6 flex flex-col items-center gap-3">
         <div className="flex items-end gap-2">
           {/* Jockey figure */}
-          <div className="flex flex-col items-center gap-0.5">
-            <span className="text-2xl">🪖</span>
-            <div className="flex flex-col items-center">
-              <div
-                className="w-7 h-8 rounded-t-full rounded-b-lg border-2 border-white/30"
-                style={{ background: jockeyColor }}
-              />
-              <div className="flex gap-0.5 mt-0.5">
-                <div className="w-2.5 h-5 rounded-b-full bg-slate-700" />
-                <div className="w-2.5 h-5 rounded-b-full bg-slate-700" />
-              </div>
-            </div>
-          </div>
+          <svg width="40" height="72" viewBox="0 0 40 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* Helmet */}
+            <ellipse cx="20" cy="10" rx="9" ry="7" fill="#1e293b" />
+            <rect x="11" y="14" width="18" height="4" rx="2" fill="#1e293b" />
+            {/* Visor brim */}
+            <rect x="9" y="16" width="22" height="3" rx="1.5" fill="#334155" />
+            {/* Head / face */}
+            <ellipse cx="20" cy="22" rx="7" ry="7.5" fill="#f5c59a" />
+            {/* Torso (jockey silks) */}
+            <rect x="13" y="29" width="14" height="16" rx="3" fill={jockeyColor} />
+            {/* Collar */}
+            <rect x="17" y="29" width="6" height="4" rx="1" fill="white" opacity="0.5" />
+            {/* Left arm */}
+            <rect x="6" y="30" width="7" height="4" rx="2" fill={jockeyColor} transform="rotate(20 6 30)" />
+            {/* Right arm / riding crop */}
+            <rect x="27" y="30" width="7" height="4" rx="2" fill={jockeyColor} transform="rotate(-20 27 30)" />
+            <line x1="33" y1="28" x2="38" y2="20" stroke="#92400e" strokeWidth="1.5" strokeLinecap="round" />
+            {/* Breeches */}
+            <rect x="13" y="44" width="14" height="10" rx="2" fill="#f1f5f9" />
+            {/* Left boot */}
+            <rect x="13" y="53" width="6" height="10" rx="2" fill="#1e293b" />
+            {/* Right boot */}
+            <rect x="21" y="53" width="6" height="10" rx="2" fill="#1e293b" />
+          </svg>
           {/* Horse */}
           <span className="text-6xl">{horseEmoji}</span>
         </div>
