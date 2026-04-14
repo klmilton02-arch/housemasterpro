@@ -180,6 +180,36 @@ export default function Burst() {
             <p className="text-muted-foreground">{Object.keys(completions).length} task{Object.keys(completions).length !== 1 ? 's' : ''} completed. Extra XP awarded!</p>
           </div>
         )}
+
+        {!isActive && (
+          <div className="mt-8">
+            <h2 className="font-heading text-lg font-semibold mb-4">Pending Tasks</h2>
+            {pendingTasks.length === 0 ? (
+              <div className="bg-card border border-border rounded-2xl p-8 text-center text-muted-foreground">
+                No pending tasks. Great job staying on top of things!
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {pendingTasks.map(task => (
+                  <div key={task.id} className="bg-card border border-border rounded-lg p-4 flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="font-semibold">{task.name}</h3>
+                      <p className="text-xs text-muted-foreground">Assigned to: {task.assigned_to_name || "Unassigned"}</p>
+                    </div>
+                    <Button
+                      onClick={() => handleTaskComplete(task.id, task.assigned_to)}
+                      disabled={!task.assigned_to}
+                      size="sm"
+                      variant="outline"
+                    >
+                      Mark Done
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
