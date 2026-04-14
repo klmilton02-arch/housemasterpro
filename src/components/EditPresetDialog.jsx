@@ -12,6 +12,12 @@ const CATEGORIES = [
   "House Maintenance", "Bill Schedules",
 ];
 
+const ROOMS = [
+  "Kitchen", "Bathroom", "Bedroom", "Living Room", "Dining Room",
+  "Garage", "Laundry Room", "Office", "Basement", "Attic", "Outdoor",
+  "Whole House", "Any",
+];
+
 const FREQ_PRESETS = [
   { label: "Daily", days: 1 },
   { label: "Every 3 days", days: 3 },
@@ -33,6 +39,7 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
   const [freqChoice, setFreqChoice] = useState("30");
   const [customDays, setCustomDays] = useState("");
   const [miles, setMiles] = useState("");
+  const [room, setRoom] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -41,6 +48,7 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
       setCategory(preset?.category || "Living Areas");
       setDifficulty(preset?.difficulty || "Easy");
       setDescription(preset?.description || "");
+      setRoom(preset?.room || "");
       setMiles(preset?.frequency_miles ? String(preset.frequency_miles) : "");
       const days = preset?.frequency_days;
       const match = FREQ_PRESETS.find(f => f.days === days);
@@ -68,6 +76,7 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
       difficulty,
       description,
       frequency_days: freqDays,
+      room: room || undefined,
     };
     if (isNew) {
       await base44.entities.PresetTask.create(data);
@@ -134,6 +143,16 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
                 className="mt-2"
               />
             )}
+          </div>
+          <div>
+            <Label className="text-xs text-muted-foreground">Room (optional)</Label>
+            <MobileSelect
+              value={room || ""}
+              onValueChange={setRoom}
+              title="Select Room"
+              triggerClassName="mt-1 w-full"
+              options={[{ value: "", label: "— None —" }, ...ROOMS.map(r => ({ value: r, label: r }))]}
+            />
           </div>
           <div>
             <Label className="text-xs text-muted-foreground">Description (optional)</Label>

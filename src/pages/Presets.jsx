@@ -26,12 +26,14 @@ function PresetCard({ p, onEdit, onDelete, onClick }) {
           )}
         </div>
         <p className="text-xs text-muted-foreground mb-2">{p.description}</p>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
             {formatFrequency(p.frequency_days)}
           </span>
-          {p.floor_type_note && (
-            <span className="text-xs text-muted-foreground italic">{p.floor_type_note}</span>
+          {p.room && (
+            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground">
+              {p.room}
+            </span>
           )}
         </div>
       </div>
