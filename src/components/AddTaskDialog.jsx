@@ -29,6 +29,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     const n = parseInt(val) || 1;
     if (unit === "weeks") return n * 7;
     if (unit === "months") return n * 30;
+    if (unit === "quarterly") return n * 90;
+    if (unit === "yearly") return n * 365;
     return n;
   }
 
@@ -50,7 +52,9 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
         if (initialPreset) {
           setSelectedPreset(initialPreset);
           setTab("preset");
-          if (initialPreset.frequency_days % 30 === 0) { setFreqValue(String(initialPreset.frequency_days / 30)); setFreqUnit("months"); }
+          if (initialPreset.frequency_days % 365 === 0) { setFreqValue(String(initialPreset.frequency_days / 365)); setFreqUnit("yearly"); }
+          else if (initialPreset.frequency_days % 90 === 0) { setFreqValue(String(initialPreset.frequency_days / 90)); setFreqUnit("quarterly"); }
+          else if (initialPreset.frequency_days % 30 === 0) { setFreqValue(String(initialPreset.frequency_days / 30)); setFreqUnit("months"); }
           else if (initialPreset.frequency_days % 7 === 0) { setFreqValue(String(initialPreset.frequency_days / 7)); setFreqUnit("weeks"); }
           else { setFreqValue(String(initialPreset.frequency_days)); setFreqUnit("days"); }
         }
@@ -145,6 +149,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                   onClick={() => {
                     setSelectedPreset(p);
     if (p.category === "Car Maintenance") { setFreqValue(p.frequency_miles ? String(p.frequency_miles) : ""); setFreqUnit("miles"); }
+    else if (p.frequency_days % 365 === 0) { setFreqValue(String(p.frequency_days / 365)); setFreqUnit("yearly"); }
+    else if (p.frequency_days % 90 === 0) { setFreqValue(String(p.frequency_days / 90)); setFreqUnit("quarterly"); }
     else if (p.frequency_days % 30 === 0) { setFreqValue(String(p.frequency_days / 30)); setFreqUnit("months"); }
     else if (p.frequency_days % 7 === 0) { setFreqValue(String(p.frequency_days / 7)); setFreqUnit("weeks"); }
     else { setFreqValue(String(p.frequency_days)); setFreqUnit("days"); }
@@ -213,6 +219,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                     { value: "days", label: "Days" },
                     { value: "weeks", label: "Weeks" },
                     { value: "months", label: "Months" },
+                    { value: "quarterly", label: "Quarterly" },
+                    { value: "yearly", label: "Yearly" },
                   ]}
                 />
               </div>
