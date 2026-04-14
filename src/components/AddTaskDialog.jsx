@@ -34,7 +34,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
   // Custom form
   const [customName, setCustomName] = useState("");
-  const [customCategory, setCustomCategory] = useState("Living Areas");
+  const [customCategory, setCustomCategory] = useState("Cleaning");
 
   const isCarMaintenance = false;
   const [customDescription, setCustomDescription] = useState("");
@@ -171,7 +171,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                 onValueChange={setCustomCategory}
                 title="Select Category"
                 triggerClassName="mt-1"
-                options={["Kitchen Cleaning","Bathroom Cleaning","Bedroom Cleaning","Living Areas","Floors","Deep Cleaning","House Maintenance","Bill Schedules"].map(c => ({ value: c, label: c }))}
+                options={["Cleaning","Kitchen Cleaning","Bathroom Cleaning","Bedroom Cleaning","Living Areas","Floors","Deep Cleaning","House Maintenance","Bill Schedules"].map(c => ({ value: c, label: c }))}
               />
             </div>
             <div>
