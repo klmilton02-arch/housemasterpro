@@ -205,7 +205,7 @@ export default function Tasks() {
             <Plus className="w-4 h-4" /> Add Task
           </Button>
           <Button
-            variant={batchMode ? "default" : "outline"}
+            variant="default"
             className="gap-2 flex-1"
             onClick={() => { setBatchMode(b => !b); setSelectedIds(new Set()); }}
           >
