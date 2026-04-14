@@ -139,7 +139,19 @@ export default function Tasks() {
     if (statusFilter === "pending" && status.label === "Completed") return false;
     if (categoryFilter !== "all" && t.category !== categoryFilter) return false;
     return true;
-  }).sort((a, b) => new Date(a.next_due_date) - new Date(b.next_due_date));
+  }).sort((a, b) => {
+    const aCompleted = a.status === "Completed";
+    const bCompleted = b.status === "Completed";
+    // Completed tasks go to the bottom
+    if (aCompleted && !bCompleted) return 1;
+    if (!aCompleted && bCompleted) return -1;
+    // Within completed, sort by last_completed_date descending (most recent first)
+    if (aCompleted && bCompleted) {
+      return new Date(b.last_completed_date || 0) - new Date(a.last_completed_date || 0);
+    }
+    // Non-completed: sort by next_due_date ascending
+    return new Date(a.next_due_date) - new Date(b.next_due_date);
+  });
 
   function getXpBucket(task) {
     const xp = getTaskPoints(task);
