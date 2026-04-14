@@ -23,6 +23,7 @@ export default function Dashboard() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [reward, setReward] = useState(null);
   const [taskListModal, setTaskListModal] = useState(null);
+  const [allTasksOpen, setAllTasksOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [profile, setProfile] = useState(null);
 
@@ -138,19 +139,27 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="bg-card border border-border rounded-lg p-4">
-        <div className="flex items-center justify-between mb-3">
+      <div className="bg-card border border-border rounded-lg overflow-hidden">
+        <button
+          className="w-full flex items-center justify-between p-4 hover:bg-muted/40 transition-colors"
+          onClick={() => setAllTasksOpen(o => !o)}
+        >
           <h2 className="font-heading font-semibold text-foreground">All Tasks</h2>
-          <span className="text-sm text-muted-foreground">{tasks.length} total</span>
-        </div>
-        <div className="space-y-2 max-h-64 overflow-y-auto">
-          {tasks.slice(0, 10).map(task => (
-            <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
-          ))}
-          {tasks.length > 10 && (
-            <p className="text-center text-xs text-muted-foreground py-2">+{tasks.length - 10} more tasks</p>
-          )}
-        </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">{tasks.length} total</span>
+            {allTasksOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+          </div>
+        </button>
+        {allTasksOpen && (
+          <div className="space-y-2 max-h-64 overflow-y-auto px-4 pb-4">
+            {tasks.slice(0, 10).map(task => (
+              <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
+            ))}
+            {tasks.length > 10 && (
+              <p className="text-center text-xs text-muted-foreground py-2">+{tasks.length - 10} more tasks</p>
+            )}
+          </div>
+        )}
       </div>
 
       <QuickNav />
