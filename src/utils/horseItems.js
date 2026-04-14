@@ -12,9 +12,9 @@ export const JOCKEY_COLORS = [
 ];
 
 export const HORSE_SKINS = [
-  { id: "brown",   label: "Brown",   emoji: "🐎", unlockLevel: 1 },
-  { id: "white",   label: "White",   emoji: "🐴", unlockLevel: 2 },
-  { id: "unicorn", label: "Unicorn", emoji: "🦄", unlockLevel: 3 },
+  { id: "brown",   label: "Brown",   emoji: "🏇", unlockLevel: 1 },
+  { id: "white",   label: "White",   emoji: "🏇", unlockLevel: 2 },
+  { id: "unicorn", label: "Unicorn", emoji: "🏇", unlockLevel: 3 },
   { id: "dark",    label: "Dark",    emoji: "🏇", unlockLevel: 4 },
 ];
 
