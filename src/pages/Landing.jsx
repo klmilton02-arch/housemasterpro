@@ -70,7 +70,7 @@ export default function Landing() {
       <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto">
         <div className="flex items-center gap-2">
           <Home className="w-6 h-6 text-primary" />
-          <span className="font-heading font-bold text-lg">HouseMasterPro</span>
+          <span className="font-heading font-bold text-lg">HomeLifeFocus</span>
         </div>
         <Link to="/">
           <Button size="sm">Sign In</Button>
@@ -83,10 +83,10 @@ export default function Landing() {
           Home management, reimagined
         </span>
         <h1 className="font-heading text-4xl sm:text-5xl font-bold leading-tight mb-5">
-          Run your home like a <span className="text-primary">pro</span>
+          Run your home with <span className="text-primary">HouseMasterPro</span>
         </h1>
         <p className="text-muted-foreground text-lg mb-8 max-w-xl mx-auto">
-          HouseMasterPro helps families stay on top of chores, maintenance, and bills — with smart scheduling, gamified rewards, and calendar sync that actually works.
+          Smart household management for families. Stay on top of chores, maintenance, and bills with automated scheduling, gamified rewards, and calendar sync that actually works.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link to="/">
@@ -200,14 +200,14 @@ export default function Landing() {
       <footer className="py-8 px-6 text-center text-sm text-muted-foreground">
         <div className="flex items-center justify-center gap-2 mb-3">
           <Home className="w-4 h-4 text-primary" />
-          <span className="font-heading font-semibold text-foreground">HouseMasterPro</span>
+          <span className="font-heading font-semibold text-foreground">HomeLifeFocus</span>
         </div>
         <div className="flex justify-center gap-6 mb-3">
           <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
           <Link to="/support" className="hover:text-foreground transition-colors">Support</Link>
           <Link to="/" className="hover:text-foreground transition-colors">Sign In</Link>
         </div>
-        <p>© {new Date().getFullYear()} HouseMasterPro. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} HomeLifeFocus. All rights reserved.</p>
       </footer>
     </div>
   );
