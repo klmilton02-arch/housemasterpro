@@ -157,12 +157,22 @@ export default function Stable() {
 
       {/* Horse preview */}
       <div className="bg-card border border-border rounded-2xl p-6 flex flex-col items-center gap-3">
-        <div className="relative">
-          {/* Jockey color sash */}
-          <div
-            className="absolute -top-2 -right-2 w-6 h-6 rounded-full border-2 border-white shadow"
-            style={{ background: jockeyColor }}
-          />
+        <div className="flex items-end gap-2">
+          {/* Jockey figure */}
+          <div className="flex flex-col items-center gap-0.5">
+            <span className="text-2xl">🪖</span>
+            <div className="flex flex-col items-center">
+              <div
+                className="w-7 h-8 rounded-t-full rounded-b-lg border-2 border-white/30"
+                style={{ background: jockeyColor }}
+              />
+              <div className="flex gap-0.5 mt-0.5">
+                <div className="w-2.5 h-5 rounded-b-full bg-slate-700" />
+                <div className="w-2.5 h-5 rounded-b-full bg-slate-700" />
+              </div>
+            </div>
+          </div>
+          {/* Horse */}
           <span className="text-6xl">{horseEmoji}</span>
         </div>
         <div className="flex gap-1 flex-wrap justify-center text-xl">
