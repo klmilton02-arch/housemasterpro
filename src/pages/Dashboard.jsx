@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, ChevronDown, ChevronUp } from "lucide-react";
+import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, ChevronDown, ChevronUp, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
 import CompletedTaskItem from "../components/CompletedTaskItem";
 import QuickNav from "../components/QuickNav";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
@@ -124,6 +125,12 @@ export default function Dashboard() {
         <StatCard icon={Clock} label="Due Soon" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" onClick={() => setTaskListModal({ title: 'Due Soon', tasks: dueSoonTasks })} />
         <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks })} />
       </div>
+
+      <Link to="/burst">
+        <Button className="w-full gap-2 bg-orange-500 hover:bg-orange-600 text-white h-11 text-base">
+          <Zap className="w-5 h-5" /> Burst Mode
+        </Button>
+      </Link>
 
       <LeaderboardSummary />
 
