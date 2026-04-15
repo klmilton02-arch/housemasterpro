@@ -13,24 +13,24 @@ const CLEANING_SUBCATEGORIES = ["Kitchen Cleaning", "Bathroom Cleaning", "Bedroo
 
 function PresetCard({ p, onEdit, onDelete, onClick }) {
   return (
-    <div className="bg-card border border-border rounded-lg p-2 hover:shadow-md hover:border-primary/30 transition-all group relative">
+    <div className="bg-card border border-border rounded-lg p-3 hover:shadow-md hover:border-primary/30 transition-all group relative">
       <div className="absolute top-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
         <button onClick={e => onEdit(e, p)} className="w-11 h-11 flex items-center justify-center rounded hover:bg-muted"><Pencil className="w-4 h-4 text-muted-foreground" /></button>
         <button onClick={e => onDelete(e, p)} className="w-11 h-11 flex items-center justify-center rounded hover:bg-red-50"><Trash2 className="w-4 h-4 text-red-400" /></button>
       </div>
       <div onClick={() => onClick(p)} className="cursor-pointer">
-        <div className="flex items-start justify-between gap-2 mb-1 pr-10">
-          <h3 className="font-heading font-semibold text-xs">{p.name}</h3>
+        <div className="flex items-start justify-between gap-2 mb-1.5 pr-10">
+          <h3 className="font-heading font-semibold text-sm">{p.name}</h3>
           {p.difficulty && (
             <Badge variant="outline" className="shrink-0 text-xs">{p.difficulty}</Badge>
           )}
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+          <span className="text-xs font-medium px-2 py-1 rounded-full bg-primary/10 text-primary">
             {formatFrequency(p.frequency_days)}
           </span>
           {p.room && (
-            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground">
+            <span className="text-xs font-medium px-2 py-1 rounded-full bg-secondary text-secondary-foreground">
               {p.room}
             </span>
           )}
@@ -130,18 +130,18 @@ export default function Presets() {
   }
 
   return (
-    <div className="space-y-3 max-w-xs md:max-w-2xl mx-auto px-2 sm:px-1 pt-6">
-      <div className="flex flex-col gap-2">
+    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
+      <div className="flex flex-col gap-3">
         <div className="flex flex-col">
-          <h1 className="font-heading text-3xl sm:text-2xl font-bold">Preset Library 📚</h1>
-          <span className="text-sm text-muted-foreground">{presets.length} presets</span>
+          <h1 className="font-heading text-4xl sm:text-3xl font-bold">Preset Library 📚</h1>
+          <span className="text-base text-muted-foreground">{presets.length} presets</span>
         </div>
-        <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} className="gap-2 w-full">
-          <Plus className="w-4 h-4" /> New Preset
+        <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} className="gap-2 w-full h-11 text-base">
+          <Plus className="w-5 h-5" /> New Preset
         </Button>
         <div className="relative w-full">
-          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground" />
-          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." className="pl-7 w-full" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." className="pl-9 w-full h-10 text-base" />
         </div>
         <div className="grid grid-cols-2 gap-2">
           <MobileSelect
@@ -196,9 +196,9 @@ export default function Presets() {
       ) : (
         Object.entries(grouped).map(([cat, items]) => (
           <div key={cat}>
-            <h2 className="font-heading font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-2">
-            {cat}{cat === "Bill Schedules" ? " 💵" : ""}
-          </h2>
+            <h2 className="font-heading font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-2">
+              {cat}{cat === "Bill Schedules" ? " 💵" : ""}
+            </h2>
             {cat === "Cleaning" ? (
               // Cleaning: show subcategory headers
               Object.entries(
@@ -209,8 +209,8 @@ export default function Presets() {
                 }, {})
               ).map(([subcat, subItems]) => (
                 <div key={subcat} className="mb-5">
-                  <h3 className="font-heading font-medium text-xs text-muted-foreground/70 uppercase tracking-wider mb-1 pl-1.5 border-l-2 border-primary/30">{subcat}</h3>
-                  <div className="grid gap-1.5">
+                  <h3 className="font-heading font-medium text-xs text-muted-foreground/70 uppercase tracking-wider mb-2 pl-2 border-l-2 border-primary/30">{subcat}</h3>
+                  <div className="grid gap-2">
                     {subItems.map(p => (
                       <PresetCard key={p.id} p={p} onEdit={handleEdit} onDelete={handleDelete} onClick={handlePresetClick} />
                     ))}
@@ -218,7 +218,7 @@ export default function Presets() {
                 </div>
               ))
             ) : (
-              <div className="grid gap-1.5">
+              <div className="grid gap-2">
                 {items.map(p => (
                   <PresetCard key={p.id} p={p} onEdit={handleEdit} onDelete={handleDelete} onClick={handlePresetClick} />
                 ))}
