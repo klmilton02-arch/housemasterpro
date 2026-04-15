@@ -128,11 +128,13 @@ export default function Dashboard() {
 
       <LeaderboardSummary />
 
+      <div className="pt-4">
       <Link to="/burst">
         <Button className="w-full gap-2 bg-orange-500 hover:bg-orange-600 text-white h-11 text-base">
           <Zap className="w-5 h-5" /> Blast Mode
         </Button>
       </Link>
+      </div>
 
       {profile && getEarnedBadges(profile).length > 0 && (
         <div className="bg-card border border-border rounded-lg p-5">
