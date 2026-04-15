@@ -26,7 +26,10 @@ export default function Layout() {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-64 flex-col border-r border-border bg-card fixed inset-y-0 left-0 z-30">
         <div className="p-6 border-b border-border" style={{ paddingTop: 'calc(1.5rem + env(safe-area-inset-top))' }}>
-          <h1 className="font-heading text-xl font-bold tracking-tight text-foreground">HomeLifeFocus</h1>
+          <div className="flex items-center gap-2">
+            <Home className="w-5 h-5 text-primary" />
+            <h1 className="font-heading text-xl font-bold tracking-tight text-foreground">HomeLifeFocus</h1>
+          </div>
           <p className="text-xs text-muted-foreground mt-1">Family Task Manager</p>
         </div>
         <nav className="flex-1 p-4 space-y-1">
