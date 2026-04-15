@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Play, Pause, X, Zap } from "lucide-react";
 import BurstTimer from "@/components/BurstTimer";
+import TaskCard from "@/components/TaskCard";
 import confetti from "canvas-confetti";
 
 export default function Burst() {
@@ -150,7 +151,7 @@ export default function Burst() {
         )}
 
         {isActive && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             <h2 className="font-heading text-lg font-semibold">Complete tasks to earn bonus XP!</h2>
             {pendingTasks.length === 0 ? (
               <div className="bg-card border border-border rounded-2xl p-8 text-center text-muted-foreground">
@@ -158,19 +159,7 @@ export default function Burst() {
               </div>
             ) : (
               pendingTasks.map(task => (
-                <div key={task.id} className="bg-card border border-border rounded-lg p-4 flex items-start justify-between">
-                  <div>
-                    <h3 className="font-semibold">{task.name}</h3>
-                    <p className="text-xs text-muted-foreground">Assigned to: {task.assigned_to_name || "Unassigned"}</p>
-                  </div>
-                  <Button
-                    onClick={() => handleTaskComplete(task.id, task.assigned_to)}
-                    disabled={!task.assigned_to || completions[`${task.id}-${task.assigned_to}`]}
-                    size="sm"
-                  >
-                    {completions[`${task.id}-${task.assigned_to}`] ? "✓ Done" : "Mark Done"}
-                  </Button>
-                </div>
+                <TaskCard key={task.id} task={task} onComplete={(t) => handleTaskComplete(t.id, t.assigned_to)} />
               ))
             )}
           </div>
@@ -193,20 +182,7 @@ export default function Burst() {
             ) : (
               <div className="space-y-3">
                 {pendingTasks.map(task => (
-                  <div key={task.id} className="bg-card border border-border rounded-lg p-4 flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="font-semibold">{task.name}</h3>
-                      <p className="text-xs text-muted-foreground">Assigned to: {task.assigned_to_name || "Unassigned"}</p>
-                    </div>
-                    <Button
-                      onClick={() => handleTaskComplete(task.id, task.assigned_to)}
-                      disabled={!task.assigned_to}
-                      size="sm"
-                      variant="outline"
-                    >
-                      Mark Done
-                    </Button>
-                  </div>
+                  <TaskCard key={task.id} task={task} onComplete={(t) => handleTaskComplete(t.id, t.assigned_to)} />
                 ))}
               </div>
             )}
