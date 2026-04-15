@@ -8,6 +8,7 @@ import QuickNav from "../components/QuickNav";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { awardPoints } from "@/utils/gamification";
 import PointsToast from "../components/PointsToast";
+import BlastModeToast from "../components/BlastModeToast";
 import { Button } from "@/components/ui/button";
 import StatCard from "../components/StatCard";
 import TaskCard, { getStatusInfo } from "../components/TaskCard";
@@ -23,6 +24,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [reward, setReward] = useState(null);
+  const [blastToastShow, setBlastToastShow] = useState(false);
   const [taskListModal, setTaskListModal] = useState(null);
   const [allTasksOpen, setAllTasksOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -83,7 +85,13 @@ export default function Dashboard() {
       streak: newStreak,
     });
     const result = await awardPoints(task);
-    if (result) setReward(result);
+    if (result) {
+      setReward(result);
+      if (result.blastBonus) {
+        setBlastToastShow(true);
+        setTimeout(() => setBlastToastShow(false), 2000);
+      }
+    }
     loadTasks();
   }
 
@@ -170,6 +178,7 @@ export default function Dashboard() {
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
+      <BlastModeToast show={blastToastShow} onDismiss={() => setBlastToastShow(false)} />
       <TaskDetailModal task={selectedTask} open={!!selectedTask} onOpenChange={(open) => { if (!open) setSelectedTask(null); }} />
 
       <Drawer open={!!taskListModal} onOpenChange={() => setTaskListModal(null)}>
