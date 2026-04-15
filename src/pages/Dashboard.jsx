@@ -126,13 +126,13 @@ export default function Dashboard() {
         <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks })} />
       </div>
 
+      <LeaderboardSummary />
+
       <Link to="/burst">
         <Button className="w-full gap-2 bg-orange-500 hover:bg-orange-600 text-white h-11 text-base">
           <Zap className="w-5 h-5" /> Blast Mode
         </Button>
       </Link>
-
-      <LeaderboardSummary />
 
       {profile && getEarnedBadges(profile).length > 0 && (
         <div className="bg-card border border-border rounded-lg p-5">
