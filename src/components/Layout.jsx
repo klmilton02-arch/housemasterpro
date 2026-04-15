@@ -6,7 +6,7 @@ import MobileHeader from "./MobileHeader";
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
   { path: "/tasks", label: "Tasks", icon: ListChecks },
-  { path: "/burst", label: "Burst", icon: Zap },
+  { path: "/burst", label: "Burst", icon: Zap, iconColor: "text-yellow-400" },
   { path: "/presets", label: "Presets", icon: Sparkles },
   { path: "/family", label: "People", icon: Users },
   { path: "/leaderboard", label: "Scores", icon: Trophy },
@@ -81,7 +81,7 @@ export default function Layout() {
         className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border flex z-40"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
-        {navItems.map(({ path, label, icon: Icon }) => {
+        {navItems.map(({ path, label, icon: Icon, iconColor }) => {
           const isActive = path === "/" ? location.pathname === "/" : location.pathname.startsWith(path);
           return (
             <Link
@@ -102,7 +102,7 @@ export default function Layout() {
                 isActive ? "text-primary" : "text-muted-foreground"
               )}
             >
-              <Icon className="w-5 h-5" />
+              <Icon className={cn("w-5 h-5", iconColor)} />
             </Link>
           );
         })}
