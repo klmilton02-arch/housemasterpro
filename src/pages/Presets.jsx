@@ -47,6 +47,8 @@ export default function Presets() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
+  const [roomFilter, setRoomFilter] = useState("all");
+  const [frequencyFilter, setFrequencyFilter] = useState("all");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -82,12 +84,27 @@ export default function Presets() {
     CLEANING_SUBCATEGORIES.includes(p.category) ? "Cleaning" : p.category
   ))];
 
+  const displayRooms = [...new Set(presets.map(p => p.room).filter(Boolean))].sort();
+
+  const FREQUENCY_BANDS = [
+    { value: "daily", label: "Daily (1-2 days)", min: 1, max: 2 },
+    { value: "weekly", label: "Weekly (3-14 days)", min: 3, max: 14 },
+    { value: "monthly", label: "Monthly (15-45 days)", min: 15, max: 45 },
+    { value: "quarterly", label: "Quarterly (46-120 days)", min: 46, max: 120 },
+    { value: "yearly", label: "Yearly (121+ days)", min: 121, max: Infinity },
+  ];
+
   const filtered = presets.filter(p => {
     if (p.category === "Car Maintenance") return false;
     if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
     const displayCat = CLEANING_SUBCATEGORIES.includes(p.category) ? "Cleaning" : p.category;
     if (categoryFilter !== "all" && displayCat !== categoryFilter) return false;
     if (difficultyFilter !== "all" && p.difficulty !== difficultyFilter) return false;
+    if (roomFilter !== "all" && p.room !== roomFilter) return false;
+    if (frequencyFilter !== "all") {
+      const band = FREQUENCY_BANDS.find(b => b.value === frequencyFilter);
+      if (band && (p.frequency_days < band.min || p.frequency_days > band.max)) return false;
+    }
     return true;
   });
 
@@ -141,6 +158,27 @@ export default function Presets() {
               { value: "Medium", label: "Medium" },
               { value: "Hard", label: "Hard" },
               { value: "Very Hard", label: "Very Hard" },
+            ]}
+          />
+          <MobileSelect
+            value={roomFilter}
+            onValueChange={setRoomFilter}
+            title="Filter by Room"
+            triggerClassName="w-full"
+            options={[{ value: "all", label: "All Rooms" }, ...displayRooms.map(r => ({ value: r, label: r }))]}
+          />
+          <MobileSelect
+            value={frequencyFilter}
+            onValueChange={setFrequencyFilter}
+            title="Filter by Frequency"
+            triggerClassName="w-full"
+            options={[
+              { value: "all", label: "All Frequencies" },
+              { value: "daily", label: "Daily" },
+              { value: "weekly", label: "Weekly" },
+              { value: "monthly", label: "Monthly" },
+              { value: "quarterly", label: "Quarterly" },
+              { value: "yearly", label: "Yearly" },
             ]}
           />
         </div>
