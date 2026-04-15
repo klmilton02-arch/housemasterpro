@@ -127,7 +127,7 @@ export default function Presets() {
     <div className="space-y-3 max-w-xs md:max-w-2xl mx-auto px-2 sm:px-1 pt-6">
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <h1 className="font-heading text-3xl sm:text-2xl font-bold">Preset Library</h1>
+          <h1 className="font-heading text-3xl sm:text-2xl font-bold">Preset Library 📚</h1>
           <span className="text-sm text-muted-foreground">{presets.length} presets</span>
         </div>
         <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} className="gap-2 w-full">
