@@ -109,45 +109,41 @@ export default function Presets() {
 
   return (
     <div className="space-y-3 max-w-xs md:max-w-2xl mx-auto px-2 sm:px-1 pt-6">
-      <div className="flex flex-col gap-3">
-        <div>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between">
           <h1 className="font-heading text-3xl sm:text-2xl font-bold">Preset Library</h1>
-          <p className="text-base sm:text-sm text-muted-foreground mt-1">{presets.length} presets</p>
+          <span className="text-sm text-muted-foreground">{presets.length} presets</span>
         </div>
-        <div className="flex flex-col gap-2">
-          <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} className="gap-2">
-            <Plus className="w-4 h-4" /> New Preset
-          </Button>
-          <p className="text-base sm:text-sm text-muted-foreground">{presets.length} presets</p>
-        </div>
-      </div>
-
-      <div className="flex gap-2">
-        <div className="relative flex-1">
+        <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} className="gap-2 w-full">
+          <Plus className="w-4 h-4" /> New Preset
+        </Button>
+        <div className="relative w-full">
           <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground" />
-          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." className="pl-7" />
+          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." className="pl-7 w-full" />
         </div>
-        <MobileSelect
-          value={categoryFilter}
-          onValueChange={setCategoryFilter}
-          title="Filter by Category"
-          triggerClassName="flex-1"
-          options={[{ value: "all", label: "All Categories" }, ...displayCategories.map(c => ({ value: c, label: c }))]}
-        />
-        <MobileSelect
-          value={difficultyFilter}
-          onValueChange={setDifficultyFilter}
-          title="Filter by Difficulty"
-          triggerClassName="flex-1"
-          options={[
-            { value: "all", label: "All Difficulties" },
-            { value: "Trivial", label: "Trivial" },
-            { value: "Easy", label: "Easy" },
-            { value: "Medium", label: "Medium" },
-            { value: "Hard", label: "Hard" },
-            { value: "Very Hard", label: "Very Hard" },
-          ]}
-        />
+        <div className="grid grid-cols-2 gap-2">
+          <MobileSelect
+            value={categoryFilter}
+            onValueChange={setCategoryFilter}
+            title="Filter by Category"
+            triggerClassName="w-full"
+            options={[{ value: "all", label: "All Categories" }, ...displayCategories.map(c => ({ value: c, label: c }))]}
+          />
+          <MobileSelect
+            value={difficultyFilter}
+            onValueChange={setDifficultyFilter}
+            title="Filter by Difficulty"
+            triggerClassName="w-full"
+            options={[
+              { value: "all", label: "All Difficulties" },
+              { value: "Trivial", label: "Trivial" },
+              { value: "Easy", label: "Easy" },
+              { value: "Medium", label: "Medium" },
+              { value: "Hard", label: "Hard" },
+              { value: "Very Hard", label: "Very Hard" },
+            ]}
+          />
+        </div>
       </div>
 
       {Object.keys(grouped).length === 0 ? (
