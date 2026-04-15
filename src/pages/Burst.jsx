@@ -168,9 +168,9 @@ export default function Burst() {
         )}
 
         {!isActive && Object.keys(completions).length > 0 && (
-          <div className="bg-primary/10 border border-primary rounded-2xl p-6 text-center">
-            <p className="font-heading text-xl font-bold text-primary mb-2">Blast Complete!</p>
-            <p className="text-muted-foreground">{Object.keys(completions).length} task{Object.keys(completions).length !== 1 ? 's' : ''} completed. Extra XP awarded!</p>
+          <div className="bg-yellow-400 border border-yellow-500 rounded-2xl p-6 text-center">
+            <p className="font-heading text-xl font-bold text-black mb-2">⚡ Blast Mode Double XP</p>
+            <p className="text-black/70">{Object.keys(completions).length} task{Object.keys(completions).length !== 1 ? 's' : ''} completed with 2× XP!</p>
           </div>
         )}
 
