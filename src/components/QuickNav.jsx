@@ -7,7 +7,7 @@ const rows = [
     { to: "/presets", label: "Presets", icon: Sparkles, cardClass: "bg-orange-400 border-orange-400 hover:bg-orange-500 hover:border-orange-500", textClass: "text-white", iconClass: "text-white" },
   ],
   [
-    { to: "/family", label: "Family", icon: Users, cardClass: "bg-card border-border hover:border-primary/30", textClass: "text-foreground", iconClass: "text-primary" },
+    { to: "/family", label: "Family", icon: Users, cardClass: "bg-blue-500 border-blue-500 hover:bg-blue-600 hover:border-blue-600", textClass: "text-white", iconClass: "text-white" },
     { to: "/leaderboard", label: "Leaderboard", icon: Trophy, cardClass: "bg-slate-400 border-slate-400 hover:bg-slate-500 hover:border-slate-500", textClass: "text-white", iconClass: "text-white" },
   ],
   [
