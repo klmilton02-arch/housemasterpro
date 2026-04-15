@@ -72,10 +72,9 @@ export async function awardPoints(task) {
   const isDeep = task.task_type === "Deep Cleaning";
 
   const basePoints = getTaskPoints(task);
-  const bonusPoints = isOverdue ? 5 : 0;
   const isBlastActive = localStorage.getItem("blast_mode_active") === "true";
   const blastMultiplier = isBlastActive ? 2 : 1;
-  const totalPoints = (basePoints + bonusPoints) * blastMultiplier;
+  const totalPoints = basePoints * blastMultiplier;
 
   // Find or create profile
   const profiles = await base44.entities.GamificationProfile.filter({ family_member_id: memberId });
@@ -135,5 +134,5 @@ export async function awardPoints(task) {
     .filter(b => newBadgeIds.includes(b.id))
     .map(b => `${b.emoji} ${b.name}`);
 
-  return { points: basePoints, bonusPoints, totalPoints, leveledUp, newLevel: newLevelInfo.title, newBadges, blastBonus: isBlastActive };
+  return { points: basePoints, totalPoints, leveledUp, newLevel: newLevelInfo.title, newBadges, blastBonus: isBlastActive };
 }
