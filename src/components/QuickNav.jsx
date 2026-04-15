@@ -11,7 +11,7 @@ const rows = [
     { to: "/leaderboard", label: "Leaderboard", icon: Trophy, cardClass: "bg-slate-400 border-slate-400 hover:bg-slate-500 hover:border-slate-500", textClass: "text-white", iconClass: "text-white" },
   ],
   [
-    { to: "/home-setup", label: "Home Setup", icon: Home, cardClass: "bg-red-500 border-red-500 hover:bg-red-600 hover:border-red-600", textClass: "text-white", iconClass: "text-white" },
+    { to: "/home-setup", label: "Home Setup", icon: Home, cardClass: "bg-black border-black hover:bg-gray-900 hover:border-gray-900", textClass: "text-white", iconClass: "text-white" },
   ],
 ];
 
