@@ -42,6 +42,7 @@ function PresetCard({ p, onEdit, onDelete, onClick }) {
           {p.name.toLowerCase().includes("appliance") ? <span className="text-lg">🧽</span> : null}
           {p.name.toLowerCase().includes("window") ? <span className="text-lg">🪟</span> : null}
           {p.name.toLowerCase().includes("fireplace") || p.name.toLowerCase().includes("chimney") ? <span className="text-lg">🔥</span> : null}
+          {p.name.toLowerCase().includes("bathtub") || p.name.toLowerCase().includes("bath tub") ? <span className="text-lg">🛁</span> : null}
         </div>
       </div>
     </div>
