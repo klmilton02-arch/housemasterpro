@@ -4,9 +4,9 @@ import { cn } from "@/lib/utils";
 import MobileHeader from "./MobileHeader";
 
 const navItems = [
-  { path: "/", label: "Dashboard", icon: LayoutDashboard },
+  { path: "/", label: "Dashboard", icon: LayoutDashboard, iconColor: "text-blue-500" },
   { path: "/tasks", label: "Tasks", icon: ListChecks, iconColor: "text-green-500" },
-  { path: "/burst", label: "Burst", icon: Zap, iconColor: "text-yellow-400" },
+  { path: "/burst", label: "Blast", icon: Zap, iconColor: "text-yellow-400" },
   { path: "/presets", label: "Presets", icon: Sparkles, iconColor: "text-orange-400" },
   { path: "/family", label: "People", icon: Users },
   { path: "/leaderboard", label: "Scores", icon: Trophy, iconColor: "text-slate-400" },
@@ -33,21 +33,24 @@ export default function Layout() {
           <p className="text-xs text-muted-foreground mt-1">Family Task Manager</p>
         </div>
         <nav className="flex-1 p-4 space-y-1">
-          {navItems.map(({ path, label, icon: Icon }) => (
-            <Link
-              key={path}
-              to={path}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all select-none",
-                location.pathname === path
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              )}
-            >
-              <Icon className="w-4 h-4" />
-              {label}
-            </Link>
-          ))}
+          {navItems.map(({ path, label, icon: Icon, iconColor }) => {
+            const isActive = location.pathname === path;
+            return (
+              <Link
+                key={path}
+                to={path}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all select-none",
+                  isActive
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                )}
+              >
+                <Icon className={cn("w-4 h-4", !isActive && iconColor)} />
+                {label}
+              </Link>
+            );
+          })}
         </nav>
         <div className="border-t border-border p-4">
           <Link
