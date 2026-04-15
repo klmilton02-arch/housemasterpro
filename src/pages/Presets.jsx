@@ -55,8 +55,8 @@ export default function Presets() {
   const [editingPreset, setEditingPreset] = useState(null);
 
   function handlePresetClick(preset) {
-    setSelectedPreset(preset);
-    setAddDialogOpen(true);
+    setEditingPreset(preset);
+    setEditDialogOpen(true);
   }
 
   function handleEdit(e, preset) {
