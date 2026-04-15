@@ -89,11 +89,6 @@ export default function Landing() {
           HomeLifeFocus helps families stay on top of chores, maintenance, and bills — with smart scheduling, gamified rewards, and calendar sync that actually works.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link to="/">
-            <Button size="lg" className="gap-2 w-full sm:w-auto">
-              Get Started Free <ChevronRight className="w-4 h-4" />
-            </Button>
-          </Link>
           <a href="#features">
             <Button size="lg" variant="outline" className="w-full sm:w-auto">See Features</Button>
           </a>
