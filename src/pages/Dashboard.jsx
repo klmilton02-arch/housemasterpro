@@ -110,16 +110,20 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6 max-w-xs md:max-w-2xl mx-auto px-2 sm:px-1 pt-6">
-      <div className="flex flex-col gap-3">
-        <div>
-          <h1 className="font-heading text-3xl sm:text-2xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-base sm:text-sm text-muted-foreground mt-1">Your home maintenance at a glance</p>
-        </div>
-        <div className="flex gap-2">
-          <Button onClick={() => setDialogOpen(true)} className="gap-2 flex-1">
-            <Plus className="w-4 h-4" /> Add Task
-          </Button>
-          <SyncCalendarButton />
+
+      {/* Hero Banner */}
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 p-5 text-white shadow-lg">
+        <div className="absolute -right-4 -bottom-4 text-8xl opacity-30 select-none pointer-events-none">🪣</div>
+        <div className="absolute right-10 -bottom-2 text-6xl opacity-25 select-none pointer-events-none">🧹</div>
+        <div className="relative z-10 flex flex-col gap-2">
+          <h1 className="font-heading text-2xl sm:text-3xl font-bold">HomeLifeFocus 🏠</h1>
+          <p className="text-blue-100 text-sm">Keep your home sparkling clean & on track!</p>
+          <div className="flex gap-2 mt-2">
+            <Button onClick={() => setDialogOpen(true)} size="sm" className="gap-2 bg-white text-indigo-600 hover:bg-blue-50 font-semibold">
+              <Plus className="w-4 h-4" /> Add Task
+            </Button>
+            <SyncCalendarButton className="bg-white/20 hover:bg-white/30 text-white border-white/30" />
+          </div>
         </div>
       </div>
 
