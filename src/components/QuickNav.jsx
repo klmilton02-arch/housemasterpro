@@ -3,15 +3,15 @@ import { ListTodo, Sparkles, Users, Trophy, Home } from "lucide-react";
 
 const rows = [
   [
-    { to: "/tasks", label: "Tasks", icon: ListTodo, iconColor: "text-green-500" },
-    { to: "/presets", label: "Presets", icon: Sparkles, iconColor: "text-orange-400" },
+    { to: "/tasks", label: "Tasks", icon: ListTodo, cardClass: "bg-green-500 border-green-500 hover:bg-green-600 hover:border-green-600", textClass: "text-white", iconClass: "text-white" },
+    { to: "/presets", label: "Presets", icon: Sparkles, cardClass: "bg-orange-400 border-orange-400 hover:bg-orange-500 hover:border-orange-500", textClass: "text-white", iconClass: "text-white" },
   ],
   [
-    { to: "/family", label: "Family", icon: Users, iconColor: "text-primary" },
-    { to: "/leaderboard", label: "Leaderboard", icon: Trophy, iconColor: "text-slate-400" },
+    { to: "/family", label: "Family", icon: Users, cardClass: "bg-card border-border hover:border-primary/30", textClass: "text-foreground", iconClass: "text-primary" },
+    { to: "/leaderboard", label: "Leaderboard", icon: Trophy, cardClass: "bg-slate-400 border-slate-400 hover:bg-slate-500 hover:border-slate-500", textClass: "text-white", iconClass: "text-white" },
   ],
   [
-    { to: "/home-setup", label: "Home Setup", icon: Home, iconColor: "text-red-500" },
+    { to: "/home-setup", label: "Home Setup", icon: Home, cardClass: "bg-red-500 border-red-500 hover:bg-red-600 hover:border-red-600", textClass: "text-white", iconClass: "text-white" },
   ],
 ];
 
@@ -20,14 +20,14 @@ export default function QuickNav() {
     <div className="space-y-2">
       {rows.map((row, i) => (
         <div key={i} className={`grid gap-2 ${row.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
-          {row.map(({ to, label, icon: Icon, iconColor }) => (
+          {row.map(({ to, label, icon: Icon, cardClass, textClass, iconClass }) => (
             <Link
               key={to}
               to={to}
-              className="bg-card border border-border rounded-lg p-3 text-center hover:shadow-md hover:border-primary/30 transition-all active:scale-95 flex flex-col items-center gap-1 justify-center"
+              className={`border rounded-lg p-3 text-center hover:shadow-md transition-all active:scale-95 flex flex-col items-center gap-1 justify-center ${cardClass}`}
             >
-              <Icon className={`w-5 h-5 ${iconColor}`} />
-              <span className="text-xs font-medium text-foreground">{label}</span>
+              <Icon className={`w-5 h-5 ${iconClass}`} />
+              <span className={`text-xs font-medium ${textClass}`}>{label}</span>
             </Link>
           ))}
         </div>
