@@ -98,7 +98,7 @@ export default function Layout() {
                 }
               }}
               className={cn(
-                "flex-1 flex flex-col items-center justify-center py-2 gap-0.5 select-none transition-colors",
+                "flex-1 flex flex-col items-center justify-center py-4 gap-0.5 select-none transition-colors",
                 isActive ? "text-primary" : "text-muted-foreground"
               )}
             >
