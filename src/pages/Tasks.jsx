@@ -194,22 +194,22 @@ export default function Tasks() {
   }
 
   return (
-    <div className="space-y-3 max-w-xs md:max-w-2xl mx-auto px-2 sm:px-1 pt-6">
+    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
       <div className="flex flex-col gap-3">
         <div>
-          <h1 className="font-heading text-3xl sm:text-2xl font-bold">Home Tasks</h1>
-          <p className="text-base sm:text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
+          <h1 className="font-heading text-4xl sm:text-3xl font-bold">Home Tasks</h1>
+          <p className="text-base text-muted-foreground mt-1">{filtered.length} tasks</p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={() => setDialogOpen(true)} className="gap-2 flex-1">
-            <Plus className="w-4 h-4" /> Add Task
+          <Button onClick={() => setDialogOpen(true)} className="gap-2 flex-1 h-11 text-base">
+            <Plus className="w-5 h-5" /> Add Task
           </Button>
           <Button
             variant="default"
-            className="gap-2 flex-1"
+            className="gap-2 flex-1 h-11 text-base"
             onClick={() => { setBatchMode(b => !b); setSelectedIds(new Set()); }}
           >
-            <CheckSquare className="w-4 h-4" /> Select
+            <CheckSquare className="w-5 h-5" /> Select
           </Button>
         </div>
       </div>
@@ -219,7 +219,7 @@ export default function Tasks() {
           value={statusFilter}
           onValueChange={setStatusFilter}
           title="Filter by Status"
-          triggerClassName="flex-1 min-w-0 text-xs h-8"
+          triggerClassName="flex-1 min-w-0 text-sm h-10"
           options={[
             { value: "all", label: "All Status" },
             { value: "pending", label: "Pending" },
@@ -232,7 +232,7 @@ export default function Tasks() {
           value={categoryFilter}
           onValueChange={setCategoryFilter}
           title="Filter by Category"
-          triggerClassName="flex-1 min-w-0 text-xs"
+          triggerClassName="flex-1 min-w-0 text-sm h-10"
           options={[
             { value: "all", label: "All Categories" },
             ...categories.map(c => ({ value: c, label: c })),
@@ -242,7 +242,7 @@ export default function Tasks() {
           value={groupBy}
           onValueChange={setGroupBy}
           title="Group By"
-          triggerClassName="flex-1 min-w-0 text-xs"
+          triggerClassName="flex-1 min-w-0 text-sm h-10"
           options={[
             { value: "none", label: "No Grouping" },
             { value: "category", label: "Group by Category" },
@@ -261,7 +261,7 @@ export default function Tasks() {
           {groups.map(({ label, tasks: groupTasks }) => (
             <div key={label || "all"}>
               {label && (
-                <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5 px-0.5">{label}</h2>
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-2 px-0.5">{label}</h2>
               )}
               <div className="space-y-2">
                 {groupTasks.map(task => (
