@@ -190,7 +190,9 @@ export default function Presets() {
       ) : (
         Object.entries(grouped).map(([cat, items]) => (
           <div key={cat}>
-            <h2 className="font-heading font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-2">{cat}</h2>
+            <h2 className="font-heading font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-2">
+            {cat}{cat === "Bill Schedules" ? " 💵" : ""}
+          </h2>
             {cat === "Cleaning" ? (
               // Cleaning: show subcategory headers
               Object.entries(
