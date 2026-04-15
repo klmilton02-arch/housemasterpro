@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Play, Pause, X, Zap } from "lucide-react";
 import BurstTimer from "@/components/BurstTimer";
 import TaskCard from "@/components/TaskCard";
+import PointsToast from "@/components/PointsToast";
+import BlastModeToast from "@/components/BlastModeToast";
+import { awardPoints } from "@/utils/gamification";
 import confetti from "canvas-confetti";
 
 export default function Burst() {
@@ -13,6 +16,8 @@ export default function Burst() {
   const [duration, setDuration] = useState(30); // minutes
   const [timeLeft, setTimeLeft] = useState(30 * 60); // seconds
   const [completions, setCompletions] = useState({});
+  const [reward, setReward] = useState(null);
+  const [blastToastShow, setBlastToastShow] = useState(false);
 
   const { data: tasks = [] } = useQuery({
     queryKey: ["tasks"],
@@ -30,31 +35,24 @@ export default function Burst() {
   });
 
   const completionMutation = useMutation({
-    mutationFn: async ({ taskId, memberId, xpBonus }) => {
-      const task = tasks.find(t => t.id === taskId);
+    mutationFn: async ({ task, memberId }) => {
       const today = new Date().toISOString().split("T")[0];
+      const nextDue = new Date();
+      nextDue.setDate(nextDue.getDate() + task.frequency_days);
       
-      await base44.entities.Task.update(taskId, {
+      await base44.entities.Task.update(task.id, {
         status: "Completed",
         last_completed_date: today,
+        next_due_date: nextDue.toISOString().split("T")[0],
       });
 
-      await base44.entities.CompletionHistory.create({
-        family_member_id: memberId,
-        family_member_name: members.find(m => m.id === memberId)?.name || "Unknown",
-        task_id: taskId,
-        task_name: task?.name || "Unknown Task",
-        points_earned: xpBonus,
-        completed_date: today,
-        is_overdue: false,
-      });
-
-      const profile = gamification.find(g => g.family_member_id === memberId);
-      if (profile) {
-        await base44.entities.GamificationProfile.update(profile.id, {
-          total_xp: (profile.total_xp || 0) + xpBonus,
-          total_completions: (profile.total_completions || 0) + 1,
-        });
+      const result = await awardPoints(task);
+      if (result) {
+        setReward(result);
+        if (result.blastBonus) {
+          setBlastToastShow(true);
+          setTimeout(() => setBlastToastShow(false), 2000);
+        }
       }
 
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
@@ -94,14 +92,13 @@ export default function Burst() {
     }
   }
 
-  function handleTaskComplete(taskId, memberId) {
-    const key = `${taskId}-${memberId}`;
+  function handleTaskComplete(task) {
+    const key = `${task.id}-${task.assigned_to}`;
     if (!completions[key]) {
       setCompletions(prev => ({ ...prev, [key]: true }));
       completionMutation.mutate({
-        taskId,
-        memberId,
-        xpBonus: 50, // Blast bonus XP
+        task,
+        memberId: task.assigned_to,
       });
     }
   }
@@ -161,7 +158,7 @@ export default function Burst() {
               </div>
             ) : (
               pendingTasks.map(task => (
-                <TaskCard key={task.id} task={task} onComplete={(t) => handleTaskComplete(t.id, t.assigned_to)} />
+                <TaskCard key={task.id} task={task} onComplete={handleTaskComplete} />
               ))
             )}
           </div>
@@ -184,12 +181,15 @@ export default function Burst() {
             ) : (
               <div className="space-y-3">
                 {pendingTasks.map(task => (
-                  <TaskCard key={task.id} task={task} onComplete={(t) => handleTaskComplete(t.id, t.assigned_to)} />
+                  <TaskCard key={task.id} task={task} onComplete={handleTaskComplete} />
                 ))}
               </div>
             )}
           </div>
         )}
+
+      <PointsToast reward={reward} onDismiss={() => setReward(null)} />
+      <BlastModeToast show={blastToastShow} onDismiss={() => setBlastToastShow(false)} />
       </div>
     </div>
   );
