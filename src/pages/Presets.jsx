@@ -20,7 +20,7 @@ function PresetCard({ p, onEdit, onDelete, onClick }) {
       </div>
       <div onClick={() => onClick(p)} className="cursor-pointer">
         <div className="flex items-start justify-between gap-2 mb-1 pr-10">
-          <h3 className="font-heading font-semibold text-xs">{p.name}{p.category === "Bill Schedules" ? " 💵" : ""}</h3>
+          <h3 className="font-heading font-semibold text-xs">{p.name}</h3>
           {p.difficulty && (
             <Badge variant="outline" className="shrink-0 text-xs">{p.difficulty}</Badge>
           )}
@@ -34,6 +34,7 @@ function PresetCard({ p, onEdit, onDelete, onClick }) {
               {p.room}
             </span>
           )}
+          {p.category === "Bill Schedules" && <span className="text-lg">💵</span>}
         </div>
       </div>
     </div>
