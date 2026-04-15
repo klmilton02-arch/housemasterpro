@@ -14,12 +14,12 @@ const CLEANING_SUBCATEGORIES = ["Kitchen Cleaning", "Bathroom Cleaning", "Bedroo
 function PresetCard({ p, onEdit, onDelete, onClick }) {
   return (
     <div className="bg-card border border-border rounded-lg p-3 hover:shadow-md hover:border-primary/30 transition-all group relative">
-      <div className="absolute top-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-        <button onClick={e => onEdit(e, p)} className="w-11 h-11 flex items-center justify-center rounded hover:bg-muted"><Pencil className="w-4 h-4 text-muted-foreground" /></button>
-        <button onClick={e => onDelete(e, p)} className="w-11 h-11 flex items-center justify-center rounded hover:bg-red-50"><Trash2 className="w-4 h-4 text-red-400" /></button>
+      <div className="absolute top-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity z-10 bg-card rounded-md shadow-sm">
+        <button onClick={e => onEdit(e, p)} className="w-9 h-9 flex items-center justify-center rounded hover:bg-muted"><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+        <button onClick={e => onDelete(e, p)} className="w-9 h-9 flex items-center justify-center rounded hover:bg-red-50"><Trash2 className="w-3.5 h-3.5 text-red-400" /></button>
       </div>
       <div onClick={() => onClick(p)} className="cursor-pointer">
-        <div className="flex items-start justify-between gap-2 mb-1.5 pr-10">
+        <div className="flex items-start justify-between gap-2 mb-1.5 pr-16">
           <h3 className="font-heading font-semibold text-sm">{p.name}</h3>
           {p.difficulty && (
             <Badge variant="outline" className="shrink-0 text-xs">{p.difficulty}</Badge>
