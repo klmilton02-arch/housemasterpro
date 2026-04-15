@@ -98,7 +98,7 @@ export default function Burst() {
       completionMutation.mutate({
         taskId,
         memberId,
-        xpBonus: 50, // Burst bonus XP
+        xpBonus: 50, // Blast bonus XP
       });
     }
   }
@@ -109,11 +109,11 @@ export default function Burst() {
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className="font-heading text-3xl font-bold mb-6">Burst Mode</h1>
+        <h1 className="font-heading text-3xl font-bold mb-6">Blast Mode</h1>
 
         {!isActive ? (
           <div className="bg-card border border-border rounded-2xl p-8 text-center mb-6">
-            <p className="text-muted-foreground mb-6">Set your burst duration and race to complete the most tasks!</p>
+            <p className="text-muted-foreground mb-6">Set your blast duration and race to complete the most tasks!</p>
             <div className="flex items-center gap-4 justify-center mb-6">
               <label className="flex items-center gap-2">
                 <span className="text-sm font-medium">Duration:</span>
@@ -129,7 +129,7 @@ export default function Burst() {
               </label>
             </div>
             <Button onClick={startBurst} size="lg" className="gap-2">
-              <Play className="w-4 h-4" /> Start Burst
+              <Play className="w-4 h-4" /> Start Blast
             </Button>
           </div>
         ) : (
@@ -141,7 +141,7 @@ export default function Burst() {
                 {isActive ? "Pause" : "Resume"}
               </Button>
               <Button onClick={() => { setIsActive(false); endBurst(); }} variant="outline" className="gap-2 text-destructive">
-                <X className="w-4 h-4" /> End Burst
+                <X className="w-4 h-4" /> End Blast
               </Button>
             </div>
           </div>
@@ -176,7 +176,7 @@ export default function Burst() {
 
         {!isActive && Object.keys(completions).length > 0 && (
           <div className="bg-primary/10 border border-primary rounded-2xl p-6 text-center">
-            <p className="font-heading text-xl font-bold text-primary mb-2">Burst Complete!</p>
+            <p className="font-heading text-xl font-bold text-primary mb-2">Blast Complete!</p>
             <p className="text-muted-foreground">{Object.keys(completions).length} task{Object.keys(completions).length !== 1 ? 's' : ''} completed. Extra XP awarded!</p>
           </div>
         )}
