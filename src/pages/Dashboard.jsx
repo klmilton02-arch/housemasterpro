@@ -116,7 +116,7 @@ export default function Dashboard() {
         <div className="absolute -right-4 -bottom-4 text-8xl opacity-30 select-none pointer-events-none">🪣</div>
         <div className="absolute right-10 -bottom-2 text-6xl opacity-25 select-none pointer-events-none">🧹</div>
         <div className="relative z-10 flex flex-col gap-2">
-          <h1 className="font-heading text-2xl sm:text-3xl font-bold">HomeLifeFocus 🏠</h1>
+          <h1 className="font-heading text-2xl sm:text-3xl font-bold">Home Task Manager</h1>
           <p className="text-blue-100 text-sm">Keep your home sparkling clean & on track!</p>
           <div className="flex gap-2 mt-2">
             <Button onClick={() => setDialogOpen(true)} size="sm" className="gap-2 bg-white text-indigo-600 hover:bg-blue-50 font-semibold">
