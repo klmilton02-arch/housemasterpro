@@ -109,16 +109,16 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6 max-w-xs md:max-w-2xl mx-auto px-2 sm:px-1 pt-6">
+    <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
 
-      <div className="grid grid-cols-2 gap-2 sm:gap-3">
-        <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full">
-          <Plus className="w-4 h-4" /> Add Task
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
+        <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full text-base h-11">
+          <Plus className="w-5 h-5" /> Add Task
         </Button>
         <SyncCalendarButton className="w-full" />
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-2 gap-2 sm:gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
         <StatCard icon={ListChecks} label="Due" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'Due Tasks', tasks: dueTasks })} />
         <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks })} />
         <StatCard icon={Clock} label="Due Soon" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" onClick={() => setTaskListModal({ title: 'Due Soon', tasks: dueSoonTasks })} />
@@ -128,25 +128,25 @@ export default function Dashboard() {
       <LeaderboardSummary />
 
       {profile && getEarnedBadges(profile).length > 0 && (
-        <div className="bg-card border border-border rounded-lg p-4">
-          <h2 className="font-heading font-semibold text-foreground mb-3">Your Badges</h2>
+        <div className="bg-card border border-border rounded-lg p-5">
+          <h2 className="font-heading font-semibold text-lg text-foreground mb-3">Your Badges</h2>
           <BadgeDisplay badges={getEarnedBadges(profile)} size="sm" />
         </div>
       )}
 
       <div className="bg-card border border-border rounded-lg overflow-hidden">
         <button
-          className="w-full flex items-center justify-between p-4 hover:bg-muted/40 transition-colors"
+          className="w-full flex items-center justify-between p-5 hover:bg-muted/40 transition-colors"
           onClick={() => setAllTasksOpen(o => !o)}
         >
-          <h2 className="font-heading font-semibold text-foreground">All Tasks</h2>
+          <h2 className="font-heading font-semibold text-lg text-foreground">All Tasks</h2>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">{tasks.length} total</span>
+            <span className="text-base text-muted-foreground">{tasks.length} total</span>
             {allTasksOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
           </div>
         </button>
         {allTasksOpen && (
-          <div className="space-y-2 max-h-64 overflow-y-auto px-4 pb-4">
+          <div className="space-y-3 max-h-72 overflow-y-auto px-5 pb-5">
             {tasks.slice(0, 10).map(task => (
               <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
             ))}
