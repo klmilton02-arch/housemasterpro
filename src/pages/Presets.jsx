@@ -38,6 +38,7 @@ function PresetCard({ p, onEdit, onDelete, onClick }) {
           {p.name.toLowerCase().includes("garbage") || p.name.toLowerCase().includes("trash") || p.name.toLowerCase().includes("bin") ? <span className="text-lg">🗑️</span> : null}
           {p.name.toLowerCase().includes("toilet") ? <span className="text-lg">🚽</span> : null}
           {p.name.toLowerCase().includes("vacuum") ? <span className="text-lg">🪣</span> : null}
+          {p.name.toLowerCase().includes("sheet") ? <span className="text-lg">🛏️</span> : null}
         </div>
       </div>
     </div>
