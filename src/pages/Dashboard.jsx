@@ -128,7 +128,7 @@ export default function Dashboard() {
 
       <Link to="/burst">
         <Button className="w-full gap-2 bg-orange-500 hover:bg-orange-600 text-white h-11 text-base">
-          <Zap className="w-5 h-5" /> Burst Mode
+          <Zap className="w-5 h-5" /> Blast Mode
         </Button>
       </Link>
 
