@@ -5,7 +5,7 @@ import MobileHeader from "./MobileHeader";
 
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
-  { path: "/tasks", label: "Tasks", icon: ListChecks },
+  { path: "/tasks", label: "Tasks", icon: ListChecks, iconColor: "text-green-500" },
   { path: "/burst", label: "Burst", icon: Zap, iconColor: "text-yellow-400" },
   { path: "/presets", label: "Presets", icon: Sparkles },
   { path: "/family", label: "People", icon: Users },
