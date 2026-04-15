@@ -84,9 +84,11 @@ export default function Burst() {
     setTimeLeft(duration * 60);
     setCompletions({});
     setIsActive(true);
+    localStorage.setItem("blast_mode_active", "true");
   }
 
   function endBurst() {
+    localStorage.removeItem("blast_mode_active");
     if (Object.keys(completions).length > 0) {
       confetti({ particleCount: 100, spread: 70 });
     }
@@ -143,7 +145,7 @@ export default function Burst() {
                 {isActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                 {isActive ? "Pause" : "Resume"}
               </Button>
-              <Button onClick={() => { setIsActive(false); endBurst(); }} variant="outline" className="gap-2 text-destructive">
+              <Button onClick={() => { setIsActive(false); localStorage.removeItem("blast_mode_active"); endBurst(); }} variant="outline" className="gap-2 text-destructive">
                 <X className="w-4 h-4" /> End Blast
               </Button>
             </div>
