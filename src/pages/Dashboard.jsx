@@ -111,14 +111,11 @@ export default function Dashboard() {
   return (
     <div className="space-y-6 max-w-xs md:max-w-2xl mx-auto px-2 sm:px-1 pt-6">
 
-      <div className="flex items-center justify-between">
-        <h1 className="font-heading text-2xl font-bold">Dashboard</h1>
-        <div className="flex gap-2">
-          <Button onClick={() => setDialogOpen(true)} size="sm" className="gap-2">
-            <Plus className="w-4 h-4" /> Add Task
-          </Button>
-          <SyncCalendarButton />
-        </div>
+      <div className="grid grid-cols-2 gap-2 sm:gap-3">
+        <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full">
+          <Plus className="w-4 h-4" /> Add Task
+        </Button>
+        <SyncCalendarButton className="w-full" />
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-2 gap-2 sm:gap-3">
