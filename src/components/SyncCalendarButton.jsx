@@ -27,14 +27,14 @@ export default function SyncCalendarButton() {
       variant="default"
       onClick={handleSync}
       disabled={status === "loading"}
-      className="gap-2 flex-1"
+      className="gap-2 flex-1 text-base h-11"
     >
       {status === "loading" ? (
-        <Loader2 className="w-4 h-4 animate-spin" />
+        <Loader2 className="w-5 h-5 animate-spin" />
       ) : status === "done" ? (
-        <CheckCircle className="w-4 h-4 text-green-500" />
+        <CheckCircle className="w-5 h-5 text-green-500" />
       ) : (
-        <CalendarDays className="w-4 h-4" />
+        <CalendarDays className="w-5 h-5" />
       )}
       {status === "loading"
         ? "Syncing..."
