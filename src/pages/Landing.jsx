@@ -9,7 +9,7 @@ const FEATURES = [
   {
     icon: <CheckCircle2 className="w-6 h-6 text-primary" />,
     title: "Smart Task Scheduling",
-    desc: "Automatically tracks when each task is due based on your custom frequency — daily, weekly, monthly, or yearly.",
+    desc: "Automatically tracks due dates for each task, based on customizable frequencies which include daily, weekly, monthly, yearly, and everything in-between.",
   },
   {
     icon: <Users className="w-6 h-6 text-primary" />,
