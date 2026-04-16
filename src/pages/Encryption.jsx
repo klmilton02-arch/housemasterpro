@@ -31,7 +31,7 @@ export default function Encryption() {
         <section className="space-y-3">
           <h2 className="font-heading text-xl font-semibold">Data Access Control</h2>
           <p className="text-sm text-muted-foreground">
-            Only you and family members you explicitly invite can access your home management data. We implement role-based access controls to ensure data is only visible to authorized users.
+            Only you and parties explicitly invited by you can access home management data. Role-based access controls are implemented in order to ensure that data are only visible to authorized users.
           </p>
         </section>
 
