@@ -194,7 +194,7 @@ export default function Landing() {
       {/* Footer */}
       <footer className="py-8 px-6 text-center text-sm text-muted-foreground">
         <div className="flex items-center justify-center gap-2 mb-3">
-          <Home className="w-4 h-4 text-primary" />
+          <Home className="w-4 h-4 text-black dark:text-white" />
           <span className="font-heading font-semibold text-foreground">HomeLifeFocus</span>
         </div>
         <div className="flex justify-center gap-6 mb-3">
