@@ -67,7 +67,6 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails })
     if (!nowChecked) {
       onComplete({ ...task, status: "Pending" });
     } else {
-      confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 }, colors: ["#22c55e", "#86efac", "#fbbf24", "#60a5fa"] });
       onComplete(task);
     }
   }
