@@ -136,8 +136,8 @@ export default function Family() {
               : "Solo Account"}
           </p>
         </div>
-        <Button onClick={() => setDialogOpen(true)} size="sm" className="gap-1 w-full text-xs">
-          <Plus className="w-3 h-3" /> Add Member
+        <Button onClick={() => setDialogOpen(true)} className="gap-1 w-full text-sm h-11">
+          <Plus className="w-5 h-5" /> Add Member
         </Button>
       </div>
 
@@ -227,7 +227,7 @@ export default function Family() {
       <div className="pt-2 border-t border-border flex justify-center">
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="outline" size="sm" className="text-xs text-destructive border-destructive/30 hover:bg-destructive/10 w-full">Delete My Account</Button>
+            <Button variant="outline" className="text-sm text-destructive border-destructive/30 hover:bg-destructive/10 w-full h-11">Delete My Account</Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
