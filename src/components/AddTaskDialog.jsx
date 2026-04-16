@@ -35,11 +35,12 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   }
 
   // Custom form
-  const [customName, setCustomName] = useState("");
-  const [customCategory, setCustomCategory] = useState("Cleaning");
+   const [customName, setCustomName] = useState("");
+   const [customCategory, setCustomCategory] = useState("Cleaning");
+   const [customRoom, setCustomRoom] = useState("");
 
-  const isCarMaintenance = false;
-  const [customDescription, setCustomDescription] = useState("");
+   const isCarMaintenance = false;
+   const [customDescription, setCustomDescription] = useState("");
 
   useEffect(() => {
     if (open) {
@@ -74,23 +75,35 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
     const freqMiles = freqUnit === "miles" ? (parseInt(freqValue) || undefined) : undefined;
 
+    const getRoomFromCategory = (cat) => {
+      if (cat.includes("Bathroom")) return "Bathroom";
+      if (cat.includes("Kitchen")) return "Kitchen";
+      if (cat.includes("Bedroom")) return "Bedroom";
+      if (cat.includes("Living") || cat.includes("Dining")) return "Living Room";
+      if (cat.includes("Garage")) return "Garage";
+      if (cat.includes("Laundry")) return "Laundry Room";
+      return null;
+    };
+
     const taskData = tab === "preset" && selectedPreset
-      ? {
-          name: selectedPreset.name,
-          category: selectedPreset.category,
-          difficulty: selectedPreset.difficulty,
-          frequency_days: freqDays,
-          frequency_miles: freqMiles,
-          description: selectedPreset.description,
-        }
-      : {
-          name: customName,
-          category: customCategory,
-          difficulty: "Easy",
-          frequency_days: freqDays,
-          frequency_miles: freqMiles,
-          description: customDescription,
-        };
+       ? {
+           name: selectedPreset.name,
+           category: selectedPreset.category,
+           room: getRoomFromCategory(selectedPreset.category),
+           difficulty: selectedPreset.difficulty,
+           frequency_days: freqDays,
+           frequency_miles: freqMiles,
+           description: selectedPreset.description,
+         }
+       : {
+           name: customName,
+           category: customCategory,
+           room: customRoom || undefined,
+           difficulty: "Easy",
+           frequency_days: freqDays,
+           frequency_miles: freqMiles,
+           description: customDescription,
+         };
 
     await base44.entities.Task.create({
       ...taskData,
@@ -105,6 +118,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     setLoading(false);
     setSelectedPreset(null);
     setCustomName("");
+    setCustomRoom("");
     setFreqValue("");
     setFreqUnit("days");
     setAssignedTo("");
@@ -181,9 +195,30 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
               />
             </div>
             <div>
-              <Label className="text-xs font-medium text-muted-foreground">Description</Label>
-              <Input value={customDescription} onChange={e => setCustomDescription(e.target.value)} placeholder="Optional description" className="mt-1" />
-            </div>
+               <Label className="text-xs font-medium text-muted-foreground">Room (Optional)</Label>
+               <MobileSelect
+                 value={customRoom}
+                 onValueChange={setCustomRoom}
+                 title="Select Room"
+                 triggerClassName="mt-1"
+                 options={[
+                   { value: "", label: "No room" },
+                   { value: "Bedroom", label: "Bedroom" },
+                   { value: "Bathroom", label: "Bathroom" },
+                   { value: "Half Bath", label: "Half Bath" },
+                   { value: "Kitchen", label: "Kitchen" },
+                   { value: "Living Room", label: "Living Room" },
+                   { value: "Dining Room", label: "Dining Room" },
+                   { value: "Garage", label: "Garage" },
+                   { value: "Laundry Room", label: "Laundry Room" },
+                   { value: "Mixed Use Room", label: "Mixed Use Room" },
+                 ]}
+               />
+             </div>
+             <div>
+               <Label className="text-xs font-medium text-muted-foreground">Description</Label>
+               <Input value={customDescription} onChange={e => setCustomDescription(e.target.value)} placeholder="Optional description" className="mt-1" />
+             </div>
           </TabsContent>
         </Tabs>
 
