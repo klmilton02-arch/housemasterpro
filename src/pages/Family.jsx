@@ -109,7 +109,7 @@ export default function Family() {
   }
 
   return (
-    <div className="space-y-3 max-w-xs mx-auto px-1 pt-6">
+    <div className="space-y-3 max-w-xs md:max-w-2xl mx-auto px-1 pt-6">
       {/* Avatars row */}
       {members.length > 0 && (
        <div className="flex gap-2 overflow-x-auto pb-1">
@@ -187,7 +187,7 @@ export default function Family() {
         </div>
       )}
 
-      <div className="grid gap-2">
+      <div className="grid gap-2 md:grid-cols-2">
         {members.map(m => {
           const c = colorMap[m.avatar_color] || colorMap.blue;
           const stats = getMemberStats(m.id);
