@@ -80,7 +80,7 @@ export default function Burst() {
       <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
         <h1 className="font-heading text-2xl font-bold">Blast Mode</h1>
 
-        <Button onClick={handleStartBlast} size="lg" className="gap-2 w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
+        <Button onClick={handleStartBlast} size="lg" className="gap-2 w-full bg-yellow-300 hover:bg-yellow-400 text-black font-semibold">
           <Play className="w-4 h-4" /> Start Blast
         </Button>
 
