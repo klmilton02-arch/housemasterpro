@@ -97,7 +97,7 @@ export default function Burst() {
                 <span className="text-sm">minutes</span>
               </label>
             </div>
-            <Button onClick={handleStartBlast} size="lg" className="gap-2 bg-yellow-300 hover:bg-yellow-400 text-black">
+            <Button onClick={handleStartBlast} size="lg" className="gap-2 bg-yellow-200 hover:bg-yellow-300 text-black">
               <Play className="w-4 h-4" /> Start Blast
             </Button>
           </div>
