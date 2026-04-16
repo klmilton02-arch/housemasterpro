@@ -78,9 +78,7 @@ export default function Burst() {
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-4xl mx-auto">
-        <div className="w-full flex items-center justify-center gap-2 bg-yellow-400 text-black rounded-xl h-11 text-base font-bold mb-6">
-          <Zap className="w-5 h-5" /> Blast Mode
-        </div>
+        <h1 className="font-heading text-4xl sm:text-3xl font-bold md:hidden mb-6">Blast Mode</h1>
 
         {!isActive ? (
           <div className="bg-card border border-border rounded-2xl p-8 text-center mb-6">
