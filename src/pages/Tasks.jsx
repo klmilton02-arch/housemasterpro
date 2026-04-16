@@ -221,19 +221,15 @@ export default function Tasks() {
         <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-          <div className="flex items-center gap-2 mb-1">
-            <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <p className="text-xs font-semibold text-blue-600 dark:text-blue-400">Due Today</p>
-          </div>
-          <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">{dueToday}</p>
+        <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 h-11 flex items-center gap-2">
+          <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
+          <p className="text-xs font-semibold text-blue-600 dark:text-blue-400">Due Today</p>
+          <p className="text-lg font-bold text-blue-900 dark:text-blue-100 ml-auto">{dueToday}</p>
         </div>
-        <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-3">
-          <div className="flex items-center gap-2 mb-1">
-            <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400" />
-            <p className="text-xs font-semibold text-red-600 dark:text-red-400">Overdue</p>
-          </div>
-          <p className="text-2xl font-bold text-red-900 dark:text-red-100">{overdue}</p>
+        <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-3 h-11 flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
+          <p className="text-xs font-semibold text-red-600 dark:text-red-400">Overdue</p>
+          <p className="text-lg font-bold text-red-900 dark:text-red-100 ml-auto">{overdue}</p>
         </div>
       </div>
       <div className="flex gap-2 flex-col gap-3">
