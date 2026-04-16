@@ -206,12 +206,12 @@ export default function Tasks() {
           <p className="text-base text-muted-foreground mt-1">{filtered.length} tasks</p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={() => setDialogOpen(true)} className="gap-2 flex-1 h-11 text-base">
+          <Button onClick={() => setDialogOpen(true)} className="gap-2 flex-1 h-11 text-base bg-blue-400 hover:bg-blue-500 border-blue-400">
             <Plus className="w-5 h-5" /> Add Task
           </Button>
           <Button
             variant="default"
-            className="gap-2 flex-1 h-11 text-base"
+            className="gap-2 flex-1 h-11 text-base bg-blue-400 hover:bg-blue-500 border-blue-400"
             onClick={() => { setBatchMode(b => !b); setSelectedIds(new Set()); }}
           >
             <CheckSquare className="w-5 h-5" /> Select
