@@ -10,7 +10,7 @@ export default function Encryption() {
         <section className="space-y-3">
           <h2 className="font-heading text-xl font-semibold">Data Encryption</h2>
           <p className="text-sm text-muted-foreground">
-            All data transmitted between your device and our servers is encrypted using HTTPS with TLS 1.2 or higher. This ensures that your task information, family member details, and personal data remain private during transmission.
+            All data transmitted between your device and our servers is encrypted using HTTPS with TLS 1.2 or higher. This ensures that your task information, personal information, and information related to family members or other invited parties remain private during transmission.
           </p>
         </section>
 
