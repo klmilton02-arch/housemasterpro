@@ -59,7 +59,9 @@ export default function Encryption() {
         <section className="space-y-3">
           <h2 className="font-heading text-xl font-semibold">Security Concerns</h2>
           <p className="text-sm text-muted-foreground">
-            If you discover a security vulnerability, please report it responsibly. Contact us at support@homeflow.app with details of the issue.
+            If you discover or suspect a security vulnerability or breach, please report it to{" "}
+            <a href="mailto:support@homeflow.app" className="text-primary underline underline-offset-2">support@homeflow.app</a>.
+            {" "}Include any relevant details.
           </p>
         </section>
 
