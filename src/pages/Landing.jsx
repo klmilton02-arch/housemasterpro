@@ -127,29 +127,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="bg-primary/5 border-y border-border py-16 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="font-heading text-3xl font-bold mb-2">How it works</h2>
-          <p className="text-muted-foreground mb-10">Up and running in minutes.</p>
-          <div className="grid sm:grid-cols-3 gap-8">
-            {[
-              { step: "1", title: "Set up your home", desc: "Tell us about your rooms and the number of people in your household." },
-              { step: "2", title: "Add tasks", desc: "Pick from our preset library or create your own with custom frequencies." },
-              { step: "3", title: "Stay on track", desc: "Get a live dashboard showing what's due, assign tasks, and earn rewards." },
-            ].map(s => (
-              <div key={s.step} className="flex flex-col items-center">
-                <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground font-heading font-bold text-lg flex items-center justify-center mb-3">
-                  {s.step}
-                </div>
-                <h3 className="font-heading font-semibold mb-1">{s.title}</h3>
-                <p className="text-sm text-muted-foreground">{s.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Testimonials */}
       <section className="py-16 px-6 max-w-5xl mx-auto">
         <h2 className="font-heading text-3xl font-bold text-center mb-10">Families love it</h2>
@@ -168,8 +145,29 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* CTA / Waitlist */}
-      <section className="bg-primary/5 border-y border-border py-16 px-6">
+      {/* How it works */}
+       <section className="py-16 px-6 max-w-5xl mx-auto">
+         <h2 className="font-heading text-3xl font-bold text-center mb-2">How it works</h2>
+         <p className="text-muted-foreground text-center mb-10">Up and running in minutes.</p>
+         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+           {[
+             { step: "1", title: "Set up your home", desc: "Tell us about your rooms and the number of people in your household." },
+             { step: "2", title: "Add tasks", desc: "Pick from our preset library or create your own with custom frequencies." },
+             { step: "3", title: "Stay on track", desc: "Get a live dashboard showing what's due, assign tasks, and earn rewards." },
+           ].map(s => (
+             <div key={s.step} className="bg-card border border-border rounded-xl p-5 hover:shadow-md transition-shadow flex flex-col items-center text-center">
+               <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground font-heading font-bold text-lg flex items-center justify-center mb-3">
+                 {s.step}
+               </div>
+               <h3 className="font-heading font-semibold mb-1">{s.title}</h3>
+               <p className="text-sm text-muted-foreground">{s.desc}</p>
+             </div>
+           ))}
+         </div>
+       </section>
+
+       {/* CTA / Waitlist */}
+       <section className="bg-primary/5 border-y border-border py-16 px-6">
         <div className="max-w-md mx-auto text-center">
           <h2 className="font-heading text-3xl font-bold mb-2">Ready to take control?</h2>
           <p className="text-muted-foreground mb-6">Join the waitlist and be among the first to get access.</p>
