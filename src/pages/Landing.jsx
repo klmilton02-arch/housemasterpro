@@ -34,7 +34,7 @@ const FEATURES = [
   {
     icon: <Sparkles className="w-6 h-6 text-primary" />,
     title: "Preset Task Library",
-    desc: "Hundreds of pre-built household tasks across cleaning, maintenance, and bills — ready to add in one tap.",
+    desc: "Pre-set household tasks — with associated difficulty level and frequency — enable you to add to your to-do list with one tap. Pre-sets are also modifiable in order to meet your unique household needs.",
   },
 ];
 
