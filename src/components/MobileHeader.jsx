@@ -21,9 +21,12 @@ export default function MobileHeader() {
       style={{ paddingTop: 'calc(0.5rem + env(safe-area-inset-top))', minHeight: 'calc(3rem + env(safe-area-inset-top))' }}
     >
       {isRoot ? (
-        <Link to="/" className="flex items-center gap-2">
-          <Home className="w-5 h-5 text-primary" />
-          <h1 className="font-heading text-lg font-bold leading-tight text-foreground">Home Task Manager</h1>
+        <Link to="/" className="flex flex-col">
+          <div className="flex items-center gap-2">
+            <Home className="w-5 h-5 text-primary" />
+            <h1 className="font-heading text-lg font-bold leading-tight text-foreground">Home Task Manager</h1>
+          </div>
+          <p className="text-xs text-muted-foreground ml-7">Dashboard</p>
         </Link>
       ) : (
         <div className="flex items-center gap-2">
