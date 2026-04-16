@@ -38,7 +38,7 @@ export default function Encryption() {
         <section className="space-y-3">
           <h2 className="font-heading text-xl font-semibold">Third-Party Integrations</h2>
           <p className="text-sm text-muted-foreground">
-            Integration with third party services, third party related data, and third party apps the minimum necessary permissions are requested. OAuth tokens are stored securely and are not shared with third parties.
+            Integration with third party services, third party related data, and third party apps is allowed. The minimum permissions for such integrations are requested as necessary. OAuth tokens are stored securely and are not shared with any integrated third parties.
           </p>
         </section>
 
