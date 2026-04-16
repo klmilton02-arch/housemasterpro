@@ -83,15 +83,26 @@ export default function Landing() {
           Home management, reimagined
         </span>
         <h1 className="font-heading text-4xl sm:text-5xl font-bold leading-tight mb-5">
-          Run your home like a <span className="text-primary">pro</span>
+          Never forget a chore,<br />bill, or home task again
         </h1>
-        <p className="text-muted-foreground text-lg mb-8 max-w-xl mx-auto">
-          HomeLifeFocus helps families stay on top of chores, maintenance, and bills — with smart scheduling, gamified rewards, and calendar sync that actually works.
+        <p className="text-foreground text-xl font-medium mb-3 max-w-2xl mx-auto">
+          HomeLifeFocus is a household task manager for families.
         </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <p className="text-muted-foreground text-base mb-8 max-w-2xl mx-auto">
+          Create recurring tasks for every room in your home — cleaning, maintenance, bills, and more. Assign them to family members, get overdue alerts, earn XP for completing them, and sync everything to Google Calendar. One app that keeps your whole house running smoothly.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
+          <Link to="/">
+            <Button size="lg" className="w-full sm:w-auto px-8">Get Started Free</Button>
+          </Link>
           <a href="#features">
-            <Button size="lg" variant="outline" className="w-full sm:w-auto">See Features</Button>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto">See How It Works</Button>
           </a>
+        </div>
+        <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+          {["✅ Recurring task scheduling", "🏠 Organize by room", "👨‍👩‍👧 Assign to family members", "🏆 Gamified with XP & badges", "📅 Google Calendar sync"].map(item => (
+            <span key={item}>{item}</span>
+          ))}
         </div>
       </section>
 
