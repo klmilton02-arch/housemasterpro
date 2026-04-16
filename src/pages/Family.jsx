@@ -187,7 +187,7 @@ export default function Family() {
         </div>
       )}
 
-      <div className="grid gap-2 md:grid-cols-2">
+      <div className="grid gap-2">
         {members.map(m => {
           const c = colorMap[m.avatar_color] || colorMap.blue;
           const stats = getMemberStats(m.id);
