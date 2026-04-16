@@ -216,27 +216,27 @@ export default function Tasks() {
 
   return (
     <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
-      <div className="flex flex-col gap-3">
-        <div>
-          <h1 className="font-heading text-2xl font-bold">Tasks</h1>
-          <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
-        </div>
-        <div className="grid grid-cols-2 gap-2">
-          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-            <div className="flex items-center gap-2 mb-1">
-              <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <p className="text-xs font-semibold text-blue-600 dark:text-blue-400">Due Today</p>
-            </div>
-            <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">{dueToday}</p>
+      <div>
+        <h1 className="font-heading text-2xl font-bold">Tasks</h1>
+        <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+          <div className="flex items-center gap-2 mb-1">
+            <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            <p className="text-xs font-semibold text-blue-600 dark:text-blue-400">Due Today</p>
           </div>
-          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-3">
-            <div className="flex items-center gap-2 mb-1">
-              <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400" />
-              <p className="text-xs font-semibold text-red-600 dark:text-red-400">Overdue</p>
-            </div>
-            <p className="text-2xl font-bold text-red-900 dark:text-red-100">{overdue}</p>
-          </div>
+          <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">{dueToday}</p>
         </div>
+        <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-3">
+          <div className="flex items-center gap-2 mb-1">
+            <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400" />
+            <p className="text-xs font-semibold text-red-600 dark:text-red-400">Overdue</p>
+          </div>
+          <p className="text-2xl font-bold text-red-900 dark:text-red-100">{overdue}</p>
+        </div>
+      </div>
+      <div className="flex gap-2 flex-col gap-3">
         <div className="flex gap-2">
           <Button onClick={() => setDialogOpen(true)} className="gap-2 flex-1 h-11 text-base bg-blue-400 hover:bg-blue-500 border-blue-400">
             <Plus className="w-5 h-5" /> Add Task
