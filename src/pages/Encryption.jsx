@@ -52,7 +52,7 @@ export default function Encryption() {
         <section className="space-y-3">
           <h2 className="font-heading text-xl font-semibold">Data Retention</h2>
           <p className="text-sm text-muted-foreground">
-            Your data is retained for as long as your account is active. You can request data deletion at any time, and we will securely remove your information from our systems.
+            User related data are retained for as long as the associated account is active. Data deletion can be requested at any time at which point it will be securely removed from our systems.
           </p>
         </section>
 
