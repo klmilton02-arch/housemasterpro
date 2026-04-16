@@ -145,26 +145,27 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* How it works */}
-       <section className="py-16 px-6 max-w-5xl mx-auto">
-         <h2 className="font-heading text-3xl font-bold text-center mb-2">How it works</h2>
-         <p className="text-muted-foreground text-center mb-10">Up and running in minutes.</p>
-         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-           {[
-             { step: "1", title: "Set up your home", desc: "Tell us about your rooms and the number of people in your household." },
-             { step: "2", title: "Add tasks", desc: "Pick from our preset library or create your own with custom frequencies." },
-             { step: "3", title: "Stay on track", desc: "Get a live dashboard showing what's due, assign tasks, and earn rewards." },
-           ].map(s => (
-             <div key={s.step} className="bg-card border border-border rounded-xl p-5 hover:shadow-md transition-shadow flex flex-col items-center text-center h-full">
-               <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground font-heading font-bold text-lg flex items-center justify-center mb-3">
-                 {s.step}
-               </div>
-               <h3 className="font-heading font-semibold mb-1">{s.title}</h3>
-               <p className="text-sm text-muted-foreground flex-1">{s.desc}</p>
-             </div>
-           ))}
-         </div>
-       </section>
+      {/* Quick Actions */}
+      <section className="py-16 px-6 max-w-5xl mx-auto">
+        <h2 className="font-heading text-3xl font-bold text-center mb-2">Get started</h2>
+        <p className="text-muted-foreground text-center mb-10">Access all features in one place.</p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            { icon: <CheckCircle2 className="w-6 h-6 text-primary" />, title: "Tasks", desc: "Manage and track all your household tasks with smart scheduling." },
+            { icon: <Home className="w-6 h-6 text-primary" />, title: "Home Setup", desc: "Configure your home layout and rooms for personalized task management." },
+            { icon: <Users className="w-6 h-6 text-primary" />, title: "Family", desc: "Manage family members and assign tasks to keep everyone on track." },
+            { icon: <Trophy className="w-6 h-6 text-primary" />, title: "Leaderboard", desc: "Track progress and see who's earning the most XP this month." },
+            { icon: <Calendar className="w-6 h-6 text-primary" />, title: "Presets", desc: "Browse hundreds of pre-built tasks ready to add to your list." },
+            { icon: <Sparkles className="w-6 h-6 text-primary" />, title: "Sync Calendar", desc: "Keep tasks in sync with your Google Calendar automatically." },
+          ].map(item => (
+            <div key={item.title} className="bg-card border border-border rounded-xl p-5 hover:shadow-md transition-shadow flex flex-col h-full">
+              <div className="mb-3">{item.icon}</div>
+              <h3 className="font-heading font-semibold mb-1">{item.title}</h3>
+              <p className="text-sm text-muted-foreground flex-1">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
        {/* CTA / Waitlist */}
        <section className="bg-primary/5 border-y border-border py-16 px-6">
