@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Sparkles, Search, Plus, Pencil, Trash2 } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, PlusCircle } from "lucide-react";
 import AddTaskDialog from "../components/AddTaskDialog";
 import { Input } from "@/components/ui/input";
 import MobileSelect from "../components/MobileSelect";
@@ -11,15 +11,16 @@ import { Button } from "@/components/ui/button";
 
 const CLEANING_SUBCATEGORIES = ["Kitchen Cleaning", "Bathroom Cleaning", "Bedroom Cleaning", "Living Areas", "Floors", "Deep Cleaning"];
 
-function PresetCard({ p, onEdit, onDelete, onClick }) {
+function PresetCard({ p, onEdit, onDelete, onClick, onAddAsTask }) {
   return (
     <div className="bg-card border border-border rounded-lg p-3 hover:shadow-md hover:border-primary/30 transition-all group relative">
       <div className="absolute top-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity z-10 bg-card rounded-md shadow-sm">
+        <button onClick={e => onAddAsTask(e, p)} className="w-9 h-9 flex items-center justify-center rounded hover:bg-green-50" title="Add as Task"><PlusCircle className="w-3.5 h-3.5 text-green-500" /></button>
         <button onClick={e => onEdit(e, p)} className="w-9 h-9 flex items-center justify-center rounded hover:bg-muted"><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
         <button onClick={e => onDelete(e, p)} className="w-9 h-9 flex items-center justify-center rounded hover:bg-red-50"><Trash2 className="w-3.5 h-3.5 text-red-400" /></button>
       </div>
       <div onClick={() => onClick(p)} className="cursor-pointer">
-        <div className="flex items-start justify-between gap-2 mb-1.5 pr-16">
+        <div className="flex items-start justify-between gap-2 mb-1.5 pr-24">
           <h3 className="font-heading font-semibold text-sm">{p.name}</h3>
           {p.difficulty && (
             <Badge variant="outline" className="shrink-0 text-xs">{p.difficulty}</Badge>
@@ -61,6 +62,8 @@ export default function Presets() {
   const [selectedPreset, setSelectedPreset] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingPreset, setEditingPreset] = useState(null);
+  const [addTaskPreset, setAddTaskPreset] = useState(null);
+  const [addTaskDialogOpen, setAddTaskDialogOpen] = useState(false);
 
   function handlePresetClick(preset) {
     setEditingPreset(preset);
@@ -71,6 +74,12 @@ export default function Presets() {
     e.stopPropagation();
     setEditingPreset(preset);
     setEditDialogOpen(true);
+  }
+
+  function handleAddAsTask(e, preset) {
+    e.stopPropagation();
+    setAddTaskPreset(preset);
+    setAddTaskDialogOpen(true);
   }
 
   async function handleDelete(e, preset) {
@@ -215,7 +224,7 @@ export default function Presets() {
                   <h3 className="font-heading font-medium text-xs text-muted-foreground/70 uppercase tracking-wider mb-2 pl-2 border-l-2 border-primary/30">{subcat}</h3>
                   <div className="grid gap-2">
                     {subItems.map(p => (
-                      <PresetCard key={p.id} p={p} onEdit={handleEdit} onDelete={handleDelete} onClick={handlePresetClick} />
+                      <PresetCard key={p.id} p={p} onEdit={handleEdit} onDelete={handleDelete} onClick={handlePresetClick} onAddAsTask={handleAddAsTask} />
                     ))}
                   </div>
                 </div>
@@ -223,7 +232,7 @@ export default function Presets() {
             ) : (
               <div className="grid gap-2">
                 {items.map(p => (
-                  <PresetCard key={p.id} p={p} onEdit={handleEdit} onDelete={handleDelete} onClick={handlePresetClick} />
+                  <PresetCard key={p.id} p={p} onEdit={handleEdit} onDelete={handleDelete} onClick={handlePresetClick} onAddAsTask={handleAddAsTask} />
                 ))}
               </div>
             )}
@@ -232,6 +241,7 @@ export default function Presets() {
       )}
 
       <AddTaskDialog open={addDialogOpen} onOpenChange={setAddDialogOpen} initialPreset={selectedPreset} />
+      <AddTaskDialog open={addTaskDialogOpen} onOpenChange={setAddTaskDialogOpen} initialPreset={addTaskPreset} />
       <EditPresetDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
