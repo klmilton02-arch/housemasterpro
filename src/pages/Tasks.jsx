@@ -238,15 +238,13 @@ export default function Tasks() {
          <div className="flex gap-2">
            <Button 
              onClick={() => setViewMode("list")} 
-             variant={viewMode === "list" ? "default" : "outline"}
-             className="flex-1 h-10"
+             className={`flex-1 h-11 ${viewMode === "list" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
            >
              List View
            </Button>
            <Button 
              onClick={() => setViewMode("rooms")} 
-             variant={viewMode === "rooms" ? "default" : "outline"}
-             className="flex-1 h-10"
+             className={`flex-1 h-11 ${viewMode === "rooms" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
            >
              Rooms
            </Button>
