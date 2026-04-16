@@ -78,31 +78,51 @@ export default function Landing() {
       </nav>
 
       {/* Hero */}
-      <section className="text-center px-6 py-16 max-w-3xl mx-auto">
-        <span className="inline-block text-xs font-semibold uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full mb-4">
-          Home management, reimagined
-        </span>
-        <h1 className="font-heading text-4xl sm:text-5xl font-bold leading-tight mb-5">
-          Never forget a chore,<br />bill, or home task again
-        </h1>
-        <p className="text-foreground text-xl font-medium mb-3 max-w-2xl mx-auto">
-          HomeLifeFocus is a household task manager for families.
-        </p>
-        <p className="text-muted-foreground text-base mb-8 max-w-2xl mx-auto">
-          Create recurring tasks for every room in your home — cleaning, maintenance, bills, and more. Assign them to family members, get overdue alerts, earn XP for completing them, and sync everything to Google Calendar. One app that keeps your whole house running smoothly.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
-          <Link to="/">
-            <Button size="lg" className="w-full sm:w-auto px-8">Get Started Free</Button>
-          </Link>
-          <a href="#features">
-            <Button size="lg" variant="outline" className="w-full sm:w-auto">See How It Works</Button>
-          </a>
-        </div>
-        <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
-          {["✅ Recurring task scheduling", "🏠 Organize by room", "👨‍👩‍👧 Assign to family members", "🏆 Gamified with XP & badges", "📅 Google Calendar sync"].map(item => (
-            <span key={item}>{item}</span>
-          ))}
+      <section className="px-6 py-16 max-w-6xl mx-auto">
+        <div className="flex flex-col lg:flex-row items-center gap-12">
+          {/* Left: Description */}
+          <div className="flex-1 text-center lg:text-left">
+            <span className="inline-block text-xs font-semibold uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full mb-4">
+              Home management, reimagined
+            </span>
+            <h1 className="font-heading text-4xl sm:text-5xl font-bold leading-tight mb-4">
+              Never forget a chore,<br />bill, or home task again
+            </h1>
+            <p className="text-foreground text-lg font-medium mb-3">
+              HomeLifeFocus is a household task manager for families.
+            </p>
+            <p className="text-muted-foreground text-base mb-6">
+              Create recurring tasks for every room in your home — cleaning, maintenance, bills, and more. Assign them to family members, get overdue alerts, earn XP for completing them, and sync everything to Google Calendar.
+            </p>
+            <div className="flex flex-wrap justify-center lg:justify-start gap-x-5 gap-y-2 text-sm text-muted-foreground">
+              {["✅ Recurring schedules", "🏠 Organized by room", "👨‍👩‍👧 Family assignments", "🏆 XP & badges", "📅 Google Calendar sync"].map(item => (
+                <span key={item}>{item}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: Sign In Card */}
+          <div className="w-full lg:w-80 shrink-0">
+            <div className="bg-card border border-border rounded-2xl p-7 shadow-lg text-center">
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <Home className="w-5 h-5 text-primary" />
+                <span className="font-heading font-bold text-lg">HomeLifeFocus</span>
+              </div>
+              <p className="text-sm text-muted-foreground mb-6">Sign in to manage your home</p>
+              <Link to="/" className="block">
+                <Button size="lg" className="w-full mb-3">Sign In / Get Started</Button>
+              </Link>
+              <p className="text-xs text-muted-foreground">Free to use · No credit card needed</p>
+              <div className="mt-5 pt-5 border-t border-border space-y-2 text-left">
+                {["Track tasks for every room", "Assign chores to family members", "Earn XP and level up", "Sync with Google Calendar"].map(item => (
+                  <div key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
