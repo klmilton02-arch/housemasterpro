@@ -10,6 +10,24 @@
       "type": "string",
       "title": "Category"
     },
+    "room": {
+      "type": "string",
+      "title": "Room",
+      "enum": [
+        "Kitchen",
+        "Bathroom",
+        "Bedroom",
+        "Living Room",
+        "Dining Room",
+        "Garage",
+        "Laundry Room",
+        "Office",
+        "Basement",
+        "Attic",
+        "Outdoor",
+        "Whole House"
+      ]
+    },
     "difficulty": {
       "type": "string",
       "title": "Difficulty",

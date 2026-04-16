@@ -13,6 +13,7 @@ import TaskCard, { getStatusInfo } from "../components/TaskCard";
 import AddTaskDialog from "../components/AddTaskDialog";
 import BatchToolbar from "../components/BatchToolbar";
 import TaskDetailModal from "../components/TaskDetailModal";
+import RoomView from "../components/RoomView";
 import { differenceInDays, parseISO } from "date-fns";
 
 export default function Tasks() {
@@ -27,6 +28,7 @@ export default function Tasks() {
   const [familyMembers, setFamilyMembers] = useState([]);
   const [groupBy, setGroupBy] = useState("none");
   const [selectedTask, setSelectedTask] = useState(null);
+  const [viewMode, setViewMode] = useState("list");
   const { isActive: blastActive } = useBlastMode();
 
   const loadTasks = useCallback(async () => {
@@ -221,124 +223,148 @@ export default function Tasks() {
         <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
       </div>
       <div className="flex gap-2 flex-col gap-3">
-        <div className="flex gap-2">
-          <Button onClick={() => setDialogOpen(true)} className="gap-2 flex-1 h-11 bg-blue-400 hover:bg-blue-500 border-blue-400">
-            <Plus className="w-5 h-5" /> Add Task
-          </Button>
-          <Button
-            variant="default"
-            className="gap-2 flex-1 h-11 bg-blue-400 hover:bg-blue-500 border-blue-400"
-            onClick={() => { setBatchMode(b => !b); setSelectedIds(new Set()); }}
-          >
-            <CheckSquare className="w-5 h-5" /> Select
-          </Button>
+         <div className="flex gap-2">
+           <Button onClick={() => setDialogOpen(true)} className="gap-2 flex-1 h-11 bg-blue-400 hover:bg-blue-500 border-blue-400">
+             <Plus className="w-5 h-5" /> Add Task
+           </Button>
+           <Button
+             variant="default"
+             className="gap-2 flex-1 h-11 bg-blue-400 hover:bg-blue-500 border-blue-400"
+             onClick={() => { setBatchMode(b => !b); setSelectedIds(new Set()); }}
+           >
+             <CheckSquare className="w-5 h-5" /> Select
+           </Button>
+         </div>
+         <div className="flex gap-2">
+           <Button 
+             onClick={() => setViewMode("list")} 
+             variant={viewMode === "list" ? "default" : "outline"}
+             className="flex-1 h-10"
+           >
+             List View
+           </Button>
+           <Button 
+             onClick={() => setViewMode("rooms")} 
+             variant={viewMode === "rooms" ? "default" : "outline"}
+             className="flex-1 h-10"
+           >
+             Rooms
+           </Button>
+         </div>
+       </div>
+      {viewMode === "list" && (
+        <div className="grid grid-cols-2 gap-2">
+          <button onClick={() => setStatusFilter("due_soon")} className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 h-11 flex items-center gap-2 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
+            <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
+            <p className="text-xs font-semibold text-blue-600 dark:text-blue-400">Due Today</p>
+            <p className="text-lg font-bold text-blue-900 dark:text-blue-100 ml-auto">{dueToday}</p>
+          </button>
+          <button onClick={() => setStatusFilter("overdue")} className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-3 h-11 flex items-center gap-2 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors">
+            <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
+            <p className="text-xs font-semibold text-red-600 dark:text-red-400">Overdue</p>
+            <p className="text-lg font-bold text-red-900 dark:text-red-100 ml-auto">{overdue}</p>
+          </button>
         </div>
-      </div>
-      <div className="grid grid-cols-2 gap-2">
-        <button onClick={() => setStatusFilter("due_soon")} className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 h-11 flex items-center gap-2 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
-          <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
-          <p className="text-xs font-semibold text-blue-600 dark:text-blue-400">Due Today</p>
-          <p className="text-lg font-bold text-blue-900 dark:text-blue-100 ml-auto">{dueToday}</p>
-        </button>
-        <button onClick={() => setStatusFilter("overdue")} className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-3 h-11 flex items-center gap-2 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors">
-          <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
-          <p className="text-xs font-semibold text-red-600 dark:text-red-400">Overdue</p>
-          <p className="text-lg font-bold text-red-900 dark:text-red-100 ml-auto">{overdue}</p>
-        </button>
-      </div>
+      )}
 
-      <div className="flex gap-2 w-full flex-col md:flex-row md:max-w-xs mx-auto md:mx-0">
-        <MobileSelect
-          value={statusFilter}
-          onValueChange={setStatusFilter}
-          title="Filter by Status"
-          triggerClassName="flex-1 min-w-0 text-sm h-10"
-          options={[
-            { value: "all", label: "All Status" },
-            { value: "pending", label: "Pending" },
-            { value: "overdue", label: "Overdue" },
-            { value: "due_soon", label: "Due Soon" },
-            { value: "completed", label: "Completed" },
-          ]}
-        />
-        <MobileSelect
-          value={categoryFilter}
-          onValueChange={setCategoryFilter}
-          title="Filter by Category"
-          triggerClassName="flex-1 min-w-0 text-sm h-10"
-          options={[
-            { value: "all", label: "All Categories" },
-            ...categories.map(c => ({ value: c, label: c })),
-          ]}
-        />
-        <MobileSelect
-          value={groupBy}
-          onValueChange={setGroupBy}
-          title="Group By"
-          triggerClassName="flex-1 min-w-0 text-sm h-10"
-          options={[
-            { value: "none", label: "No Grouping" },
-            { value: "category", label: "Group by Category" },
-            { value: "xp", label: "Group by XP" },
-            { value: "frequency", label: "Group by Frequency" },
-          ]}
-        />
-      </div>
-
-      {filtered.length === 0 ? (
-        <div className="bg-card border border-border rounded-lg p-6 text-center">
-          <p className="text-xs text-muted-foreground">No tasks match your filters.</p>
+      {viewMode === "list" && (
+        <div className="flex gap-2 w-full flex-col md:flex-row md:max-w-xs mx-auto md:mx-0">
+          <MobileSelect
+            value={statusFilter}
+            onValueChange={setStatusFilter}
+            title="Filter by Status"
+            triggerClassName="flex-1 min-w-0 text-sm h-10"
+            options={[
+              { value: "all", label: "All Status" },
+              { value: "pending", label: "Pending" },
+              { value: "overdue", label: "Overdue" },
+              { value: "due_soon", label: "Due Soon" },
+              { value: "completed", label: "Completed" },
+            ]}
+          />
+          <MobileSelect
+            value={categoryFilter}
+            onValueChange={setCategoryFilter}
+            title="Filter by Category"
+            triggerClassName="flex-1 min-w-0 text-sm h-10"
+            options={[
+              { value: "all", label: "All Categories" },
+              ...categories.map(c => ({ value: c, label: c })),
+            ]}
+          />
+          <MobileSelect
+            value={groupBy}
+            onValueChange={setGroupBy}
+            title="Group By"
+            triggerClassName="flex-1 min-w-0 text-sm h-10"
+            options={[
+              { value: "none", label: "No Grouping" },
+              { value: "category", label: "Group by Category" },
+              { value: "xp", label: "Group by XP" },
+              { value: "frequency", label: "Group by Frequency" },
+            ]}
+          />
         </div>
-      ) : (
-        <div className="space-y-4">
-          {groups.map(({ label, tasks: groupTasks }) => (
-            <div key={label || "all"}>
-              {label && (
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-2 px-0.5">{label}</h2>
-              )}
-              <div className="space-y-2">
-                {groupTasks.map(task => (
-                  <div key={task.id} className="relative group w-full flex items-center gap-2">
-                    {batchMode && (
-                      <button
-                        onClick={() => toggleSelect(task.id)}
-                        className={`shrink-0 h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all ${
-                          selectedIds.has(task.id)
-                            ? "border-primary bg-primary"
-                            : "border-muted-foreground/40 bg-transparent"
-                        }`}
-                      >
-                        {selectedIds.has(task.id) && <CheckSquare className="w-3 h-3 text-white" />}
-                      </button>
-                    )}
-                    <div className="flex-1 min-w-0" onClick={batchMode ? () => toggleSelect(task.id) : undefined}>
-                      <TaskCard task={task} onComplete={batchMode ? undefined : handleComplete} onViewDetails={batchMode ? undefined : setSelectedTask} />
+      )}
+
+      {viewMode === "list" ? (
+        filtered.length === 0 ? (
+          <div className="bg-card border border-border rounded-lg p-6 text-center">
+            <p className="text-xs text-muted-foreground">No tasks match your filters.</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {groups.map(({ label, tasks: groupTasks }) => (
+              <div key={label || "all"}>
+                {label && (
+                  <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-2 px-0.5">{label}</h2>
+                )}
+                <div className="space-y-2">
+                  {groupTasks.map(task => (
+                    <div key={task.id} className="relative group w-full flex items-center gap-2">
+                      {batchMode && (
+                        <button
+                          onClick={() => toggleSelect(task.id)}
+                          className={`shrink-0 h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                            selectedIds.has(task.id)
+                              ? "border-primary bg-primary"
+                              : "border-muted-foreground/40 bg-transparent"
+                          }`}
+                        >
+                          {selectedIds.has(task.id) && <CheckSquare className="w-3 h-3 text-white" />}
+                        </button>
+                      )}
+                      <div className="flex-1 min-w-0" onClick={batchMode ? () => toggleSelect(task.id) : undefined}>
+                        <TaskCard task={task} onComplete={batchMode ? undefined : handleComplete} onViewDetails={batchMode ? undefined : setSelectedTask} />
+                      </div>
+                      {!batchMode && (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <button className="absolute top-10 right-2 p-1 rounded-lg bg-card/80 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500">
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete Task</AlertDialogTitle>
+                              <AlertDialogDescription>Are you sure you want to delete "{task.name}"? This cannot be undone.</AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => handleDelete(task)} className="bg-destructive text-destructive-foreground">Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
                     </div>
-                    {!batchMode && (
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <button className="absolute top-10 right-2 p-1 rounded-lg bg-card/80 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500">
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Delete Task</AlertDialogTitle>
-                            <AlertDialogDescription>Are you sure you want to delete "{task.name}"? This cannot be undone.</AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(task)} className="bg-destructive text-destructive-foreground">Delete</AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    )}
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )
+      ) : (
+        <RoomView tasks={tasks} onComplete={handleComplete} onViewDetails={setSelectedTask} onDelete={handleDelete} />
       )}
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
