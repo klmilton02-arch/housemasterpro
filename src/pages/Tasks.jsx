@@ -4,7 +4,6 @@ import { base44 } from "@/api/base44Client";
 import { Plus, Trash2, CheckSquare } from "lucide-react";
 import { awardPoints, getTaskPoints } from "@/utils/gamification";
 import PointsToast from "../components/PointsToast";
-import BlastModeToast from "../components/BlastModeToast";
 import { Button } from "@/components/ui/button";
 import MobileSelect from "../components/MobileSelect";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -20,7 +19,6 @@ export default function Tasks() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [reward, setReward] = useState(null);
-  const [blastToastShow, setBlastToastShow] = useState(false);
   const [batchMode, setBatchMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [familyMembers, setFamilyMembers] = useState([]);
@@ -73,10 +71,6 @@ export default function Tasks() {
       const result = await awardPoints(task);
       if (result) {
         setReward(result);
-        if (result.blastBonus) {
-          setBlastToastShow(true);
-          setTimeout(() => setBlastToastShow(false), 2000);
-        }
       }
       loadTasks();
     } else {
@@ -318,7 +312,6 @@ export default function Tasks() {
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
-      <BlastModeToast show={blastToastShow} onDismiss={() => setBlastToastShow(false)} />
       <TaskDetailModal task={selectedTask} open={!!selectedTask} onOpenChange={(open) => { if (!open) setSelectedTask(null); }} />
       <BatchToolbar
         selectedCount={selectedIds.size}
