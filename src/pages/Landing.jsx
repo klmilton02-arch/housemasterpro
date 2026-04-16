@@ -13,8 +13,8 @@ const FEATURES = [
   },
   {
     icon: <Users className="w-6 h-6 text-primary" />,
-    title: "Family Collaboration",
-    desc: "Assign chores to any family member, track who's done what, and keep everyone accountable.",
+    title: "Collaboration",
+    desc: "Assign chores to any family member, friend, or housemate in order to track who has done what and when in order to keep everyone accountable.",
   },
   {
     icon: <Trophy className="w-6 h-6 text-primary" />,
