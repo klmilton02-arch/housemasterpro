@@ -45,7 +45,7 @@ export default function Encryption() {
         <section className="space-y-3">
           <h2 className="font-heading text-xl font-semibold">Regular Security Audits</h2>
           <p className="text-sm text-muted-foreground">
-            We regularly review our security practices and infrastructure to identify and address potential vulnerabilities.
+            We regularly review our security practices and infrastructure in order to identify and address potential vulnerabilities.
           </p>
         </section>
 
