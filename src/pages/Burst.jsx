@@ -80,8 +80,8 @@ export default function Burst() {
       <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
         <h1 className="font-heading text-2xl font-bold md:hidden">Blast Mode</h1>
 
-        {!isActive ? (
-          <div className="bg-card border border-border rounded-2xl p-8 text-center mb-6">
+        {!isActive && (
+          <div className="bg-card border border-border rounded-2xl p-8 text-center">
             <p className="text-muted-foreground mb-6">Set your blast duration and race to complete the most tasks!</p>
             <div className="flex items-center gap-4 justify-center mb-6">
               <label className="flex items-center gap-2">
@@ -101,8 +101,10 @@ export default function Burst() {
               <Play className="w-4 h-4" /> Start Blast
             </Button>
           </div>
-        ) : (
-          <div className="bg-card border border-border rounded-2xl p-6 mb-6">
+        )}
+
+        {isActive && (
+          <div className="bg-card border border-border rounded-2xl p-6">
             <BurstTimer timeLeft={timeLeft} duration={duration} />
             <div className="flex gap-2 mt-4">
               <Button onClick={isActive ? pauseBlast : resumeBlast} variant="outline" className="gap-2">
