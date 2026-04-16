@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { ChevronLeft, Home } from "lucide-react";
 
 const ROOT_PATHS = ["/", "/tasks", "/presets", "/family", "/leaderboard", "/home-setup"];
@@ -21,10 +21,10 @@ export default function MobileHeader() {
       style={{ paddingTop: 'calc(0.5rem + env(safe-area-inset-top))', minHeight: 'calc(3rem + env(safe-area-inset-top))' }}
     >
       {isRoot ? (
-        <div className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2">
           <Home className="w-5 h-5 text-primary" />
           <h1 className="font-heading text-lg font-bold leading-tight text-foreground">Home Task Manager</h1>
-        </div>
+        </Link>
       ) : (
         <div className="flex items-center gap-2">
           <button
