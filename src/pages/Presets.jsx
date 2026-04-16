@@ -38,7 +38,8 @@ function PresetCard({ p, onEdit, onDelete, onClick, onAddAsTask }) {
           {p.category === "Bill Schedules" && <span className="text-lg">💵</span>}
           {p.name.toLowerCase().includes("garbage") || p.name.toLowerCase().includes("trash") || p.name.toLowerCase().includes("bin") ? <span className="text-lg">🗑️</span> : null}
           {p.name.toLowerCase().includes("toilet") ? <span className="text-lg">🚽</span> : null}
-          {p.name.toLowerCase().includes("vacuum") ? <span className="text-lg">🪣</span> : null}
+          {p.name.toLowerCase().includes("bucket") ? <span className="text-lg">🪣</span> : null}
+          {p.name.toLowerCase().includes("vacuum") || p.name.toLowerCase().includes("sweep") || p.name.toLowerCase().includes("broom") ? <span className="text-lg">🧹</span> : null}
           {p.name.toLowerCase().includes("sheet") || p.name.toLowerCase().includes("mattress") ? <span className="text-lg">🛏️</span> : null}
           {p.name.toLowerCase().includes("appliance") ? <span className="text-lg">🧽</span> : null}
           {p.name.toLowerCase().includes("window") ? <span className="text-lg">🪟</span> : null}
