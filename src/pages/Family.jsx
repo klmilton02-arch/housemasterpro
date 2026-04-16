@@ -136,7 +136,7 @@ export default function Family() {
               : "Solo Account"}
           </p>
         </div>
-        <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full h-11 bg-card text-foreground border border-border hover:bg-secondary">
+        <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full h-11 bg-blue-100 text-blue-700 hover:bg-blue-200">
           <Plus className="w-5 h-5" /> Add Member
         </Button>
       </div>
