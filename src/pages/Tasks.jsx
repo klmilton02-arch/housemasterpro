@@ -137,6 +137,7 @@ export default function Tasks() {
   const categories = [...new Set(tasks.map(t => t.category).filter(Boolean))];
 
   const filtered = tasks.filter(t => {
+    if (t.category === "Car Maintenance") return false;
     const status = getStatusInfo(t);
     if (statusFilter === "overdue" && status.label !== "Overdue" && status.label !== "Past Due") return false;
     if (statusFilter === "due_soon" && status.label !== "Due Soon") return false;
