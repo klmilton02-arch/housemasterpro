@@ -55,6 +55,11 @@ export default function Burst() {
     },
   });
 
+  // Clean up blast flag on unmount
+  useEffect(() => {
+    return () => localStorage.removeItem("blast_mode_active");
+  }, []);
+
   // Timer effect
   useEffect(() => {
     if (!isActive || timeLeft <= 0) return;
@@ -88,14 +93,25 @@ export default function Burst() {
   }
 
   function handleTaskComplete(task) {
+    // Only award double XP + show toast during active blast
     const key = `${task.id}-${task.assigned_to}`;
     if (!completions[key]) {
       setCompletions(prev => ({ ...prev, [key]: true }));
-      completionMutation.mutate({
-        task,
-        memberId: task.assigned_to,
-      });
+      completionMutation.mutate({ task, memberId: task.assigned_to });
     }
+  }
+
+  async function handleTaskCompleteNormal(task) {
+    // Regular completion outside blast — no double XP, no toast
+    const today = new Date().toISOString().split("T")[0];
+    const nextDue = new Date();
+    nextDue.setDate(nextDue.getDate() + task.frequency_days);
+    await base44.entities.Task.update(task.id, {
+      status: "Completed",
+      last_completed_date: today,
+      next_due_date: nextDue.toISOString().split("T")[0],
+    });
+    queryClient.invalidateQueries({ queryKey: ["tasks"] });
   }
 
   const pendingTasks = tasks.filter(t => t.status === "Pending" || t.status === "Overdue");
@@ -176,7 +192,7 @@ export default function Burst() {
             ) : (
               <div className="space-y-3">
                 {pendingTasks.map(task => (
-                  <TaskCard key={task.id} task={task} onComplete={handleTaskComplete} />
+                  <TaskCard key={task.id} task={task} onComplete={handleTaskCompleteNormal} />
                 ))}
               </div>
             )}
