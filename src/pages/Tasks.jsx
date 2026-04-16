@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { Plus, Trash2, CheckSquare } from "lucide-react";
+import { Plus, Trash2, CheckSquare, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
 import { awardPoints, getTaskPoints } from "@/utils/gamification";
+import { useBlastMode } from "@/lib/BlastModeContext";
 import PointsToast from "../components/PointsToast";
 import { Button } from "@/components/ui/button";
 import MobileSelect from "../components/MobileSelect";
@@ -24,6 +26,7 @@ export default function Tasks() {
   const [familyMembers, setFamilyMembers] = useState([]);
   const [groupBy, setGroupBy] = useState("none");
   const [selectedTask, setSelectedTask] = useState(null);
+  const { isActive: blastActive } = useBlastMode();
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);

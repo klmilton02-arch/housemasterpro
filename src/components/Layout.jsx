@@ -2,6 +2,7 @@ import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { LayoutDashboard, ListChecks, Sparkles, Users, Trophy, Home, User, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import MobileHeader from "./MobileHeader";
+import { useBlastMode } from "@/lib/BlastModeContext";
 
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard, iconColor: "text-blue-500" },
@@ -18,6 +19,10 @@ const rootPaths = ["/", "/tasks", "/burst", "/presets", "/family", "/leaderboard
 export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { isActive, timeLeft } = useBlastMode();
+
+  const blastMins = Math.floor(timeLeft / 60);
+  const blastSecs = String(timeLeft % 60).padStart(2, "0");
   const isRootPath = rootPaths.includes(location.pathname);
   const currentNav = navItems.find(n => location.pathname.startsWith(n.path === "/" ? "/" : n.path)) || navItems[0];
 
@@ -71,6 +76,13 @@ export default function Layout() {
 
 
       <MobileHeader />
+
+      {/* Global Blast Mode Banner */}
+      {isActive && location.pathname !== "/burst" && (
+        <Link to="/burst" className="fixed top-0 left-0 right-0 z-50 md:left-64 flex items-center justify-center gap-2 bg-yellow-400 text-black text-sm font-bold py-1.5 shadow-md" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+          <Zap className="w-4 h-4" /> Blast Mode Active — {blastMins}:{blastSecs} remaining
+        </Link>
+      )}
 
       {/* Main content */}
       <main className="flex-1 md:ml-64 md:pt-0 md:pb-8" style={{ paddingTop: 'calc(3.5rem + env(safe-area-inset-top))', paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>

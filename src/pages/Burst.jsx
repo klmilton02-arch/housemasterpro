@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -7,38 +7,26 @@ import BurstTimer from "@/components/BurstTimer";
 import TaskCard from "@/components/TaskCard";
 import PointsToast from "@/components/PointsToast";
 import { awardPoints } from "@/utils/gamification";
+import { useBlastMode } from "@/lib/BlastModeContext";
 import confetti from "canvas-confetti";
 
 export default function Burst() {
   const queryClient = useQueryClient();
-  const [isActive, setIsActive] = useState(false);
-  const [duration, setDuration] = useState(30); // minutes
-  const [timeLeft, setTimeLeft] = useState(30 * 60); // seconds
+  const { isActive, timeLeft, duration, setDuration, startBlast, stopBlast, pauseBlast, resumeBlast } = useBlastMode();
   const [completions, setCompletions] = useState({});
   const [reward, setReward] = useState(null);
-
 
   const { data: tasks = [] } = useQuery({
     queryKey: ["tasks"],
     queryFn: () => base44.entities.Task.list("-next_due_date"),
   });
 
-  const { data: members = [] } = useQuery({
-    queryKey: ["family-members"],
-    queryFn: () => base44.entities.FamilyMember.list(),
-  });
-
-  const { data: gamification = [] } = useQuery({
-    queryKey: ["gamification"],
-    queryFn: () => base44.entities.GamificationProfile.list(),
-  });
-
   const completionMutation = useMutation({
-    mutationFn: async ({ task, memberId }) => {
+    mutationFn: async ({ task }) => {
       const today = new Date().toISOString().split("T")[0];
       const nextDue = new Date();
       nextDue.setDate(nextDue.getDate() + task.frequency_days);
-      
+
       await base44.entities.Task.update(task.id, {
         status: "Completed",
         last_completed_date: today,
@@ -46,63 +34,34 @@ export default function Burst() {
       });
 
       const result = await awardPoints(task);
-      if (result) {
-        setReward(result);
-      }
+      if (result) setReward(result);
 
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["gamification"] });
     },
   });
 
-  // Clean up blast flag on unmount
-  useEffect(() => {
-    return () => localStorage.removeItem("blast_mode_active");
-  }, []);
-
-  // Timer effect
-  useEffect(() => {
-    if (!isActive || timeLeft <= 0) return;
-
-    const timer = setInterval(() => {
-      setTimeLeft(t => {
-        if (t <= 1) {
-          setIsActive(false);
-          endBurst();
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [isActive, timeLeft]);
-
-  function startBurst() {
-    setTimeLeft(duration * 60);
+  function handleStartBlast() {
     setCompletions({});
-    setIsActive(true);
-    localStorage.setItem("blast_mode_active", "true");
+    startBlast(duration);
   }
 
-  function endBurst() {
-    localStorage.removeItem("blast_mode_active");
+  function handleStopBlast() {
+    stopBlast();
     if (Object.keys(completions).length > 0) {
       confetti({ particleCount: 100, spread: 70 });
     }
   }
 
   function handleTaskComplete(task) {
-    // Only award double XP + show toast during active blast
     const key = `${task.id}-${task.assigned_to}`;
     if (!completions[key]) {
       setCompletions(prev => ({ ...prev, [key]: true }));
-      completionMutation.mutate({ task, memberId: task.assigned_to });
+      completionMutation.mutate({ task });
     }
   }
 
   async function handleTaskCompleteNormal(task) {
-    // Regular completion outside blast — no double XP, no toast
     const today = new Date().toISOString().split("T")[0];
     const nextDue = new Date();
     nextDue.setDate(nextDue.getDate() + task.frequency_days);
@@ -115,7 +74,6 @@ export default function Burst() {
   }
 
   const pendingTasks = tasks.filter(t => t.status === "Pending" || t.status === "Overdue");
-  const progress = 100 - (timeLeft / (duration * 60)) * 100;
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -141,7 +99,7 @@ export default function Burst() {
                 <span className="text-sm">minutes</span>
               </label>
             </div>
-            <Button onClick={startBurst} size="lg" className="gap-2 bg-yellow-400 hover:bg-yellow-500 text-black">
+            <Button onClick={handleStartBlast} size="lg" className="gap-2 bg-yellow-400 hover:bg-yellow-500 text-black">
               <Play className="w-4 h-4" /> Start Blast
             </Button>
           </div>
@@ -149,11 +107,11 @@ export default function Burst() {
           <div className="bg-card border border-border rounded-2xl p-6 mb-6">
             <BurstTimer timeLeft={timeLeft} duration={duration} />
             <div className="flex gap-2 mt-4">
-              <Button onClick={() => setIsActive(!isActive)} variant="outline" className="gap-2">
+              <Button onClick={isActive ? pauseBlast : resumeBlast} variant="outline" className="gap-2">
                 {isActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                 {isActive ? "Pause" : "Resume"}
               </Button>
-              <Button onClick={() => { setIsActive(false); localStorage.removeItem("blast_mode_active"); endBurst(); }} variant="outline" className="gap-2 text-destructive">
+              <Button onClick={handleStopBlast} variant="outline" className="gap-2 text-destructive">
                 <X className="w-4 h-4" /> End Blast
               </Button>
             </div>
@@ -199,7 +157,7 @@ export default function Burst() {
           </div>
         )}
 
-      <PointsToast reward={reward} onDismiss={() => setReward(null)} />
+        <PointsToast reward={reward} onDismiss={() => setReward(null)} />
       </div>
     </div>
   );

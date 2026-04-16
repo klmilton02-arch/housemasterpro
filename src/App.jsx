@@ -8,6 +8,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Layout from './components/Layout';
+import { BlastModeProvider } from './lib/BlastModeContext';
 import Dashboard from './pages/Dashboard';
 import Tasks from './pages/Tasks';
 import NeedsAttention from './pages/NeedsAttention';
@@ -113,6 +114,7 @@ function App() {
 
   return (
     <AuthProvider>
+      <BlastModeProvider>
       <QueryClientProvider client={queryClientInstance}>
         <DarkModeSync />
         <Router>
@@ -120,6 +122,7 @@ function App() {
         </Router>
         <Toaster />
       </QueryClientProvider>
+      </BlastModeProvider>
     </AuthProvider>
   );
 }
