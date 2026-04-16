@@ -155,12 +155,12 @@ export default function Landing() {
              { step: "2", title: "Add tasks", desc: "Pick from our preset library or create your own with custom frequencies." },
              { step: "3", title: "Stay on track", desc: "Get a live dashboard showing what's due, assign tasks, and earn rewards." },
            ].map(s => (
-             <div key={s.step} className="bg-card border border-border rounded-xl p-5 hover:shadow-md transition-shadow flex flex-col items-center text-center">
+             <div key={s.step} className="bg-card border border-border rounded-xl p-5 hover:shadow-md transition-shadow flex flex-col items-center text-center h-full">
                <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground font-heading font-bold text-lg flex items-center justify-center mb-3">
                  {s.step}
                </div>
                <h3 className="font-heading font-semibold mb-1">{s.title}</h3>
-               <p className="text-sm text-muted-foreground">{s.desc}</p>
+               <p className="text-sm text-muted-foreground flex-1">{s.desc}</p>
              </div>
            ))}
          </div>
