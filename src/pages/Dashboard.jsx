@@ -120,6 +120,8 @@ export default function Dashboard() {
   return (
     <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
 
+      <h1 className="font-heading text-4xl sm:text-3xl font-bold md:hidden">Dashboard</h1>
+
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full text-base h-11 bg-blue-400 hover:bg-blue-500 border-blue-400">
           <Plus className="w-5 h-5" /> Add Task

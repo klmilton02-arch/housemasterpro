@@ -26,7 +26,6 @@ export default function MobileHeader() {
             <Home className="w-5 h-5 text-primary" />
             <h1 className="font-heading text-lg font-bold leading-tight text-foreground">Home Task Manager</h1>
           </div>
-          <p className="text-xs text-muted-foreground ml-7">Dashboard</p>
         </Link>
       ) : (
         <div className="flex items-center gap-2">
