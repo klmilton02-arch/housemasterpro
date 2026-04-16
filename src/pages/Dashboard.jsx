@@ -121,7 +121,7 @@ export default function Dashboard() {
     <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
-        <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full text-base h-11">
+        <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full text-base h-11 bg-blue-400 hover:bg-blue-500 border-blue-400">
           <Plus className="w-5 h-5" /> Add Task
         </Button>
         <SyncCalendarButton className="w-full" />
