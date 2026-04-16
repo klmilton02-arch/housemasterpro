@@ -38,7 +38,7 @@ export default function Encryption() {
         <section className="space-y-3">
           <h2 className="font-heading text-xl font-semibold">Third-Party Integrations</h2>
           <p className="text-sm text-muted-foreground">
-            When you integrate with services like Google Calendar, we only request the minimum necessary permissions. Your OAuth tokens are securely stored and never shared with third parties.
+            Integration with third party services, third party related data, and third party apps the minimum necessary permissions are requested. OAuth tokens are stored securely and are not shared with third parties.
           </p>
         </section>
 
