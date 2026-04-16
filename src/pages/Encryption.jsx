@@ -17,7 +17,7 @@ export default function Encryption() {
         <section className="space-y-3">
           <h2 className="font-heading text-xl font-semibold">At-Rest Encryption</h2>
           <p className="text-sm text-muted-foreground">
-            Your data stored on our servers is encrypted at rest using industry-standard encryption protocols. This protects your information even if our storage systems are compromised.
+            Data stored on our servers are encrypted at rest using industry standard protocols. Your information is protected if our storage systems are compromised.
           </p>
         </section>
 
