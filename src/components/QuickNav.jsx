@@ -3,15 +3,15 @@ import { ListTodo, Sparkles, Users, Trophy, Home } from "lucide-react";
 
 const rows = [
   [
-    { to: "/tasks", label: "Tasks", icon: ListTodo, cardClass: "bg-blue-500 border-blue-500 hover:bg-blue-600 hover:border-blue-600", textClass: "text-white", iconClass: "text-white" },
-    { to: "/presets", label: "Presets", icon: Sparkles, cardClass: "bg-blue-500 border-blue-500 hover:bg-blue-600 hover:border-blue-600", textClass: "text-white", iconClass: "text-white" },
+    { to: "/tasks", label: "Tasks", icon: ListTodo, cardClass: "bg-blue-400 border-blue-400 hover:bg-blue-500 hover:border-blue-500", textClass: "text-white", iconClass: "text-white" },
+    { to: "/presets", label: "Presets", icon: Sparkles, cardClass: "bg-blue-400 border-blue-400 hover:bg-blue-500 hover:border-blue-500", textClass: "text-white", iconClass: "text-white" },
   ],
   [
-    { to: "/family", label: "Family", icon: Users, cardClass: "bg-blue-500 border-blue-500 hover:bg-blue-600 hover:border-blue-600", textClass: "text-white", iconClass: "text-white" },
-    { to: "/leaderboard", label: "Leaderboard", icon: Trophy, cardClass: "bg-blue-500 border-blue-500 hover:bg-blue-600 hover:border-blue-600", textClass: "text-white", iconClass: "text-white" },
+    { to: "/family", label: "Family", icon: Users, cardClass: "bg-blue-400 border-blue-400 hover:bg-blue-500 hover:border-blue-500", textClass: "text-white", iconClass: "text-white" },
+    { to: "/leaderboard", label: "Leaderboard", icon: Trophy, cardClass: "bg-blue-400 border-blue-400 hover:bg-blue-500 hover:border-blue-500", textClass: "text-white", iconClass: "text-white" },
   ],
   [
-    { to: "/home-setup", label: "Home Setup", icon: Home, cardClass: "bg-blue-500 border-blue-500 hover:bg-blue-600 hover:border-blue-600", textClass: "text-white", iconClass: "text-white" },
+    { to: "/home-setup", label: "Home Setup", icon: Home, cardClass: "bg-blue-400 border-blue-400 hover:bg-blue-500 hover:border-blue-500", textClass: "text-white", iconClass: "text-white" },
   ],
 ];
 
