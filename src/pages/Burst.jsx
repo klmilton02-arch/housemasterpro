@@ -82,6 +82,9 @@ export default function Burst() {
 
         {!isActive && (
           <div className="bg-yellow-200 border border-yellow-300 rounded-2xl p-8 text-center">
+            <Button onClick={handleStartBlast} size="lg" className="gap-2 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold mb-6">
+              <Play className="w-4 h-4" /> Start Blast
+            </Button>
             <p className="text-muted-foreground mb-6">Set your blast duration and race to complete the most tasks!</p>
             <div className="flex items-center gap-4 justify-center mb-6">
               <label className="flex items-center gap-2">
@@ -97,9 +100,6 @@ export default function Burst() {
                 <span className="text-sm">minutes</span>
               </label>
             </div>
-            <Button onClick={handleStartBlast} size="lg" className="gap-2 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
-              <Play className="w-4 h-4" /> Start Blast
-            </Button>
           </div>
         )}
 
