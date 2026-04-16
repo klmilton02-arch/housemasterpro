@@ -76,9 +76,9 @@ export default function Burst() {
   const pendingTasks = tasks.filter(t => t.status === "Pending" || t.status === "Overdue");
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="font-heading text-4xl sm:text-3xl font-bold md:hidden mb-6">Blast Mode</h1>
+    <div className="min-h-screen bg-background">
+      <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
+        <h1 className="font-heading text-4xl sm:text-3xl font-bold md:hidden">Blast Mode</h1>
 
         {!isActive ? (
           <div className="bg-card border border-border rounded-2xl p-8 text-center mb-6">
@@ -158,5 +158,6 @@ export default function Burst() {
         <PointsToast reward={reward} onDismiss={() => setReward(null)} />
       </div>
     </div>
+
   );
 }
