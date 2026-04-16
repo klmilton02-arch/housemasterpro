@@ -101,7 +101,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails })
             />
           ) : (
             <div className="flex items-center gap-1 group/name">
-              <h3 className={cn("font-heading font-semibold text-base sm:text-sm truncate", optimisticChecked ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
+              <h3 className={cn("font-heading font-semibold text-sm truncate", optimisticChecked ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
               <button
                 onClick={e => { e.stopPropagation(); setEditing(true); }}
                 className="opacity-0 group-hover/name:opacity-100 transition-opacity p-0.5 rounded hover:bg-muted"
@@ -111,20 +111,20 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails })
             </div>
           )}
           <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-           <span className={cn("inline-flex items-center gap-1 px-2 py-1 sm:px-1.5 sm:py-0.5 rounded-full text-sm sm:text-xs font-medium", status.color)}>
+           <span className={cn("inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-medium", status.color)}>
              <StatusIcon className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
              {status.label}
            </span>
            {showDate && (
-             <span className="text-sm sm:text-xs text-muted-foreground">{format(parseISO(task.next_due_date), "MMM d")}</span>
+             <span className="text-xs text-muted-foreground">{format(parseISO(task.next_due_date), "MMM d")}</span>
            )}
            {task.streak > 0 && (
-             <span className="inline-flex items-center gap-0.5 text-sm sm:text-xs font-medium text-orange-500">
-               <Flame className="w-3.5 h-3.5 sm:w-3 sm:h-3" />{task.streak}
+             <span className="inline-flex items-center gap-0.5 text-xs font-medium text-orange-500">
+               <Flame className="w-3 h-3" />{task.streak}
              </span>
            )}
            {task.assigned_to_name && (
-             <span className="text-sm sm:text-xs text-muted-foreground">· {task.assigned_to_name}</span>
+             <span className="text-xs text-muted-foreground">· {task.assigned_to_name}</span>
            )}
           </div>
         </div>
