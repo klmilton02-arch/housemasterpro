@@ -109,7 +109,7 @@ export default function Encryption() {
         <section className="space-y-3">
           <h2 className="font-heading text-xl font-semibold">Encryption Documentation Requirements</h2>
           <p className="text-sm text-muted-foreground">
-            Documentation is required if your app contains:
+            Documentation is required if an app contains:
           </p>
           <ul className="text-sm text-muted-foreground space-y-2">
             <li className="flex gap-2">
