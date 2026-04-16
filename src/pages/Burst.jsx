@@ -80,11 +80,14 @@ export default function Burst() {
       <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
         <h1 className="font-heading text-2xl font-bold">Blast Mode</h1>
 
+        <div className="bg-yellow-200 border border-yellow-300 rounded-2xl p-8 text-center">
+          <Button onClick={handleStartBlast} size="lg" className="gap-2 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold w-full">
+            <Play className="w-4 h-4" /> Start Blast
+          </Button>
+        </div>
+
         {!isActive && (
-          <div className="bg-yellow-200 border border-yellow-300 rounded-2xl p-8 text-center">
-            <Button onClick={handleStartBlast} size="lg" className="gap-2 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold mb-6">
-              <Play className="w-4 h-4" /> Start Blast
-            </Button>
+          <div className="bg-card border border-border rounded-2xl p-8 text-center">
             <p className="text-muted-foreground mb-6">Set your blast duration and race to complete the most tasks!</p>
             <div className="flex items-center gap-4 justify-center mb-6">
               <label className="flex items-center gap-2">
