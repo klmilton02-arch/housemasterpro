@@ -24,7 +24,7 @@ export default function Encryption() {
         <section className="space-y-3">
           <h2 className="font-heading text-xl font-semibold">Authentication Security</h2>
           <p className="text-sm text-muted-foreground">
-            We use secure authentication mechanisms to verify your identity. Your password is never stored in plain text and is protected using modern hashing algorithms.
+            Secure authentication mechanisms are used to verify your identity. Your password is never stored in plain text and is protected through the use of modern hashing algorithms.
           </p>
         </section>
 
