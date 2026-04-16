@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Home, Sparkles, CheckCircle, BedDouble, Bath, ChefHat, Sofa, UtensilsCrossed, Car, Shirt } from "lucide-react";
+import { Home, Sparkles, CheckCircle, BedDouble, Bath, ChefHat, Sofa, UtensilsCrossed, Car, Shirt, LayoutGrid } from "lucide-react";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 
@@ -28,6 +28,7 @@ export default function HomeSetup() {
     has_dining_room: false,
     has_garage: false,
     has_laundry_room: false,
+    has_mixed_use: false,
   });
   const [setupId, setSetupId] = useState(null);
   const [generating, setGenerating] = useState(false);
@@ -48,6 +49,7 @@ export default function HomeSetup() {
           has_dining_room: r.has_dining_room ?? false,
           has_garage: r.has_garage ?? false,
           has_laundry_room: r.has_laundry_room ?? false,
+          has_mixed_use: r.has_mixed_use ?? false,
         });
       }
     });
@@ -117,6 +119,7 @@ export default function HomeSetup() {
       { key: "has_dining_room", label: "Dining Room", category: "Living Areas" },
       { key: "has_garage", label: "Garage", category: "Car Maintenance" },
       { key: "has_laundry_room", label: "Laundry Room", category: "House Maintenance" },
+      { key: "has_mixed_use", label: "Mixed Use Room", category: "Living Areas" },
     ];
 
     for (const room of singleRooms) {
@@ -218,6 +221,7 @@ export default function HomeSetup() {
           <ToggleRoom label="Dining Room" icon={UtensilsCrossed} field="has_dining_room" />
           <ToggleRoom label="Garage" icon={Car} field="has_garage" />
           <ToggleRoom label="Laundry Room" icon={Shirt} field="has_laundry_room" />
+          <ToggleRoom label="Mixed Use" icon={LayoutGrid} field="has_mixed_use" />
         </div>
       </div>
 

@@ -41,6 +41,11 @@
       "type": "boolean",
       "title": "Laundry Room",
       "default": false
+    },
+    "has_mixed_use": {
+      "type": "boolean",
+      "title": "Mixed Use Room",
+      "default": false
     }
   },
   "required": []
