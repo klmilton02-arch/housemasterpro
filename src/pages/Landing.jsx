@@ -72,7 +72,7 @@ export default function Landing() {
           <Home className="w-6 h-6 text-primary" />
           <span className="font-heading font-bold text-lg">HomeLifeFocus</span>
         </div>
-        <Link to="/">
+        <Link to="/dashboard">
           <Button size="sm">Sign In</Button>
         </Link>
       </nav>
@@ -109,7 +109,7 @@ export default function Landing() {
                 <span className="font-heading font-bold text-lg">HomeLifeFocus</span>
               </div>
               <p className="text-sm text-muted-foreground mb-6">Sign in to manage your home</p>
-              <Link to="/" className="block">
+              <Link to="/dashboard" className="block">
                 <Button size="lg" className="w-full mb-3">Sign In / Get Started</Button>
               </Link>
               <p className="text-xs text-muted-foreground">Free to use · No credit card needed</p>
@@ -241,7 +241,7 @@ export default function Landing() {
         <div className="flex justify-center gap-6 mb-3">
           <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
           <Link to="/support" className="hover:text-foreground transition-colors">Support</Link>
-          <Link to="/" className="hover:text-foreground transition-colors">Sign In</Link>
+          <Link to="/dashboard" className="hover:text-foreground transition-colors">Sign In</Link>
         </div>
         <p>© {new Date().getFullYear()} HomeLifeFocus. All rights reserved.</p>
       </footer>
