@@ -6,7 +6,6 @@ import { Play, Pause, X, Zap } from "lucide-react";
 import BurstTimer from "@/components/BurstTimer";
 import TaskCard from "@/components/TaskCard";
 import PointsToast from "@/components/PointsToast";
-import BlastModeToast from "@/components/BlastModeToast";
 import { awardPoints } from "@/utils/gamification";
 import confetti from "canvas-confetti";
 
@@ -17,7 +16,7 @@ export default function Burst() {
   const [timeLeft, setTimeLeft] = useState(30 * 60); // seconds
   const [completions, setCompletions] = useState({});
   const [reward, setReward] = useState(null);
-  const [blastToastShow, setBlastToastShow] = useState(false);
+
 
   const { data: tasks = [] } = useQuery({
     queryKey: ["tasks"],
@@ -49,10 +48,6 @@ export default function Burst() {
       const result = await awardPoints(task);
       if (result) {
         setReward(result);
-        if (result.blastBonus) {
-          setBlastToastShow(true);
-          setTimeout(() => setBlastToastShow(false), 2000);
-        }
       }
 
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
@@ -189,7 +184,6 @@ export default function Burst() {
         )}
 
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
-      <BlastModeToast show={blastToastShow} onDismiss={() => setBlastToastShow(false)} />
       </div>
     </div>
   );

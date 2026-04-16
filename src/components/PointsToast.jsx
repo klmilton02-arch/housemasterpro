@@ -16,9 +16,9 @@ export default function PointsToast({ reward, onDismiss }) {
           <div className="bg-card border border-border rounded-2xl shadow-2xl px-6 py-4 text-center min-w-[200px]">
             <div className="text-4xl font-heading font-bold text-primary">+{reward.totalPoints}</div>
             <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mt-0.5">XP Earned</div>
-            {reward.bonusPoints > 0 && (
-              <div className="mt-1.5 text-xs font-medium text-orange-500">
-                🔥 +{reward.bonusPoints} overdue bonus!
+            {reward.blastBonus && (
+              <div className="mt-1.5 text-xs font-medium text-yellow-500">
+                ⚡ Blast Mode 2×
               </div>
             )}
             {reward.leveledUp && (
