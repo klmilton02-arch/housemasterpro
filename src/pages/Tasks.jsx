@@ -71,7 +71,7 @@ export default function Tasks() {
         next_due_date: updated.next_due_date,
         streak: newStreak,
       });
-      const result = await awardPoints(task);
+      const result = await awardPoints(task, blastActive);
       if (result) {
         setReward(result);
       }

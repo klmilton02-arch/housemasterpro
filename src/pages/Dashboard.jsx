@@ -18,8 +18,10 @@ import SyncCalendarButton from "../components/SyncCalendarButton";
 import TaskDetailModal from "../components/TaskDetailModal";
 import BadgeDisplay from "../components/BadgeDisplay";
 import { getEarnedBadges } from "@/utils/badges";
+import { useBlastMode } from "@/lib/BlastModeContext";
 
 export default function Dashboard() {
+  const { isActive: isBlastActive } = useBlastMode();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -84,7 +86,7 @@ export default function Dashboard() {
       next_due_date: updated.next_due_date,
       streak: newStreak,
     });
-    const result = await awardPoints(task);
+    const result = await awardPoints(task, isBlastActive);
     if (result) {
       setReward(result);
       if (result.blastBonus) {

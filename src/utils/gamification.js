@@ -52,7 +52,7 @@ function checkNewBadges(profile) {
     .map(b => b.id);
 }
 
-export async function awardPoints(task) {
+export async function awardPoints(task, isBlastRunning = false) {
   // Use assigned member, or fall back to the logged-in user
   let memberId = task.assigned_to;
   let memberName = task.assigned_to_name;
@@ -72,7 +72,7 @@ export async function awardPoints(task) {
   const isDeep = task.task_type === "Deep Cleaning";
 
   const basePoints = getTaskPoints(task);
-  const isBlastActive = localStorage.getItem("blast_mode_active") === "true";
+  const isBlastActive = isBlastRunning;
   const blastMultiplier = isBlastActive ? 2 : 1;
   const totalPoints = basePoints * blastMultiplier;
 

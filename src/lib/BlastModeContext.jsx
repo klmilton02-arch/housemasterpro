@@ -42,6 +42,7 @@ export function BlastModeProvider({ children }) {
 
   function pauseBlast() {
     setIsActive(false);
+    localStorage.removeItem("blast_mode_active");
   }
 
   function resumeBlast() {

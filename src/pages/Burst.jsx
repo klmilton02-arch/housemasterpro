@@ -33,7 +33,7 @@ export default function Burst() {
         next_due_date: nextDue.toISOString().split("T")[0],
       });
 
-      const result = await awardPoints(task);
+      const result = await awardPoints(task, isActive);
       if (result) setReward(result);
 
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
