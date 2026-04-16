@@ -69,7 +69,7 @@ export default function Encryption() {
           <h2 className="font-heading text-xl font-semibold">App Store Encryption Declaration</h2>
           <div className="space-y-3 text-sm text-muted-foreground">
             <p>
-              HomeFlow complies with Apple's encryption requirements for app distribution on the App Store. Our app uses HTTPS with TLS 1.2+ for all data transmission, which is considered standard encryption exempt from disclosure requirements.
+              HomeFlow complies with Apple's encryption requirements for app distribution on the App Store. Our app uses HTTPS with TLS 1.2+ for all data transmission. This is considered to be standard encryption, exempt from disclosure requirements.
             </p>
             <div className="bg-muted/50 border border-border rounded-lg p-3 space-y-2">
               <h3 className="font-semibold text-foreground text-xs">Info.plist Declaration:</h3>
