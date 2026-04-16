@@ -155,14 +155,14 @@ export default function Landing() {
         <h2 className="font-heading text-3xl font-bold text-center mb-10">Families love it</h2>
         <div className="grid sm:grid-cols-3 gap-6">
           {TESTIMONIALS.map(t => (
-            <div key={t.name} className="bg-card border border-border rounded-xl p-5">
+            <div key={t.name} className="bg-blue-600 border border-blue-500 rounded-xl p-5">
               <div className="flex gap-0.5 mb-3">
                 {Array.from({ length: t.stars }).map((_, i) => (
                   <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                 ))}
               </div>
-              <p className="text-sm text-foreground mb-4">"{t.text}"</p>
-              <p className="text-xs font-semibold text-muted-foreground">— {t.name}</p>
+              <p className="text-sm text-white mb-4">"{t.text}"</p>
+              <p className="text-xs font-semibold text-blue-200">— {t.name}</p>
             </div>
           ))}
         </div>
