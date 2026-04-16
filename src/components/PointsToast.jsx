@@ -1,4 +1,5 @@
-import { motion, AnimatePresence, useEffect } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect } from "react";
 import { TrendingUp, Award } from "lucide-react";
 import confetti from "canvas-confetti";
 
