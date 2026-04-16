@@ -28,8 +28,8 @@ const FEATURES = [
   },
   {
     icon: <Bell className="w-6 h-6 text-primary" />,
-    title: "Overdue Alerts",
-    desc: "Get a clear view of what needs attention right now, with a grace period so you're never caught off guard.",
+    title: "Modifiable Pending Task Alerts",
+    desc: "Use reminders to determine which tasks need to be completed today. You can also adjust or simply shut off reminders so that you can enjoy your device without unnecessary pop-ups. The experience is yours.",
   },
   {
     icon: <Sparkles className="w-6 h-6 text-primary" />,
