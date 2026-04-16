@@ -5,12 +5,12 @@ import MobileHeader from "./MobileHeader";
 import { useBlastMode } from "@/lib/BlastModeContext";
 
 const navItems = [
-  { path: "/", label: "Dashboard", icon: LayoutDashboard, iconColor: "text-blue-500" },
-  { path: "/tasks", label: "Tasks", icon: ListChecks, iconColor: "text-green-500" },
-  { path: "/burst", label: "Blast", icon: Zap, iconColor: "text-yellow-400" },
-  { path: "/presets", label: "Presets", icon: Sparkles, iconColor: "text-orange-400" },
-  { path: "/family", label: "People", icon: Users, iconColor: "text-blue-500" },
-  { path: "/leaderboard", label: "Scores", icon: Trophy, iconColor: "text-slate-400" },
+  { path: "/", label: "Dashboard", icon: LayoutDashboard, iconColor: "text-black dark:text-white" },
+  { path: "/tasks", label: "Tasks", icon: ListChecks, iconColor: "text-black dark:text-white" },
+  { path: "/burst", label: "Blast", icon: Zap, iconColor: "text-black dark:text-white" },
+  { path: "/presets", label: "Presets", icon: Sparkles, iconColor: "text-black dark:text-white" },
+  { path: "/family", label: "People", icon: Users, iconColor: "text-black dark:text-white" },
+  { path: "/leaderboard", label: "Scores", icon: Trophy, iconColor: "text-black dark:text-white" },
   { path: "/home-setup", label: "Setup", icon: Home, iconColor: "text-black dark:text-white" },
 ];
 
