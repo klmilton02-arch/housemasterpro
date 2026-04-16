@@ -17,20 +17,7 @@ const ROOMS = [
   "Whole House"
 ];
 
-const ROOM_COLORS = {
-  Kitchen: "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800",
-  Bathroom: "bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800",
-  Bedroom: "bg-purple-50 dark:bg-purple-950/30 border-purple-200 dark:border-purple-800",
-  "Living Room": "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800",
-  "Dining Room": "bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800",
-  Garage: "bg-gray-50 dark:bg-gray-950/30 border-gray-200 dark:border-gray-800",
-  "Laundry Room": "bg-cyan-50 dark:bg-cyan-950/30 border-cyan-200 dark:border-cyan-800",
-  Office: "bg-slate-50 dark:bg-slate-950/30 border-slate-200 dark:border-slate-800",
-  Basement: "bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200 dark:border-indigo-800",
-  Attic: "bg-pink-50 dark:bg-pink-950/30 border-pink-200 dark:border-pink-800",
-  Outdoor: "bg-lime-50 dark:bg-lime-950/30 border-lime-200 dark:border-lime-800",
-  "Whole House": "bg-teal-50 dark:bg-teal-950/30 border-teal-200 dark:border-teal-800"
-};
+const ROOM_COLOR = "bg-blue-100 dark:bg-blue-900/40 border-blue-300 dark:border-blue-700";
 
 export default function RoomView({ tasks, onComplete, onViewDetails, onDelete }) {
   const [expandedRoom, setExpandedRoom] = useState(null);
@@ -51,7 +38,7 @@ export default function RoomView({ tasks, onComplete, onViewDetails, onDelete })
           <div key={room}>
             <button
               onClick={() => setExpandedRoom(isExpanded ? null : room)}
-              className={`border rounded-lg p-3 w-full flex items-center justify-between hover:shadow-md transition-all ${ROOM_COLORS[room]}`}
+              className={`border rounded-lg h-11 w-full flex items-center justify-between hover:shadow-md transition-all px-3 ${ROOM_COLOR}`}
             >
               <div className="flex items-center gap-3 flex-1 text-left">
                 <span className="font-heading font-semibold text-sm">{room}</span>
