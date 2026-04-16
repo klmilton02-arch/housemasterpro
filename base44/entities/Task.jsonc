@@ -14,18 +14,15 @@
       "type": "string",
       "title": "Room",
       "enum": [
-        "Kitchen",
-        "Bathroom",
         "Bedroom",
+        "Bathroom",
+        "Half Bath",
+        "Kitchen",
         "Living Room",
         "Dining Room",
         "Garage",
         "Laundry Room",
-        "Office",
-        "Basement",
-        "Attic",
-        "Outdoor",
-        "Whole House"
+        "Mixed Use Room"
       ]
     },
     "difficulty": {

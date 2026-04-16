@@ -86,49 +86,49 @@ export default function HomeSetup() {
     }
 
     // Bedrooms
-    for (let i = 1; i <= config.bedrooms; i++) {
-      const label = config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i}`;
-      for (const p of presetsForCategory("Bedroom Cleaning")) {
-        tasksToCreate.push({ ...p, name: `${label} – ${p.name}` });
-      }
-    }
+     for (let i = 1; i <= config.bedrooms; i++) {
+       const label = config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i}`;
+       for (const p of presetsForCategory("Bedroom Cleaning")) {
+         tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: "Bedroom" });
+       }
+     }
 
-    // Full bathrooms
-    for (let i = 1; i <= config.full_bathrooms; i++) {
-      const label = config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i}`;
-      for (const p of presetsForCategory("Bathroom Cleaning")) {
-        tasksToCreate.push({ ...p, name: `${label} – ${p.name}` });
-      }
-    }
+     // Full bathrooms
+     for (let i = 1; i <= config.full_bathrooms; i++) {
+       const label = config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i}`;
+       for (const p of presetsForCategory("Bathroom Cleaning")) {
+         tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: "Bathroom" });
+       }
+     }
 
-    // Half bathrooms
-    for (let i = 1; i <= config.half_bathrooms; i++) {
-      const label = config.half_bathrooms === 1 ? "Half Bath" : `Half Bath ${i}`;
-      const halfPresets = presetsForCategory("Bathroom Cleaning").filter(
-        p => p.task_type !== "Deep Cleaning"
-      );
-      for (const p of halfPresets) {
-        tasksToCreate.push({ ...p, name: `${label} – ${p.name}` });
-      }
-    }
+     // Half bathrooms
+     for (let i = 1; i <= config.half_bathrooms; i++) {
+       const label = config.half_bathrooms === 1 ? "Half Bath" : `Half Bath ${i}`;
+       const halfPresets = presetsForCategory("Bathroom Cleaning").filter(
+         p => p.task_type !== "Deep Cleaning"
+       );
+       for (const p of halfPresets) {
+         tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: "Half Bath" });
+       }
+     }
 
-    // Single-instance rooms
-    const singleRooms = [
-      { key: "has_kitchen", label: "Kitchen", category: "Kitchen Cleaning" },
-      { key: "has_living_room", label: "Living Room", category: "Living Areas" },
-      { key: "has_dining_room", label: "Dining Room", category: "Living Areas" },
-      { key: "has_garage", label: "Garage", category: "Car Maintenance" },
-      { key: "has_laundry_room", label: "Laundry Room", category: "House Maintenance" },
-      { key: "has_mixed_use", label: "Mixed Use Room", category: "Living Areas" },
-    ];
+     // Single-instance rooms
+     const singleRooms = [
+       { key: "has_kitchen", label: "Kitchen", category: "Kitchen Cleaning", room: "Kitchen" },
+       { key: "has_living_room", label: "Living Room", category: "Living Areas", room: "Living Room" },
+       { key: "has_dining_room", label: "Dining Room", category: "Living Areas", room: "Dining Room" },
+       { key: "has_garage", label: "Garage", category: "Car Maintenance", room: "Garage" },
+       { key: "has_laundry_room", label: "Laundry Room", category: "House Maintenance", room: "Laundry Room" },
+       { key: "has_mixed_use", label: "Mixed Use Room", category: "Living Areas", room: "Mixed Use Room" },
+     ];
 
-    for (const room of singleRooms) {
-      if (config[room.key]) {
-        for (const p of presetsForCategory(room.category)) {
-          tasksToCreate.push({ ...p, name: `${room.label} – ${p.name}` });
-        }
-      }
-    }
+     for (const room of singleRooms) {
+       if (config[room.key]) {
+         for (const p of presetsForCategory(room.category)) {
+           tasksToCreate.push({ ...p, name: `${room.label} – ${p.name}`, room: room.room });
+         }
+       }
+     }
 
     // Floors (if any rooms selected)
     const hasRooms = config.bedrooms > 0 || config.has_living_room || config.has_dining_room;
@@ -139,21 +139,22 @@ export default function HomeSetup() {
     }
 
     // Create all tasks
-    const created = await Promise.all(
-      tasksToCreate.map(t =>
-        base44.entities.Task.create({
-          name: t.name,
-          category: t.category,
-          task_type: t.task_type || "Regular",
-          frequency_days: t.frequency_days,
-          description: t.description || "",
-          start_date: today,
-          next_due_date: today,
-          status: "Pending",
-          overdue_grace_days: 3,
-        })
-      )
-    );
+     const created = await Promise.all(
+       tasksToCreate.map(t =>
+         base44.entities.Task.create({
+           name: t.name,
+           category: t.category,
+           room: t.room || null,
+           task_type: t.task_type || "Regular",
+           frequency_days: t.frequency_days,
+           description: t.description || "",
+           start_date: today,
+           next_due_date: today,
+           status: "Pending",
+           overdue_grace_days: 3,
+         })
+       )
+     );
 
     setGenerated(created.length);
     setGenerating(false);
