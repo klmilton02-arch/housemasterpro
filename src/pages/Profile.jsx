@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { User, LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BadgeDisplay from "../components/BadgeDisplay";
+import SyncGoogleTasksButton from "../components/SyncGoogleTasksButton";
 import { getEarnedBadges } from "@/utils/badges";
 
 export default function Profile() {
@@ -108,6 +109,18 @@ export default function Profile() {
         <h3 className="font-heading font-semibold text-lg">Badges & Achievements</h3>
         <div className="bg-card border border-border rounded-lg p-6">
           <BadgeDisplay badges={earnedBadges} size="md" />
+        </div>
+      </div>
+
+      {/* Google Tasks Sync */}
+      <div className="space-y-3">
+        <h3 className="font-heading font-semibold text-lg">Integrations</h3>
+        <div className="bg-card border border-border rounded-lg p-4 flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium">Google Tasks</p>
+            <p className="text-xs text-muted-foreground">Sync upcoming maintenance tasks to your to-do list</p>
+          </div>
+          <SyncGoogleTasksButton />
         </div>
       </div>
 
