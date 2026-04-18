@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle } from "lucide-react";
+import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { awardPoints, getTaskPoints } from "@/utils/gamification";
 import { useBlastMode } from "@/lib/BlastModeContext";
@@ -9,6 +9,7 @@ import PointsToast from "../components/PointsToast";
 import { Button } from "@/components/ui/button";
 import MobileSelect from "../components/MobileSelect";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import TaskCard, { getStatusInfo } from "../components/TaskCard";
 import AddTaskDialog from "../components/AddTaskDialog";
 import BatchToolbar from "../components/BatchToolbar";
@@ -30,6 +31,7 @@ export default function Tasks() {
   const [selectedTask, setSelectedTask] = useState(null);
   const [viewMode, setViewMode] = useState("list");
   const [assignedFilter, setAssignedFilter] = useState("all"); // "all" | "assigned" | "unassigned"
+  const [selectedMemberId, setSelectedMemberId] = useState(null);
   const { isActive: blastActive } = useBlastMode();
 
   const loadTasks = useCallback(async () => {
@@ -150,6 +152,7 @@ export default function Tasks() {
     if (categoryFilter !== "all" && t.category !== categoryFilter) return false;
     if (assignedFilter === "assigned" && !t.assigned_to) return false;
     if (assignedFilter === "unassigned" && t.assigned_to) return false;
+    if (selectedMemberId && t.assigned_to !== selectedMemberId) return false;
     return true;
   }).sort((a, b) => {
     const aCompleted = a.status === "Completed";
@@ -253,14 +256,36 @@ export default function Tasks() {
            </Button>
          </div>
          <div className="flex gap-2">
+           <DropdownMenu>
+             <DropdownMenuTrigger asChild>
+               <Button
+                 className={`flex-1 h-11 gap-1 ${selectedMemberId ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
+               >
+                 {selectedMemberId ? familyMembers.find(m => m.id === selectedMemberId)?.name : "Assigned To"}
+                 <ChevronDown className="w-4 h-4" />
+               </Button>
+             </DropdownMenuTrigger>
+             <DropdownMenuContent align="start" className="w-48">
+               {selectedMemberId && (
+                 <DropdownMenuItem onClick={() => { setSelectedMemberId(null); setAssignedFilter("all"); setViewMode("list"); }}>
+                   All Members
+                 </DropdownMenuItem>
+               )}
+               {familyMembers.map(member => (
+                 <DropdownMenuItem
+                   key={member.id}
+                   onClick={() => { setSelectedMemberId(member.id); setAssignedFilter("all"); setViewMode("list"); }}
+                 >
+                   <div className={`w-5 h-5 rounded-full bg-${member.avatar_color}-500 flex items-center justify-center text-white text-xs font-bold mr-2`}>
+                     {member.name[0]}
+                   </div>
+                   {member.name}
+                 </DropdownMenuItem>
+               ))}
+             </DropdownMenuContent>
+           </DropdownMenu>
            <Button 
-             onClick={() => { setViewMode("list"); setAssignedFilter(assignedFilter === "assigned" ? "all" : "assigned"); }}
-             className={`flex-1 h-11 ${assignedFilter === "assigned" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
-           >
-             Assigned To
-           </Button>
-           <Button 
-             onClick={() => { setViewMode("list"); setAssignedFilter(assignedFilter === "unassigned" ? "all" : "unassigned"); }}
+             onClick={() => { setViewMode("list"); setSelectedMemberId(null); setAssignedFilter(assignedFilter === "unassigned" ? "all" : "unassigned"); }}
              className={`flex-1 h-11 ${assignedFilter === "unassigned" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
            >
              Unassigned
