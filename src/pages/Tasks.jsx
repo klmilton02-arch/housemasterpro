@@ -237,12 +237,6 @@ export default function Tasks() {
          </div>
          <div className="flex gap-2">
            <Button 
-             onClick={() => setViewMode("list")} 
-             className={`flex-1 h-11 ${viewMode === "list" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
-           >
-             List View
-           </Button>
-           <Button 
              onClick={() => { setViewMode("list"); setCategoryFilter("Bill Schedules"); }}
              className={`flex-1 h-11 ${categoryFilter === "Bill Schedules" && viewMode === "list" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
            >
