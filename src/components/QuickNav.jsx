@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ListTodo, Sparkles, Users, Trophy, Home } from "lucide-react";
+import { ListTodo, Sparkles, Users, Trophy, Home, User } from "lucide-react";
 
 const rows = [
   [
@@ -12,6 +12,7 @@ const rows = [
   ],
   [
     { to: "/home-setup", label: "Home Setup", icon: Home, cardClass: "bg-blue-400 border-blue-400 hover:bg-blue-500 hover:border-blue-500", textClass: "text-white", iconClass: "text-white" },
+    { to: "/profile", label: "Profile", icon: User, cardClass: "bg-blue-400 border-blue-400 hover:bg-blue-500 hover:border-blue-500", textClass: "text-white", iconClass: "text-white" },
   ],
 ];
 
