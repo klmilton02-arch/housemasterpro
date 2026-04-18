@@ -29,6 +29,7 @@ export default function Tasks() {
   const [groupBy, setGroupBy] = useState("none");
   const [selectedTask, setSelectedTask] = useState(null);
   const [viewMode, setViewMode] = useState("list");
+  const [assignedFilter, setAssignedFilter] = useState("all"); // "all" | "assigned" | "unassigned"
   const { isActive: blastActive } = useBlastMode();
 
   const loadTasks = useCallback(async () => {
@@ -147,6 +148,8 @@ export default function Tasks() {
     if (statusFilter === "completed" && status.label !== "Completed") return false;
     if (statusFilter === "pending" && status.label === "Completed") return false;
     if (categoryFilter !== "all" && t.category !== categoryFilter) return false;
+    if (assignedFilter === "assigned" && !t.assigned_to) return false;
+    if (assignedFilter === "unassigned" && t.assigned_to) return false;
     return true;
   }).sort((a, b) => {
     const aCompleted = a.status === "Completed";
@@ -247,6 +250,20 @@ export default function Tasks() {
              className={`flex-1 h-11 ${viewMode === "rooms" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
            >
              Rooms
+           </Button>
+         </div>
+         <div className="flex gap-2">
+           <Button 
+             onClick={() => { setViewMode("list"); setAssignedFilter(assignedFilter === "assigned" ? "all" : "assigned"); }}
+             className={`flex-1 h-11 ${assignedFilter === "assigned" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
+           >
+             Assigned To
+           </Button>
+           <Button 
+             onClick={() => { setViewMode("list"); setAssignedFilter(assignedFilter === "unassigned" ? "all" : "unassigned"); }}
+             className={`flex-1 h-11 ${assignedFilter === "unassigned" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
+           >
+             Unassigned
            </Button>
          </div>
        </div>
