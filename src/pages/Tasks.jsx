@@ -243,6 +243,12 @@ export default function Tasks() {
              List View
            </Button>
            <Button 
+             onClick={() => { setViewMode("list"); setCategoryFilter("Bill Schedules"); }}
+             className={`flex-1 h-11 ${categoryFilter === "Bill Schedules" && viewMode === "list" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
+           >
+             Bills
+           </Button>
+           <Button 
              onClick={() => setViewMode("rooms")} 
              className={`flex-1 h-11 ${viewMode === "rooms" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
            >
