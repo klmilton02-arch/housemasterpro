@@ -121,6 +121,15 @@ export default function Layout() {
             </Link>
           );
         })}
+        <Link
+          to="/profile"
+          className={cn(
+            "flex-1 flex flex-col items-center justify-center py-4 gap-0.5 select-none transition-colors",
+            location.pathname === "/profile" ? "text-primary" : "text-muted-foreground"
+          )}
+        >
+          <User className="w-5 h-5" />
+        </Link>
       </nav>
     </div>
   );
