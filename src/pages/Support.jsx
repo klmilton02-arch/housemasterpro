@@ -1,5 +1,6 @@
 import { Mail, MessageCircle, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export default function Support() {
   return (
@@ -34,9 +35,11 @@ export default function Support() {
             <p className="text-sm text-muted-foreground mb-4">
               Find answers to common questions about using HouseMasterPro.
             </p>
-            <Button variant="outline" className="w-full">
-              Coming Soon
-            </Button>
+            <Link to="/faq">
+              <Button variant="outline" className="w-full">
+                View FAQs
+              </Button>
+            </Link>
           </div>
         </div>
 
