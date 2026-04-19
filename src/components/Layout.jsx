@@ -8,9 +8,9 @@ const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard, iconColor: "text-black dark:text-white" },
   { path: "/tasks", label: "Tasks", icon: ListChecks, iconColor: "text-black dark:text-white" },
   { path: "/burst", label: "Blast Mode", icon: Zap, iconColor: "text-black dark:text-white" },
+  { path: "/leaderboard", label: "Rewards", icon: Trophy, iconColor: "text-black dark:text-white" },
   { path: "/presets", label: "Presets", icon: Sparkles, iconColor: "text-black dark:text-white" },
   { path: "/family", label: "Family", icon: Users, iconColor: "text-black dark:text-white" },
-  { path: "/leaderboard", label: "Rewards", icon: Trophy, iconColor: "text-black dark:text-white" },
   { path: "/home-setup", label: "Home Setup", icon: Home, iconColor: "text-black dark:text-white" },
 ];
 
