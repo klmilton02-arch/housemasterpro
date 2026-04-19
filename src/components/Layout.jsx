@@ -119,7 +119,7 @@ export default function Layout() {
               )}
             >
               <Icon className={cn("w-5 h-5", iconColor)} />
-              <span className="text-[10px] font-medium leading-tight text-center">{label}</span>
+              <span className={cn("text-[10px] font-medium leading-tight text-center", label === "Family" ? "text-black dark:text-white" : "")}>{label}</span>
             </Link>
           );
         })}
@@ -131,7 +131,7 @@ export default function Layout() {
           )}
         >
           <User className="w-5 h-5" />
-          <span className="text-[10px] font-medium leading-tight text-center">Profile</span>
+          <span className="text-[10px] font-medium leading-tight text-center text-black dark:text-white">Profile</span>
         </Link>
         </div>
       </nav>
