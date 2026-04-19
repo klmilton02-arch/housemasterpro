@@ -15,6 +15,7 @@ import AddTaskDialog from "../components/AddTaskDialog";
 import BatchToolbar from "../components/BatchToolbar";
 import TaskDetailModal from "../components/TaskDetailModal";
 import RoomView from "../components/RoomView";
+import TaskCalendar from "../components/TaskCalendar";
 import { differenceInDays, parseISO } from "date-fns";
 
 export default function Tasks() {
@@ -254,6 +255,12 @@ export default function Tasks() {
            >
              Rooms
            </Button>
+           <Button 
+             onClick={() => setViewMode("calendar")} 
+             className={`flex-1 h-11 ${viewMode === "calendar" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
+           >
+             Calendar
+           </Button>
          </div>
          <div className="flex gap-2">
            <DropdownMenu>
@@ -429,6 +436,8 @@ export default function Tasks() {
             ))}
           </div>
         )
+      ) : viewMode === "calendar" ? (
+        <TaskCalendar tasks={tasks} onViewDetails={setSelectedTask} />
       ) : (
         <RoomView tasks={tasks} onComplete={handleComplete} onViewDetails={setSelectedTask} onDelete={handleDelete} />
       )}
