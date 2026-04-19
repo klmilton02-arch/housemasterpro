@@ -7,11 +7,11 @@ import { useBlastMode } from "@/lib/BlastModeContext";
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard, iconColor: "text-black dark:text-white" },
   { path: "/tasks", label: "Tasks", icon: ListChecks, iconColor: "text-black dark:text-white" },
-  { path: "/burst", label: "Blast", icon: Zap, iconColor: "text-black dark:text-white" },
+  { path: "/burst", label: "Blast Mode", icon: Zap, iconColor: "text-black dark:text-white" },
   { path: "/presets", label: "Presets", icon: Sparkles, iconColor: "text-black dark:text-white" },
-  { path: "/family", label: "People", icon: Users, iconColor: "text-black dark:text-white" },
-  { path: "/leaderboard", label: "Scores", icon: Trophy, iconColor: "text-black dark:text-white" },
-  { path: "/home-setup", label: "Setup", icon: Home, iconColor: "text-black dark:text-white" },
+  { path: "/family", label: "Family", icon: Users, iconColor: "text-black dark:text-white" },
+  { path: "/leaderboard", label: "Rewards", icon: Trophy, iconColor: "text-black dark:text-white" },
+  { path: "/home-setup", label: "Home Setup", icon: Home, iconColor: "text-black dark:text-white" },
 ];
 
 const rootPaths = ["/", "/tasks", "/burst", "/presets", "/family", "/leaderboard", "/home-setup"];
@@ -114,22 +114,24 @@ export default function Layout() {
                 }
               }}
               className={cn(
-                "w-14 flex flex-col items-center justify-center py-4 gap-0.5 select-none transition-colors",
+                "w-20 flex flex-col items-center justify-center py-2 gap-0.5 select-none transition-colors",
                 isActive ? "text-primary" : "text-muted-foreground"
               )}
             >
               <Icon className={cn("w-5 h-5", iconColor)} />
+              <span className="text-[10px] font-medium leading-tight text-center">{label}</span>
             </Link>
           );
         })}
         <Link
           to="/profile"
           className={cn(
-            "w-14 flex flex-col items-center justify-center py-4 gap-0.5 select-none transition-colors",
+            "w-20 flex flex-col items-center justify-center py-2 gap-0.5 select-none transition-colors",
             location.pathname === "/profile" ? "text-primary" : "text-muted-foreground"
           )}
         >
           <User className="w-5 h-5" />
+          <span className="text-[10px] font-medium leading-tight text-center">Profile</span>
         </Link>
         </div>
       </nav>
