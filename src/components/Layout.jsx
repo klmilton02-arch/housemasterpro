@@ -93,9 +93,10 @@ export default function Layout() {
 
       {/* Mobile Bottom Tab Bar */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border flex z-40"
+        className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-40 overflow-x-auto"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
+        <div className="flex min-w-max">
         {navItems.map(({ path, label, icon: Icon, iconColor }) => {
           const isActive = path === "/" ? location.pathname === "/" : location.pathname.startsWith(path);
           return (
@@ -113,7 +114,7 @@ export default function Layout() {
                 }
               }}
               className={cn(
-                "flex-1 flex flex-col items-center justify-center py-4 gap-0.5 select-none transition-colors",
+                "w-14 flex flex-col items-center justify-center py-4 gap-0.5 select-none transition-colors",
                 isActive ? "text-primary" : "text-muted-foreground"
               )}
             >
@@ -124,12 +125,13 @@ export default function Layout() {
         <Link
           to="/profile"
           className={cn(
-            "flex-1 flex flex-col items-center justify-center py-4 gap-0.5 select-none transition-colors",
+            "w-14 flex flex-col items-center justify-center py-4 gap-0.5 select-none transition-colors",
             location.pathname === "/profile" ? "text-primary" : "text-muted-foreground"
           )}
         >
           <User className="w-5 h-5" />
         </Link>
+        </div>
       </nav>
     </div>
   );
