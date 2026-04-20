@@ -137,19 +137,18 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
           </div>
           <div>
             <Label className="text-xs text-muted-foreground">Frequency</Label>
-            <div className="flex gap-2 mt-1">
+            <div className="grid grid-cols-2 gap-2 mt-1">
               <Input
                 type="number" min="1"
                 value={freqValue}
                 onChange={e => setFreqValue(e.target.value)}
                 placeholder="e.g., 2"
-                className="flex-1"
               />
               <MobileSelect
                 value={freqUnit}
                 onValueChange={setFreqUnit}
                 title="Frequency Unit"
-                triggerClassName="w-32"
+                triggerClassName="w-full"
                 options={FREQ_UNITS}
               />
             </div>
