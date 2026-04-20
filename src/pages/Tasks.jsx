@@ -230,6 +230,12 @@ export default function Tasks() {
         <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
       </div>
       <div className="flex gap-2 flex-col gap-3">
+         <Button 
+           onClick={() => setViewMode(viewMode === "calendar" ? "list" : "calendar")} 
+           className={`w-full h-11 ${viewMode === "calendar" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
+         >
+           <Calendar className="w-4 h-4 mr-2" /> Calendar
+         </Button>
          <div className="flex gap-2">
            <Button onClick={() => setDialogOpen(true)} className="gap-2 flex-1 h-11 bg-blue-400 hover:bg-blue-500 border-blue-400">
              <Plus className="w-5 h-5" /> Add Task
@@ -242,12 +248,6 @@ export default function Tasks() {
              <CheckSquare className="w-5 h-5" /> Select
            </Button>
          </div>
-         <Button 
-           onClick={() => setViewMode(viewMode === "calendar" ? "list" : "calendar")} 
-           className={`w-full h-11 ${viewMode === "calendar" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
-         >
-           <Calendar className="w-4 h-4 mr-2" /> Calendar
-         </Button>
          <div className="flex gap-2">
            <Button 
              onClick={() => { setViewMode("list"); setCategoryFilter("Bill Schedules"); }}
