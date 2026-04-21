@@ -28,6 +28,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   const [useBillDay, setUseBillDay] = useState(false);
   const [streamingServiceName, setStreamingServiceName] = useState("");
   const [phoneBillType, setPhoneBillType] = useState("");
+  const [insuranceType, setInsuranceType] = useState("");
 
   function toDays(val, unit) {
     const n = parseInt(val) || 1;
@@ -78,6 +79,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     const isBill = (tab === "preset" && selectedPreset?.category === "Bill Schedules") || (tab === "custom" && customCategory === "Bill Schedules");
     const isStreaming = tab === "preset" && selectedPreset?.name?.toLowerCase().includes("streaming");
     const isPhone = tab === "preset" && selectedPreset?.name?.toLowerCase().includes("phone");
+    const isInsurance = tab === "preset" && selectedPreset?.name?.toLowerCase().includes("home insurance");
 
     // If bill with specific day of month, compute next_due_date and set frequency to 30 days
     let nextDueDate = startDate;
@@ -109,6 +111,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
              ? `Streaming Services (${streamingServiceName.trim()})`
              : isPhone && phoneBillType
              ? `${selectedPreset.name} (${phoneBillType})`
+             : isInsurance && insuranceType
+             ? `${selectedPreset.name} (${insuranceType})`
              : selectedPreset.name,
            category: selectedPreset.category,
            room: getRoomFromCategory(selectedPreset.category),
@@ -147,6 +151,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     setBillDayOfMonth("1");
     setStreamingServiceName("");
     setPhoneBillType("");
+    setInsuranceType("");
     setAssignedTo("");
     onOpenChange(false);
     onTaskAdded?.();
@@ -203,6 +208,30 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                 </button>
               ))}
             </div>
+            {selectedPreset?.name?.toLowerCase().includes("home insurance") && (
+              <div className="mt-3">
+                <Label className="text-xs font-medium text-muted-foreground">Insurance Type (optional)</Label>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {["Fire", "Flood", "Earthquake"].map(type => (
+                    <button
+                      key={type}
+                      type="button"
+                      onClick={() => setInsuranceType(insuranceType === type ? "" : type)}
+                      className={`px-3 py-1.5 rounded-lg text-sm border transition-all ${
+                        insuranceType === type
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "border-border text-foreground hover:bg-muted"
+                      }`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+                {insuranceType && (
+                  <p className="text-xs text-muted-foreground mt-1">Task will be named: <span className="font-medium text-foreground">{selectedPreset.name} ({insuranceType})</span></p>
+                )}
+              </div>
+            )}
             {selectedPreset?.name?.toLowerCase().includes("phone") && (
               <div className="mt-3">
                 <Label className="text-xs font-medium text-muted-foreground">Phone Type (optional)</Label>
