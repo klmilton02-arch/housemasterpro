@@ -27,6 +27,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   const [billDayOfMonth, setBillDayOfMonth] = useState("1");
   const [useBillDay, setUseBillDay] = useState(false);
   const [streamingServiceName, setStreamingServiceName] = useState("");
+  const [phoneBillType, setPhoneBillType] = useState("");
 
   function toDays(val, unit) {
     const n = parseInt(val) || 1;
@@ -76,6 +77,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
     const isBill = (tab === "preset" && selectedPreset?.category === "Bill Schedules") || (tab === "custom" && customCategory === "Bill Schedules");
     const isStreaming = tab === "preset" && selectedPreset?.name?.toLowerCase().includes("streaming");
+    const isPhone = tab === "preset" && selectedPreset?.name?.toLowerCase().includes("phone");
 
     // If bill with specific day of month, compute next_due_date and set frequency to 30 days
     let nextDueDate = startDate;
@@ -105,6 +107,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
        ? {
            name: isStreaming && streamingServiceName.trim()
              ? `Streaming Services (${streamingServiceName.trim()})`
+             : isPhone && phoneBillType
+             ? `${selectedPreset.name} (${phoneBillType})`
              : selectedPreset.name,
            category: selectedPreset.category,
            room: getRoomFromCategory(selectedPreset.category),
@@ -142,6 +146,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     setUseBillDay(false);
     setBillDayOfMonth("1");
     setStreamingServiceName("");
+    setPhoneBillType("");
     setAssignedTo("");
     onOpenChange(false);
     onTaskAdded?.();
@@ -198,6 +203,30 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                 </button>
               ))}
             </div>
+            {selectedPreset?.name?.toLowerCase().includes("phone") && (
+              <div className="mt-3">
+                <Label className="text-xs font-medium text-muted-foreground">Phone Type (optional)</Label>
+                <div className="flex gap-2 mt-1">
+                  {["Mobile", "Landline"].map(type => (
+                    <button
+                      key={type}
+                      type="button"
+                      onClick={() => setPhoneBillType(phoneBillType === type ? "" : type)}
+                      className={`px-3 py-1.5 rounded-lg text-sm border transition-all ${
+                        phoneBillType === type
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "border-border text-foreground hover:bg-muted"
+                      }`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+                {phoneBillType && (
+                  <p className="text-xs text-muted-foreground mt-1">Task will be named: <span className="font-medium text-foreground">{selectedPreset.name} ({phoneBillType})</span></p>
+                )}
+              </div>
+            )}
             {selectedPreset?.name?.toLowerCase().includes("streaming") && (
               <div className="mt-3">
                 <Label className="text-xs font-medium text-muted-foreground">Streaming Service Name</Label>
