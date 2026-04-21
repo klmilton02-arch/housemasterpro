@@ -26,6 +26,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   const [freqUnit, setFreqUnit] = useState("days");
   const [billDayOfMonth, setBillDayOfMonth] = useState("1");
   const [useBillDay, setUseBillDay] = useState(false);
+  const [streamingServiceName, setStreamingServiceName] = useState("");
 
   function toDays(val, unit) {
     const n = parseInt(val) || 1;
@@ -74,6 +75,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     const member = familyMembers.find(m => m.id === assignedTo);
 
     const isBill = (tab === "preset" && selectedPreset?.category === "Bill Schedules") || (tab === "custom" && customCategory === "Bill Schedules");
+    const isStreaming = tab === "preset" && selectedPreset?.name?.toLowerCase().includes("streaming");
 
     // If bill with specific day of month, compute next_due_date and set frequency to 30 days
     let nextDueDate = startDate;
@@ -101,7 +103,9 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
     const taskData = tab === "preset" && selectedPreset
        ? {
-           name: selectedPreset.name,
+           name: isStreaming && streamingServiceName.trim()
+             ? `Streaming Services (${streamingServiceName.trim()})`
+             : selectedPreset.name,
            category: selectedPreset.category,
            room: getRoomFromCategory(selectedPreset.category),
            difficulty: selectedPreset.difficulty,
@@ -137,6 +141,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     setFreqUnit("days");
     setUseBillDay(false);
     setBillDayOfMonth("1");
+    setStreamingServiceName("");
     setAssignedTo("");
     onOpenChange(false);
     onTaskAdded?.();
@@ -193,6 +198,20 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                 </button>
               ))}
             </div>
+            {selectedPreset?.name?.toLowerCase().includes("streaming") && (
+              <div className="mt-3">
+                <Label className="text-xs font-medium text-muted-foreground">Streaming Service Name</Label>
+                <Input
+                  value={streamingServiceName}
+                  onChange={e => setStreamingServiceName(e.target.value)}
+                  placeholder="e.g. Netflix, Hulu, Disney+"
+                  className="mt-1"
+                />
+                {streamingServiceName.trim() && (
+                  <p className="text-xs text-muted-foreground mt-1">Task will be named: <span className="font-medium text-foreground">Streaming Services ({streamingServiceName.trim()})</span></p>
+                )}
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="custom" className="space-y-4 mt-4">
