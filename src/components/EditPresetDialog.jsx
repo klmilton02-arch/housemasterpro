@@ -86,7 +86,7 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
       difficulty,
       description,
       frequency_days: freqDays,
-      room: room || null,
+      room: (room && room !== "None") ? room : null,
     };
     if (isNew) {
       await base44.entities.PresetTask.create(data);

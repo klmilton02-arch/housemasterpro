@@ -17,7 +17,23 @@
     },
     "room": {
       "type": "string",
-      "title": "Room"
+      "title": "Room",
+      "enum": [
+        "None",
+        "Kitchen",
+        "Bathroom",
+        "Bedroom",
+        "Living Room",
+        "Dining Room",
+        "Garage",
+        "Laundry Room",
+        "Office",
+        "Basement",
+        "Attic",
+        "Outdoor",
+        "Whole House",
+        "Any"
+      ]
     },
     "frequency_days": {
       "type": "number",
