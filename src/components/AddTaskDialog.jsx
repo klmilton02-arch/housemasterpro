@@ -24,6 +24,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   const [startDate, setStartDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [freqValue, setFreqValue] = useState("");
   const [freqUnit, setFreqUnit] = useState("days");
+  const [billDayOfMonth, setBillDayOfMonth] = useState("1");
+  const [useBillDay, setUseBillDay] = useState(false);
 
   function toDays(val, unit) {
     const n = parseInt(val) || 1;
@@ -71,6 +73,18 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     setLoading(true);
     const member = familyMembers.find(m => m.id === assignedTo);
 
+    const isBill = (tab === "preset" && selectedPreset?.category === "Bill Schedules") || (tab === "custom" && customCategory === "Bill Schedules");
+
+    // If bill with specific day of month, compute next_due_date and set frequency to 30 days
+    let nextDueDate = startDate;
+    if (isBill && useBillDay) {
+      const day = parseInt(billDayOfMonth) || 1;
+      const today = new Date();
+      let candidate = new Date(today.getFullYear(), today.getMonth(), day);
+      if (candidate < today) candidate = new Date(today.getFullYear(), today.getMonth() + 1, day);
+      nextDueDate = format(candidate, "yyyy-MM-dd");
+    }
+
     const freqDays = freqValue ? toDays(freqValue, freqUnit) : (selectedPreset?.frequency_days || 30);
 
     const freqMiles = freqUnit === "miles" ? (parseInt(freqValue) || undefined) : undefined;
@@ -110,7 +124,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
       assigned_to: assignedTo || undefined,
       assigned_to_name: member?.name || undefined,
       start_date: startDate,
-      next_due_date: startDate,
+      next_due_date: nextDueDate,
       status: "Pending",
       overdue_grace_days: 3,
     });
@@ -121,6 +135,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     setCustomRoom("");
     setFreqValue("");
     setFreqUnit("days");
+    setUseBillDay(false);
+    setBillDayOfMonth("1");
     setAssignedTo("");
     onOpenChange(false);
     onTaskAdded?.();
@@ -226,6 +242,34 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
         </Tabs>
 
         <div className="space-y-4 mt-4 pt-4 border-t border-border">
+          {/* Bill day-of-month option */}
+          {((tab === "preset" && selectedPreset?.category === "Bill Schedules") || (tab === "custom" && customCategory === "Bill Schedules")) && (
+            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 space-y-2">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setUseBillDay(b => !b)}
+                  className={`w-9 h-5 rounded-full transition-colors flex items-center ${useBillDay ? "bg-primary justify-end" : "bg-muted justify-start"}`}
+                >
+                  <span className="w-4 h-4 rounded-full bg-white shadow mx-0.5 block" />
+                </button>
+                <span className="text-sm font-medium text-foreground">Due on a specific day of the month</span>
+              </div>
+              {useBillDay && (
+                <div className="flex items-center gap-2">
+                  <Label className="text-xs text-muted-foreground whitespace-nowrap">Day of month:</Label>
+                  <MobileSelect
+                    value={billDayOfMonth}
+                    onValueChange={setBillDayOfMonth}
+                    title="Day of Month"
+                    triggerClassName="w-24"
+                    options={Array.from({ length: 28 }, (_, i) => ({ value: String(i + 1), label: String(i + 1) }))}
+                  />
+                  <span className="text-xs text-muted-foreground">of each month</span>
+                </div>
+              )}
+            </div>
+          )}
           <div>
             <Label className="text-xs font-medium text-muted-foreground">
               {isCarMaintenance ? "Every (miles)" : "Frequency"}
