@@ -19,6 +19,7 @@
       "type": "string",
       "title": "Room",
       "enum": [
+        "",
         "Kitchen",
         "Bathroom",
         "Bedroom",
@@ -36,7 +37,7 @@
     },
     "frequency_days": {
       "type": "number",
-      "title": "Frequency"
+      "title": "Frequency (Days)"
     },
     "difficulty": {
       "type": "string",
