@@ -98,7 +98,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     const getRoomFromCategory = (cat) => {
       if (cat.includes("Bathroom")) return "Bathroom";
       if (cat.includes("Kitchen")) return "Kitchen";
-      if (cat.includes("Bedroom")) return "Bedroom 1";
+      if (cat.includes("Bedroom")) return "Bedroom";
       if (cat.includes("Living") || cat.includes("Dining")) return "Living Room";
       if (cat.includes("Garage")) return "Garage";
       if (cat.includes("Laundry")) return "Laundry Room";
@@ -296,10 +296,12 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                  triggerClassName="mt-1"
                  options={[
                    { value: "", label: "No room" },
+                   { value: "Bedroom", label: "Bedroom (General)" },
                    { value: "Bedroom 1", label: "Bedroom 1" },
                    { value: "Bedroom 2", label: "Bedroom 2" },
                    { value: "Bedroom 3", label: "Bedroom 3" },
                    { value: "Bedroom 4", label: "Bedroom 4" },
+                   { value: "Bedroom 5", label: "Bedroom 5" },
                    { value: "Bathroom", label: "Bathroom" },
                    { value: "Half Bath", label: "Half Bath" },
                    { value: "Kitchen", label: "Kitchen" },

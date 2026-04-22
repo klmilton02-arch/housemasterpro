@@ -14,10 +14,12 @@
       "type": "string",
       "title": "Room",
       "enum": [
+        "Bedroom",
         "Bedroom 1",
         "Bedroom 2",
         "Bedroom 3",
         "Bedroom 4",
+        "Bedroom 5",
         "Bathroom",
         "Half Bath",
         "Kitchen",
