@@ -59,6 +59,7 @@ export default function Presets() {
   const [difficultyFilter, setDifficultyFilter] = useState("all");
   const [roomFilter, setRoomFilter] = useState("all");
   const [frequencyFilter, setFrequencyFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("category");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -126,11 +127,30 @@ export default function Presets() {
     return true;
   });
 
+  // Sort filtered results
+  const sorted = [...filtered].sort((a, b) => {
+    if (sortBy === "name") return a.name.localeCompare(b.name);
+    if (sortBy === "room") return (a.room || "zzz").localeCompare(b.room || "zzz");
+    if (sortBy === "frequency") return a.frequency_days - b.frequency_days;
+    // default: category
+    const catA = CLEANING_SUBCATEGORIES.includes(a.category) ? "Cleaning" : a.category;
+    const catB = CLEANING_SUBCATEGORIES.includes(b.category) ? "Cleaning" : b.category;
+    return catA.localeCompare(catB) || a.name.localeCompare(b.name);
+  });
+
   // Top-level grouping: cleaning subcategories merged under "Cleaning"
-  const grouped = filtered.reduce((acc, p) => {
-    const displayCat = CLEANING_SUBCATEGORIES.includes(p.category) ? "Cleaning" : p.category;
-    if (!acc[displayCat]) acc[displayCat] = [];
-    acc[displayCat].push(p);
+  const grouped = sorted.reduce((acc, p) => {
+    let groupKey;
+    if (sortBy === "name") groupKey = p.name[0].toUpperCase();
+    else if (sortBy === "room") groupKey = p.room || "No Room";
+    else if (sortBy === "frequency") {
+      const band = FREQUENCY_BANDS.find(b => p.frequency_days >= b.min && p.frequency_days <= b.max);
+      groupKey = band ? band.label.split(" (")[0] : "Other";
+    } else {
+      groupKey = CLEANING_SUBCATEGORIES.includes(p.category) ? "Cleaning" : p.category;
+    }
+    if (!acc[groupKey]) acc[groupKey] = [];
+    acc[groupKey].push(p);
     return acc;
   }, {});
 
@@ -156,6 +176,18 @@ export default function Presets() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." className="pl-9 w-full h-10 text-base" />
         </div>
+        <MobileSelect
+          value={sortBy}
+          onValueChange={setSortBy}
+          title="Sort by"
+          triggerClassName="w-full"
+          options={[
+            { value: "category", label: "Sort by Category" },
+            { value: "name", label: "Sort by Name" },
+            { value: "room", label: "Sort by Room" },
+            { value: "frequency", label: "Sort by Frequency" },
+          ]}
+        />
         <div className="grid grid-cols-2 gap-2">
           <MobileSelect
             value={categoryFilter}
@@ -207,12 +239,12 @@ export default function Presets() {
           <p className="text-xs text-muted-foreground">No presets match your search.</p>
         </div>
       ) : (
-        Object.entries(grouped).map(([cat, items]) => (
-          <div key={cat}>
+        Object.entries(grouped).map(([groupKey, items]) => (
+          <div key={groupKey}>
             <h2 className="font-heading font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-2">
-              {cat}{cat === "Bill Schedules" ? " 💵" : ""}
+              {groupKey}{groupKey === "Bill Schedules" ? " 💵" : ""}
             </h2>
-            {cat === "Cleaning" ? (
+            {sortBy === "category" && groupKey === "Cleaning" ? (
               // Cleaning: show subcategory headers
               Object.entries(
                 items.reduce((acc, p) => {
