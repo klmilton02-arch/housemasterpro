@@ -25,6 +25,7 @@
         "Bedroom",
         "Living Room",
         "Dining Room",
+        "Playroom",
         "Garage",
         "Laundry Room",
         "Office",
@@ -60,5 +61,23 @@
     "name",
     "category",
     "frequency_days"
-  ]
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
 }
