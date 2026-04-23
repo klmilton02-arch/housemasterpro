@@ -118,7 +118,7 @@ export default function Leaderboard() {
   }
 
   return (
-    <div className="space-y-6 max-w-xs mx-auto px-2 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div className="space-y-6 max-w-xs mx-auto px-1 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div>
