@@ -29,13 +29,7 @@ function PresetCard({ p, onEdit, onDelete, onClick, onAddAsTask }) {
         <div className="flex items-start gap-2 mb-1.5 pr-36">
           <h3 className="font-heading font-semibold text-sm">{p.name}</h3>
         </div>
-        {p.room && (
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-medium px-2 py-1 rounded-full bg-secondary text-secondary-foreground">
-              {p.room}
-            </span>
-          </div>
-        )}
+
       </div>
     </div>
   );
