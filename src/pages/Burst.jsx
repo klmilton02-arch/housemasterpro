@@ -123,11 +123,11 @@ export default function Burst() {
           <div className="bg-card border border-border rounded-2xl p-6">
             <BurstTimer timeLeft={timeLeft} duration={duration} />
             <div className="flex gap-2 mt-4">
-              <Button onClick={isActive ? pauseBlast : resumeBlast} className="gap-2 flex-1 bg-yellow-200 hover:bg-yellow-300 text-black font-semibold">
+              <Button onClick={isActive ? pauseBlast : resumeBlast} className="gap-2 flex-1 bg-yellow-200 hover:bg-orange-400 text-black font-semibold">
                 {isActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                 {isActive ? "Pause" : "Resume"}
               </Button>
-              <Button onClick={handleStopBlast} className="gap-2 flex-1 bg-yellow-200 hover:bg-yellow-300 text-black font-semibold">
+              <Button onClick={handleStopBlast} className="gap-2 flex-1 bg-yellow-200 hover:bg-red-400 text-black font-semibold">
                 <X className="w-4 h-4" /> End Blast
               </Button>
             </div>
