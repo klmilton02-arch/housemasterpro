@@ -185,15 +185,20 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
             ) : (
               <>
                 <div>
-                  <Label className="text-xs font-medium text-muted-foreground">Category</Label>
-                  <MobileSelect
-                    value={categoryFilter}
-                    onValueChange={setCategoryFilter}
-                    title="Filter by Category"
-                    triggerClassName="mt-1"
-                    options={[{ value: "all", label: "All Categories" }, ...categories.map(c => ({ value: c, label: c }))]}
-                  />
-                </div>
+                   <Label className="text-xs font-medium text-muted-foreground">Category</Label>
+                   <MobileSelect
+                     value={categoryFilter}
+                     onValueChange={setCategoryFilter}
+                     title="Filter by Category"
+                     triggerClassName="mt-1"
+                     options={[
+                       { value: "all", label: "All Categories" },
+                       { value: "Cleaning", label: "Cleaning" },
+                       { value: "House Maintenance", label: "House Maintenance" },
+                       { value: "Bill Schedules", label: "Bill Schedules" },
+                     ]}
+                   />
+                 </div>
                 <div className="max-h-48 overflow-y-auto space-y-1 border border-border rounded-lg p-2">
                   {filteredPresets.map(p => (
                     <button
