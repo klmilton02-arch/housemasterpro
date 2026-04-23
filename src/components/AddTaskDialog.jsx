@@ -18,6 +18,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   // Preset form
   const [selectedPreset, setSelectedPreset] = useState(null);
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [roomFilter, setRoomFilter] = useState("all");
 
   // Common fields
   const [assignedTo, setAssignedTo] = useState("");
@@ -74,7 +75,11 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
   const allPresets = presets.filter(p => p.category !== "Car Maintenance");
   const categories = [...new Set(allPresets.map(p => p.category))];
-  const filteredPresets = categoryFilter === "all" ? allPresets : allPresets.filter(p => p.category === categoryFilter);
+  const rooms = [...new Set(allPresets.map(p => p.room).filter(Boolean))];
+  const filteredPresets = allPresets.filter(p => 
+    (categoryFilter === "all" || p.category === categoryFilter) &&
+    (roomFilter === "all" || p.room === roomFilter)
+  );
 
   async function handleSubmit() {
     setLoading(true);
@@ -149,6 +154,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     setSelectedPreset(null);
     setCustomName("");
     setCustomRoom("");
+    setCategoryFilter("all");
+    setRoomFilter("all");
     setFreqValue("");
     setFreqUnit("days");
     setUseBillDay(false);
@@ -184,22 +191,34 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
               </div>
             ) : (
               <>
-                <div>
-                   <Label className="text-xs font-medium text-muted-foreground">Category</Label>
-                   <MobileSelect
-                     value={categoryFilter}
-                     onValueChange={setCategoryFilter}
-                     title="Filter by Category"
-                     triggerClassName="mt-1"
-                     options={[
-                       { value: "all", label: "All Categories" },
-                       { value: "Cleaning", label: "Cleaning" },
-                       { value: "House Maintenance", label: "House Maintenance" },
-                       { value: "Bill Schedules", label: "Bill Schedules" },
-                     ]}
-                   />
+                <div className="grid grid-cols-2 gap-3">
+                   <div>
+                     <Label className="text-xs font-medium text-muted-foreground">Category</Label>
+                     <MobileSelect
+                       value={categoryFilter}
+                       onValueChange={setCategoryFilter}
+                       title="Filter by Category"
+                       triggerClassName="mt-1"
+                       options={[
+                         { value: "all", label: "All Categories" },
+                         { value: "Cleaning", label: "Cleaning" },
+                         { value: "House Maintenance", label: "House Maintenance" },
+                         { value: "Bill Schedules", label: "Bill Schedules" },
+                       ]}
+                     />
+                   </div>
+                   <div>
+                     <Label className="text-xs font-medium text-muted-foreground">Room</Label>
+                     <MobileSelect
+                       value={roomFilter}
+                       onValueChange={setRoomFilter}
+                       title="Filter by Room"
+                       triggerClassName="mt-1"
+                       options={[{ value: "all", label: "All Rooms" }, ...rooms.map(r => ({ value: r, label: r }))]}
+                     />
+                   </div>
                  </div>
-                <div className="max-h-48 overflow-y-auto space-y-1 border border-border rounded-lg p-2">
+                 <div className="max-h-48 overflow-y-auto space-y-1 border border-border rounded-lg p-2">
                   {filteredPresets.map(p => (
                     <button
                       key={p.id}
