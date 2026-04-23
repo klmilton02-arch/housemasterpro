@@ -114,13 +114,11 @@ export default function Leaderboard() {
     const diff = touchStartX.current - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) {
       if (diff < 0) {
-        // swipe right: advance tab, or go to presets at last tab
-        if (tabIndex === TABS.length - 1) navigate("/presets");
-        else setTabIndex(i => i + 1);
+        // swipe right: go to burst
+        navigate("/burst");
       } else {
-        // swipe left: go back a tab, or go to tasks at first tab
-        if (tabIndex === 0) navigate("/tasks");
-        else setTabIndex(i => i - 1);
+        // swipe left: go to presets
+        navigate("/presets");
       }
     }
     touchStartX.current = null;

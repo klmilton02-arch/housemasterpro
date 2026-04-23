@@ -14,8 +14,8 @@ export default function Profile() {
   function handleTouchEnd(e) {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/dashboard"); // swipe right → dashboard (wrap around)
-    else if (diff > 60) navigate("/home-setup"); // swipe left → home setup
+    if (diff < -60) navigate("/home-setup");  // swipe right → home-setup
+    else if (diff > 60) navigate("/dashboard"); // swipe left → dashboard
     touchStartX.current = null;
   }
 

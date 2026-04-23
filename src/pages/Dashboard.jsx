@@ -32,8 +32,8 @@ export default function Dashboard() {
   function handleTouchEnd(e) {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/burst");       // swipe right → burst
-    else if (diff > 60) navigate("/profile"); // swipe left → profile (wrap around)
+    if (diff < -60) navigate("/profile");     // swipe right → profile
+    else if (diff > 60) navigate("/tasks");   // swipe left → tasks
     touchStartX.current = null;
   }
   const [tasks, setTasks] = useState([]);
