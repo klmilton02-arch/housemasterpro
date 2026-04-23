@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ChevronDown, ChevronRight, CheckCircle2, AlertTriangle, Clock } from "lucide-react";
+import { ChevronDown, ChevronRight, CheckCircle2, AlertTriangle, Clock, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import TaskCard, { getStatusInfo } from "./TaskCard";
 
 const ROOMS = [
@@ -43,7 +44,7 @@ function getRoomStatus(tasks) {
   return { pending: pending.length, hasOverdue, hasDueSoon, allDone };
 }
 
-export default function RoomView({ tasks, onComplete, onViewDetails, onDelete }) {
+export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, onAddTask }) {
   const [expandedRooms, setExpandedRooms] = useState(new Set());
 
   const roomTasks = ROOMS.reduce((acc, room) => {
@@ -100,23 +101,36 @@ export default function RoomView({ tasks, onComplete, onViewDetails, onDelete })
 
     return (
       <div key={room}>
-        <button
-          onClick={() => toggleRoom(room)}
-          className={`border rounded-lg w-full flex items-center justify-between hover:shadow-md transition-all px-3 py-2.5 ${borderColor} ${bgColor}`}
-        >
-          <div className="flex items-center gap-2.5 flex-1 text-left">
-            <span className="text-base">{ROOM_ICONS[room] || "🏠"}</span>
-            <span className="font-heading font-semibold text-sm">{room}</span>
-            <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-medium ${badgeBg}`}>
-              {StatusIcon}
-              {allDone ? "All done" : `${pending} pending`}
-            </span>
-          </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>{roomTaskList.length} total</span>
-            {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-          </div>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => toggleRoom(room)}
+            className={`border rounded-lg w-full flex items-center justify-between hover:shadow-md transition-all px-3 py-2.5 ${borderColor} ${bgColor}`}
+          >
+            <div className="flex items-center gap-2.5 flex-1 text-left">
+              <span className="text-base">{ROOM_ICONS[room] || "🏠"}</span>
+              <span className="font-heading font-semibold text-sm">{room}</span>
+              <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-medium ${badgeBg}`}>
+                {StatusIcon}
+                {allDone ? "All done" : `${pending} pending`}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span>{roomTaskList.length} total</span>
+              {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+            </div>
+          </button>
+          {room !== "Unassigned" && (
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => onAddTask?.(room)}
+              className="shrink-0"
+              title="Add task to this room"
+            >
+              <Plus className="w-4 h-4" />
+            </Button>
+          )}
+        </div>
         {isExpanded && (
           <div className="mt-2 ml-2 pl-3 border-l-2 border-muted space-y-2">
             {sortedTasks.map(task => (
