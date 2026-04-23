@@ -79,7 +79,7 @@ export default function Layout() {
 
       {/* Global Blast Mode Banner */}
       {isActive && location.pathname !== "/burst" && (
-        <Link to="/burst" className="fixed top-0 left-0 right-0 z-50 md:left-64 flex items-center justify-center gap-2 bg-yellow-400 text-black text-sm font-bold py-1.5 shadow-md" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+        <Link to="/burst" className="fixed left-0 right-0 z-50 md:left-64 flex items-center justify-center gap-2 bg-yellow-400 text-black text-sm font-bold py-1.5 shadow-md" style={{ top: 'calc(3.5rem + env(safe-area-inset-top))' }}>
           <Zap className="w-4 h-4" /> Blast Mode Active — {blastMins}:{blastSecs} remaining
         </Link>
       )}
