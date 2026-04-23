@@ -26,7 +26,7 @@ export default function Tasks() {
   function handleTouchEnd(e) {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/dashboard");   // swipe right → dashboard
+    if (diff < -60) navigate("/dashboard"); // swipe right → dashboard
     else if (diff > 60) navigate("/burst");   // swipe left → burst
     touchStartX.current = null;
   }
