@@ -99,7 +99,7 @@ export default function Burst() {
   const pendingTasks = tasks.filter(t => t.status === "Pending" || t.status === "Overdue");
 
   return (
-    <div className="min-h-screen bg-background" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div className="min-h-screen bg-background" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'pan-y' }}>
       <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
         <h1 className="font-heading text-2xl font-bold">Blast Mode</h1>
 

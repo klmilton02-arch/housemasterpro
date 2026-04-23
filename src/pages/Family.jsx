@@ -121,7 +121,7 @@ export default function Family() {
   }
 
   return (
-    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'pan-y' }}>
       <div className="flex flex-col gap-3">
         <div className="flex flex-col">
           <h1 className="font-heading text-2xl font-bold">Manage Household</h1>

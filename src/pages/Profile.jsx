@@ -69,7 +69,7 @@ export default function Profile() {
   const earnedBadges = profile ? getEarnedBadges(profile) : [];
 
   return (
-    <div className="space-y-8 max-w-xs md:max-w-2xl mx-auto px-2 sm:px-1 pt-6 pb-8" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div className="space-y-8 max-w-xs md:max-w-2xl mx-auto px-2 sm:px-1 pt-6 pb-8" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'pan-y' }}>
       {/* User Info */}
       <div className="space-y-4">
         <div>
