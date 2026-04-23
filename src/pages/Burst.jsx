@@ -127,7 +127,7 @@ export default function Burst() {
                 {isActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                 {isActive ? "Pause" : "Resume"}
               </Button>
-              <Button onClick={handleStopBlast} variant="outline" className="gap-2 text-destructive flex-1">
+              <Button onClick={handleStopBlast} variant="outline" className="gap-2 flex-1">
                 <X className="w-4 h-4" /> End Blast
               </Button>
             </div>
