@@ -49,8 +49,8 @@ export default function Dashboard() {
     const touchEndX = e.changedTouches[0].clientX;
     const diff = touchStartX.current - touchEndX;
     if (Math.abs(diff) > 40) {
-      if (diff > 40) navigate("/tasks");      // swipe left → tasks
-      else if (diff < -40) navigate("/profile"); // swipe right → profile
+      if (diff > 40) navigate("/profile");    // swipe left → profile
+      else if (diff < -40) navigate("/tasks"); // swipe right → tasks
     }
     touchStartX.current = null;
     touchStartY.current = null;
