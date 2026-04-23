@@ -231,7 +231,7 @@ export default function Tasks() {
   return (
     <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div>
-        <h1 className="font-heading text-2xl font-bold">Tasks</h1>
+        <h1 className="font-heading text-3xl font-bold">Tasks</h1>
         <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
       </div>
       <div className="flex gap-2 flex-col gap-3">
