@@ -10,8 +10,13 @@
       "type": "string",
       "title": "Category",
       "enum": [
-        "Cleaning",
+        "Bedroom Cleaning",
+        "Bathroom Cleaning",
+        "Kitchen Cleaning",
+        "Living Areas",
+        "Car Maintenance",
         "House Maintenance",
+        "Floors",
         "Bill Schedules"
       ]
     },
