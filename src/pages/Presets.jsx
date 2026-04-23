@@ -166,7 +166,7 @@ export default function Presets() {
           value={sortBy}
           onValueChange={setSortBy}
           title="Sort by"
-          triggerClassName="w-full"
+          triggerClassName="w-full h-14"
           options={[
             { value: "category", label: "Sort by Category" },
             { value: "name", label: "Sort by Name" },
