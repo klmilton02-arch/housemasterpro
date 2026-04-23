@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
 import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, ChevronDown, ChevronUp, Zap } from "lucide-react";
@@ -24,6 +25,16 @@ import DashboardPresetBrowser from "../components/DashboardPresetBrowser";
 
 export default function Dashboard() {
   const { isActive: isBlastActive } = useBlastMode();
+  const navigate = useNavigate();
+  const touchStartX = useRef(null);
+
+  function handleTouchStart(e) { touchStartX.current = e.touches[0].clientX; }
+  function handleTouchEnd(e) {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (diff > 60) navigate("/burst"); // swipe left → burst
+    touchStartX.current = null;
+  }
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -123,7 +134,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
+    <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
 
       <h1 className="font-heading text-2xl font-bold md:hidden">Dashboard</h1>
 
