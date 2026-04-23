@@ -254,14 +254,14 @@ export default function HomeSetup() {
         </div>
       )}
 
-      <div className="flex gap-3">
-        <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false })} className="flex-1 text-xs">
+      <div className="grid grid-cols-4 gap-3">
+        <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false })} className="text-xs">
           Reset
         </Button>
-        <Button variant="outline" onClick={saveConfig} disabled={saving} className="flex-1">
+        <Button variant="outline" onClick={saveConfig} disabled={saving}>
           {saving ? "Saving..." : "Save Config"}
         </Button>
-        <Button onClick={generateTasks} disabled={generating} className="flex-1 gap-2">
+        <Button onClick={generateTasks} disabled={generating} className="col-span-2 gap-2">
           <Sparkles className="w-4 h-4" />
           {generating ? "Generating..." : "Generate Tasks"}
         </Button>
