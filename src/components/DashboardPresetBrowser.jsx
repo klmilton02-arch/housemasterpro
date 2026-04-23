@@ -16,17 +16,27 @@ const FREQUENCY_BANDS = [
   { value: "yearly", label: "Yearly", min: 121, max: Infinity },
 ];
 
+const TABLE_HEADER = (
+  <div className="grid grid-cols-[2fr_1.2fr_1fr_1fr_1fr_2fr_auto] gap-2 px-2 py-1.5 bg-muted/50 rounded-md text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+    <span>Task Name</span>
+    <span>Category</span>
+    <span>Room</span>
+    <span>Frequency</span>
+    <span>Difficulty</span>
+    <span>Description</span>
+    <span></span>
+  </div>
+);
+
 function PresetRow({ p, onAdd }) {
   return (
-    <div className="flex items-center justify-between gap-2 py-2 border-b border-border last:border-0">
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-foreground truncate">{p.name}</p>
-        <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
-          <span className="text-xs text-primary font-medium">{formatFrequency(p.frequency_days)}</span>
-          {p.room && <span className="text-xs text-muted-foreground">· {p.room}</span>}
-          {p.difficulty && <span className="text-xs text-muted-foreground">· {p.difficulty}</span>}
-        </div>
-      </div>
+    <div className="grid grid-cols-[2fr_1.2fr_1fr_1fr_1fr_2fr_auto] gap-2 items-center px-2 py-2 border-b border-border last:border-0 text-sm">
+      <span className="font-medium text-foreground truncate">{p.name}</span>
+      <span className="text-muted-foreground truncate">{CLEANING_SUBCATEGORIES.includes(p.category) ? "Cleaning" : p.category}</span>
+      <span className="text-muted-foreground truncate">{p.room || "—"}</span>
+      <span className="text-primary font-medium truncate">{formatFrequency(p.frequency_days)}</span>
+      <span className="text-muted-foreground truncate">{p.difficulty || "—"}</span>
+      <span className="text-muted-foreground text-xs truncate">{p.description || "—"}</span>
       <button
         onClick={() => onAdd(p)}
         className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-green-50 text-green-500 transition-colors"
@@ -163,7 +173,9 @@ export default function DashboardPresetBrowser({ onTaskAdded }) {
             ) : sorted.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-4">No presets match your search.</p>
             ) : (
-              <div className="max-h-96 overflow-y-auto space-y-4">
+              <div className="overflow-x-auto">
+              {TABLE_HEADER}
+              <div className="max-h-96 overflow-y-auto space-y-4 mt-1">
                 {Object.entries(grouped).map(([groupKey, items]) => (
                   <div key={groupKey}>
                     <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1 sticky top-0 bg-card py-1">
@@ -174,6 +186,7 @@ export default function DashboardPresetBrowser({ onTaskAdded }) {
                     ))}
                   </div>
                 ))}
+              </div>
               </div>
             )}
           </div>
