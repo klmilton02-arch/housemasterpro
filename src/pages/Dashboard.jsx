@@ -132,19 +132,6 @@ export default function Dashboard() {
 
       <h1 className="font-heading text-3xl font-bold md:hidden">Dashboard</h1>
 
-      <div className="grid grid-cols-2 gap-3 sm:gap-4">
-        <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full text-lg h-14 bg-blue-400 hover:bg-blue-500 border-blue-400">
-          <Plus className="w-5 h-5" /> Add Task
-        </Button>
-        <SyncCalendarButton className="w-full h-14" />
-      </div>
-
-      <div className="pt-2">
-      <Button onClick={() => { startBlast(duration); navigate("/burst"); }} className="w-full gap-2 bg-yellow-300 hover:bg-yellow-400 text-black h-14 text-lg">
-        <Zap className="w-5 h-5" /> Blast Mode
-      </Button>
-      </div>
-
       <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
         <StatCard icon={ListChecks} label="Due" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'Due Tasks', tasks: dueTasks })} />
         <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks })} />
