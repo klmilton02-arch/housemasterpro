@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { getLevelInfo, ACHIEVEMENT_BADGES } from "@/utils/gamification";
 import { Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { startOfWeek, startOfMonth, parseISO, isAfter } from "date-fns";
 
@@ -45,6 +44,8 @@ export default function Leaderboard() {
   const [profiles, setProfiles] = useState([]);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [tabIndex, setTabIndex] = useState(0);
+  const touchStartX = useRef(null);
 
   useEffect(() => {
     Promise.all([
@@ -94,9 +95,28 @@ export default function Leaderboard() {
     );
   }
 
+  const TABS = ["alltime", "monthly", "weekly"];
+  const TAB_LABELS = ["All Time", "This Month", "This Week"];
+
   const allTimeSorted = [...profiles].sort((a, b) => (b.total_xp || 0) - (a.total_xp || 0));
   const weeklySorted = [...profiles].sort((a, b) => getWeeklyXP(b.family_member_id) - getWeeklyXP(a.family_member_id));
   const monthlySorted = [...profiles].sort((a, b) => getMonthlyXP(b.family_member_id) - getMonthlyXP(a.family_member_id));
+  const sortedLists = [allTimeSorted, monthlySorted, weeklySorted];
+  const xpFns = [p => p.total_xp || 0, p => getMonthlyXP(p.family_member_id), p => getWeeklyXP(p.family_member_id)];
+
+  function handleTouchStart(e) {
+    touchStartX.current = e.touches[0].clientX;
+  }
+
+  function handleTouchEnd(e) {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) setTabIndex(i => Math.min(i + 1, TABS.length - 1));
+      else setTabIndex(i => Math.max(i - 1, 0));
+    }
+    touchStartX.current = null;
+  }
 
   return (
     <div className="space-y-6 max-w-xs mx-auto px-1 pt-6">
@@ -113,31 +133,42 @@ export default function Leaderboard() {
         <Link to="/stable" className="text-xs text-primary font-medium hover:underline">🏇 My Stable →</Link>
       </div>
 
-      <Tabs defaultValue="alltime">
-        <TabsList className="w-full">
-          <TabsTrigger value="alltime" className="flex-1">All Time</TabsTrigger>
-          <TabsTrigger value="monthly" className="flex-1">This Month</TabsTrigger>
-          <TabsTrigger value="weekly" className="flex-1">This Week</TabsTrigger>
-        </TabsList>
+      {/* Tab bar */}
+      <div className="flex bg-muted rounded-lg p-1 gap-1">
+        {TAB_LABELS.map((label, i) => (
+          <button
+            key={i}
+            onClick={() => setTabIndex(i)}
+            className={`flex-1 text-sm font-medium py-1.5 rounded-md transition-colors ${
+              tabIndex === i
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
 
-        <TabsContent value="alltime" className="mt-4 space-y-3">
-          {allTimeSorted.map((p, i) => (
-            <ProfileRow key={p.id} rank={i} profile={p} xp={p.total_xp || 0} />
-          ))}
-        </TabsContent>
+      {/* Swipeable content */}
+      <div
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        className="space-y-3"
+      >
+        {sortedLists[tabIndex].map((p, i) => (
+          <ProfileRow key={p.id} rank={i} profile={p} xp={xpFns[tabIndex](p)} />
+        ))}
+      </div>
 
-        <TabsContent value="monthly" className="mt-4 space-y-3">
-          {monthlySorted.map((p, i) => (
-            <ProfileRow key={p.id} rank={i} profile={p} xp={getMonthlyXP(p.family_member_id)} />
-          ))}
-        </TabsContent>
-
-        <TabsContent value="weekly" className="mt-4 space-y-3">
-          {weeklySorted.map((p, i) => (
-            <ProfileRow key={p.id} rank={i} profile={p} xp={getWeeklyXP(p.family_member_id)} />
-          ))}
-        </TabsContent>
-      </Tabs>
+      {/* Dot indicators */}
+      <div className="flex justify-center gap-2 pb-2">
+        {TABS.map((_, i) => (
+          <button key={i} onClick={() => setTabIndex(i)}
+            className={`w-2 h-2 rounded-full transition-colors ${i === tabIndex ? "bg-primary" : "bg-muted-foreground/30"}`}
+          />
+        ))}
+      </div>
     </div>
   );
 }
