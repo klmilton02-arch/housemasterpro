@@ -109,10 +109,24 @@ export default function Family() {
   }
 
   return (
-    <div className="space-y-3 max-w-xs md:max-w-2xl mx-auto px-1 pt-6">
+    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col">
+          <h1 className="font-heading text-2xl font-bold">Manage Household</h1>
+          <p className="text-sm text-muted-foreground">
+            {currentUser.account_type === "family" && familyGroup
+              ? `${familyGroup.name} · Family Account`
+              : "Solo Account"}
+          </p>
+        </div>
+        <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full h-11 text-base bg-blue-400 hover:bg-blue-500 text-white border-0">
+          <Plus className="w-5 h-5" /> Add Member
+        </Button>
+      </div>
+
       {/* Avatars row */}
       {members.length > 0 && (
-       <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="flex gap-2 overflow-x-auto pb-1">
           {members.map(m => {
             const c = colorMap[m.avatar_color] || colorMap.blue;
             return (
@@ -126,20 +140,6 @@ export default function Family() {
           })}
         </div>
       )}
-
-      <div className="flex flex-col gap-2">
-        <div>
-          <h1 className="font-heading text-2xl font-bold">Manage Household</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {currentUser.account_type === "family" && familyGroup
-              ? `${familyGroup.name} · Family Account`
-              : "Solo Account"}
-          </p>
-        </div>
-        <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full h-11 bg-blue-100 text-blue-700 hover:bg-blue-200">
-          <Plus className="w-5 h-5" /> Add Member
-        </Button>
-      </div>
 
       {/* Family invite code banner */}
       {currentUser.account_type === "family" && familyGroup && (
