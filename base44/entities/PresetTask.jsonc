@@ -16,7 +16,9 @@
         "Kitchen",
         "Attic",
         "Office",
-        "Basement"
+        "Basement",
+        "Garage",
+        "Playroom"
       ]
     },
     "task_type": {
