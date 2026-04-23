@@ -93,14 +93,14 @@ export default function HomeSetup() {
     const presets = await base44.entities.PresetTask.list();
     const tasksToCreate = [];
 
-    function presetsForCategory(cat) {
-      return presets.filter(p => p.category === cat);
+    function presetsForRoom(roomName) {
+      return presets.filter(p => p.room === roomName);
     }
 
     // Bedrooms
      for (let i = 1; i <= config.bedrooms; i++) {
        const label = config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i}`;
-       for (const p of presetsForCategory("Bedroom Cleaning")) {
+       for (const p of presetsForRoom("Bedroom")) {
          const roomName = config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i}`;
          tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: roomName });
        }
@@ -109,7 +109,7 @@ export default function HomeSetup() {
      // Full bathrooms
      for (let i = 1; i <= config.full_bathrooms; i++) {
        const label = config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i}`;
-       for (const p of presetsForCategory("Bathroom Cleaning")) {
+       for (const p of presetsForRoom("Bathroom")) {
          const roomName = config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i}`;
          tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: roomName });
        }
@@ -118,7 +118,7 @@ export default function HomeSetup() {
      // Half bathrooms
      for (let i = 1; i <= config.half_bathrooms; i++) {
        const label = config.half_bathrooms === 1 ? "Half Bath" : `Half Bath ${i}`;
-       const halfPresets = presetsForCategory("Bathroom Cleaning").filter(
+       const halfPresets = presetsForRoom("Bathroom").filter(
          p => p.task_type !== "Deep Cleaning"
        );
        for (const p of halfPresets) {
@@ -129,17 +129,17 @@ export default function HomeSetup() {
 
      // Single-instance rooms
      const singleRooms = [
-       { key: "has_kitchen", label: "Kitchen", category: "Kitchen Cleaning", room: "Kitchen" },
-       { key: "has_living_room", label: "Living Room", category: "Living Areas", room: "Living Room" },
-       { key: "has_dining_room", label: "Dining Room", category: "Living Areas", room: "Dining Room" },
-       { key: "has_garage", label: "Garage", category: "Car Maintenance", room: "Garage" },
-       { key: "has_laundry_room", label: "Laundry Room", category: "House Maintenance", room: "Laundry Room" },
-       { key: "has_mixed_use", label: "Mixed Use Room", category: "Living Areas", room: "Mixed Use Room" },
+       { key: "has_kitchen", label: "Kitchen", room: "Kitchen" },
+       { key: "has_living_room", label: "Living Room", room: "Living Room" },
+       { key: "has_dining_room", label: "Dining Room", room: "Dining Room" },
+       { key: "has_garage", label: "Garage", room: "Garage" },
+       { key: "has_laundry_room", label: "Laundry Room", room: "Laundry Room" },
+       { key: "has_mixed_use", label: "Mixed Use Room", room: "Mixed Use Room" },
      ];
 
      for (const room of singleRooms) {
        if (config[room.key]) {
-         for (const p of presetsForCategory(room.category)) {
+         for (const p of presetsForRoom(room.room)) {
            tasksToCreate.push({ ...p, name: `${room.label} – ${p.name}`, room: room.room });
          }
        }
@@ -148,7 +148,7 @@ export default function HomeSetup() {
     // Floors (if any rooms selected)
     const hasRooms = config.bedrooms > 0 || config.has_living_room || config.has_dining_room;
     if (hasRooms) {
-      for (const p of presetsForCategory("Floors")) {
+      for (const p of presetsForRoom("Whole House")) {
         tasksToCreate.push({ ...p, name: p.name });
       }
     }
