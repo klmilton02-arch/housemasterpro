@@ -6,6 +6,7 @@ import { Play, Pause, X, Zap } from "lucide-react";
 import BurstTimer from "@/components/BurstTimer";
 import TaskCard from "@/components/TaskCard";
 import PointsToast from "@/components/PointsToast";
+import TaskDetailModal from "@/components/TaskDetailModal";
 import { awardPoints } from "@/utils/gamification";
 import { useBlastMode } from "@/lib/BlastModeContext";
 import confetti from "canvas-confetti";
@@ -15,6 +16,7 @@ export default function Burst() {
   const { isActive, timeLeft, duration, setDuration, startBlast, stopBlast, pauseBlast, resumeBlast } = useBlastMode();
   const [completions, setCompletions] = useState({});
   const [reward, setReward] = useState(null);
+  const [selectedTask, setSelectedTask] = useState(null);
 
   const { data: tasks = [] } = useQuery({
     queryKey: ["tasks"],
@@ -128,7 +130,7 @@ export default function Burst() {
               </div>
             ) : (
               pendingTasks.map(task => (
-                <TaskCard key={task.id} task={task} onComplete={handleTaskComplete} />
+                <TaskCard key={task.id} task={task} onComplete={handleTaskComplete} onViewDetails={setSelectedTask} />
               ))
             )}
           </div>
@@ -151,7 +153,7 @@ export default function Burst() {
             ) : (
               <div className="space-y-3">
                 {pendingTasks.map(task => (
-                  <TaskCard key={task.id} task={task} onComplete={handleTaskCompleteNormal} />
+                  <TaskCard key={task.id} task={task} onComplete={handleTaskCompleteNormal} onViewDetails={setSelectedTask} />
                 ))}
               </div>
             )}
@@ -159,6 +161,7 @@ export default function Burst() {
         )}
 
         <PointsToast reward={reward} onDismiss={() => setReward(null)} />
+        <TaskDetailModal task={selectedTask} open={!!selectedTask} onOpenChange={open => !open && setSelectedTask(null)} />
       </div>
     </div>
 
