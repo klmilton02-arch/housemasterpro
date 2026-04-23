@@ -89,13 +89,13 @@ export default function HomeSetup() {
     const tasksToCreate = [];
 
     function presetsForRoom(roomName) {
-      return presets.filter(p => p.room === roomName);
+      return presets.filter(p => p.category === roomName);
     }
 
     // Bedrooms
      for (let i = 1; i <= config.bedrooms; i++) {
        const label = config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i}`;
-       for (const p of presetsForRoom("Bedroom")) {
+       for (const p of presetsForRoom("Bedroom") || []) {
          const roomName = config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i}`;
          tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: roomName });
        }
@@ -151,9 +151,8 @@ export default function HomeSetup() {
     // Create all tasks using bulkCreate to avoid rate limit
       const taskData = tasksToCreate.map(t => ({
         name: t.name,
-        category: t.category,
+        category: t.task_type,
         room: t.room || null,
-        task_type: t.task_type || "Regular",
         frequency_days: t.frequency_days,
         description: t.description || "",
         start_date: startDate,
@@ -161,6 +160,11 @@ export default function HomeSetup() {
         status: "Pending",
         overdue_grace_days: 3,
       }));
+
+      if (taskData.length === 0) {
+        setGenerating(false);
+        return;
+      }
 
       const created = await base44.entities.Task.bulkCreate(taskData);
 
