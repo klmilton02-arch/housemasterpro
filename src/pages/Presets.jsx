@@ -14,13 +14,19 @@ const CLEANING_SUBCATEGORIES = ["Kitchen Cleaning", "Bathroom Cleaning", "Bedroo
 function PresetCard({ p, onEdit, onDelete, onClick, onAddAsTask }) {
   return (
     <div className="bg-card border border-border rounded-lg p-3 hover:shadow-md hover:border-primary/30 transition-all group relative">
-      <div className="absolute top-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity z-10 bg-card rounded-md shadow-sm">
-        <button onClick={e => onAddAsTask(e, p)} className="w-9 h-9 flex items-center justify-center rounded hover:bg-green-50" title="Add as Task"><PlusCircle className="w-3.5 h-3.5 text-green-500" /></button>
-        <button onClick={e => onEdit(e, p)} className="w-9 h-9 flex items-center justify-center rounded hover:bg-muted"><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
-        <button onClick={e => onDelete(e, p)} className="w-9 h-9 flex items-center justify-center rounded hover:bg-red-50"><Trash2 className="w-3.5 h-3.5 text-red-400" /></button>
+      <div className="absolute top-1.5 right-1.5 flex gap-1 z-10">
+        <button onClick={e => onAddAsTask(e, p)} className="flex items-center gap-1 px-2 py-1 rounded-md bg-green-100 hover:bg-green-200 text-green-700 text-xs font-medium transition-colors" title="Add as Task">
+          <PlusCircle className="w-3.5 h-3.5" /><span className="hidden sm:inline">Add</span>
+        </button>
+        <button onClick={e => onEdit(e, p)} className="flex items-center gap-1 px-2 py-1 rounded-md bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-medium transition-colors" title="Edit">
+          <Pencil className="w-3.5 h-3.5" /><span className="hidden sm:inline">Edit</span>
+        </button>
+        <button onClick={e => onDelete(e, p)} className="flex items-center gap-1 px-2 py-1 rounded-md bg-red-100 hover:bg-red-200 text-red-700 text-xs font-medium transition-colors" title="Delete">
+          <Trash2 className="w-3.5 h-3.5" /><span className="hidden sm:inline">Delete</span>
+        </button>
       </div>
       <div onClick={() => onClick(p)} className="cursor-pointer">
-        <div className="flex items-start justify-between gap-2 mb-1.5 pr-24">
+        <div className="flex items-start justify-between gap-2 mb-1.5 pr-36">
           <h3 className="font-heading font-semibold text-sm">{p.name}</h3>
           {p.difficulty && (
             <Badge variant="outline" className="shrink-0 text-xs">{p.difficulty}</Badge>
