@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
 import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, ChevronDown, ChevronUp, Zap } from "lucide-react";
+import confetti from "canvas-confetti";
 import { Link } from "react-router-dom";
 import CompletedTaskItem from "../components/CompletedTaskItem";
 import QuickNav from "../components/QuickNav";
@@ -90,6 +91,7 @@ export default function Dashboard() {
     const result = await awardPoints(task, isBlastActive);
     if (result) {
       setReward(result);
+      confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
       if (result.blastBonus) {
         setBlastToastShow(true);
         setTimeout(() => setBlastToastShow(false), 2000);

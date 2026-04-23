@@ -4,8 +4,11 @@ import { CheckCircle } from "lucide-react";
 import TaskCard, { getStatusInfo } from "../components/TaskCard";
 import PointsToast from "../components/PointsToast";
 import { awardPoints } from "@/utils/gamification";
+import confetti from "canvas-confetti";
+import { useBlastMode } from "@/lib/BlastModeContext";
 
 export default function NeedsAttention() {
+  const { isActive: blastActive } = useBlastMode();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [reward, setReward] = useState(null);
@@ -34,8 +37,11 @@ export default function NeedsAttention() {
       last_completed_date: updated.last_completed_date,
       next_due_date: updated.next_due_date,
     });
-    const result = await awardPoints(task);
-    if (result) setReward(result);
+    const result = await awardPoints(task, blastActive);
+    if (result) {
+      setReward(result);
+      confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+    }
     loadTasks();
   }
 

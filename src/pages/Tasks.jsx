@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { awardPoints, getTaskPoints } from "@/utils/gamification";
+import confetti from "canvas-confetti";
 import { useBlastMode } from "@/lib/BlastModeContext";
 import PointsToast from "../components/PointsToast";
 import { Button } from "@/components/ui/button";
@@ -81,6 +82,7 @@ export default function Tasks() {
       const result = await awardPoints(task, blastActive);
       if (result) {
         setReward(result);
+        confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
       }
       loadTasks();
     } else {
