@@ -222,6 +222,13 @@ export default function Tasks() {
     return differenceInDays(due, today) === 0 && t.status !== "Completed";
   }).length;
   
+  const dueSoon = tasks.filter(t => {
+    const due = parseISO(t.next_due_date);
+    due.setHours(0, 0, 0, 0);
+    const days = differenceInDays(due, today);
+    return days > 0 && days <= 3 && t.status !== "Completed";
+  }).length;
+  
   const overdue = tasks.filter(t => {
     const due = parseISO(t.next_due_date);
     due.setHours(0, 0, 0, 0);
@@ -234,6 +241,21 @@ export default function Tasks() {
         <h1 className="font-heading text-3xl font-bold">Tasks</h1>
         <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
       </div>
+      <div className="grid grid-cols-3 gap-2">
+        <button onClick={() => setStatusFilter("all")} className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg h-14 flex flex-col items-center justify-center hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
+          <p className="text-xs font-semibold text-blue-600 dark:text-blue-400">Due Today</p>
+          <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">{dueToday}</p>
+        </button>
+        <button onClick={() => setStatusFilter("due_soon")} className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg h-14 flex flex-col items-center justify-center hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors">
+          <p className="text-xs font-semibold text-amber-600 dark:text-amber-400">Due Soon</p>
+          <p className="text-2xl font-bold text-amber-900 dark:text-amber-100">{dueSoon}</p>
+        </button>
+        <button onClick={() => setStatusFilter("overdue")} className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg h-14 flex flex-col items-center justify-center hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors">
+          <p className="text-xs font-semibold text-red-600 dark:text-red-400">Overdue</p>
+          <p className="text-2xl font-bold text-red-900 dark:text-red-100">{overdue}</p>
+        </button>
+      </div>
+
       <div className="flex gap-2 flex-col gap-3">
          <Button 
            onClick={() => setViewMode(viewMode === "calendar" ? "list" : "calendar")} 
@@ -306,18 +328,6 @@ export default function Tasks() {
        </div>
       {viewMode === "list" && (
         <>
-          <div className="grid grid-cols-2 gap-2">
-            <button onClick={() => setStatusFilter("due_soon")} className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 h-11 flex items-center gap-2 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
-              <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
-              <p className="text-xs font-semibold text-blue-600 dark:text-blue-400">Due Today</p>
-              <p className="text-lg font-bold text-blue-900 dark:text-blue-100 ml-auto">{dueToday}</p>
-            </button>
-            <button onClick={() => setStatusFilter("overdue")} className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-3 h-11 flex items-center gap-2 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors">
-              <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
-              <p className="text-xs font-semibold text-red-600 dark:text-red-400">Overdue</p>
-              <p className="text-lg font-bold text-red-900 dark:text-red-100 ml-auto">{overdue}</p>
-            </button>
-          </div>
           {familyMembers.length > 0 && (
             <div className="grid grid-cols-2 gap-2">
               {familyMembers.map(member => {
