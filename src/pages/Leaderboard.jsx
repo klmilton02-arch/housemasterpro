@@ -83,7 +83,7 @@ export default function Leaderboard() {
     return (
       <div className="space-y-6 max-w-xs mx-auto px-1 pt-6">
         <div>
-          <h1 className="font-heading text-2xl font-bold">Leaderboard</h1>
+          <h1 className="font-heading text-2xl font-bold">Rewards</h1>
           <p className="text-sm text-muted-foreground mt-1">Family rankings</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-12 text-center">
@@ -104,7 +104,7 @@ export default function Leaderboard() {
         <div className="flex items-center gap-3">
           <Trophy className="w-7 h-7 text-amber-500" />
           <div>
-            <h1 className="font-heading text-2xl font-bold">Leaderboard</h1>
+            <h1 className="font-heading text-2xl font-bold">Rewards</h1>
             <p className="text-sm text-muted-foreground">Family rankings</p>
           </div>
         </div>
