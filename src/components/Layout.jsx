@@ -36,6 +36,11 @@ export default function Layout() {
             <h1 className="font-heading text-xl font-bold tracking-tight text-foreground">HomeLifeFocus</h1>
           </div>
           <p className="text-xs text-muted-foreground mt-1">HomeLifeFocus</p>
+          {isActive && (
+            <p className="text-xs font-semibold text-yellow-600 dark:text-yellow-500 mt-2 flex items-center gap-1">
+              <Zap className="w-3 h-3" /> Blast Mode: {blastMins}:{blastSecs}
+            </p>
+          )}
         </div>
         <nav className="flex-1 p-4 space-y-1">
           {navItems.map(({ path, label, icon: Icon, iconColor }) => {
