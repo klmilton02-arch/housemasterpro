@@ -214,7 +214,7 @@ export default function HomeSetup() {
   return (
     <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div>
-        <h1 className="font-heading text-2xl font-bold">Home Setup</h1>
+        <h1 className="font-heading text-3xl font-bold">Home Setup</h1>
         <p className="text-sm text-muted-foreground mt-1">Configure your rooms to auto-generate cleaning tasks</p>
       </div>
 
