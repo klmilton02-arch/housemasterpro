@@ -1,17 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { getLevelInfo, ACHIEVEMENT_BADGES } from "@/utils/gamification";
-import { Trophy } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { startOfWeek, startOfMonth, parseISO, isAfter } from "date-fns";
 
-const RANK_COLORS = ["text-amber-500", "text-slate-400", "text-orange-600"];
 const RANK_ICONS = ["🥇", "🥈", "🥉"];
+const RANK_COLORS = ["text-amber-500", "text-slate-400", "text-orange-600"];
 
 function ProfileRow({ rank, profile, xp }) {
   const levelInfo = getLevelInfo(xp);
   const badges = (profile.badges || []);
+
   return (
     <div className={`bg-card border border-border rounded-xl p-4 flex items-center gap-4 ${rank === 0 ? "border-amber-200 bg-amber-50/30 dark:border-amber-800 dark:bg-amber-950/20" : ""}`}>
       <div className="text-2xl w-8 text-center">{RANK_ICONS[rank] || `#${rank + 1}`}</div>
@@ -73,25 +73,22 @@ export default function Leaderboard() {
       .reduce((sum, h) => sum + (h.points_earned || 0), 0);
   }
 
+  function handleTouchStart(e) {
+    touchStartX.current = e.touches[0].clientX;
+  }
+
+  function handleTouchEnd(e) {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (diff < -50) navigate("/burst");
+    else if (diff > 50) navigate("/presets");
+    touchStartX.current = null;
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="w-8 h-8 border-4 border-muted border-t-primary rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (profiles.length === 0) {
-    return (
-      <div className="space-y-6 max-w-xs mx-auto px-1 pt-6">
-        <div>
-          <h1 className="font-heading text-2xl font-bold">Rewards</h1>
-          <p className="text-sm text-muted-foreground mt-1">Family rankings</p>
-        </div>
-        <div className="bg-card border border-border rounded-xl p-12 text-center">
-          <Trophy className="w-12 h-12 text-muted-foreground mx-auto mb-3 opacity-40" />
-          <p className="text-muted-foreground">No points earned yet. Complete tasks to get on the board!</p>
-        </div>
       </div>
     );
   }
@@ -105,53 +102,74 @@ export default function Leaderboard() {
   const sortedLists = [allTimeSorted, monthlySorted, weeklySorted];
   const xpFns = [p => p.total_xp || 0, p => getMonthlyXP(p.family_member_id), p => getWeeklyXP(p.family_member_id)];
 
-  function handleTouchStart(e) {
-    touchStartX.current = e.touches[0].clientX;
-  }
-
-  function handleTouchEnd(e) {
-    if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -50) navigate("/burst");     // swipe right → burst
-    else if (diff > 50) navigate("/presets"); // swipe left → presets
-    touchStartX.current = null;
-  }
-
   return (
     <div className="space-y-6 max-w-xs mx-auto px-1 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <h1 className="font-heading text-2xl font-bold md:hidden">Rewards</h1>
 
-      {/* Tab bar */}
-      <div className="flex bg-muted rounded-lg p-1 gap-1">
-        {TAB_LABELS.map((label, i) => (
-          <button
-            key={i}
-            onClick={() => setTabIndex(i)}
-            className={`flex-1 text-sm font-medium py-1.5 rounded-md transition-colors ${
-              tabIndex === i
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      {/* Rewards Summary */}
+      {profiles.length > 0 && (
+        <div className="bg-card border border-border rounded-lg p-5 space-y-3">
+          <h2 className="font-heading font-semibold text-lg">Your Rewards</h2>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Total XP: <span className="font-bold text-foreground">{profiles[0]?.total_xp || 0}</span></p>
+            <p className="text-sm text-muted-foreground">Level: <span className="font-bold text-foreground">{profiles[0]?.level || 1}</span></p>
+            {profiles[0]?.badges?.length > 0 && (
+              <div>
+                <p className="text-sm text-muted-foreground mb-2">Badges:</p>
+                <div className="flex gap-2 flex-wrap">
+                  {profiles[0].badges.map(bid => {
+                    const b = ACHIEVEMENT_BADGES.find(a => a.id === bid);
+                    return b ? (
+                      <span key={bid} title={b.name} className="text-2xl cursor-help">{b.emoji}</span>
+                    ) : null;
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
-      {/* Swipeable content */}
-      <div className="space-y-3">
-        {sortedLists[tabIndex].map((p, i) => (
-          <ProfileRow key={p.id} rank={i} profile={p} xp={xpFns[tabIndex](p)} />
-        ))}
-      </div>
+      {/* Leaderboard */}
+      <div className="space-y-4">
+        <h2 className="font-heading font-semibold text-lg">Leaderboard</h2>
 
-      {/* Dot indicators */}
-      <div className="flex justify-center gap-2 pb-2">
-        {TABS.map((_, i) => (
-          <button key={i} onClick={() => setTabIndex(i)}
-            className={`w-2 h-2 rounded-full transition-colors ${i === tabIndex ? "bg-primary" : "bg-muted-foreground/30"}`}
-          />
-        ))}
+        {/* Tab bar */}
+        <div className="flex bg-muted rounded-lg p-1 gap-1">
+          {TAB_LABELS.map((label, i) => (
+            <button
+              key={i}
+              onClick={() => setTabIndex(i)}
+              className={`flex-1 text-sm font-medium py-1.5 rounded-md transition-colors ${
+                tabIndex === i
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Rankings */}
+        <div className="space-y-3">
+          {profiles.length === 0 ? (
+            <p className="text-center text-muted-foreground py-8 text-sm">No rankings yet.</p>
+          ) : (
+            sortedLists[tabIndex].map((p, i) => (
+              <ProfileRow key={p.id} rank={i} profile={p} xp={xpFns[tabIndex](p)} />
+            ))
+          )}
+        </div>
+
+        {/* Dot indicators */}
+        <div className="flex justify-center gap-2 pb-2">
+          {TABS.map((_, i) => (
+            <button key={i} onClick={() => setTabIndex(i)}
+              className={`w-2 h-2 rounded-full transition-colors ${i === tabIndex ? "bg-primary" : "bg-muted-foreground/30"}`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
