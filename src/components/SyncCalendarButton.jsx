@@ -33,9 +33,7 @@ export default function SyncCalendarButton() {
         <Loader2 className="w-5 h-5 animate-spin" />
       ) : status === "done" ? (
         <CheckCircle className="w-5 h-5 text-green-500" />
-      ) : (
-        <CalendarDays className="w-5 h-5" />
-      )}
+      ) : null}
       {status === "loading"
         ? "Syncing..."
         : status === "done"
