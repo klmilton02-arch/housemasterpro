@@ -237,7 +237,7 @@ export default function Tasks() {
       <div className="flex gap-2 flex-col gap-3">
          <Button 
            onClick={() => setViewMode(viewMode === "calendar" ? "list" : "calendar")} 
-           className={`w-full h-14 text-lg font-medium ${viewMode === "calendar" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
+           className="w-full h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
          >
            <Calendar className="w-4 h-4 mr-2" /> Calendar
          </Button>
@@ -256,13 +256,13 @@ export default function Tasks() {
          <div className="flex gap-2">
            <Button 
              onClick={() => { setViewMode("list"); setCategoryFilter("Bill Schedules"); }}
-             className={`flex-1 h-14 text-lg font-medium ${categoryFilter === "Bill Schedules" && viewMode === "list" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
+             className="flex-1 h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
            >
              Bills
            </Button>
            <Button 
              onClick={() => setViewMode("rooms")} 
-             className={`flex-1 h-14 text-lg font-medium ${viewMode === "rooms" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
+             className="flex-1 h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
            >
              Rooms
            </Button>
@@ -271,7 +271,7 @@ export default function Tasks() {
            <DropdownMenu>
              <DropdownMenuTrigger asChild>
                <Button
-                 className={`flex-1 h-14 gap-1 text-lg font-medium ${selectedMemberId ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
+                 className="flex-1 h-14 gap-1 text-lg font-medium bg-blue-400 hover:bg-blue-500"
                >
                  {selectedMemberId ? familyMembers.find(m => m.id === selectedMemberId)?.name : "Assigned To"}
                  <ChevronDown className="w-4 h-4" />
@@ -298,7 +298,7 @@ export default function Tasks() {
            </DropdownMenu>
            <Button 
              onClick={() => { setViewMode("list"); setSelectedMemberId(null); setAssignedFilter(assignedFilter === "unassigned" ? "all" : "unassigned"); }}
-             className={`flex-1 h-14 text-lg font-medium ${assignedFilter === "unassigned" ? "bg-blue-400 hover:bg-blue-500" : "bg-blue-100 hover:bg-blue-200 text-foreground"}`}
+             className="flex-1 h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
            >
              Unassigned
            </Button>
