@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
 import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown } from "lucide-react";
@@ -20,17 +21,6 @@ import TaskCalendar from "../components/TaskCalendar";
 import { differenceInDays, parseISO } from "date-fns";
 
 export default function Tasks() {
-  const navigate = useNavigate();
-  const touchStartX = useRef(null);
-  function handleTouchStart(e) { touchStartX.current = e.touches[0].clientX; }
-  function handleTouchEnd(e) {
-    if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/dashboard");   // swipe right → dashboard
-    else if (diff > 60) navigate("/burst");   // swipe left → burst
-    touchStartX.current = null;
-  }
-
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -46,6 +36,8 @@ export default function Tasks() {
   const [assignedFilter, setAssignedFilter] = useState("all"); // "all" | "assigned" | "unassigned"
   const [selectedMemberId, setSelectedMemberId] = useState(null);
   const { isActive: blastActive } = useBlastMode();
+  const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
+  const { handleTouchStart, handleTouchEnd } = useSwipeNavigation(PAGES);
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);

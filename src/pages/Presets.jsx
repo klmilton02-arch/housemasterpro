@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Search, Plus, Pencil, Trash2, PlusCircle } from "lucide-react";
@@ -37,17 +38,8 @@ function PresetCard({ p, onEdit, onDelete, onClick, onAddAsTask }) {
 }
 
 export default function Presets() {
-  const navigate = useNavigate();
-  const touchStartX = useRef(null);
-
-  function handleTouchStart(e) { touchStartX.current = e.touches[0].clientX; }
-  function handleTouchEnd(e) {
-    if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/leaderboard");  // swipe right → leaderboard
-    else if (diff > 60) navigate("/family");   // swipe left → family
-    touchStartX.current = null;
-  }
+  const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
+  const { handleTouchStart, handleTouchEnd } = useSwipeNavigation(PAGES);
 
   const [presets, setPresets] = useState([]);
   const [loading, setLoading] = useState(true);

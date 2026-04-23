@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { User, LogOut, Shield } from "lucide-react";
@@ -8,16 +9,8 @@ import SyncGoogleTasksButton from "../components/SyncGoogleTasksButton";
 import { getEarnedBadges } from "@/utils/badges";
 
 export default function Profile() {
-  const navigate = useNavigate();
-  const touchStartX = useRef(null);
-  function handleTouchStart(e) { touchStartX.current = e.touches[0].clientX; }
-  function handleTouchEnd(e) {
-    if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/home-setup");  // swipe right → home-setup
-    else if (diff > 60) navigate("/dashboard"); // swipe left → dashboard
-    touchStartX.current = null;
-  }
+  const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
+  const { handleTouchStart, handleTouchEnd } = useSwipeNavigation(PAGES);
 
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);

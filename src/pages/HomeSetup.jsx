@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -20,16 +21,8 @@ const ROOM_CATEGORY_MAP = {
 };
 
 export default function HomeSetup() {
-  const navigate = useNavigate();
-  const touchStartX = useRef(null);
-  function handleTouchStart(e) { touchStartX.current = e.touches[0].clientX; }
-  function handleTouchEnd(e) {
-    if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/profile"); // swipe right → profile
-    else if (diff > 60) navigate("/family"); // swipe left → family
-    touchStartX.current = null;
-  }
+  const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
+  const { handleTouchStart, handleTouchEnd } = useSwipeNavigation(PAGES);
 
   const [config, setConfig] = useState({
     bedrooms: 2,

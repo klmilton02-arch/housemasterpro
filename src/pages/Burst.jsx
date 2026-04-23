@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
+import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -14,21 +15,12 @@ import confetti from "canvas-confetti";
 
 export default function Burst() {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const touchStartX = useRef(null);
   const { isActive, timeLeft, duration, setDuration, startBlast, stopBlast, pauseBlast, resumeBlast } = useBlastMode();
-
-  function handleTouchStart(e) { touchStartX.current = e.touches[0].clientX; }
-  function handleTouchEnd(e) {
-    if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/tasks");      // swipe right → tasks
-    else if (diff > 60) navigate("/leaderboard"); // swipe left → leaderboard
-    touchStartX.current = null;
-  }
   const [completions, setCompletions] = useState({});
   const [reward, setReward] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
+  const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
+  const { handleTouchStart, handleTouchEnd } = useSwipeNavigation(PAGES);
 
   const { data: tasks = [] } = useQuery({
     queryKey: ["tasks"],

@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { base44 } from "@/api/base44Client";
 import { Plus, Trash2, Copy, Check, LogOut } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
@@ -22,16 +22,8 @@ const colorMap = {
 };
 
 export default function Family() {
-  const navigate = useNavigate();
-  const touchStartX = useRef(null);
-  function handleTouchStart(e) { touchStartX.current = e.touches[0].clientX; }
-  function handleTouchEnd(e) {
-    if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/presets");      // swipe right → presets
-    else if (diff > 60) navigate("/home-setup"); // swipe left → home-setup
-    touchStartX.current = null;
-  }
+  const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
+  const { handleTouchStart, handleTouchEnd } = useSwipeNavigation(PAGES);
 
   const [members, setMembers] = useState([]);
   const [tasks, setTasks] = useState([]);

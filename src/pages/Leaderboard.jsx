@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { base44 } from "@/api/base44Client";
 import { getLevelInfo, ACHIEVEMENT_BADGES } from "@/utils/gamification";
 import { useNavigate } from "react-router-dom";
@@ -45,8 +46,8 @@ export default function Leaderboard() {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [tabIndex, setTabIndex] = useState(0);
-  const touchStartX = useRef(null);
-  const navigate = useNavigate();
+  const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
+  const { handleTouchStart, handleTouchEnd } = useSwipeNavigation(PAGES);
 
   useEffect(() => {
     Promise.all([
@@ -73,17 +74,7 @@ export default function Leaderboard() {
       .reduce((sum, h) => sum + (h.points_earned || 0), 0);
   }
 
-  function handleTouchStart(e) {
-    touchStartX.current = e.touches[0].clientX;
-  }
 
-  function handleTouchEnd(e) {
-    if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -50) navigate("/burst");
-    else if (diff > 50) navigate("/presets");
-    touchStartX.current = null;
-  }
 
   if (loading) {
     return (
