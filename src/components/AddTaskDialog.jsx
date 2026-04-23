@@ -164,7 +164,6 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     setPhoneBillType("");
     setInsuranceType("");
     setAssignedTo("");
-    onOpenChange(false);
     onTaskAdded?.();
   }
 
@@ -434,13 +433,23 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
             <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="mt-1" />
           </div>
 
-          <Button
-            className="w-full"
-            onClick={handleSubmit}
-            disabled={loading || (tab === "preset" && !selectedPreset) || (tab === "custom" && !customName)}
-          >
-            {loading ? "Adding..." : "Add Task"}
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              className="flex-1"
+              onClick={handleSubmit}
+              disabled={loading || (tab === "preset" && !selectedPreset) || (tab === "custom" && !customName)}
+            >
+              {loading ? "Adding..." : "Add Task"}
+            </Button>
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={handleSubmit}
+              disabled={loading || (tab === "preset" && !selectedPreset) || (tab === "custom" && !customName)}
+            >
+              {loading ? "Adding..." : "Add & Continue"}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
