@@ -16,7 +16,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   const [tab, setTab] = useState("preset");
 
   // Preset form
-  const [selectedPreset, setSelectedPreset] = useState(null);
+  const [selectedPresets, setSelectedPresets] = useState(new Set());
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [roomFilter, setRoomFilter] = useState("all");
 
@@ -59,7 +59,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
       });
 
       if (initialPreset) {
-        setSelectedPreset(initialPreset);
+        setSelectedPresets(new Set([initialPreset.id]));
         setTab("preset");
         if (initialPreset.frequency_days % 365 === 0) { setFreqValue(String(initialPreset.frequency_days / 365)); setFreqUnit("yearly"); }
         else if (initialPreset.frequency_days % 90 === 0) { setFreqValue(String(initialPreset.frequency_days / 90)); setFreqUnit("quarterly"); }
@@ -67,7 +67,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
         else if (initialPreset.frequency_days % 7 === 0) { setFreqValue(String(initialPreset.frequency_days / 7)); setFreqUnit("weeks"); }
         else { setFreqValue(String(initialPreset.frequency_days)); setFreqUnit("days"); }
       } else {
-        setSelectedPreset(null);
+        setSelectedPresets(new Set());
         setTab("preset");
       }
     }
@@ -85,25 +85,6 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     setLoading(true);
     const member = familyMembers.find(m => m.id === assignedTo);
 
-    const isBill = (tab === "preset" && selectedPreset?.category === "Bill Schedules") || (tab === "custom" && customCategory === "Bill Schedules");
-    const isStreaming = tab === "preset" && selectedPreset?.name?.toLowerCase().includes("streaming");
-    const isPhone = tab === "preset" && selectedPreset?.name?.toLowerCase().includes("phone");
-    const isInsurance = tab === "preset" && selectedPreset?.name?.toLowerCase().includes("home insurance");
-
-    // If bill with specific day of month, compute next_due_date and set frequency to 30 days
-    let nextDueDate = startDate;
-    if (isBill && useBillDay) {
-      const day = parseInt(billDayOfMonth) || 1;
-      const today = new Date();
-      let candidate = new Date(today.getFullYear(), today.getMonth(), day);
-      if (candidate < today) candidate = new Date(today.getFullYear(), today.getMonth() + 1, day);
-      nextDueDate = format(candidate, "yyyy-MM-dd");
-    }
-
-    const freqDays = freqValue ? toDays(freqValue, freqUnit) : (selectedPreset?.frequency_days || 30);
-
-    const freqMiles = freqUnit === "miles" ? (parseInt(freqValue) || undefined) : undefined;
-
     const getRoomFromCategory = (cat) => {
       if (cat.includes("Bathroom")) return "Bathroom";
       if (cat.includes("Kitchen")) return "Kitchen";
@@ -114,44 +95,71 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
       return null;
     };
 
-    const taskData = tab === "preset" && selectedPreset
-       ? {
-           name: isStreaming && streamingServiceName.trim()
-             ? `Streaming Services (${streamingServiceName.trim()})`
-             : isPhone && phoneBillType
-             ? `${selectedPreset.name} (${phoneBillType})`
-             : isInsurance && insuranceType
-             ? `${selectedPreset.name} (${insuranceType})`
-             : selectedPreset.name,
-           category: selectedPreset.category,
-           room: getRoomFromCategory(selectedPreset.category),
-           difficulty: selectedPreset.difficulty,
-           frequency_days: freqDays,
-           frequency_miles: freqMiles,
-           description: selectedPreset.description,
-         }
-       : {
-           name: customName,
-           category: customCategory,
-           room: customRoom || undefined,
-           difficulty: "Easy",
-           frequency_days: freqDays,
-           frequency_miles: freqMiles,
-           description: customDescription,
-         };
+    if (tab === "preset") {
+      // Create tasks for all selected presets
+      const selectedPresetObjs = presets.filter(p => selectedPresets.has(p.id));
+      
+      for (const preset of selectedPresetObjs) {
+        const isBill = preset.category === "Bill Schedules";
+        const isStreaming = preset.name?.toLowerCase().includes("streaming");
+        const isPhone = preset.name?.toLowerCase().includes("phone");
+        const isInsurance = preset.name?.toLowerCase().includes("home insurance");
 
-    await base44.entities.Task.create({
-      ...taskData,
-      assigned_to: assignedTo || undefined,
-      assigned_to_name: member?.name || undefined,
-      start_date: startDate,
-      next_due_date: nextDueDate,
-      status: "Pending",
-      overdue_grace_days: 3,
-    });
+        let nextDueDate = startDate;
+        if (isBill && useBillDay) {
+          const day = parseInt(billDayOfMonth) || 1;
+          const today = new Date();
+          let candidate = new Date(today.getFullYear(), today.getMonth(), day);
+          if (candidate < today) candidate = new Date(today.getFullYear(), today.getMonth() + 1, day);
+          nextDueDate = format(candidate, "yyyy-MM-dd");
+        }
+
+        const freqDays = freqValue ? toDays(freqValue, freqUnit) : preset.frequency_days;
+
+        await base44.entities.Task.create({
+          name: isStreaming && streamingServiceName.trim()
+            ? `Streaming Services (${streamingServiceName.trim()})`
+            : isPhone && phoneBillType
+            ? `${preset.name} (${phoneBillType})`
+            : isInsurance && insuranceType
+            ? `${preset.name} (${insuranceType})`
+            : preset.name,
+          category: preset.category,
+          room: getRoomFromCategory(preset.category),
+          difficulty: preset.difficulty,
+          frequency_days: freqDays,
+          frequency_miles: freqUnit === "miles" ? (parseInt(freqValue) || undefined) : undefined,
+          description: preset.description,
+          assigned_to: assignedTo || undefined,
+          assigned_to_name: member?.name || undefined,
+          start_date: startDate,
+          next_due_date: nextDueDate,
+          status: "Pending",
+          overdue_grace_days: 3,
+        });
+      }
+    } else {
+      // Create custom task
+      const freqDays = freqValue ? toDays(freqValue, freqUnit) : 30;
+      await base44.entities.Task.create({
+        name: customName,
+        category: customCategory,
+        room: customRoom || undefined,
+        difficulty: "Easy",
+        frequency_days: freqDays,
+        frequency_miles: freqUnit === "miles" ? (parseInt(freqValue) || undefined) : undefined,
+        description: customDescription,
+        assigned_to: assignedTo || undefined,
+        assigned_to_name: member?.name || undefined,
+        start_date: startDate,
+        next_due_date: startDate,
+        status: "Pending",
+        overdue_grace_days: 3,
+      });
+    }
 
     setLoading(false);
-    setSelectedPreset(null);
+    setSelectedPresets(new Set());
     setCustomName("");
     setCustomRoom("");
     setCategoryFilter("all");
@@ -184,9 +192,9 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
             {initialPreset ? (
               // Launched from a specific preset card — show it directly, no list
               <div className="bg-muted/50 border border-border rounded-lg px-4 py-3">
-                <p className="font-semibold text-sm text-foreground">{selectedPreset?.name}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{selectedPreset?.category}{selectedPreset?.room ? ` · ${selectedPreset.room}` : ""} · {formatFrequency(selectedPreset?.frequency_days)}</p>
-                {selectedPreset?.description && <p className="text-xs text-muted-foreground mt-1">{selectedPreset.description}</p>}
+                <p className="font-semibold text-sm text-foreground">{initialPreset.name}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{initialPreset.category}{initialPreset.room ? ` · ${initialPreset.room}` : ""} · {formatFrequency(initialPreset.frequency_days)}</p>
+                {initialPreset.description && <p className="text-xs text-muted-foreground mt-1">{initialPreset.description}</p>}
               </div>
             ) : (
               <>
@@ -222,22 +230,22 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                     <button
                       key={p.id}
                       className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
-                        selectedPreset?.id === p.id
+                        selectedPresets.has(p.id)
                           ? "bg-primary text-primary-foreground"
                           : "hover:bg-muted text-foreground"
                       }`}
                       onClick={() => {
-                        setSelectedPreset(p);
-                        if (p.category === "Car Maintenance") { setFreqValue(p.frequency_miles ? String(p.frequency_miles) : ""); setFreqUnit("miles"); }
-                        else if (p.frequency_days % 365 === 0) { setFreqValue(String(p.frequency_days / 365)); setFreqUnit("yearly"); }
-                        else if (p.frequency_days % 90 === 0) { setFreqValue(String(p.frequency_days / 90)); setFreqUnit("quarterly"); }
-                        else if (p.frequency_days % 30 === 0) { setFreqValue(String(p.frequency_days / 30)); setFreqUnit("months"); }
-                        else if (p.frequency_days % 7 === 0) { setFreqValue(String(p.frequency_days / 7)); setFreqUnit("weeks"); }
-                        else { setFreqValue(String(p.frequency_days)); setFreqUnit("days"); }
+                        const newSelected = new Set(selectedPresets);
+                        if (newSelected.has(p.id)) {
+                          newSelected.delete(p.id);
+                        } else {
+                          newSelected.add(p.id);
+                        }
+                        setSelectedPresets(newSelected);
                       }}
                     >
                       <div className="font-medium">{p.name}</div>
-                      <div className={`text-xs mt-0.5 ${selectedPreset?.id === p.id ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
+                      <div className={`text-xs mt-0.5 ${selectedPresets.has(p.id) ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
                         {formatFrequency(p.frequency_days)} · {p.task_type}
                       </div>
                     </button>
@@ -245,7 +253,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                 </div>
               </>
             )}
-            {selectedPreset?.name?.toLowerCase().includes("home insurance") && (
+            {[...selectedPresets].map(id => presets.find(p => p.id === id)).some(p => p?.name?.toLowerCase().includes("home insurance")) && (
               <div className="mt-3">
                 <Label className="text-xs font-medium text-muted-foreground">Insurance Type (optional)</Label>
                 <div className="flex flex-wrap gap-2 mt-1">
@@ -265,11 +273,11 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                   ))}
                 </div>
                 {insuranceType && (
-                  <p className="text-xs text-muted-foreground mt-1">Task will be named: <span className="font-medium text-foreground">{selectedPreset.name} ({insuranceType})</span></p>
+                  <p className="text-xs text-muted-foreground mt-1">Tasks will include insurance type: <span className="font-medium text-foreground">({insuranceType})</span></p>
                 )}
               </div>
             )}
-            {selectedPreset?.name?.toLowerCase().includes("phone") && (
+            {[...selectedPresets].map(id => presets.find(p => p.id === id)).some(p => p?.name?.toLowerCase().includes("phone")) && (
               <div className="mt-3">
                 <Label className="text-xs font-medium text-muted-foreground">Phone Type (optional)</Label>
                 <div className="flex gap-2 mt-1">
@@ -289,11 +297,11 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                   ))}
                 </div>
                 {phoneBillType && (
-                  <p className="text-xs text-muted-foreground mt-1">Task will be named: <span className="font-medium text-foreground">{selectedPreset.name} ({phoneBillType})</span></p>
+                  <p className="text-xs text-muted-foreground mt-1">Tasks will include phone type: <span className="font-medium text-foreground">({phoneBillType})</span></p>
                 )}
               </div>
             )}
-            {selectedPreset?.name?.toLowerCase().includes("streaming") && (
+            {[...selectedPresets].map(id => presets.find(p => p.id === id)).some(p => p?.name?.toLowerCase().includes("streaming")) && (
               <div className="mt-3">
                 <Label className="text-xs font-medium text-muted-foreground">Streaming Service Name</Label>
                 <Input
@@ -303,7 +311,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                   className="mt-1"
                 />
                 {streamingServiceName.trim() && (
-                  <p className="text-xs text-muted-foreground mt-1">Task will be named: <span className="font-medium text-foreground">Streaming Services ({streamingServiceName.trim()})</span></p>
+                  <p className="text-xs text-muted-foreground mt-1">Tasks will use: <span className="font-medium text-foreground">Streaming Services ({streamingServiceName.trim()})</span></p>
                 )}
               </div>
             )}
@@ -359,7 +367,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
         <div className="space-y-4 mt-4 pt-4 border-t border-border">
           {/* Bill day-of-month option */}
-          {((tab === "preset" && selectedPreset?.category === "Bill Schedules") || (tab === "custom" && customCategory === "Bill Schedules")) && (
+          {((tab === "preset" && [...selectedPresets].map(id => presets.find(p => p.id === id)).some(p => p?.category === "Bill Schedules")) || (tab === "custom" && customCategory === "Bill Schedules")) && (
             <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 space-y-2">
               <div className="flex items-center gap-2">
                 <button
@@ -437,7 +445,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
             <Button
               className="flex-1"
               onClick={handleSubmit}
-              disabled={loading || (tab === "preset" && !selectedPreset) || (tab === "custom" && !customName)}
+              disabled={loading || (tab === "preset" && selectedPresets.size === 0) || (tab === "custom" && !customName)}
             >
               {loading ? "Adding..." : "Add Task"}
             </Button>
@@ -445,7 +453,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
               variant="outline"
               className="flex-1"
               onClick={handleSubmit}
-              disabled={loading || (tab === "preset" && !selectedPreset) || (tab === "custom" && !customName)}
+              disabled={loading || (tab === "preset" && selectedPresets.size === 0) || (tab === "custom" && !customName)}
             >
               {loading ? "Adding..." : "Add & Continue"}
             </Button>
