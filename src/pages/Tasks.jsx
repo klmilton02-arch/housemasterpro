@@ -257,6 +257,9 @@ export default function Tasks() {
       </div>
 
       <div className="flex gap-2 flex-col gap-3">
+         <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500 border-blue-400">
+           <Plus className="w-5 h-5" /> Add Task
+         </Button>
          <Button 
            onClick={() => setViewMode(viewMode === "calendar" ? "list" : "calendar")} 
            className="w-full h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
