@@ -101,7 +101,8 @@ export default function HomeSetup() {
      for (let i = 1; i <= config.bedrooms; i++) {
        const label = config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i}`;
        for (const p of presetsForCategory("Bedroom Cleaning")) {
-         tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: "Bedroom" });
+         const roomName = config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i}`;
+         tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: roomName });
        }
      }
 
@@ -109,7 +110,8 @@ export default function HomeSetup() {
      for (let i = 1; i <= config.full_bathrooms; i++) {
        const label = config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i}`;
        for (const p of presetsForCategory("Bathroom Cleaning")) {
-         tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: "Bathroom" });
+         const roomName = config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i}`;
+         tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: roomName });
        }
      }
 
@@ -120,7 +122,8 @@ export default function HomeSetup() {
          p => p.task_type !== "Deep Cleaning"
        );
        for (const p of halfPresets) {
-         tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: "Half Bath" });
+         const roomName = config.half_bathrooms === 1 ? "Half Bath" : `Half Bath ${i}`;
+         tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: roomName });
        }
      }
 
