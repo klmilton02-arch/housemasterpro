@@ -36,7 +36,10 @@ export default function Burst() {
       });
 
       const result = await awardPoints(task, isActive);
-      if (result) setReward(result);
+      if (result) {
+        setReward(result);
+        confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+      }
 
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["gamification"] });
@@ -72,7 +75,13 @@ export default function Burst() {
       last_completed_date: today,
       next_due_date: nextDue.toISOString().split("T")[0],
     });
+    const result = await awardPoints(task, false);
+    if (result) {
+      setReward(result);
+      confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+    }
     queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    queryClient.invalidateQueries({ queryKey: ["gamification"] });
   }
 
   const pendingTasks = tasks.filter(t => t.status === "Pending" || t.status === "Overdue");
