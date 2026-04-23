@@ -78,7 +78,7 @@ export default function Layout() {
       <MobileHeader />
 
       {/* Global Blast Mode Banner */}
-      {isActive && location.pathname !== "/burst" && (
+      {isActive && (
         <Link to="/burst" className="fixed left-0 right-0 z-50 md:left-64 flex items-center justify-center gap-2 bg-yellow-300 text-black text-sm font-bold py-1.5 shadow-md" style={{ top: 'calc(3rem + env(safe-area-inset-top))' }}>
           <Zap className="w-4 h-4" /> Blast Mode Active — {blastMins}:{blastSecs} remaining
         </Link>
