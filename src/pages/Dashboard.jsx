@@ -28,12 +28,17 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const touchStartX = useRef(null);
 
-  function handleTouchStart(e) { touchStartX.current = e.touches[0].clientX; }
+  function handleTouchStart(e) { 
+    touchStartX.current = e.touches[0].clientX; 
+  }
   function handleTouchEnd(e) {
     if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/tasks");      // swipe right → tasks
-    else if (diff > 60) navigate("/profile");  // swipe left → profile
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX.current - touchEndX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 50) navigate("/profile");    // swipe left → profile
+      else navigate("/tasks");                 // swipe right → tasks
+    }
     touchStartX.current = null;
   }
   const [tasks, setTasks] = useState([]);
