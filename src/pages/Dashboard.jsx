@@ -49,8 +49,8 @@ export default function Dashboard() {
     const touchEndX = e.changedTouches[0].clientX;
     const diff = touchStartX.current - touchEndX;
     if (Math.abs(diff) > 40) {
-      if (diff > 40) navigate("/tasks");     // swipe left → tasks
-      else if (diff < -40) navigate("/profile"); // swipe right → profile
+      if (diff > 40) navigate("/profile");    // swipe left → profile
+      else navigate("/tasks");                 // swipe right → tasks
     }
     touchStartX.current = null;
     touchStartY.current = null;
@@ -154,7 +154,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" style={{ touchAction: 'pan-y' }} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+    <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
 
       <h1 className="font-heading text-2xl font-bold md:hidden">Dashboard</h1>
 
