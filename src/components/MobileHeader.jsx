@@ -27,7 +27,7 @@ export default function MobileHeader() {
                <Home className="w-7 h-7 fill-blue-500 text-blue-500" />
                <Check className="absolute inset-0 w-7 h-7 text-slate-100 stroke-2" strokeWidth={3} />
              </div>
-             <h1 className="font-heading text-lg font-bold leading-tight text-foreground">HomeLifeFocus</h1>
+             <h1 className="font-heading text-xl font-bold leading-tight text-foreground">HomeLifeFocus</h1>
            </div>
         </Link>
       ) : (
