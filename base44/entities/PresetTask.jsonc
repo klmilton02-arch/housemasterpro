@@ -6,9 +6,9 @@
       "type": "string",
       "title": "Task Name"
     },
-    "room": {
+    "category": {
       "type": "string",
-      "title": "Room",
+      "title": "Category",
       "enum": [
         "Bedroom Cleaning",
         "Bathroom Cleaning",
@@ -45,7 +45,7 @@
   },
   "required": [
     "name",
-    "room",
+    "category",
     "frequency_days"
   ],
   "rls": {
