@@ -27,19 +27,33 @@ export default function Dashboard() {
   const { isActive: isBlastActive } = useBlastMode();
   const navigate = useNavigate();
   const touchStartX = useRef(null);
+  const touchStartY = useRef(null);
 
   function handleTouchStart(e) { 
-    touchStartX.current = e.touches[0].clientX; 
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
   }
+  
+  function handleTouchMove(e) {
+    if (touchStartX.current === null) return;
+    const deltaX = Math.abs(e.touches[0].clientX - touchStartX.current);
+    const deltaY = Math.abs(e.touches[0].clientY - touchStartY.current);
+    // If horizontal movement is greater than vertical, prevent default scroll
+    if (deltaX > deltaY && deltaX > 10) {
+      e.preventDefault();
+    }
+  }
+  
   function handleTouchEnd(e) {
     if (touchStartX.current === null) return;
     const touchEndX = e.changedTouches[0].clientX;
     const diff = touchStartX.current - touchEndX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 50) navigate("/profile");    // swipe left → profile
+    if (Math.abs(diff) > 40) {
+      if (diff > 40) navigate("/profile");    // swipe left → profile
       else navigate("/tasks");                 // swipe right → tasks
     }
     touchStartX.current = null;
+    touchStartY.current = null;
   }
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -140,7 +154,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7 touch-action-pan-y" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'pan-y' }}>
+    <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
 
       <h1 className="font-heading text-2xl font-bold md:hidden">Dashboard</h1>
 
