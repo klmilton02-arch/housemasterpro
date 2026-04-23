@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown } from "lucide-react";
+import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown, ListChecks, Clock, CheckCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { awardPoints, getTaskPoints } from "@/utils/gamification";
 import confetti from "canvas-confetti";
@@ -14,6 +14,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import TaskCard, { getStatusInfo } from "../components/TaskCard";
 import AddTaskDialog from "../components/AddTaskDialog";
+import StatCard from "../components/StatCard";
 import BatchToolbar from "../components/BatchToolbar";
 import TaskDetailModal from "../components/TaskDetailModal";
 import RoomView from "../components/RoomView";
@@ -235,25 +236,23 @@ export default function Tasks() {
     return differenceInDays(due, today) < 0 && t.status !== "Completed";
   }).length;
 
+  const completedCount = tasks.filter(t => t.status === "Completed").length;
+  const dueTasks = tasks.filter(t => {
+    const s = getStatusInfo(t);
+    return (s.label === "Overdue" || s.label === "Past Due" || s.label === "Due Soon" || s.label === "Upcoming") && t.status !== "Completed";
+  });
+
   return (
     <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div>
         <h1 className="font-heading text-3xl font-bold">Tasks</h1>
         <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
       </div>
-      <div className="grid grid-cols-3 gap-2">
-        <button onClick={() => setStatusFilter("all")} className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg h-14 flex flex-col items-center justify-center hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
-          <p className="text-xs font-semibold text-blue-600 dark:text-blue-400">Due Today</p>
-          <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">{dueToday}</p>
-        </button>
-        <button onClick={() => setStatusFilter("due_soon")} className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg h-14 flex flex-col items-center justify-center hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors">
-          <p className="text-xs font-semibold text-amber-600 dark:text-amber-400">Due Soon</p>
-          <p className="text-2xl font-bold text-amber-900 dark:text-amber-100">{dueSoon}</p>
-        </button>
-        <button onClick={() => setStatusFilter("overdue")} className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg h-14 flex flex-col items-center justify-center hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors">
-          <p className="text-xs font-semibold text-red-600 dark:text-red-400">Overdue</p>
-          <p className="text-2xl font-bold text-red-900 dark:text-red-100">{overdue}</p>
-        </button>
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
+        <StatCard icon={ListChecks} label="Due" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setStatusFilter("all")} />
+        <StatCard icon={AlertTriangle} label="Overdue" value={overdue} color="bg-red-100 text-red-600" onClick={() => setStatusFilter("overdue")} />
+        <StatCard icon={Clock} label="Due Soon" value={dueSoon} color="bg-amber-100 text-amber-600" onClick={() => setStatusFilter("due_soon")} />
+        <StatCard icon={CheckCircle} label="Completed" value={completedCount} color="bg-green-100 text-green-600" onClick={() => setStatusFilter("completed")} />
       </div>
 
       <div className="flex gap-2 flex-col gap-3">
