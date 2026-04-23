@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
 import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown } from "lucide-react";
@@ -21,6 +21,15 @@ import { differenceInDays, parseISO } from "date-fns";
 
 export default function Tasks() {
   const navigate = useNavigate();
+  const touchStartX = useRef(null);
+  function handleTouchStart(e) { touchStartX.current = e.touches[0].clientX; }
+  function handleTouchEnd(e) {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (diff > 60) navigate("/burst");      // swipe left → burst
+    else if (diff < -60) navigate("/dashboard"); // swipe right → dashboard
+    touchStartX.current = null;
+  }
 
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -228,7 +237,7 @@ export default function Tasks() {
   }).length;
 
   return (
-    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
+    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'pan-y' }}>
       <div>
         <h1 className="font-heading text-2xl font-bold">Tasks</h1>
         <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
