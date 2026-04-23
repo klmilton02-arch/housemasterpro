@@ -6,9 +6,9 @@
       "type": "string",
       "title": "Task Name"
     },
-    "category": {
+    "room": {
       "type": "string",
-      "title": "Category",
+      "title": "Room/Category",
       "enum": [
         "Bedroom Cleaning",
         "Bathroom Cleaning",
@@ -18,27 +18,6 @@
         "House Maintenance",
         "Floors",
         "Bill Schedules"
-      ]
-    },
-    "room": {
-      "type": "string",
-      "title": "Room",
-      "enum": [
-        "None",
-        "Kitchen",
-        "Bathroom",
-        "Bedroom",
-        "Living Room",
-        "Dining Room",
-        "Playroom",
-        "Garage",
-        "Laundry Room",
-        "Office",
-        "Basement",
-        "Attic",
-        "Outdoor",
-        "Whole House",
-        "Any"
       ]
     },
     "frequency_days": {
@@ -64,7 +43,7 @@
   },
   "required": [
     "name",
-    "category",
+    "room",
     "frequency_days"
   ],
   "rls": {
