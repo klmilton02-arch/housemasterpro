@@ -41,6 +41,7 @@ export default function HomeSetup() {
     has_garage: false,
     has_laundry_room: false,
     has_mixed_use: false,
+    start_date: format(new Date(), "yyyy-MM-dd"),
   });
   const [setupId, setSetupId] = useState(null);
   const [generating, setGenerating] = useState(false);
@@ -62,6 +63,7 @@ export default function HomeSetup() {
           has_garage: r.has_garage ?? false,
           has_laundry_room: r.has_laundry_room ?? false,
           has_mixed_use: r.has_mixed_use ?? false,
+          start_date: r.start_date ?? format(new Date(), "yyyy-MM-dd"),
         });
       }
     });
@@ -80,7 +82,7 @@ export default function HomeSetup() {
 
   async function generateTasks() {
     setGenerating(true);
-    const today = format(new Date(), "yyyy-MM-dd");
+    const startDate = config.start_date;
 
     // Save config first
     if (setupId) {
@@ -163,8 +165,8 @@ export default function HomeSetup() {
          task_type: t.task_type || "Regular",
          frequency_days: t.frequency_days,
          description: t.description || "",
-         start_date: today,
-         next_due_date: today,
+         start_date: startDate,
+         next_due_date: startDate,
          status: "Pending",
          overdue_grace_days: 3,
        });
@@ -231,7 +233,17 @@ export default function HomeSetup() {
       </div>
 
       <div className="space-y-3">
-        <h2 className="font-heading font-semibold text-base">Other rooms</h2>
+        <Label className="text-sm">Start Date</Label>
+        <Input
+          type="date"
+          value={config.start_date}
+          onChange={(e) => setConfig(c => ({ ...c, start_date: e.target.value }))}
+          className="w-full"
+        />
+      </div>
+
+      <div className="space-y-3">
+         <h2 className="font-heading font-semibold text-base">Other rooms</h2>
         <div className="grid grid-cols-2 gap-2">
           <ToggleRoom label="Kitchen" icon={ChefHat} field="has_kitchen" />
           <ToggleRoom label="Living Room" icon={Sofa} field="has_living_room" />
@@ -260,7 +272,7 @@ export default function HomeSetup() {
           {generating ? "Generating..." : "Generate Tasks"}
         </Button>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false })} className="flex-1 text-xs">
+          <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false, start_date: format(new Date(), "yyyy-MM-dd") })} className="flex-1 text-xs">
             Reset
           </Button>
           <Button variant="outline" onClick={saveConfig} disabled={saving} className="flex-1">
