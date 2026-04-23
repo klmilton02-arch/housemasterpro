@@ -29,7 +29,7 @@ export default function QuickNav() {
             <Link
               key={to}
               to={to}
-              className={`border rounded-lg px-2 text-center hover:shadow-md transition-all active:scale-95 flex flex-col items-center justify-center gap-1 h-14 text-xs ${cardClass}`}
+              className={`border rounded-lg px-2 text-center hover:shadow-md transition-all active:scale-95 flex flex-col items-center justify-center gap-1 h-14 text-lg ${cardClass}`}
             >
               <Icon className={`w-4 h-4 ${iconClass}`} />
               <span className={`font-medium ${textClass}`}>{label}</span>
