@@ -28,8 +28,8 @@ export default function Family() {
   function handleTouchEnd(e) {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/home-setup"); // swipe right → home-setup
-    else if (diff > 60) navigate("/presets"); // swipe left → presets
+    if (diff > 60) navigate("/home-setup"); // swipe left → home-setup
+    else if (diff < -60) navigate("/presets"); // swipe right → presets
     touchStartX.current = null;
   }
 
