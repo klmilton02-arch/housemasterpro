@@ -119,7 +119,7 @@ export default function Family() {
           <h1 className="font-heading text-3xl font-bold">Manage Household</h1>
           <p className="text-sm text-muted-foreground">
             {currentUser.account_type === "family" && familyGroup
-              ? `${familyGroup.name} · Manage Family Members`
+              ? "Manage Family Members"
               : "Solo Account"}
           </p>
         </div>
