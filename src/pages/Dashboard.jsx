@@ -149,7 +149,7 @@ export default function Dashboard() {
       <LeaderboardSummary />
 
       <div className="pt-2">
-      <Button onClick={() => { startBlast(duration); navigate("/burst"); }} className="w-full gap-2 bg-yellow-200 hover:bg-yellow-300 text-black h-14 text-lg">
+      <Button onClick={() => { startBlast(duration); navigate("/burst"); }} className="w-full gap-2 bg-yellow-300 hover:bg-yellow-400 text-black h-14 text-lg">
         <Zap className="w-5 h-5" /> Blast Mode
       </Button>
       </div>
