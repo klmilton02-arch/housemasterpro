@@ -166,7 +166,7 @@ export default function Presets() {
           <h1 className="font-heading text-2xl font-bold">Preset Library</h1>
           <span className="text-sm text-muted-foreground">{presets.length} presets</span>
         </div>
-        <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} className="gap-2 w-full h-11 text-base bg-blue-400 hover:bg-blue-500 text-white border-0">
+        <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} className="gap-2 w-full h-11 text-base font-medium bg-blue-400 hover:bg-blue-500 text-white border-0">
           <Plus className="w-5 h-5" /> New Preset
         </Button>
         <div className="relative w-full">
