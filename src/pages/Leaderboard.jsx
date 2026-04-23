@@ -102,9 +102,11 @@ export default function Leaderboard() {
     <div className="space-y-6 max-w-xs px-1 pt-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Trophy className="w-7 h-7 text-amber-500" />
           <div>
-            <h1 className="font-heading text-2xl font-bold">Rewards</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="font-heading text-2xl font-bold">Rewards</h1>
+              <Trophy className="w-6 h-6 text-amber-500" />
+            </div>
             <p className="text-sm text-muted-foreground">Family rankings</p>
           </div>
         </div>
