@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { getLevelInfo, ACHIEVEMENT_BADGES } from "@/utils/gamification";
 import { Trophy } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { startOfWeek, startOfMonth, parseISO, isAfter } from "date-fns";
 
@@ -46,6 +46,7 @@ export default function Leaderboard() {
   const [loading, setLoading] = useState(true);
   const [tabIndex, setTabIndex] = useState(0);
   const touchStartX = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     Promise.all([
@@ -112,8 +113,14 @@ export default function Leaderboard() {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) {
-      if (diff > 0) setTabIndex(i => Math.min(i + 1, TABS.length - 1));
-      else setTabIndex(i => Math.max(i - 1, 0));
+      if (diff > 0) {
+        // swipe left: advance tab or stay
+        setTabIndex(i => Math.min(i + 1, TABS.length - 1));
+      } else {
+        // swipe right: go back to tab 0, or if already at 0 navigate to burst
+        if (tabIndex === 0) navigate("/burst");
+        else setTabIndex(i => Math.max(i - 1, 0));
+      }
     }
     touchStartX.current = null;
   }
