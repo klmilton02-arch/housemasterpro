@@ -129,7 +129,7 @@ export default function HomeSetup() {
 
      // Single-instance rooms
      const singleRooms = [
-       { key: "has_kitchen", label: "Kitchen", room: "Kitchen" },
+       { key: "has_kitchen", label: "Kitchen", room: "kitchen" },
        { key: "has_living_room", label: "Living Room", room: "Living Room" },
        { key: "has_dining_room", label: "Dining Room", room: "Dining Room" },
        { key: "has_garage", label: "Garage", room: "Garage" },
