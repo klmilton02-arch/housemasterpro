@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { ChevronDown, ChevronUp, Search, PlusCircle } from "lucide-react";
+import { ChevronDown, ChevronUp, Search, PlusCircle, ChevronsUpDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import MobileSelect from "./MobileSelect";
 import { formatFrequency } from "./TaskCard";
@@ -16,17 +16,38 @@ const FREQUENCY_BANDS = [
   { value: "yearly", label: "Yearly", min: 121, max: Infinity },
 ];
 
-const TABLE_HEADER = (
-  <div className="grid grid-cols-[2fr_1.2fr_1fr_1fr_1fr_2fr_auto] gap-2 px-2 py-1.5 bg-muted/50 rounded-md text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-    <span>Task Name</span>
-    <span>Category</span>
-    <span>Room</span>
-    <span>Frequency</span>
-    <span>Difficulty</span>
-    <span>Description</span>
-    <span></span>
-  </div>
-);
+const DIFFICULTY_ORDER = ["Trivial", "Easy", "Medium", "Hard", "Very Hard"];
+
+function SortIcon({ col, sortBy, sortDir }) {
+  if (sortBy !== col) return <ChevronsUpDown className="w-3 h-3 opacity-40" />;
+  return sortDir === "asc" ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />;
+}
+
+function TableHeader({ sortBy, sortDir, onSort }) {
+  const cols = [
+    { key: "name", label: "Task Name" },
+    { key: "category", label: "Category" },
+    { key: "room", label: "Room" },
+    { key: "frequency", label: "Frequency" },
+    { key: "difficulty", label: "Difficulty" },
+    { key: "description", label: "Description" },
+  ];
+  return (
+    <div className="grid grid-cols-[2fr_1.2fr_1fr_1fr_1fr_2fr_auto] gap-2 px-2 py-1.5 bg-muted/50 rounded-md">
+      {cols.map(({ key, label }) => (
+        <button
+          key={key}
+          onClick={() => onSort(key)}
+          className="flex items-center gap-1 text-xs font-semibold text-muted-foreground uppercase tracking-wide hover:text-foreground transition-colors text-left"
+        >
+          {label}
+          <SortIcon col={key} sortBy={sortBy} sortDir={sortDir} />
+        </button>
+      ))}
+      <span />
+    </div>
+  );
+}
 
 function PresetRow({ p, onAdd }) {
   return (
@@ -57,6 +78,7 @@ export default function DashboardPresetBrowser({ onTaskAdded }) {
   const [roomFilter, setRoomFilter] = useState("all");
   const [frequencyFilter, setFrequencyFilter] = useState("all");
   const [sortBy, setSortBy] = useState("category");
+  const [sortDir, setSortDir] = useState("asc");
   const [addTaskPreset, setAddTaskPreset] = useState(null);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
 
@@ -91,29 +113,31 @@ export default function DashboardPresetBrowser({ onTaskAdded }) {
     return true;
   });
 
+  function handleSort(col) {
+    if (sortBy === col) {
+      setSortDir(d => d === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(col);
+      setSortDir("asc");
+    }
+  }
+
   const sorted = [...filtered].sort((a, b) => {
-    if (sortBy === "name") return a.name.localeCompare(b.name);
-    if (sortBy === "room") return (a.room || "zzz").localeCompare(b.room || "zzz");
-    if (sortBy === "frequency") return a.frequency_days - b.frequency_days;
-    const catA = CLEANING_SUBCATEGORIES.includes(a.category) ? "Cleaning" : a.category;
-    const catB = CLEANING_SUBCATEGORIES.includes(b.category) ? "Cleaning" : b.category;
-    return catA.localeCompare(catB) || a.name.localeCompare(b.name);
+    let cmp = 0;
+    if (sortBy === "name") cmp = a.name.localeCompare(b.name);
+    else if (sortBy === "room") cmp = (a.room || "zzz").localeCompare(b.room || "zzz");
+    else if (sortBy === "frequency") cmp = a.frequency_days - b.frequency_days;
+    else if (sortBy === "difficulty") cmp = DIFFICULTY_ORDER.indexOf(a.difficulty) - DIFFICULTY_ORDER.indexOf(b.difficulty);
+    else if (sortBy === "description") cmp = (a.description || "").localeCompare(b.description || "");
+    else {
+      const catA = CLEANING_SUBCATEGORIES.includes(a.category) ? "Cleaning" : a.category;
+      const catB = CLEANING_SUBCATEGORIES.includes(b.category) ? "Cleaning" : b.category;
+      cmp = catA.localeCompare(catB) || a.name.localeCompare(b.name);
+    }
+    return sortDir === "asc" ? cmp : -cmp;
   });
 
-  const grouped = sorted.reduce((acc, p) => {
-    let groupKey;
-    if (sortBy === "name") groupKey = p.name[0].toUpperCase();
-    else if (sortBy === "room") groupKey = p.room || "No Room";
-    else if (sortBy === "frequency") {
-      const band = FREQUENCY_BANDS.find(b => p.frequency_days >= b.min && p.frequency_days <= b.max);
-      groupKey = band ? band.label : "Other";
-    } else {
-      groupKey = CLEANING_SUBCATEGORIES.includes(p.category) ? "Cleaning" : p.category;
-    }
-    if (!acc[groupKey]) acc[groupKey] = [];
-    acc[groupKey].push(p);
-    return acc;
-  }, {});
+
 
   return (
     <>
@@ -137,16 +161,8 @@ export default function DashboardPresetBrowser({ onTaskAdded }) {
               <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search presets..." className="pl-9 h-9 text-sm" />
             </div>
 
-            {/* Sort + Filters */}
+            {/* Filters */}
             <div className="grid grid-cols-2 gap-2">
-              <MobileSelect value={sortBy} onValueChange={setSortBy} title="Sort by" triggerClassName="w-full"
-                options={[
-                  { value: "category", label: "By Category" },
-                  { value: "name", label: "By Name" },
-                  { value: "room", label: "By Room" },
-                  { value: "frequency", label: "By Frequency" },
-                ]}
-              />
               <MobileSelect value={categoryFilter} onValueChange={setCategoryFilter} title="Filter Category" triggerClassName="w-full"
                 options={[{ value: "all", label: "All Categories" }, ...displayCategories.map(c => ({ value: c, label: c }))]}
               />
@@ -174,17 +190,10 @@ export default function DashboardPresetBrowser({ onTaskAdded }) {
               <p className="text-sm text-muted-foreground text-center py-4">No presets match your search.</p>
             ) : (
               <div className="overflow-x-auto">
-              {TABLE_HEADER}
-              <div className="max-h-96 overflow-y-auto space-y-4 mt-1">
-                {Object.entries(grouped).map(([groupKey, items]) => (
-                  <div key={groupKey}>
-                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1 sticky top-0 bg-card py-1">
-                      {groupKey}{groupKey === "Bill Schedules" ? " 💵" : ""}
-                    </h3>
-                    {items.map(p => (
-                      <PresetRow key={p.id} p={p} onAdd={handleAdd} />
-                    ))}
-                  </div>
+              <TableHeader sortBy={sortBy} sortDir={sortDir} onSort={handleSort} />
+              <div className="max-h-96 overflow-y-auto mt-1">
+                {sorted.map(p => (
+                  <PresetRow key={p.id} p={p} onAdd={handleAdd} />
                 ))}
               </div>
               </div>
