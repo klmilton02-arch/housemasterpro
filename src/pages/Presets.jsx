@@ -179,14 +179,14 @@ export default function Presets() {
             value={categoryFilter}
             onValueChange={setCategoryFilter}
             title="Filter by Category"
-            triggerClassName="w-full"
+            triggerClassName="w-full h-14"
             options={[{ value: "all", label: "All Categories" }, ...displayCategories.map(c => ({ value: c, label: c }))]}
           />
           <MobileSelect
             value={difficultyFilter}
             onValueChange={setDifficultyFilter}
             title="Filter by Difficulty"
-            triggerClassName="w-full"
+            triggerClassName="w-full h-14"
             options={[
               { value: "all", label: "All Difficulties" },
               { value: "Trivial", label: "Trivial" },
@@ -200,14 +200,14 @@ export default function Presets() {
             value={roomFilter}
             onValueChange={setRoomFilter}
             title="Filter by Room"
-            triggerClassName="w-full"
+            triggerClassName="w-full h-14"
             options={[{ value: "all", label: "All Rooms" }, ...displayRooms.map(r => ({ value: r, label: r }))]}
           />
           <MobileSelect
             value={frequencyFilter}
             onValueChange={setFrequencyFilter}
             title="Filter by Frequency"
-            triggerClassName="w-full"
+            triggerClassName="w-full h-14"
             options={[
               { value: "all", label: "All Frequencies" },
               { value: "daily", label: "Daily" },
