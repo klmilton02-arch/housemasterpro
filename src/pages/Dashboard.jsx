@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, ChevronDown, ChevronUp, Zap } from "lucide-react";
+import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, ChevronDown, ChevronUp, Zap, Trophy, PlusCircle, User, Users, Home } from "lucide-react";
 import confetti from "canvas-confetti";
 import { Link } from "react-router-dom";
 import CompletedTaskItem from "../components/CompletedTaskItem";
@@ -139,61 +139,36 @@ export default function Dashboard() {
 
       <h1 className="font-heading text-2xl font-bold md:hidden">HomeLifeFocus</h1>
 
-      <div className="grid grid-cols-2 gap-3 sm:gap-4">
-        <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full text-base h-11 bg-blue-400 hover:bg-blue-500 border-blue-400">
-          <Plus className="w-5 h-5" /> Add Task
-        </Button>
-        <SyncCalendarButton className="w-full" />
+      <div className="grid grid-cols-2 gap-3">
+        <Link to="/tasks" className="h-24 bg-blue-400 hover:bg-blue-500 rounded-lg p-4 flex flex-col items-center justify-center text-white font-semibold transition-colors">
+          <ListChecks className="w-6 h-6 mb-2" /> Tasks
+        </Link>
+        <Link to="/burst" className="h-24 bg-yellow-200 hover:bg-yellow-300 rounded-lg p-4 flex flex-col items-center justify-center text-black font-semibold transition-colors">
+          <Zap className="w-6 h-6 mb-2" /> Blast Mode
+        </Link>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
-        <StatCard icon={ListChecks} label="Due" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'Due Tasks', tasks: dueTasks })} />
-        <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks })} />
-        <StatCard icon={Clock} label="Due Soon" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" onClick={() => setTaskListModal({ title: 'Due Soon', tasks: dueSoonTasks })} />
-        <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks })} />
+      <div className="grid grid-cols-2 gap-3">
+        <Link to="/leaderboard" className="h-24 bg-amber-400 hover:bg-amber-500 rounded-lg p-4 flex flex-col items-center justify-center text-white font-semibold transition-colors">
+          <Trophy className="w-6 h-6 mb-2" /> Leaderboard
+        </Link>
+        <Link to="/presets" className="h-24 bg-purple-400 hover:bg-purple-500 rounded-lg p-4 flex flex-col items-center justify-center text-white font-semibold transition-colors">
+          <PlusCircle className="w-6 h-6 mb-2" /> Presets
+        </Link>
       </div>
 
-      <LeaderboardSummary />
+      <div className="grid grid-cols-2 gap-3">
+        <Link to="/family" className="h-24 bg-green-400 hover:bg-green-500 rounded-lg p-4 flex flex-col items-center justify-center text-white font-semibold transition-colors">
+          <Users className="w-6 h-6 mb-2" /> Family
+        </Link>
+        <Link to="/home-setup" className="h-24 bg-indigo-400 hover:bg-indigo-500 rounded-lg p-4 flex flex-col items-center justify-center text-white font-semibold transition-colors">
+          <Home className="w-6 h-6 mb-2" /> Home Setup
+        </Link>
+      </div>
 
-      <div className="pt-2">
-      <Link to="/burst">
-        <Button className="w-full gap-2 bg-yellow-200 hover:bg-yellow-300 text-black h-11 text-base">
-          <Zap className="w-5 h-5" /> Blast Mode
-        </Button>
+      <Link to="/profile" className="h-20 bg-cyan-400 hover:bg-cyan-500 rounded-lg p-4 flex flex-col items-center justify-center text-white font-semibold transition-colors">
+        <User className="w-6 h-6 mb-2" /> Profile
       </Link>
-      </div>
-
-      {profile && getEarnedBadges(profile).length > 0 && (
-        <div className="bg-card border border-border rounded-lg p-5">
-          <h2 className="font-heading font-semibold text-lg text-foreground mb-3">Your Badges</h2>
-          <BadgeDisplay badges={getEarnedBadges(profile)} size="sm" />
-        </div>
-      )}
-
-      <div className="bg-card border border-border rounded-lg overflow-hidden">
-        <button
-          className="w-full flex items-center justify-between p-5 hover:bg-muted/40 transition-colors"
-          onClick={() => setAllTasksOpen(o => !o)}
-        >
-          <h2 className="font-heading font-semibold text-lg text-foreground">All Tasks</h2>
-          <div className="flex items-center gap-2">
-            <span className="text-base text-muted-foreground">{tasks.length} total</span>
-            {allTasksOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
-          </div>
-        </button>
-        {allTasksOpen && (
-          <div className="space-y-3 max-h-72 overflow-y-auto px-5 pb-5">
-            {tasks.slice(0, 10).map(task => (
-              <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
-            ))}
-            {tasks.length > 10 && (
-              <p className="text-center text-xs text-muted-foreground py-2">+{tasks.length - 10} more tasks</p>
-            )}
-          </div>
-        )}
-      </div>
-
-      <DashboardPresetBrowser onTaskAdded={loadTasks} />
 
       <QuickNav />
 
