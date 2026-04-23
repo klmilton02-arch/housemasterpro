@@ -255,6 +255,9 @@ export default function HomeSetup() {
       )}
 
       <div className="flex gap-3">
+        <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false })} className="flex-1 text-xs">
+          Reset
+        </Button>
         <Button variant="outline" onClick={saveConfig} disabled={saving} className="flex-1">
           {saving ? "Saving..." : "Save Config"}
         </Button>
