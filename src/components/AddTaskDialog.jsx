@@ -55,16 +55,20 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
       ]).then(([p, f]) => {
         setPresets(p);
         setFamilyMembers(f);
-        if (initialPreset) {
-          setSelectedPreset(initialPreset);
-          setTab("preset");
-          if (initialPreset.frequency_days % 365 === 0) { setFreqValue(String(initialPreset.frequency_days / 365)); setFreqUnit("yearly"); }
-          else if (initialPreset.frequency_days % 90 === 0) { setFreqValue(String(initialPreset.frequency_days / 90)); setFreqUnit("quarterly"); }
-          else if (initialPreset.frequency_days % 30 === 0) { setFreqValue(String(initialPreset.frequency_days / 30)); setFreqUnit("months"); }
-          else if (initialPreset.frequency_days % 7 === 0) { setFreqValue(String(initialPreset.frequency_days / 7)); setFreqUnit("weeks"); }
-          else { setFreqValue(String(initialPreset.frequency_days)); setFreqUnit("days"); }
-        }
       });
+
+      if (initialPreset) {
+        setSelectedPreset(initialPreset);
+        setTab("preset");
+        if (initialPreset.frequency_days % 365 === 0) { setFreqValue(String(initialPreset.frequency_days / 365)); setFreqUnit("yearly"); }
+        else if (initialPreset.frequency_days % 90 === 0) { setFreqValue(String(initialPreset.frequency_days / 90)); setFreqUnit("quarterly"); }
+        else if (initialPreset.frequency_days % 30 === 0) { setFreqValue(String(initialPreset.frequency_days / 30)); setFreqUnit("months"); }
+        else if (initialPreset.frequency_days % 7 === 0) { setFreqValue(String(initialPreset.frequency_days / 7)); setFreqUnit("weeks"); }
+        else { setFreqValue(String(initialPreset.frequency_days)); setFreqUnit("days"); }
+      } else {
+        setSelectedPreset(null);
+        setTab("preset");
+      }
     }
   }, [open, initialPreset]);
 
@@ -171,43 +175,53 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
           </TabsList>
 
           <TabsContent value="preset" className="space-y-4 mt-4">
-            <div>
-              <Label className="text-xs font-medium text-muted-foreground">Category</Label>
-              <MobileSelect
-                value={categoryFilter}
-                onValueChange={setCategoryFilter}
-                title="Filter by Category"
-                triggerClassName="mt-1"
-                options={[{ value: "all", label: "All Categories" }, ...categories.map(c => ({ value: c, label: c }))]}
-              />
-            </div>
-
-            <div className="max-h-48 overflow-y-auto space-y-1 border border-border rounded-lg p-2">
-              {filteredPresets.map(p => (
-                <button
-                  key={p.id}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
-                    selectedPreset?.id === p.id
-                      ? "bg-primary text-primary-foreground"
-                      : "hover:bg-muted text-foreground"
-                  }`}
-                  onClick={() => {
-                    setSelectedPreset(p);
-    if (p.category === "Car Maintenance") { setFreqValue(p.frequency_miles ? String(p.frequency_miles) : ""); setFreqUnit("miles"); }
-    else if (p.frequency_days % 365 === 0) { setFreqValue(String(p.frequency_days / 365)); setFreqUnit("yearly"); }
-    else if (p.frequency_days % 90 === 0) { setFreqValue(String(p.frequency_days / 90)); setFreqUnit("quarterly"); }
-    else if (p.frequency_days % 30 === 0) { setFreqValue(String(p.frequency_days / 30)); setFreqUnit("months"); }
-    else if (p.frequency_days % 7 === 0) { setFreqValue(String(p.frequency_days / 7)); setFreqUnit("weeks"); }
-    else { setFreqValue(String(p.frequency_days)); setFreqUnit("days"); }
-                  }}
-                >
-                  <div className="font-medium">{p.name}</div>
-                  <div className={`text-xs mt-0.5 ${selectedPreset?.id === p.id ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
-                    {formatFrequency(p.frequency_days)} · {p.task_type}
-                  </div>
-                </button>
-              ))}
-            </div>
+            {initialPreset ? (
+              // Launched from a specific preset card — show it directly, no list
+              <div className="bg-muted/50 border border-border rounded-lg px-4 py-3">
+                <p className="font-semibold text-sm text-foreground">{selectedPreset?.name}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{selectedPreset?.category}{selectedPreset?.room ? ` · ${selectedPreset.room}` : ""} · {formatFrequency(selectedPreset?.frequency_days)}</p>
+                {selectedPreset?.description && <p className="text-xs text-muted-foreground mt-1">{selectedPreset.description}</p>}
+              </div>
+            ) : (
+              <>
+                <div>
+                  <Label className="text-xs font-medium text-muted-foreground">Category</Label>
+                  <MobileSelect
+                    value={categoryFilter}
+                    onValueChange={setCategoryFilter}
+                    title="Filter by Category"
+                    triggerClassName="mt-1"
+                    options={[{ value: "all", label: "All Categories" }, ...categories.map(c => ({ value: c, label: c }))]}
+                  />
+                </div>
+                <div className="max-h-48 overflow-y-auto space-y-1 border border-border rounded-lg p-2">
+                  {filteredPresets.map(p => (
+                    <button
+                      key={p.id}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
+                        selectedPreset?.id === p.id
+                          ? "bg-primary text-primary-foreground"
+                          : "hover:bg-muted text-foreground"
+                      }`}
+                      onClick={() => {
+                        setSelectedPreset(p);
+                        if (p.category === "Car Maintenance") { setFreqValue(p.frequency_miles ? String(p.frequency_miles) : ""); setFreqUnit("miles"); }
+                        else if (p.frequency_days % 365 === 0) { setFreqValue(String(p.frequency_days / 365)); setFreqUnit("yearly"); }
+                        else if (p.frequency_days % 90 === 0) { setFreqValue(String(p.frequency_days / 90)); setFreqUnit("quarterly"); }
+                        else if (p.frequency_days % 30 === 0) { setFreqValue(String(p.frequency_days / 30)); setFreqUnit("months"); }
+                        else if (p.frequency_days % 7 === 0) { setFreqValue(String(p.frequency_days / 7)); setFreqUnit("weeks"); }
+                        else { setFreqValue(String(p.frequency_days)); setFreqUnit("days"); }
+                      }}
+                    >
+                      <div className="font-medium">{p.name}</div>
+                      <div className={`text-xs mt-0.5 ${selectedPreset?.id === p.id ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
+                        {formatFrequency(p.frequency_days)} · {p.task_type}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
             {selectedPreset?.name?.toLowerCase().includes("home insurance") && (
               <div className="mt-3">
                 <Label className="text-xs font-medium text-muted-foreground">Insurance Type (optional)</Label>
