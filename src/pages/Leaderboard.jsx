@@ -113,20 +113,21 @@ export default function Leaderboard() {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        // swipe left: advance tab or stay
-        setTabIndex(i => Math.min(i + 1, TABS.length - 1));
+      if (diff < 0) {
+        // swipe right: go to presets, or advance tab if not on last
+        if (tabIndex === TABS.length - 1) navigate("/presets");
+        else setTabIndex(i => i + 1);
       } else {
-        // swipe right: go back to tab 0, or if already at 0 navigate to burst
+        // swipe left: go to burst, or go back a tab
         if (tabIndex === 0) navigate("/burst");
-        else setTabIndex(i => Math.max(i - 1, 0));
+        else setTabIndex(i => i - 1);
       }
     }
     touchStartX.current = null;
   }
 
   return (
-    <div className="space-y-6 max-w-xs mx-auto px-1 pt-6">
+    <div className="space-y-6 max-w-xs mx-auto px-1 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div>
@@ -158,11 +159,7 @@ export default function Leaderboard() {
       </div>
 
       {/* Swipeable content */}
-      <div
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        className="space-y-3"
-      >
+      <div className="space-y-3">
         {sortedLists[tabIndex].map((p, i) => (
           <ProfileRow key={p.id} rank={i} profile={p} xp={xpFns[tabIndex](p)} />
         ))}

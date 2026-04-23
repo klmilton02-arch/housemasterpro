@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Search, Plus, Pencil, Trash2, PlusCircle } from "lucide-react";
 import AddTaskDialog from "../components/AddTaskDialog";
@@ -36,6 +37,18 @@ function PresetCard({ p, onEdit, onDelete, onClick, onAddAsTask }) {
 }
 
 export default function Presets() {
+  const navigate = useNavigate();
+  const touchStartX = useRef(null);
+
+  function handleTouchStart(e) { touchStartX.current = e.touches[0].clientX; }
+  function handleTouchEnd(e) {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (diff > 60) navigate("/leaderboard");   // swipe left → leaderboard
+    else if (diff < -60) navigate("/dashboard"); // swipe right → dashboard (wrap around)
+    touchStartX.current = null;
+  }
+
   const [presets, setPresets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -147,7 +160,7 @@ export default function Presets() {
   }
 
   return (
-    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
+    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div className="flex flex-col gap-3">
         <div className="flex flex-col">
           <h1 className="font-heading text-2xl font-bold">Preset Library</h1>
