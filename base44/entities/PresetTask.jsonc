@@ -8,7 +8,7 @@
     },
     "room": {
       "type": "string",
-      "title": "Room/Category",
+      "title": "Room",
       "enum": [
         "Bedroom Cleaning",
         "Bathroom Cleaning",
