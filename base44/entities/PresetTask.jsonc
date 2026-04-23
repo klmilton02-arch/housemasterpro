@@ -18,7 +18,8 @@
         "Office",
         "Basement",
         "Garage",
-        "Playroom"
+        "Playroom",
+        "Living Room"
       ]
     },
     "task_type": {
