@@ -26,23 +26,16 @@ function PresetCard({ p, onEdit, onDelete, onClick, onAddAsTask }) {
         </button>
       </div>
       <div onClick={() => onClick(p)} className="cursor-pointer">
-        <div className="flex items-start justify-between gap-2 mb-1.5 pr-36">
+        <div className="flex items-start gap-2 mb-1.5 pr-36">
           <h3 className="font-heading font-semibold text-sm">{p.name}</h3>
-          {p.difficulty && (
-            <Badge variant="outline" className="shrink-0 text-xs">{p.difficulty}</Badge>
-          )}
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-xs font-medium px-2 py-1 rounded-full bg-primary/10 text-primary">
-            {formatFrequency(p.frequency_days)}
-          </span>
-          {p.room && (
+        {p.room && (
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs font-medium px-2 py-1 rounded-full bg-secondary text-secondary-foreground">
               {p.room}
             </span>
-          )}
-
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
