@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
 import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { awardPoints, getTaskPoints } from "@/utils/gamification";
 import confetti from "canvas-confetti";
 import { useBlastMode } from "@/lib/BlastModeContext";
@@ -20,6 +20,17 @@ import TaskCalendar from "../components/TaskCalendar";
 import { differenceInDays, parseISO } from "date-fns";
 
 export default function Tasks() {
+  const navigate = useNavigate();
+  const touchStartX = useRef(null);
+  function handleTouchStart(e) { touchStartX.current = e.touches[0].clientX; }
+  function handleTouchEnd(e) {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (diff < -60) navigate("/leaderboard"); // swipe right → leaderboard (rewards)
+    else if (diff > 60) navigate("/burst");   // swipe left → burst
+    touchStartX.current = null;
+  }
+
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -226,7 +237,7 @@ export default function Tasks() {
   }).length;
 
   return (
-    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
+    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div>
         <h1 className="font-heading text-2xl font-bold">Tasks</h1>
         <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>

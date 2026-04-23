@@ -22,7 +22,7 @@ export default function Burst() {
   function handleTouchEnd(e) {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/leaderboard"); // swipe right → leaderboard (rewards)
+    if (diff < -60) navigate("/tasks");      // swipe right → tasks
     else if (diff > 60) navigate("/dashboard"); // swipe left → dashboard
     touchStartX.current = null;
   }

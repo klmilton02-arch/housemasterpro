@@ -118,8 +118,8 @@ export default function Leaderboard() {
         if (tabIndex === TABS.length - 1) navigate("/presets");
         else setTabIndex(i => i + 1);
       } else {
-        // swipe left: go back a tab, or go to burst at first tab
-        if (tabIndex === 0) navigate("/burst");
+        // swipe left: go back a tab, or go to tasks at first tab
+        if (tabIndex === 0) navigate("/tasks");
         else setTabIndex(i => i - 1);
       }
     }
