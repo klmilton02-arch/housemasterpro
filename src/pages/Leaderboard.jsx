@@ -81,7 +81,7 @@ export default function Leaderboard() {
 
   if (profiles.length === 0) {
     return (
-      <div className="space-y-6 max-w-xs px-1 pt-6">
+      <div className="space-y-6 max-w-xs mx-auto px-1 pt-6">
         <div>
           <h1 className="font-heading text-2xl font-bold">Rewards</h1>
           <p className="text-sm text-muted-foreground mt-1">Family rankings</p>
@@ -99,7 +99,7 @@ export default function Leaderboard() {
   const monthlySorted = [...profiles].sort((a, b) => getMonthlyXP(b.family_member_id) - getMonthlyXP(a.family_member_id));
 
   return (
-    <div className="space-y-6 max-w-xs px-1 pt-6">
+    <div className="space-y-6 max-w-xs mx-auto px-1 pt-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div>
