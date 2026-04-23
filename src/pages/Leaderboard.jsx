@@ -112,8 +112,8 @@ export default function Leaderboard() {
   function handleTouchEnd(e) {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -50) navigate("/presets");   // swipe right → presets
-    else if (diff > 50) navigate("/burst");  // swipe left → burst
+    if (diff < -40) navigate("/presets");   // swipe right → presets
+    else if (diff > 40) navigate("/burst");  // swipe left → burst
     touchStartX.current = null;
   }
 
