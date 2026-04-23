@@ -41,16 +41,7 @@ function PresetCard({ p, onEdit, onDelete, onClick, onAddAsTask }) {
               {p.room}
             </span>
           )}
-          {p.category === "Bill Schedules" && <span className="text-lg">💵{(p.name.toLowerCase().includes("mortgage") || p.name.toLowerCase().includes("rent")) && "🏠"}</span>}
-          {p.name.toLowerCase().includes("garbage") || p.name.toLowerCase().includes("trash") || p.name.toLowerCase().includes("bin") ? <span className="text-lg">🗑️</span> : null}
-          {p.name.toLowerCase().includes("toilet") ? <span className="text-lg">🚽</span> : null}
-          {p.name.toLowerCase().includes("bucket") ? <span className="text-lg">🪣</span> : null}
-          {p.name.toLowerCase().includes("vacuum") || p.name.toLowerCase().includes("sweep") || p.name.toLowerCase().includes("broom") ? <span className="text-lg">🧹</span> : null}
-          {p.name.toLowerCase().includes("sheet") || p.name.toLowerCase().includes("mattress") ? <span className="text-lg">🛏️</span> : null}
-          {p.name.toLowerCase().includes("appliance") ? <span className="text-lg">🧽</span> : null}
-          {p.name.toLowerCase().includes("window") ? <span className="text-lg">🪟</span> : null}
-          {p.name.toLowerCase().includes("fireplace") || p.name.toLowerCase().includes("chimney") ? <span className="text-lg">🔥</span> : null}
-          {p.name.toLowerCase().includes("bathtub") || p.name.toLowerCase().includes("bath tub") || p.name.toLowerCase().includes("shower") || p.name.toLowerCase().includes("tub") ? <span className="text-lg">🛁</span> : null}
+
         </div>
       </div>
     </div>
@@ -172,7 +163,7 @@ export default function Presets() {
     <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
       <div className="flex flex-col gap-3">
         <div className="flex flex-col">
-          <h1 className="font-heading text-2xl font-bold">Preset Library 🧽💵🪣🧹</h1>
+          <h1 className="font-heading text-2xl font-bold">Preset Library</h1>
           <span className="text-sm text-muted-foreground">{presets.length} presets</span>
         </div>
         <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} className="gap-2 w-full h-11 text-base bg-blue-400 hover:bg-blue-500 text-white border-0">
@@ -248,7 +239,7 @@ export default function Presets() {
         Object.entries(grouped).map(([groupKey, items]) => (
           <div key={groupKey}>
             <h2 className="font-heading font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-2">
-              {groupKey}{groupKey === "Bill Schedules" ? " 💵" : ""}
+              {groupKey}
             </h2>
             {sortBy === "category" && groupKey === "Cleaning" ? (
               // Cleaning: show subcategory headers
