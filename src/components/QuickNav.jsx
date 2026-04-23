@@ -31,7 +31,7 @@ export default function QuickNav() {
               className={`border rounded-lg px-3 text-center hover:shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 h-11 ${cardClass}`}
             >
               <Icon className={`w-5 h-5 ${iconClass}`} />
-              <span className={`text-xs font-medium ${textClass}`}>{label}</span>
+              <span className={`${row.length === 1 ? "text-sm" : "text-xs"} font-medium ${textClass}`}>{label}</span>
             </Link>
           ))}
         </div>
