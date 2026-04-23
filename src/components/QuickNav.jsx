@@ -16,8 +16,6 @@ const rows = [
   ],
   [
     { to: "/tasks", label: "Calendar", icon: Calendar, cardClass: "bg-blue-400 border-blue-400 hover:bg-blue-500 hover:border-blue-500", textClass: "text-white", iconClass: "text-white" },
-  ],
-  [
     { to: "/profile", label: "Profile", icon: User, cardClass: "bg-blue-400 border-blue-400 hover:bg-blue-500 hover:border-blue-500", textClass: "text-white", iconClass: "text-white" },
   ],
 ];
@@ -31,10 +29,10 @@ export default function QuickNav() {
             <Link
               key={to}
               to={to}
-              className={`border rounded-lg px-3 text-center hover:shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 h-11 ${cardClass}`}
+              className={`border rounded-lg px-2 text-center hover:shadow-md transition-all active:scale-95 flex flex-col items-center justify-center gap-1 h-14 text-xs ${cardClass}`}
             >
-              <Icon className={`w-5 h-5 ${iconClass}`} />
-              <span className={`text-lg font-medium ${textClass}`}>{label}</span>
+              <Icon className={`w-4 h-4 ${iconClass}`} />
+              <span className={`font-medium ${textClass}`}>{label}</span>
             </Link>
           ))}
         </div>
