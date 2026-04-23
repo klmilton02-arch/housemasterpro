@@ -24,7 +24,7 @@ export default function MobileHeader() {
         <Link to="/" className="flex flex-col">
           <div className="flex items-center gap-2">
              <div className="relative w-5 h-5">
-               <Home className="w-5 h-5 fill-primary text-primary" />
+               <Home className="w-5 h-5 fill-slate-200 text-slate-200" />
                <Check className="absolute inset-0 w-5 h-5 text-primary" />
              </div>
              <h1 className="font-heading text-lg font-bold leading-tight text-foreground">HomeLifeFocus</h1>
