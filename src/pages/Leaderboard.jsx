@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { getLevelInfo, ACHIEVEMENT_BADGES } from "@/utils/gamification";
 import { Trophy } from "lucide-react";
@@ -45,7 +45,6 @@ export default function Leaderboard() {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [tabIndex, setTabIndex] = useState(0);
-  const touchStartX = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -105,20 +104,8 @@ export default function Leaderboard() {
   const sortedLists = [allTimeSorted, monthlySorted, weeklySorted];
   const xpFns = [p => p.total_xp || 0, p => getMonthlyXP(p.family_member_id), p => getWeeklyXP(p.family_member_id)];
 
-  function handleTouchStart(e) {
-    touchStartX.current = e.touches[0].clientX;
-  }
-
-  function handleTouchEnd(e) {
-    if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff > 40) navigate("/presets");   // swipe left → presets
-    else if (diff < -40) navigate("/burst");  // swipe right → burst
-    touchStartX.current = null;
-  }
-
   return (
-    <div className="space-y-6 max-w-xs mx-auto px-1 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'pan-y' }}>
+    <div className="space-y-6 max-w-xs mx-auto px-1 pt-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div>

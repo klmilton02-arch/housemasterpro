@@ -15,17 +15,7 @@ import confetti from "canvas-confetti";
 export default function Burst() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const touchStartX = useRef(null);
   const { isActive, timeLeft, duration, setDuration, startBlast, stopBlast, pauseBlast, resumeBlast } = useBlastMode();
-
-  function handleTouchStart(e) { touchStartX.current = e.touches[0].clientX; }
-  function handleTouchEnd(e) {
-    if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/leaderboard"); // swipe right → leaderboard
-    else if (diff > 60) navigate("/tasks");   // swipe left → tasks
-    touchStartX.current = null;
-  }
   const [completions, setCompletions] = useState({});
   const [reward, setReward] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -99,7 +89,7 @@ export default function Burst() {
   const pendingTasks = tasks.filter(t => t.status === "Pending" || t.status === "Overdue");
 
   return (
-    <div className="min-h-screen bg-background" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'pan-y' }}>
+    <div className="min-h-screen bg-background">
       <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
         <h1 className="font-heading text-2xl font-bold">Blast Mode</h1>
 
