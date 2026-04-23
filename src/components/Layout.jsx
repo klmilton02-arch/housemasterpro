@@ -35,7 +35,7 @@ export default function Layout() {
             <Home className="w-5 h-5 text-primary" />
             <h1 className="font-heading text-xl font-bold tracking-tight text-foreground">HomeLifeFocus</h1>
           </div>
-          <p className="text-xs text-muted-foreground mt-1">Family Task Manager</p>
+          <p className="text-xs text-muted-foreground mt-1">HomeLifeFocus</p>
         </div>
         <nav className="flex-1 p-4 space-y-1">
           {navItems.map(({ path, label, icon: Icon, iconColor }) => {
