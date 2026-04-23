@@ -85,7 +85,7 @@ export default function Layout() {
       )}
 
       {/* Main content */}
-      <main className="flex-1 md:ml-64 md:pt-0 md:pb-8" style={{ paddingTop: 'calc(3.5rem + env(safe-area-inset-top))', paddingBottom: 'calc(7rem + env(safe-area-inset-bottom))' }}>
+      <main className="flex-1 md:ml-64 md:pt-0 md:pb-8" style={{ paddingTop: `calc(${isActive ? '5.5rem' : '3.5rem'} + env(safe-area-inset-top))`, paddingBottom: 'calc(7rem + env(safe-area-inset-bottom))' }}>
         <div className="w-full max-w-sm md:max-w-4xl mx-auto md:pb-8">
           <Outlet />
         </div>
