@@ -24,7 +24,7 @@ export default function MobileHeader() {
         <Link to="/" className="flex flex-col">
           <div className="flex items-center gap-2">
             <Home className="w-5 h-5 text-primary" />
-            <h1 className="font-heading text-lg font-bold leading-tight text-foreground">Home Task Manager</h1>
+            <h1 className="font-heading text-lg font-bold leading-tight text-foreground">HomeLifeFocus</h1>
           </div>
         </Link>
       ) : (
