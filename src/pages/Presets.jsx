@@ -44,8 +44,8 @@ export default function Presets() {
   function handleTouchEnd(e) {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/family");        // swipe right → family
-    else if (diff > 60) navigate("/leaderboard"); // swipe left → leaderboard
+    if (diff < -60) navigate("/leaderboard");  // swipe right → leaderboard
+    else if (diff > 60) navigate("/family");   // swipe left → family
     touchStartX.current = null;
   }
 
@@ -160,7 +160,7 @@ export default function Presets() {
   }
 
   return (
-    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'pan-y' }}>
+    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div className="flex flex-col gap-3">
         <div className="flex flex-col">
           <h1 className="font-heading text-2xl font-bold">Preset Library</h1>

@@ -26,8 +26,8 @@ export default function Tasks() {
   function handleTouchEnd(e) {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/burst");      // swipe right → burst
-    else if (diff > 60) navigate("/dashboard"); // swipe left → dashboard
+    if (diff < -60) navigate("/dashboard");   // swipe right → dashboard
+    else if (diff > 60) navigate("/burst");   // swipe left → burst
     touchStartX.current = null;
   }
 
@@ -237,7 +237,7 @@ export default function Tasks() {
   }).length;
 
   return (
-    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'pan-y' }}>
+    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div>
         <h1 className="font-heading text-2xl font-bold">Tasks</h1>
         <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>

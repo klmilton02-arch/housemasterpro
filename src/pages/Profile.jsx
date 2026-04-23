@@ -14,8 +14,8 @@ export default function Profile() {
   function handleTouchEnd(e) {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/dashboard");  // swipe right → dashboard
-    else if (diff > 60) navigate("/home-setup"); // swipe left → home-setup
+    if (diff < -60) navigate("/home-setup");  // swipe right → home-setup
+    else if (diff > 60) navigate("/dashboard"); // swipe left → dashboard
     touchStartX.current = null;
   }
 
@@ -69,7 +69,7 @@ export default function Profile() {
   const earnedBadges = profile ? getEarnedBadges(profile) : [];
 
   return (
-    <div className="space-y-8 max-w-xs md:max-w-2xl mx-auto px-2 sm:px-1 pt-6 pb-8" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'pan-y' }}>
+    <div className="space-y-8 max-w-xs md:max-w-2xl mx-auto px-2 sm:px-1 pt-6 pb-8" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       {/* User Info */}
       <div className="space-y-4">
         <div>

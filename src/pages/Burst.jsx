@@ -22,8 +22,8 @@ export default function Burst() {
   function handleTouchEnd(e) {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/leaderboard"); // swipe right → leaderboard
-    else if (diff > 60) navigate("/tasks");    // swipe left → tasks
+    if (diff < -60) navigate("/tasks");      // swipe right → tasks
+    else if (diff > 60) navigate("/leaderboard"); // swipe left → leaderboard
     touchStartX.current = null;
   }
   const [completions, setCompletions] = useState({});
@@ -99,7 +99,7 @@ export default function Burst() {
   const pendingTasks = tasks.filter(t => t.status === "Pending" || t.status === "Overdue");
 
   return (
-    <div className="min-h-screen bg-background" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'pan-y' }}>
+    <div className="min-h-screen bg-background" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
         <h1 className="font-heading text-2xl font-bold">Blast Mode</h1>
 

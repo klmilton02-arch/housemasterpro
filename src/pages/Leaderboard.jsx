@@ -112,13 +112,13 @@ export default function Leaderboard() {
   function handleTouchEnd(e) {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -40) navigate("/presets");   // swipe right → presets
-    else if (diff > 40) navigate("/burst");  // swipe left → burst
+    if (diff < -50) navigate("/burst");     // swipe right → burst
+    else if (diff > 50) navigate("/presets"); // swipe left → presets
     touchStartX.current = null;
   }
 
   return (
-    <div className="space-y-6 max-w-xs mx-auto px-1 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'pan-y' }}>
+    <div className="space-y-6 max-w-xs mx-auto px-1 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div>
