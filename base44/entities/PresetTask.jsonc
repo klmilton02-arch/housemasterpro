@@ -10,16 +10,13 @@
       "type": "string",
       "title": "Room",
       "enum": [
-        "Bedroom Cleaning",
-        "Bathroom Cleaning",
-        "Kitchen Cleaning",
+        "Bedroom",
+        "Full Bathroom",
+        "Half Bathroom",
         "Kitchen",
-        "Living Areas",
-        "Car Maintenance",
-        "House Maintenance",
-        "Floors",
-        "Laundry Room",
-        "Bill Schedules"
+        "Attic",
+        "Office",
+        "Basement"
       ]
     },
     "task_type": {
