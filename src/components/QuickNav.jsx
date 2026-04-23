@@ -27,12 +27,12 @@ export default function QuickNav() {
         <div key={i} className={`grid gap-2 ${row.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
           {row.map(({ to, label, icon: Icon, cardClass, textClass, iconClass }) => (
             <Link
-              key={to}
-              to={to}
-              className={`border rounded-lg px-2 text-center hover:shadow-md transition-all active:scale-95 flex flex-col items-center justify-center gap-1 h-14 text-lg ${cardClass}`}
+             key={to}
+             to={to}
+             className={`border rounded-lg px-3 hover:shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 h-14 text-lg ${cardClass}`}
             >
-              <Icon className={`w-4 h-4 ${iconClass}`} />
-              <span className={`font-medium ${textClass}`}>{label}</span>
+             <Icon className={`w-5 h-5 ${iconClass}`} />
+             <span className={`font-medium ${textClass}`}>{label}</span>
             </Link>
           ))}
         </div>
