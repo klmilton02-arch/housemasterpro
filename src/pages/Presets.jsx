@@ -44,8 +44,8 @@ export default function Presets() {
   function handleTouchEnd(e) {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff < -60) navigate("/tasks");   // swipe right → tasks
-    else if (diff > 60) navigate("/family"); // swipe left → family
+    if (diff < -60) navigate("/leaderboard"); // swipe right → leaderboard
+    else if (diff > 60) navigate("/family");  // swipe left → family
     touchStartX.current = null;
   }
 
