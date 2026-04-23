@@ -73,7 +73,7 @@ export default function Profile() {
       {/* User Info */}
       <div className="space-y-4">
         <div>
-          <h1 className="font-heading text-3xl sm:text-2xl font-bold">HomeLifeFocus</h1>
+          <h1 className="font-heading text-3xl sm:text-2xl font-bold">Profile</h1>
           <p className="text-base sm:text-sm text-muted-foreground mt-1">Your account and achievements</p>
         </div>
 

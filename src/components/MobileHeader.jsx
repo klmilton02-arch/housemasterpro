@@ -13,7 +13,7 @@ export default function MobileHeader() {
   const location = useLocation();
   const navigate = useNavigate();
   const isRoot = ROOT_PATHS.includes(location.pathname);
-  const title = PAGE_TITLES[location.pathname] || "HouseMasterPro";
+  const title = PAGE_TITLES[location.pathname] || "HomeLifeFocus";
 
   return (
     <header

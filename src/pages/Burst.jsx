@@ -101,7 +101,7 @@ export default function Burst() {
   return (
     <div className="min-h-screen bg-background" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
-        <h1 className="font-heading text-2xl font-bold">HomeLifeFocus</h1>
+        <h1 className="font-heading text-2xl font-bold">Blast Mode</h1>
 
         <Button onClick={handleStartBlast} size="lg" className="gap-2 w-full h-11 bg-yellow-200 hover:bg-yellow-300 text-black font-semibold">
           <Play className="w-4 h-4" /> Start Blast

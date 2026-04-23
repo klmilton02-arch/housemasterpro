@@ -123,7 +123,7 @@ export default function Leaderboard() {
         <div className="flex items-center gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="font-heading text-2xl font-bold">HomeLifeFocus</h1>
+              <h1 className="font-heading text-2xl font-bold">Rewards</h1>
               <Trophy className="w-6 h-6 text-amber-500" />
             </div>
             <p className="text-sm text-muted-foreground">Family rankings</p>

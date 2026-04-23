@@ -124,7 +124,7 @@ export default function Family() {
     <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div className="flex flex-col gap-3">
         <div className="flex flex-col">
-          <h1 className="font-heading text-2xl font-bold">HomeLifeFocus</h1>
+          <h1 className="font-heading text-2xl font-bold">Manage Household</h1>
           <p className="text-sm text-muted-foreground">
             {currentUser.account_type === "family" && familyGroup
               ? `${familyGroup.name} · Family Account`
