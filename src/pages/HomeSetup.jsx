@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +20,17 @@ const ROOM_CATEGORY_MAP = {
 };
 
 export default function HomeSetup() {
+  const navigate = useNavigate();
+  const touchStartX = useRef(null);
+  function handleTouchStart(e) { touchStartX.current = e.touches[0].clientX; }
+  function handleTouchEnd(e) {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (diff < -60) navigate("/profile"); // swipe right → profile
+    else if (diff > 60) navigate("/family"); // swipe left → family
+    touchStartX.current = null;
+  }
+
   const [config, setConfig] = useState({
     bedrooms: 2,
     full_bathrooms: 1,
@@ -201,7 +213,7 @@ export default function HomeSetup() {
   }
 
   return (
-    <div className="space-y-3 max-w-xs mx-auto px-1 pt-6">
+    <div className="space-y-3 max-w-xs mx-auto px-1 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div>
         <h1 className="font-heading text-2xl font-bold">Home Setup</h1>
         <p className="text-sm text-muted-foreground mt-1">Configure your rooms to auto-generate cleaning tasks</p>

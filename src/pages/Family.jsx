@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Plus, Trash2, Copy, Check, LogOut } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
@@ -21,6 +22,17 @@ const colorMap = {
 };
 
 export default function Family() {
+  const navigate = useNavigate();
+  const touchStartX = useRef(null);
+  function handleTouchStart(e) { touchStartX.current = e.touches[0].clientX; }
+  function handleTouchEnd(e) {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (diff < -60) navigate("/home-setup"); // swipe right → home setup
+    else if (diff > 60) navigate("/presets"); // swipe left → presets
+    touchStartX.current = null;
+  }
+
   const [members, setMembers] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
@@ -109,7 +121,7 @@ export default function Family() {
   }
 
   return (
-    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
+    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div className="flex flex-col gap-3">
         <div className="flex flex-col">
           <h1 className="font-heading text-2xl font-bold">Manage Household</h1>

@@ -114,11 +114,11 @@ export default function Leaderboard() {
     const diff = touchStartX.current - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) {
       if (diff < 0) {
-        // swipe right: go to presets, or advance tab if not on last
+        // swipe right: advance tab, or go to presets at last tab
         if (tabIndex === TABS.length - 1) navigate("/presets");
         else setTabIndex(i => i + 1);
       } else {
-        // swipe left: go to burst, or go back a tab
+        // swipe left: go back a tab, or go to burst at first tab
         if (tabIndex === 0) navigate("/burst");
         else setTabIndex(i => i - 1);
       }

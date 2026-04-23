@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { User, LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,17 @@ import SyncGoogleTasksButton from "../components/SyncGoogleTasksButton";
 import { getEarnedBadges } from "@/utils/badges";
 
 export default function Profile() {
+  const navigate = useNavigate();
+  const touchStartX = useRef(null);
+  function handleTouchStart(e) { touchStartX.current = e.touches[0].clientX; }
+  function handleTouchEnd(e) {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (diff < -60) navigate("/dashboard"); // swipe right → dashboard (wrap around)
+    else if (diff > 60) navigate("/home-setup"); // swipe left → home setup
+    touchStartX.current = null;
+  }
+
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -58,7 +69,7 @@ export default function Profile() {
   const earnedBadges = profile ? getEarnedBadges(profile) : [];
 
   return (
-    <div className="space-y-8 max-w-xs md:max-w-2xl mx-auto px-2 sm:px-1 pt-6 pb-8">
+    <div className="space-y-8 max-w-xs md:max-w-2xl mx-auto px-2 sm:px-1 pt-6 pb-8" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       {/* User Info */}
       <div className="space-y-4">
         <div>
