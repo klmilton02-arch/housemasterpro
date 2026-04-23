@@ -169,7 +169,7 @@ export default function HomeSetup() {
          overdue_grace_days: 3,
        });
        created.push(result);
-       await new Promise(r => setTimeout(r, 100));
+       await new Promise(r => setTimeout(r, 300));
      }
 
     setGenerated(created.length);
