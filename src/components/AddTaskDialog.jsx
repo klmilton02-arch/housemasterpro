@@ -221,7 +221,10 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                        onValueChange={setRoomFilter}
                        title="Filter by Room"
                        triggerClassName="mt-1"
-                       options={[{ value: "all", label: "All Rooms" }, ...rooms.map(r => ({ value: r, label: r }))]}
+                       options={[
+                         { value: "all", label: "All Rooms" },
+                         ...Array.from(new Set([...rooms, "Laundry Room"])).map(r => ({ value: r, label: r }))
+                       ]}
                      />
                    </div>
                  </div>
