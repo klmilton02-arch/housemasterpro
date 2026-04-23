@@ -160,7 +160,7 @@ export default function Presets() {
         </Button>
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." className="pl-9 w-full h-10 text-base" />
+          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." className="pl-9 w-full h-14 text-base" />
         </div>
         <MobileSelect
           value={sortBy}
