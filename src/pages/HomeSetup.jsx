@@ -212,21 +212,21 @@ export default function HomeSetup() {
   }
 
   return (
-    <div className="space-y-3 max-w-xs mx-auto px-1 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div>
         <h1 className="font-heading text-2xl font-bold">Home Setup</h1>
         <p className="text-sm text-muted-foreground mt-1">Configure your rooms to auto-generate cleaning tasks</p>
       </div>
 
-      <div className="space-y-3">
-        <h2 className="font-heading font-semibold text-base">Rooms with multiple instances</h2>
+      <div className="space-y-4">
+        <h2 className="font-heading font-semibold text-lg">Rooms with multiple instances</h2>
         <NumberInput label="Bedrooms" icon={BedDouble} field="bedrooms" />
         <NumberInput label="Full Bathrooms" icon={Bath} field="full_bathrooms" />
         <NumberInput label="Half Bathrooms" icon={Bath} field="half_bathrooms" />
       </div>
 
       <div className="space-y-3">
-        <Label className="text-sm">Start Date</Label>
+        <Label className="text-sm font-medium">Start Date</Label>
         <Input
           type="date"
           value={config.start_date}
@@ -235,8 +235,8 @@ export default function HomeSetup() {
         />
       </div>
 
-      <div className="space-y-3">
-         <h2 className="font-heading font-semibold text-base">Other rooms</h2>
+      <div className="space-y-4">
+        <h2 className="font-heading font-semibold text-lg">Other rooms</h2>
         <div className="grid grid-cols-2 gap-2">
           <ToggleRoom label="Kitchen" icon={ChefHat} field="has_kitchen" />
           <ToggleRoom label="Living Room" icon={Sofa} field="has_living_room" />
@@ -260,15 +260,15 @@ export default function HomeSetup() {
       )}
 
       <div className="space-y-3">
-        <Button onClick={generateTasks} disabled={generating} className="w-full gap-2">
-          <Sparkles className="w-4 h-4" />
+        <Button onClick={generateTasks} disabled={generating} className="w-full gap-2 h-11 text-lg font-medium bg-blue-400 hover:bg-blue-500">
+          <Sparkles className="w-5 h-5" />
           {generating ? "Generating..." : "Generate Tasks"}
         </Button>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false, start_date: format(new Date(), "yyyy-MM-dd") })} className="flex-1 text-xs">
+          <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false, start_date: format(new Date(), "yyyy-MM-dd") })} className="flex-1 h-11 text-base">
             Reset
           </Button>
-          <Button variant="outline" onClick={saveConfig} disabled={saving} className="flex-1">
+          <Button variant="outline" onClick={saveConfig} disabled={saving} className="flex-1 h-11 text-base">
             {saving ? "Saving..." : "Save Config"}
           </Button>
         </div>
