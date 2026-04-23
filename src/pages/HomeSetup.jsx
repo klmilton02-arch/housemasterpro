@@ -153,31 +153,23 @@ export default function HomeSetup() {
       }
     }
 
-    // Create all tasks in batches to avoid rate limit
-     const batchSize = 10;
+    // Create all tasks sequentially to avoid rate limit
      const created = [];
-     for (let i = 0; i < tasksToCreate.length; i += batchSize) {
-       const batch = tasksToCreate.slice(i, i + batchSize);
-       const batchResults = await Promise.all(
-         batch.map(t =>
-           base44.entities.Task.create({
-             name: t.name,
-             category: t.category,
-             room: t.room || null,
-             task_type: t.task_type || "Regular",
-             frequency_days: t.frequency_days,
-             description: t.description || "",
-             start_date: today,
-             next_due_date: today,
-             status: "Pending",
-             overdue_grace_days: 3,
-           })
-         )
-       );
-       created.push(...batchResults);
-       if (i + batchSize < tasksToCreate.length) {
-         await new Promise(r => setTimeout(r, 500));
-       }
+     for (const t of tasksToCreate) {
+       const result = await base44.entities.Task.create({
+         name: t.name,
+         category: t.category,
+         room: t.room || null,
+         task_type: t.task_type || "Regular",
+         frequency_days: t.frequency_days,
+         description: t.description || "",
+         start_date: today,
+         next_due_date: today,
+         status: "Pending",
+         overdue_grace_days: 3,
+       });
+       created.push(result);
+       await new Promise(r => setTimeout(r, 100));
      }
 
     setGenerated(created.length);
