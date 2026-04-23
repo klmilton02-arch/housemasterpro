@@ -95,7 +95,7 @@ export default function Burst() {
       <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
         <h1 className="font-heading text-3xl font-bold">Blast Mode</h1>
 
-        <Button onClick={handleStartBlast} size="lg" className="gap-2 w-full h-14 bg-yellow-200 hover:bg-yellow-300 text-black font-semibold text-xl">
+        <Button onClick={handleStartBlast} size="lg" className="gap-2 w-full h-14 bg-yellow-300 hover:bg-yellow-400 text-black font-semibold text-xl">
           <Play className="w-4 h-4" /> {isActive ? "Restart Blast" : "Start Blast"}
         </Button>
 
@@ -123,11 +123,11 @@ export default function Burst() {
           <div className="bg-card border border-border rounded-2xl p-6">
             <BurstTimer timeLeft={timeLeft} duration={duration} />
             <div className="flex gap-2 mt-4">
-              <Button onClick={isActive ? pauseBlast : resumeBlast} className="gap-2 flex-1 bg-yellow-200 hover:bg-orange-400 text-black font-semibold">
+              <Button onClick={isActive ? pauseBlast : resumeBlast} className="gap-2 flex-1 bg-yellow-300 hover:bg-yellow-400 text-black font-semibold">
                 {isActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                 {isActive ? "Pause" : "Resume"}
               </Button>
-              <Button onClick={handleStopBlast} className="gap-2 flex-1 bg-yellow-200 hover:bg-red-400 text-black font-semibold">
+              <Button onClick={handleStopBlast} className="gap-2 flex-1 bg-yellow-300 hover:bg-yellow-400 text-black font-semibold">
                 <X className="w-4 h-4" /> End Blast
               </Button>
             </div>
