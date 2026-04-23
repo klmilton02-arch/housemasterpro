@@ -119,18 +119,7 @@ export default function Leaderboard() {
 
   return (
     <div className="space-y-6 max-w-xs mx-auto px-1 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="font-heading text-2xl font-bold">Rewards</h1>
-              <Trophy className="w-6 h-6 text-amber-500" />
-            </div>
-            <p className="text-sm text-muted-foreground">Family rankings</p>
-          </div>
-        </div>
-        <Link to="/stable" className="text-xs text-primary font-medium hover:underline">🏇 My Stable →</Link>
-      </div>
+      <h1 className="font-heading text-2xl font-bold md:hidden">Rewards</h1>
 
       {/* Tab bar */}
       <div className="flex bg-muted rounded-lg p-1 gap-1">
