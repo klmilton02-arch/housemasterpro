@@ -1,7 +1,7 @@
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { ChevronLeft, Home } from "lucide-react";
 
-const ROOT_PATHS = ["/", "/tasks", "/presets", "/family", "/leaderboard", "/home-setup", "/burst"];
+const ROOT_PATHS = ["/", "/tasks", "/presets", "/family", "/leaderboard", "/home-setup", "/burst", "/profile"];
 
 const PAGE_TITLES = {
   "/needs-attention": "Needs Attention",
