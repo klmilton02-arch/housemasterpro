@@ -148,24 +148,21 @@ export default function HomeSetup() {
       }
     }
 
-    // Create all tasks sequentially to avoid rate limit
-     const created = [];
-     for (const t of tasksToCreate) {
-       const result = await base44.entities.Task.create({
-         name: t.name,
-         category: t.category,
-         room: t.room || null,
-         task_type: t.task_type || "Regular",
-         frequency_days: t.frequency_days,
-         description: t.description || "",
-         start_date: startDate,
-         next_due_date: startDate,
-         status: "Pending",
-         overdue_grace_days: 3,
-       });
-       created.push(result);
-       await new Promise(r => setTimeout(r, 300));
-     }
+    // Create all tasks using bulkCreate to avoid rate limit
+      const taskData = tasksToCreate.map(t => ({
+        name: t.name,
+        category: t.category,
+        room: t.room || null,
+        task_type: t.task_type || "Regular",
+        frequency_days: t.frequency_days,
+        description: t.description || "",
+        start_date: startDate,
+        next_due_date: startDate,
+        status: "Pending",
+        overdue_grace_days: 3,
+      }));
+
+      const created = await base44.entities.Task.bulkCreate(taskData);
 
     setGenerated(created.length);
     setGenerating(false);
