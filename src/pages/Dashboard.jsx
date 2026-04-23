@@ -25,7 +25,8 @@ import { useBlastMode } from "@/lib/BlastModeContext";
 import DashboardPresetBrowser from "../components/DashboardPresetBrowser";
 
 export default function Dashboard() {
-  const { isActive: isBlastActive } = useBlastMode();
+  const navigate = useNavigate();
+  const { isActive: isBlastActive, startBlast, duration } = useBlastMode();
   const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
   const { handleTouchStart, handleTouchEnd } = useSwipeNavigation(PAGES);
   const [tasks, setTasks] = useState([]);
@@ -148,11 +149,9 @@ export default function Dashboard() {
       <LeaderboardSummary />
 
       <div className="pt-2">
-      <Link to="/burst">
-        <Button className="w-full gap-2 bg-yellow-200 hover:bg-yellow-300 text-black h-14 text-lg">
-          <Zap className="w-5 h-5" /> Blast Mode
-        </Button>
-      </Link>
+      <Button onClick={() => { startBlast(duration); navigate("/burst"); }} className="w-full gap-2 bg-yellow-200 hover:bg-yellow-300 text-black h-14 text-lg">
+        <Zap className="w-5 h-5" /> Blast Mode
+      </Button>
       </div>
 
       {profile && getEarnedBadges(profile).length > 0 && (
