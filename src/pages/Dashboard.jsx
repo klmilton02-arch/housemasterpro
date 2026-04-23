@@ -121,7 +121,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7">
+    <div className="space-y-7 max-w-sm md:max-w-2xl px-3 sm:px-2 pt-7">
 
       <h1 className="font-heading text-2xl font-bold md:hidden">Dashboard</h1>
 
