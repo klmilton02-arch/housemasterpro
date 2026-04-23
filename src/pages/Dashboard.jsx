@@ -19,6 +19,7 @@ import TaskDetailModal from "../components/TaskDetailModal";
 import BadgeDisplay from "../components/BadgeDisplay";
 import { getEarnedBadges } from "@/utils/badges";
 import { useBlastMode } from "@/lib/BlastModeContext";
+import DashboardPresetBrowser from "../components/DashboardPresetBrowser";
 
 export default function Dashboard() {
   const { isActive: isBlastActive } = useBlastMode();
@@ -177,6 +178,8 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+
+      <DashboardPresetBrowser onTaskAdded={loadTasks} />
 
       <QuickNav />
 
