@@ -15,14 +15,14 @@ function PresetCard({ p, onEdit, onDelete, onClick, onAddAsTask }) {
   return (
     <div className="bg-card border border-border rounded-lg p-3 hover:shadow-md hover:border-primary/30 transition-all group relative">
       <div className="absolute top-1.5 right-1.5 flex gap-1 z-10">
-        <button onClick={e => onAddAsTask(e, p)} className="flex items-center gap-1 px-2 py-1 rounded-md bg-green-100 hover:bg-green-200 text-green-700 text-xs font-medium transition-colors" title="Add as Task">
-          <PlusCircle className="w-3.5 h-3.5" /><span className="hidden sm:inline">Add</span>
+        <button onClick={e => onAddAsTask(e, p)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-green-100 hover:bg-green-200 text-green-700 text-sm font-medium transition-colors" title="Add as Task">
+          <PlusCircle className="w-4.5 h-4.5" /><span className="hidden sm:inline">Add</span>
         </button>
-        <button onClick={e => onEdit(e, p)} className="flex items-center gap-1 px-2 py-1 rounded-md bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-medium transition-colors" title="Edit">
-          <Pencil className="w-3.5 h-3.5" /><span className="hidden sm:inline">Edit</span>
+        <button onClick={e => onEdit(e, p)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-blue-100 hover:bg-blue-200 text-blue-700 text-sm font-medium transition-colors" title="Edit">
+          <Pencil className="w-4.5 h-4.5" /><span className="hidden sm:inline">Edit</span>
         </button>
-        <button onClick={e => onDelete(e, p)} className="flex items-center gap-1 px-2 py-1 rounded-md bg-red-100 hover:bg-red-200 text-red-700 text-xs font-medium transition-colors" title="Delete">
-          <Trash2 className="w-3.5 h-3.5" /><span className="hidden sm:inline">Delete</span>
+        <button onClick={e => onDelete(e, p)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-red-100 hover:bg-red-200 text-red-700 text-sm font-medium transition-colors" title="Delete">
+          <Trash2 className="w-4.5 h-4.5" /><span className="hidden sm:inline">Delete</span>
         </button>
       </div>
       <div onClick={() => onClick(p)} className="cursor-pointer">
