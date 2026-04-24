@@ -5,6 +5,7 @@ import { getLevelInfo, ACHIEVEMENT_BADGES } from "@/utils/gamification";
 import { useNavigate } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { startOfWeek, startOfMonth, parseISO, isAfter } from "date-fns";
+import WeeklyCompletionsChart from "@/components/WeeklyCompletionsChart";
 
 const RANK_ICONS = ["🥇", "🥈", "🥉"];
 const RANK_COLORS = ["text-amber-500", "text-slate-400", "text-orange-600"];
@@ -96,6 +97,32 @@ export default function Leaderboard() {
   return (
     <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <h1 className="font-heading text-3xl font-bold md:hidden">Rewards</h1>
+      
+      <WeeklyCompletionsChart profiles={profiles} history={history} />
+
+      <div className="space-y-3">
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          {TAB_LABELS.map((label, idx) => (
+            <button
+              key={idx}
+              onClick={() => setTabIndex(idx)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+                tabIndex === idx
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-foreground hover:bg-muted/80"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <div className="space-y-2">
+          {sortedLists[tabIndex].map((profile, idx) => (
+            <ProfileRow key={profile.id} rank={idx} profile={profile} xp={xpFns[tabIndex](profile)} />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
