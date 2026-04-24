@@ -74,11 +74,11 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   }, [open, initialPreset]);
 
   const allPresets = presets.filter(p => p.category !== "Car Maintenance");
-  const categories = [...new Set(allPresets.map(p => p.category))];
-  const rooms = [...new Set(allPresets.map(p => p.room).filter(Boolean))];
+  const categories = [...new Set(allPresets.map(p => p.task_type).filter(Boolean))];
+  const rooms = [...new Set(allPresets.map(p => p.category).filter(Boolean))].sort();
   const filteredPresets = allPresets.filter(p => 
-    (categoryFilter === "all" || p.category === categoryFilter) &&
-    (roomFilter === "all" || p.room === roomFilter)
+    (categoryFilter === "all" || p.task_type === categoryFilter) &&
+    (roomFilter === "all" || p.category === roomFilter)
   );
 
   async function handleSubmit() {
@@ -200,17 +200,15 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
               <>
                 <div className="grid grid-cols-2 gap-3">
                    <div>
-                     <Label className="text-xs font-medium text-muted-foreground">Category</Label>
+                     <Label className="text-xs font-medium text-muted-foreground">Type</Label>
                      <MobileSelect
                        value={categoryFilter}
                        onValueChange={setCategoryFilter}
-                       title="Filter by Category"
+                       title="Filter by Type"
                        triggerClassName="mt-1"
                        options={[
-                         { value: "all", label: "All Categories" },
-                         { value: "Cleaning", label: "Cleaning" },
-                         { value: "House Maintenance", label: "House Maintenance" },
-                         { value: "Bill Schedules", label: "Bill Schedules" },
+                         { value: "all", label: "All Types" },
+                         ...categories.map(c => ({ value: c, label: c })),
                        ]}
                      />
                    </div>
@@ -223,7 +221,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                        triggerClassName="mt-1"
                        options={[
                          { value: "all", label: "All Rooms" },
-                         ...Array.from(new Set([...rooms, "Laundry Room"])).map(r => ({ value: r, label: r }))
+                         ...rooms.map(r => ({ value: r, label: r }))
                        ]}
                      />
                    </div>
