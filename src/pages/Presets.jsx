@@ -9,16 +9,26 @@ import MobileSelect from "../components/MobileSelect";
 import { formatFrequency } from "../components/TaskCard";
 import EditPresetDialog from "../components/EditPresetDialog";
 import { Button } from "@/components/ui/button";
-const TASK_TYPES = ["Cleaning", "Maintenance", "Bills"];
+
+
+const TASK_TYPE_STYLE = {
+  Maintenance: { emoji: "🔧", color: "text-blue-600" },
+  Bills:       { emoji: "💰", color: "text-green-600" },
+  Cleaning:    { emoji: "🫧", color: "text-orange-500" },
+};
 
 function PresetCard({ p, onClick }) {
+  const style = TASK_TYPE_STYLE[p.task_type] || {};
   return (
     <button
       onClick={() => onClick(p)}
-      className="w-full bg-card border border-border rounded-lg px-3 hover:shadow-md hover:border-primary/30 transition-all flex items-center gap-2 text-left h-14"
+      className="w-full bg-card border border-border rounded-lg px-3 hover:shadow-md hover:border-primary/30 transition-all flex items-center gap-3 text-left h-14"
     >
+      {style.emoji && (
+        <span className="text-lg shrink-0">{style.emoji}</span>
+      )}
       <div className="flex-1 min-w-0">
-        <h3 className="font-heading font-semibold text-sm truncate">{p.name}</h3>
+        <h3 className={`font-heading font-semibold text-sm truncate ${style.color || ""}`}>{p.name}</h3>
         <p className="text-xs text-muted-foreground mt-0.5">{p.category}{p.task_type ? ` · ${p.task_type}` : ""} · {formatFrequency(p.frequency_days)}</p>
       </div>
       <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
