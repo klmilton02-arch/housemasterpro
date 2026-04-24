@@ -35,6 +35,7 @@ export default function Tasks() {
   const [selectedTask, setSelectedTask] = useState(null);
   const [viewMode, setViewMode] = useState("list");
   const [assignedFilter, setAssignedFilter] = useState("all"); // "all" | "assigned" | "unassigned"
+  const [roomFilter, setRoomFilter] = useState("all");
   const [selectedMemberId, setSelectedMemberId] = useState(null);
   const { isActive: blastActive } = useBlastMode();
   const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
@@ -148,6 +149,7 @@ export default function Tasks() {
   }
 
   const categories = [...new Set(tasks.map(t => t.category).filter(Boolean))];
+  const rooms = [...new Set(tasks.map(t => t.room).filter(Boolean))].sort();
 
   const filtered = tasks.filter(t => {
     if (t.category === "Car Maintenance") return false;
@@ -160,6 +162,7 @@ export default function Tasks() {
     if (assignedFilter === "assigned" && !t.assigned_to) return false;
     if (assignedFilter === "unassigned" && t.assigned_to) return false;
     if (selectedMemberId && t.assigned_to !== selectedMemberId) return false;
+    if (roomFilter !== "all" && t.room !== roomFilter) return false;
     return true;
   }).sort((a, b) => {
     const aCompleted = a.status === "Completed";
@@ -319,6 +322,16 @@ export default function Tasks() {
               { value: "category", label: "Group by Category" },
               { value: "xp", label: "Group by XP" },
               { value: "frequency", label: "Group by Frequency" },
+            ]}
+          />
+          <MobileSelect
+            value={roomFilter}
+            onValueChange={setRoomFilter}
+            title="Filter by Room"
+            triggerClassName="flex-1 min-w-0 text-sm h-10"
+            options={[
+              { value: "all", label: "All Rooms" },
+              ...rooms.map(r => ({ value: r, label: r })),
             ]}
           />
         </div>
