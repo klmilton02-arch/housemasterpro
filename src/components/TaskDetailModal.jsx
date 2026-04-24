@@ -1,7 +1,16 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { format, parseISO } from "date-fns";
+import { Pencil, Trash2 } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 
-export default function TaskDetailModal({ task, open, onOpenChange }) {
+export default function TaskDetailModal({ task, open, onOpenChange, onModify, onDelete }) {
+  async function handleDelete() {
+    if (!task) return;
+    await base44.entities.Task.delete(task.id);
+    onDelete?.(task.id);
+    onOpenChange(false);
+  }
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-sm max-h-[85vh] overflow-y-auto">
@@ -34,7 +43,28 @@ export default function TaskDetailModal({ task, open, onOpenChange }) {
             )}
           </div>
 
-
+          {/* Action buttons */}
+          <div className="flex gap-2 border-t border-border pt-4">
+            <Button
+              variant="outline"
+              className="flex-1 gap-2"
+              onClick={() => {
+                onModify?.(task);
+                onOpenChange(false);
+              }}
+            >
+              <Pencil className="w-4 h-4" />
+              Modify
+            </Button>
+            <Button
+              variant="destructive"
+              className="flex-1 gap-2"
+              onClick={handleDelete}
+            >
+              <Trash2 className="w-4 h-4" />
+              Delete
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

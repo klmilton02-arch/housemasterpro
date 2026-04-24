@@ -461,7 +461,16 @@ export default function Tasks() {
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
-      <TaskDetailModal task={selectedTask} open={!!selectedTask} onOpenChange={(open) => { if (!open) setSelectedTask(null); }} />
+      <TaskDetailModal 
+        task={selectedTask} 
+        open={!!selectedTask} 
+        onOpenChange={(open) => { if (!open) setSelectedTask(null); }}
+        onModify={(task) => {
+          setDialogOpen(true);
+          // Note: AddTaskDialog would need to be updated to support editing existing tasks
+        }}
+        onDelete={handleDelete}
+      />
       <BatchToolbar
         selectedCount={selectedIds.size}
         familyMembers={familyMembers}
