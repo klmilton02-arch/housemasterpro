@@ -23,9 +23,10 @@ const EMPTY = {
   description: "",
 };
 
-export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }) {
+export default function EditPresetDialog({ open, onOpenChange, preset, onSaved, onDeleted }) {
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -134,7 +135,24 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
           </div>
         </div>
 
-        <DialogFooter className="mt-2">
+        <DialogFooter className="mt-2 flex-col gap-2 sm:flex-row">
+          {preset?.id && (
+            <Button
+              variant="destructive"
+              className="sm:mr-auto"
+              onClick={async () => {
+                if (!confirm(`Delete "${preset.name}"?`)) return;
+                setDeleting(true);
+                await base44.entities.PresetTask.delete(preset.id);
+                setDeleting(false);
+                onOpenChange(false);
+                onDeleted?.(preset.id);
+              }}
+              disabled={deleting}
+            >
+              {deleting ? "Deleting..." : "Delete"}
+            </Button>
+          )}
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
           <Button onClick={handleSave} disabled={saving || !form.name.trim()}>
             {saving ? "Saving..." : preset ? "Save" : "Create"}

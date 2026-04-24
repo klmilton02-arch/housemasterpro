@@ -2,15 +2,13 @@ import { useState, useEffect } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { Search, Plus, Pencil, Trash2, PlusCircle, ChevronRight } from "lucide-react";
+import { Search, Plus, ChevronRight } from "lucide-react";
 import AddTaskDialog from "../components/AddTaskDialog";
 import { Input } from "@/components/ui/input";
 import MobileSelect from "../components/MobileSelect";
 import { formatFrequency } from "../components/TaskCard";
 import EditPresetDialog from "../components/EditPresetDialog";
 import { Button } from "@/components/ui/button";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
-
 const TASK_TYPES = ["Cleaning", "Maintenance", "Bills"];
 
 function PresetCard({ p, onClick }) {
@@ -28,39 +26,7 @@ function PresetCard({ p, onClick }) {
   );
 }
 
-function PresetActionDrawer({ preset, open, onOpenChange, onEdit, onAddAsTask, onDelete }) {
-  if (!preset) return null;
-  return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle className="font-heading text-base truncate">{preset.name}</DrawerTitle>
-          <p className="text-xs text-muted-foreground text-center">{preset.category}{preset.task_type ? ` · ${preset.task_type}` : ""} · {formatFrequency(preset.frequency_days)}</p>
-        </DrawerHeader>
-        <div className="px-4 pb-8 space-y-2">
-          <button
-            onClick={() => { onAddAsTask(preset); onOpenChange(false); }}
-            className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl bg-green-50 hover:bg-green-100 text-green-700 font-medium text-sm transition-colors"
-          >
-            <PlusCircle className="w-5 h-5" /> Add as Task
-          </button>
-          <button
-            onClick={() => { onEdit(preset); onOpenChange(false); }}
-            className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium text-sm transition-colors"
-          >
-            <Pencil className="w-5 h-5" /> Edit Preset
-          </button>
-          <button
-            onClick={() => { onDelete(preset); onOpenChange(false); }}
-            className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 font-medium text-sm transition-colors"
-          >
-            <Trash2 className="w-5 h-5" /> Delete Preset
-          </button>
-        </div>
-      </DrawerContent>
-    </Drawer>
-  );
-}
+
 
 export default function Presets() {
   const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
@@ -74,19 +40,12 @@ export default function Presets() {
   const [difficultyFilter, setDifficultyFilter] = useState("all");
   const [frequencyFilter, setFrequencyFilter] = useState("all");
   const [sortBy, setSortBy] = useState("room");
-  const [actionPreset, setActionPreset] = useState(null);
-  const [actionDrawerOpen, setActionDrawerOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingPreset, setEditingPreset] = useState(null);
   const [addTaskPreset, setAddTaskPreset] = useState(null);
   const [addTaskDialogOpen, setAddTaskDialogOpen] = useState(false);
 
   function handlePresetClick(preset) {
-    setActionPreset(preset);
-    setActionDrawerOpen(true);
-  }
-
-  function handleEdit(preset) {
     setEditingPreset(preset);
     setEditDialogOpen(true);
   }
@@ -94,12 +53,6 @@ export default function Presets() {
   function handleAddAsTask(preset) {
     setAddTaskPreset(preset);
     setAddTaskDialogOpen(true);
-  }
-
-  async function handleDelete(preset) {
-    if (!confirm(`Delete preset "${preset.name}"?`)) return;
-    await base44.entities.PresetTask.delete(preset.id);
-    setPresets(prev => prev.filter(p => p.id !== preset.id));
   }
 
   useEffect(() => {
@@ -258,20 +211,13 @@ export default function Presets() {
         ))
       )}
 
-      <PresetActionDrawer
-        preset={actionPreset}
-        open={actionDrawerOpen}
-        onOpenChange={setActionDrawerOpen}
-        onEdit={handleEdit}
-        onAddAsTask={handleAddAsTask}
-        onDelete={handleDelete}
-      />
       <AddTaskDialog open={addTaskDialogOpen} onOpenChange={setAddTaskDialogOpen} initialPreset={addTaskPreset} />
       <EditPresetDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         preset={editingPreset}
         onSaved={() => base44.entities.PresetTask.list("name", 500).then(setPresets)}
+        onDeleted={id => setPresets(prev => prev.filter(p => p.id !== id))}
       />
     </div>
   );
