@@ -28,7 +28,7 @@ function PresetCard({ p, onEdit, onDelete, onClick, onAddAsTask }) {
          </button>
        </div>
        <div onClick={() => onClick(p)} className="cursor-pointer flex-1">
-         <h3 className="font-heading font-semibold text-base pr-36">{p.name}</h3>
+         <h3 className="font-heading font-semibold text-sm pr-36">{p.name}</h3>
        </div>
      </div>
   );
