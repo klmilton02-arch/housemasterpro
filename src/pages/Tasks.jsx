@@ -88,8 +88,8 @@ export default function Tasks() {
       });
       const result = await awardPoints(task, blastActive);
       if (result) {
-        setReward(result);
         confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+        setReward(result);
       }
       loadTasks();
     } else {
