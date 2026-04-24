@@ -43,8 +43,9 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
               </div>
             )}
             {task?.description && (
-              <div>
-                <span className="text-muted-foreground">Notes:</span> {task.description}
+              <div className="bg-blue-100 dark:bg-blue-950/30 border border-blue-300 dark:border-blue-700 rounded-lg p-3">
+                <span className="text-muted-foreground text-sm">Notes:</span> 
+                <p className="text-foreground mt-1">{task.description}</p>
               </div>
             )}
           </div>
