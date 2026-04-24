@@ -70,7 +70,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails })
       } else {
         onComplete(task);
       }
-    }, 5000);
+    }, 2000);
   }
 
   const cardBg = optimisticChecked
