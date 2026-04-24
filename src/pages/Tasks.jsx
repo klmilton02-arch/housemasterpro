@@ -255,68 +255,6 @@ export default function Tasks() {
         <StatCard icon={CheckCircle} label="Completed" value={completedCount} color="bg-green-100 text-green-600" onClick={() => setStatusFilter("completed")} />
       </div>
 
-      <div className="flex gap-2 flex-col gap-3">
-         <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500 border-blue-400">
-           <Plus className="w-5 h-5" /> Add Task
-         </Button>
-         <Button 
-           onClick={() => setViewMode(viewMode === "calendar" ? "list" : "calendar")} 
-           className="w-full h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
-         >
-           <Calendar className="w-4 h-4 mr-2" /> Calendar
-         </Button>
-
-         <div className="flex gap-2">
-           <Button 
-             onClick={() => { setViewMode("list"); setCategoryFilter("Bill Schedules"); }}
-             className="flex-1 h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
-           >
-             Bills
-           </Button>
-           <Button 
-             onClick={() => setViewMode("rooms")} 
-             className="flex-1 h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
-           >
-             Rooms
-           </Button>
-         </div>
-         <div className="flex gap-2">
-           <DropdownMenu>
-             <DropdownMenuTrigger asChild>
-               <Button
-                 className="flex-1 h-14 gap-1 text-lg font-medium bg-blue-400 hover:bg-blue-500"
-               >
-                 {selectedMemberId ? familyMembers.find(m => m.id === selectedMemberId)?.name : "Assigned To"}
-                 <ChevronDown className="w-4 h-4" />
-               </Button>
-             </DropdownMenuTrigger>
-             <DropdownMenuContent align="start" className="w-48">
-               {selectedMemberId && (
-                 <DropdownMenuItem onClick={() => { setSelectedMemberId(null); setAssignedFilter("all"); setViewMode("list"); }}>
-                   All Members
-                 </DropdownMenuItem>
-               )}
-               {familyMembers.map(member => (
-                 <DropdownMenuItem
-                   key={member.id}
-                   onClick={() => { setSelectedMemberId(member.id); setAssignedFilter("all"); setViewMode("list"); }}
-                 >
-                   <div className={`w-5 h-5 rounded-full bg-${member.avatar_color}-500 flex items-center justify-center text-white text-xs font-bold mr-2`}>
-                     {member.name[0]}
-                   </div>
-                   {member.name}
-                 </DropdownMenuItem>
-               ))}
-             </DropdownMenuContent>
-           </DropdownMenu>
-           <Button 
-             onClick={() => { setViewMode("list"); setSelectedMemberId(null); setAssignedFilter(assignedFilter === "unassigned" ? "all" : "unassigned"); }}
-             className="flex-1 h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
-           >
-             Unassigned
-           </Button>
-         </div>
-       </div>
       {viewMode === "list" && (
         <>
           {familyMembers.length > 0 && (
@@ -447,6 +385,66 @@ export default function Tasks() {
       ) : (
         <RoomView tasks={tasks} onComplete={handleComplete} onViewDetails={setSelectedTask} onDelete={handleDelete} onAddTask={(room) => { setDialogOpen(true); /* pre-fill room if AddTaskDialog supports it */ }} />
       )}
+
+      <div className="flex gap-2 flex-col gap-3 pt-2">
+        <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500 border-blue-400">
+          <Plus className="w-5 h-5" /> Add Task
+        </Button>
+        <Button
+          onClick={() => setViewMode(viewMode === "calendar" ? "list" : "calendar")}
+          className="w-full h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
+        >
+          <Calendar className="w-4 h-4 mr-2" /> Calendar
+        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => { setViewMode("list"); setCategoryFilter("Bill Schedules"); }}
+            className="flex-1 h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
+          >
+            Bills
+          </Button>
+          <Button
+            onClick={() => setViewMode("rooms")}
+            className="flex-1 h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
+          >
+            Rooms
+          </Button>
+        </div>
+        <div className="flex gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="flex-1 h-14 gap-1 text-lg font-medium bg-blue-400 hover:bg-blue-500">
+                {selectedMemberId ? familyMembers.find(m => m.id === selectedMemberId)?.name : "Assigned To"}
+                <ChevronDown className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-48">
+              {selectedMemberId && (
+                <DropdownMenuItem onClick={() => { setSelectedMemberId(null); setAssignedFilter("all"); setViewMode("list"); }}>
+                  All Members
+                </DropdownMenuItem>
+              )}
+              {familyMembers.map(member => (
+                <DropdownMenuItem
+                  key={member.id}
+                  onClick={() => { setSelectedMemberId(member.id); setAssignedFilter("all"); setViewMode("list"); }}
+                >
+                  <div className={`w-5 h-5 rounded-full bg-${member.avatar_color}-500 flex items-center justify-center text-white text-xs font-bold mr-2`}>
+                    {member.name[0]}
+                  </div>
+                  {member.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button
+            onClick={() => { setViewMode("list"); setSelectedMemberId(null); setAssignedFilter(assignedFilter === "unassigned" ? "all" : "unassigned"); }}
+            className="flex-1 h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
+          >
+            Unassigned
+          </Button>
+        </div>
+      </div>
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
