@@ -15,22 +15,22 @@ const CLEANING_SUBCATEGORIES = ["Kitchen Cleaning", "Bathroom Cleaning", "Bedroo
 
 function PresetCard({ p, onEdit, onDelete, onClick, onAddAsTask }) {
   return (
-    <div className="bg-card border border-border rounded-lg p-3 h-14 hover:shadow-md hover:border-primary/30 transition-all group relative flex items-center">
-      <div className="absolute top-1.5 right-1.5 flex gap-1 z-10">
-         <button onClick={e => onAddAsTask(e, p)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-green-100 hover:bg-green-200 text-green-700 text-sm font-medium transition-colors" title="Add as Task">
-           <PlusCircle className="w-4.5 h-4.5" /><span className="hidden sm:inline">Add</span>
-         </button>
-         <button onClick={e => onEdit(e, p)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-blue-100 hover:bg-blue-200 text-blue-700 text-sm font-medium transition-colors" title="Edit">
-           <Pencil className="w-4.5 h-4.5" /><span className="hidden sm:inline">Edit</span>
-         </button>
-         <button onClick={e => onDelete(e, p)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-red-100 hover:bg-red-200 text-red-700 text-sm font-medium transition-colors" title="Delete">
-           <Trash2 className="w-4.5 h-4.5" /><span className="hidden sm:inline">Delete</span>
-         </button>
-       </div>
-       <div onClick={() => onClick(p)} className="cursor-pointer flex-1">
-         <h3 className="font-heading font-semibold text-sm pr-36">{p.name}</h3>
-       </div>
-     </div>
+    <div className="bg-card border border-border rounded-lg px-3 py-2 hover:shadow-md hover:border-primary/30 transition-all group flex items-center gap-2">
+      <div onClick={() => onClick(p)} className="cursor-pointer flex-1 min-w-0">
+        <h3 className="font-heading font-semibold text-sm truncate">{p.name}</h3>
+      </div>
+      <div className="flex gap-1 shrink-0">
+        <button onClick={e => onAddAsTask(e, p)} className="h-9 w-9 flex items-center justify-center rounded-md bg-green-100 hover:bg-green-200 text-green-700 transition-colors" title="Add as Task">
+          <PlusCircle className="w-4 h-4" />
+        </button>
+        <button onClick={e => onEdit(e, p)} className="h-9 w-9 flex items-center justify-center rounded-md bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors" title="Edit">
+          <Pencil className="w-4 h-4" />
+        </button>
+        <button onClick={e => onDelete(e, p)} className="h-9 w-9 flex items-center justify-center rounded-md bg-red-100 hover:bg-red-200 text-red-700 transition-colors" title="Delete">
+          <Trash2 className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
   );
 }
 
