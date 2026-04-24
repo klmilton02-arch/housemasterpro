@@ -8,7 +8,7 @@ import { useState } from "react";
 export default function TaskDetailModal({ task, open, onOpenChange, onModify, onDelete, onChangeDueDate }) {
   const [dueDateInput, setDueDateInput] = useState(task?.next_due_date || "");
   async function handleDelete() {
-    if (!task) return;
+    if (!task || !task.id) return;
     await base44.entities.Task.delete(task.id);
     onDelete?.(task.id);
     onOpenChange(false);
