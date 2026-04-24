@@ -11,7 +11,7 @@ import { formatFrequency } from "../components/TaskCard";
 import EditPresetDialog from "../components/EditPresetDialog";
 import { Button } from "@/components/ui/button";
 
-const CLEANING_SUBCATEGORIES = ["Kitchen Cleaning", "Bathroom Cleaning", "Bedroom Cleaning", "Living Areas", "Floors", "Deep Cleaning"];
+const TASK_TYPES = ["Cleaning", "Maintenance", "Bills"];
 
 function PresetCard({ p, onEdit, onDelete, onClick, onAddAsTask }) {
   return (
@@ -41,11 +41,11 @@ export default function Presets() {
   const [presets, setPresets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [difficultyFilter, setDifficultyFilter] = useState("all");
   const [roomFilter, setRoomFilter] = useState("all");
+  const [taskTypeFilter, setTaskTypeFilter] = useState("all");
+  const [difficultyFilter, setDifficultyFilter] = useState("all");
   const [frequencyFilter, setFrequencyFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("category");
+  const [sortBy, setSortBy] = useState("room");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -84,12 +84,7 @@ export default function Presets() {
     });
   }, []);
 
-  // For category filter dropdown: cleaning subcategories shown as "Cleaning"
-  const displayCategories = [...new Set(presets.map(p =>
-    CLEANING_SUBCATEGORIES.includes(p.category) ? "Cleaning" : p.category
-  ))];
-
-  const displayRooms = [...new Set(presets.map(p => p.room).filter(Boolean))].sort();
+  const displayRooms = [...new Set(presets.map(p => p.category).filter(Boolean))].sort();
 
   const FREQUENCY_BANDS = [
     { value: "daily", label: "Daily (1-2 days)", min: 1, max: 2 },
@@ -100,12 +95,10 @@ export default function Presets() {
   ];
 
   const filtered = presets.filter(p => {
-    if (p.category === "Car Maintenance") return false;
     if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
-    const displayCat = CLEANING_SUBCATEGORIES.includes(p.category) ? "Cleaning" : p.category;
-    if (categoryFilter !== "all" && displayCat !== categoryFilter) return false;
+    if (roomFilter !== "all" && p.category !== roomFilter) return false;
+    if (taskTypeFilter !== "all" && p.task_type !== taskTypeFilter) return false;
     if (difficultyFilter !== "all" && p.difficulty !== difficultyFilter) return false;
-    if (roomFilter !== "all" && p.room !== roomFilter) return false;
     if (frequencyFilter !== "all") {
       const band = FREQUENCY_BANDS.find(b => b.value === frequencyFilter);
       if (band && (p.frequency_days < band.min || p.frequency_days > band.max)) return false;
@@ -113,27 +106,23 @@ export default function Presets() {
     return true;
   });
 
-  // Sort filtered results
   const sorted = [...filtered].sort((a, b) => {
     if (sortBy === "name") return a.name.localeCompare(b.name);
-    if (sortBy === "room") return (a.room || "zzz").localeCompare(b.room || "zzz");
+    if (sortBy === "task_type") return (a.task_type || "").localeCompare(b.task_type || "") || a.name.localeCompare(b.name);
     if (sortBy === "frequency") return a.frequency_days - b.frequency_days;
-    // default: category
-    const catA = CLEANING_SUBCATEGORIES.includes(a.category) ? "Cleaning" : a.category;
-    const catB = CLEANING_SUBCATEGORIES.includes(b.category) ? "Cleaning" : b.category;
-    return catA.localeCompare(catB) || a.name.localeCompare(b.name);
+    // default: room
+    return (a.category || "zzz").localeCompare(b.category || "zzz") || a.name.localeCompare(b.name);
   });
 
-  // Top-level grouping: cleaning subcategories merged under "Cleaning"
   const grouped = sorted.reduce((acc, p) => {
     let groupKey;
     if (sortBy === "name") groupKey = p.name[0].toUpperCase();
-    else if (sortBy === "room") groupKey = p.room || "No Room";
+    else if (sortBy === "task_type") groupKey = p.task_type || "Uncategorized";
     else if (sortBy === "frequency") {
       const band = FREQUENCY_BANDS.find(b => p.frequency_days >= b.min && p.frequency_days <= b.max);
       groupKey = band ? band.label.split(" (")[0] : "Other";
     } else {
-      groupKey = CLEANING_SUBCATEGORIES.includes(p.category) ? "Cleaning" : p.category;
+      groupKey = p.category || "No Room";
     }
     if (!acc[groupKey]) acc[groupKey] = [];
     acc[groupKey].push(p);
@@ -168,19 +157,31 @@ export default function Presets() {
           title="Sort by"
           triggerClassName="w-full h-14"
           options={[
-            { value: "category", label: "Sort by Category" },
-            { value: "name", label: "Sort by Name" },
             { value: "room", label: "Sort by Room" },
+            { value: "task_type", label: "Sort by Type" },
+            { value: "name", label: "Sort by Name" },
             { value: "frequency", label: "Sort by Frequency" },
           ]}
         />
         <div className="grid grid-cols-2 gap-2">
           <MobileSelect
-            value={categoryFilter}
-            onValueChange={setCategoryFilter}
-            title="Filter by Category"
+            value={roomFilter}
+            onValueChange={setRoomFilter}
+            title="Filter by Room"
             triggerClassName="w-full h-14"
-            options={[{ value: "all", label: "All Categories" }, ...displayCategories.map(c => ({ value: c, label: c }))]}
+            options={[{ value: "all", label: "All Rooms" }, ...displayRooms.map(r => ({ value: r, label: r }))]}
+          />
+          <MobileSelect
+            value={taskTypeFilter}
+            onValueChange={setTaskTypeFilter}
+            title="Filter by Type"
+            triggerClassName="w-full h-14"
+            options={[
+              { value: "all", label: "All Types" },
+              { value: "Cleaning", label: "Cleaning" },
+              { value: "Maintenance", label: "Maintenance" },
+              { value: "Bills", label: "Bills" },
+            ]}
           />
           <MobileSelect
             value={difficultyFilter}
@@ -195,13 +196,6 @@ export default function Presets() {
               { value: "Hard", label: "Hard" },
               { value: "Very Hard", label: "Very Hard" },
             ]}
-          />
-          <MobileSelect
-            value={roomFilter}
-            onValueChange={setRoomFilter}
-            title="Filter by Room"
-            triggerClassName="w-full h-14"
-            options={[{ value: "all", label: "All Rooms" }, ...displayRooms.map(r => ({ value: r, label: r }))]}
           />
           <MobileSelect
             value={frequencyFilter}
@@ -230,31 +224,11 @@ export default function Presets() {
             <h2 className="font-heading font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-2">
               {groupKey}
             </h2>
-            {sortBy === "category" && groupKey === "Cleaning" ? (
-              // Cleaning: show subcategory headers
-              Object.entries(
-                items.reduce((acc, p) => {
-                  if (!acc[p.category]) acc[p.category] = [];
-                  acc[p.category].push(p);
-                  return acc;
-                }, {})
-              ).map(([subcat, subItems]) => (
-                <div key={subcat} className="mb-5">
-                  <h3 className="font-heading font-medium text-xs text-muted-foreground/70 uppercase tracking-wider mb-2 pl-2 border-l-2 border-primary/30">{subcat}</h3>
-                  <div className="grid gap-2">
-                    {subItems.map(p => (
-                      <PresetCard key={p.id} p={p} onEdit={handleEdit} onDelete={handleDelete} onClick={handlePresetClick} onAddAsTask={handleAddAsTask} />
-                    ))}
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="grid gap-2">
-                {items.map(p => (
-                  <PresetCard key={p.id} p={p} onEdit={handleEdit} onDelete={handleDelete} onClick={handlePresetClick} onAddAsTask={handleAddAsTask} />
-                ))}
-              </div>
-            )}
+            <div className="grid gap-2">
+              {items.map(p => (
+                <PresetCard key={p.id} p={p} onEdit={handleEdit} onDelete={handleDelete} onClick={handlePresetClick} onAddAsTask={handleAddAsTask} />
+              ))}
+            </div>
           </div>
         ))
       )}
