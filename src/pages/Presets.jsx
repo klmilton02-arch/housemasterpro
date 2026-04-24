@@ -15,7 +15,7 @@ const CLEANING_SUBCATEGORIES = ["Kitchen Cleaning", "Bathroom Cleaning", "Bedroo
 
 function PresetCard({ p, onEdit, onDelete, onClick, onAddAsTask }) {
   return (
-    <div className="bg-card border border-border rounded-lg px-3 py-2 hover:shadow-md hover:border-primary/30 transition-all group flex items-center gap-2">
+    <div className="bg-card border border-border rounded-lg px-3 py-2 hover:shadow-md hover:border-primary/30 transition-all group flex items-center gap-2 overflow-hidden">
       <div onClick={() => onClick(p)} className="cursor-pointer flex-1 min-w-0">
         <h3 className="font-heading font-semibold text-sm truncate">{p.name}</h3>
       </div>
