@@ -59,8 +59,7 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
                 Modify
               </Button>
               <Button
-                variant="destructive"
-                className="flex-1 gap-2"
+                className="flex-1 gap-2 bg-red-400 hover:bg-red-500 text-white"
                 onClick={handleDelete}
               >
                 <Trash2 className="w-4 h-4" />
