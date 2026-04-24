@@ -99,7 +99,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const navigateToLogin = () => {
-    base44.auth.redirectToLogin(window.location.href);
+    // Avoid redirect loops by not including auth-related params
+    const loginUrl = window.location.pathname === '/' ? '/dashboard' : window.location.pathname;
+    base44.auth.redirectToLogin(window.location.origin + loginUrl);
   };
 
   return (
