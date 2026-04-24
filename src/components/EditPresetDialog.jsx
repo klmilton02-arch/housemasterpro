@@ -7,9 +7,9 @@ import { Label } from "@/components/ui/label";
 import MobileSelect from "./MobileSelect";
 
 const CATEGORIES = [
-  "Kitchen Cleaning", "Bathroom Cleaning", "Bedroom Cleaning",
-  "Living Areas", "Floors", "Deep Cleaning",
-  "House Maintenance", "Bill Schedules",
+  "Cleaning",
+  "Maintenance",
+  "Bills",
 ];
 
 const ROOMS = [
@@ -46,7 +46,7 @@ function fromDays(days) {
 export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }) {
   const isNew = !preset?.id;
   const [name, setName] = useState("");
-  const [category, setCategory] = useState("Living Areas");
+  const [category, setCategory] = useState("Cleaning");
   const [difficulty, setDifficulty] = useState("Easy");
   const [description, setDescription] = useState("");
   const [freqValue, setFreqValue] = useState("1");
@@ -58,7 +58,7 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved }
   useEffect(() => {
     if (open) {
       setName(preset?.name || "");
-      setCategory(preset?.category || "Living Areas");
+      setCategory(preset?.category || "Cleaning");
       setDifficulty(preset?.difficulty || "Easy");
       setDescription(preset?.description || "");
       setRoom(preset?.room || "");
