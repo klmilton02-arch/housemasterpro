@@ -1,5 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { format, parseISO } from "date-fns";
 import { Pencil, Trash2, Calendar } from "lucide-react";
 import { base44 } from "@/api/base44Client";
@@ -7,10 +8,13 @@ import { useState } from "react";
 
 export default function TaskDetailModal({ task, open, onOpenChange, onModify, onDelete, onChangeDueDate }) {
   const [dueDateInput, setDueDateInput] = useState(task?.next_due_date || "");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  
   async function handleDelete() {
     if (!task || !task.id) return;
     await base44.entities.Task.delete(task.id);
     onDelete?.(task.id);
+    setDeleteDialogOpen(false);
     onOpenChange(false);
   }
   return (
@@ -58,13 +62,28 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
                 <Pencil className="w-4 h-4" />
                 Modify
               </Button>
-              <Button
-                className="flex-1 gap-2 bg-red-400 hover:bg-red-500 text-white"
-                onClick={handleDelete}
-              >
-                <Trash2 className="w-4 h-4" />
-                Delete
-              </Button>
+              <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    className="flex-1 gap-2 bg-red-400 hover:bg-red-500 text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Delete
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Task</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to delete "{task?.name}"? This cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete} className="bg-red-500 hover:bg-red-600">
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
             <Button
               variant="outline"
