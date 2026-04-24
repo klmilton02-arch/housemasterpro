@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 
 const ROOMS = [
-  "Kitchen", "Bathroom", "Bedroom", "Living Room", "Dining Room",
+  "Kitchen", "Full Bathroom", "Half Bathroom", "Bathroom", "Bedroom", "Living Room", "Dining Room",
   "Garage", "Laundry Room", "Office", "Basement", "Attic", "Outdoor", "Whole House", "Any"
 ];
 const TASK_TYPES = ["Cleaning", "Maintenance", "Bills"];

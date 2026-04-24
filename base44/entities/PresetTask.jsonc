@@ -11,6 +11,8 @@
       "title": "Room",
       "enum": [
         "Kitchen",
+        "Full Bathroom",
+        "Half Bathroom",
         "Bathroom",
         "Bedroom",
         "Living Room",
