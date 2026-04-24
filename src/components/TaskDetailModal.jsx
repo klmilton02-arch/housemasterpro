@@ -49,8 +49,7 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
           <div className="space-y-2 border-t border-border pt-4">
             <div className="flex gap-2">
               <Button
-                variant="outline"
-                className="flex-1 gap-2"
+                className="flex-1 gap-2 bg-blue-500 hover:bg-blue-600 text-white"
                 onClick={() => {
                   onModify?.(task);
                   onOpenChange(false);
