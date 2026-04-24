@@ -28,8 +28,16 @@ export const ACHIEVEMENT_BADGES = [
   { id: "overdue_fighter", name: "Overdue Fighter", emoji: "⚡", check: (p) => p.overdue_completions >= 5 },
 ];
 
+const DIFFICULTY_POINTS = {
+  "Trivial": 1,
+  "Easy": 2,
+  "Medium": 2,
+  "Hard": 3,
+  "Very Hard": 5,
+};
+
 export function getTaskPoints(task) {
-  return TASK_POINTS[task.name] ?? (task.task_type === "Deep Cleaning" ? 15 : 5);
+  return DIFFICULTY_POINTS[task.difficulty] ?? 2;
 }
 
 export function getLevelInfo(xp) {
