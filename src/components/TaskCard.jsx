@@ -83,10 +83,10 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails })
 
   return (
     <div className={cn(
-      "border rounded-lg px-3 py-2 sm:px-2.5 sm:py-1.5 hover:shadow-md transition-all group w-full cursor-pointer",
+      "border rounded-lg px-3 hover:shadow-md transition-all group w-full cursor-pointer h-14 flex items-center",
       cardBg
     )} onClick={() => onViewDetails?.(task)}>
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-2 w-full">
         <div className="flex-1 min-w-0">
           {editing ? (
             <input

@@ -174,7 +174,7 @@ export default function HomeSetup() {
 
   function NumberInput({ label, icon: Icon, field }) {
     return (
-      <div className="flex items-center justify-between p-4 bg-card border border-border rounded-xl">
+      <div className="flex items-center justify-between px-4 bg-card border border-border rounded-xl h-14">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
             <Icon className="w-5 h-5 text-primary" />
