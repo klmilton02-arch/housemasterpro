@@ -9,6 +9,7 @@ import { useState } from "react";
 export default function TaskDetailModal({ task, open, onOpenChange, onModify, onDelete, onChangeDueDate }) {
   const [dueDateInput, setDueDateInput] = useState(task?.next_due_date || "");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [changeDueDateOpen, setChangeDueDateOpen] = useState(false);
   
   async function handleDelete() {
     if (!task || !task.id) return;
@@ -85,22 +86,40 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
                 </AlertDialogContent>
               </AlertDialog>
             </div>
-            <Button
-              className="w-full gap-2 bg-blue-400 hover:bg-blue-500 text-white"
-              onClick={() => {
-                onChangeDueDate?.(task, dueDateInput);
-                onOpenChange(false);
-              }}
-            >
-              <Calendar className="w-4 h-4" />
-              Change Due Date
-            </Button>
-            <input
-              type="date"
-              value={dueDateInput}
-              onChange={(e) => setDueDateInput(e.target.value)}
-              className="w-full px-3 py-2 border border-input rounded-md text-sm"
-            />
+            <AlertDialog open={changeDueDateOpen} onOpenChange={setChangeDueDateOpen}>
+              <AlertDialogTrigger asChild>
+                <Button
+                  className="w-full gap-2 bg-blue-400 hover:bg-blue-500 text-white"
+                >
+                  <Calendar className="w-4 h-4" />
+                  Change Due Date
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Change Due Date</AlertDialogTitle>
+                </AlertDialogHeader>
+                <input
+                  type="date"
+                  value={dueDateInput}
+                  onChange={(e) => setDueDateInput(e.target.value)}
+                  className="w-full px-3 py-2 border border-input rounded-md text-sm"
+                />
+                <div className="flex gap-2 justify-end">
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => {
+                      onChangeDueDate?.(task, dueDateInput);
+                      setChangeDueDateOpen(false);
+                      onOpenChange(false);
+                    }}
+                    className="bg-blue-500 hover:bg-blue-600"
+                  >
+                    Save
+                  </AlertDialogAction>
+                </div>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
       </DialogContent>
