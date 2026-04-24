@@ -2,74 +2,69 @@
 export const BADGE_DEFINITIONS = {
   first_task: {
     id: "first_task",
-    name: "Getting Started",
-    description: "Complete your first task",
+    name: "First Task",
+    description: "Complete your first task (any type)",
     icon: "🌟",
+    bonusPoints: 0,
     requirement: "total_completions >= 1"
   },
-  five_tasks: {
-    id: "five_tasks",
-    name: "Task Master",
-    description: "Complete 5 tasks",
-    icon: "⭐",
-    requirement: "total_completions >= 5"
+  cleaning_streak_7: {
+    id: "cleaning_streak_7",
+    name: "Cleaning Streak",
+    description: "Clean 7 days in a row",
+    icon: "🔥",
+    bonusPoints: 100,
+    requirement: "cleaning_streak >= 7"
   },
-  twenty_tasks: {
-    id: "twenty_tasks",
-    name: "Home Hero",
+  maintenance_guru: {
+    id: "maintenance_guru",
+    name: "Maintenance Guru",
+    description: "Complete 5 maintenance tasks",
+    icon: "🔧",
+    bonusPoints: 200,
+    requirement: "maintenance_completions >= 5"
+  },
+  bill_pay_pro: {
+    id: "bill_pay_pro",
+    name: "Bill Pay Pro",
+    description: "Pay bills on time for 3 months",
+    icon: "💳",
+    bonusPoints: 300,
+    requirement: "bill_months_ontime >= 3"
+  },
+  all_rounder: {
+    id: "all_rounder",
+    name: "All-Rounder",
+    description: "Complete cleaning, maintenance, and bill tasks each week for a month",
+    icon: "🏅",
+    bonusPoints: 500,
+    requirement: "all_rounder_weeks >= 4"
+  },
+  // Legacy / milestone badges
+  task_master: {
+    id: "task_master",
+    name: "Task Master",
     description: "Complete 20 tasks",
-    icon: "🦸",
+    icon: "⭐",
+    bonusPoints: 0,
     requirement: "total_completions >= 20"
   },
-  fifty_tasks: {
-    id: "fifty_tasks",
+  household_legend: {
+    id: "household_legend",
     name: "Household Legend",
     description: "Complete 50 tasks",
     icon: "👑",
+    bonusPoints: 0,
     requirement: "total_completions >= 50"
   },
-  week_streak: {
-    id: "week_streak",
-    name: "Week Warrior",
-    description: "Maintain a 7-day streak",
-    icon: "🔥",
-    requirement: "max_streak >= 7"
-  },
-  month_streak: {
-    id: "month_streak",
-    name: "Consistency King",
-    description: "Maintain a 30-day streak",
-    icon: "💪",
-    requirement: "max_streak >= 30"
-  },
-  deep_cleaner: {
-    id: "deep_cleaner",
-    name: "Deep Cleaner",
-    description: "Complete 5 deep cleaning tasks",
-    icon: "✨",
-    requirement: "deep_cleaning_completions >= 5"
-  },
-  overdue_master: {
-    id: "overdue_master",
+  catch_up_champion: {
+    id: "catch_up_champion",
     name: "Catch-Up Champion",
     description: "Complete 5 overdue tasks",
     icon: "⚡",
+    bonusPoints: 0,
     requirement: "overdue_completions >= 5"
   },
-  level_five: {
-    id: "level_five",
-    name: "Rising Star",
-    description: "Reach Level 5",
-    icon: "🌠",
-    requirement: "level >= 5"
-  },
-  level_ten: {
-    id: "level_ten",
-    name: "Master of Home",
-    description: "Reach Level 10",
-    icon: "🏆",
-    requirement: "level >= 10"
-  }
 };
 
 export function checkBadgeEarned(profile, badgeId) {
@@ -77,23 +72,21 @@ export function checkBadgeEarned(profile, badgeId) {
   if (!badge) return false;
 
   const checks = {
-    "total_completions >= 1": profile.total_completions >= 1,
-    "total_completions >= 5": profile.total_completions >= 5,
-    "total_completions >= 20": profile.total_completions >= 20,
-    "total_completions >= 50": profile.total_completions >= 50,
-    "max_streak >= 7": (profile.max_streak || 0) >= 7,
-    "max_streak >= 30": (profile.max_streak || 0) >= 30,
-    "deep_cleaning_completions >= 5": profile.deep_cleaning_completions >= 5,
-    "overdue_completions >= 5": profile.overdue_completions >= 5,
-    "level >= 5": profile.level >= 5,
-    "level >= 10": profile.level >= 10,
+    "total_completions >= 1": (profile.total_completions || 0) >= 1,
+    "cleaning_streak >= 7": (profile.cleaning_streak || 0) >= 7,
+    "maintenance_completions >= 5": (profile.maintenance_completions || 0) >= 5,
+    "bill_months_ontime >= 3": (profile.bill_months_ontime || 0) >= 3,
+    "all_rounder_weeks >= 4": (profile.all_rounder_weeks || 0) >= 4,
+    "total_completions >= 20": (profile.total_completions || 0) >= 20,
+    "total_completions >= 50": (profile.total_completions || 0) >= 50,
+    "overdue_completions >= 5": (profile.overdue_completions || 0) >= 5,
   };
 
   return checks[badge.requirement] || false;
 }
 
 export function getEarnedBadges(profile) {
-  return Object.keys(BADGE_DEFINITIONS).filter(badgeId => 
+  return Object.keys(BADGE_DEFINITIONS).filter(badgeId =>
     checkBadgeEarned(profile, badgeId)
   );
 }

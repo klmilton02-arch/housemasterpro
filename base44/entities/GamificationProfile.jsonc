@@ -42,6 +42,35 @@
       "type": "number",
       "title": "Overdue Task Completions",
       "default": 0
+    },
+    "maintenance_completions": {
+      "type": "number",
+      "title": "Maintenance Completions",
+      "default": 0
+    },
+    "bill_completions": {
+      "type": "number",
+      "title": "Bill Completions",
+      "default": 0
+    },
+    "cleaning_streak": {
+      "type": "number",
+      "title": "Cleaning Streak (Days)",
+      "default": 0
+    },
+    "last_cleaning_date": {
+      "type": "string",
+      "title": "Last Cleaning Date"
+    },
+    "bill_months_ontime": {
+      "type": "number",
+      "title": "Bill Months On Time",
+      "default": 0
+    },
+    "all_rounder_weeks": {
+      "type": "number",
+      "title": "All-Rounder Weeks",
+      "default": 0
     }
   },
   "required": [
