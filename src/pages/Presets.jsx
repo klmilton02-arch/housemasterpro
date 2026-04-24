@@ -22,16 +22,16 @@ function PresetCard({ p, onClick }) {
   return (
     <button
       onClick={() => onClick(p)}
-      className="w-full bg-card border border-border rounded-lg px-3 hover:shadow-md hover:border-primary/30 transition-all flex items-center gap-3 text-left h-14"
+      className="w-full bg-blue-400 hover:bg-blue-500 border-0 rounded-lg px-3 transition-all flex items-center gap-3 text-left h-14"
     >
       {style.emoji && (
         <span className="text-lg shrink-0">{style.emoji}</span>
       )}
       <div className="flex-1 min-w-0">
-        <h3 className={`font-heading font-semibold text-sm truncate ${style.color || ""}`}>{p.name}</h3>
-        <p className="text-xs text-muted-foreground mt-0.5">{p.category}{p.task_type ? ` · ${p.task_type}` : ""} · {formatFrequency(p.frequency_days)}</p>
+        <h3 className="font-heading font-semibold text-sm truncate text-white">{p.name}</h3>
+        <p className="text-xs text-white/70 mt-0.5">{p.category}{p.task_type ? ` · ${p.task_type}` : ""} · {formatFrequency(p.frequency_days)}</p>
       </div>
-      <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
+      <ChevronRight className="w-4 h-4 text-white/70 shrink-0" />
     </button>
   );
 }
