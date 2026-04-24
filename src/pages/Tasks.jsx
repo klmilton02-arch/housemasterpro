@@ -17,6 +17,7 @@ import AddTaskDialog from "../components/AddTaskDialog";
 import StatCard from "../components/StatCard";
 import BatchToolbar from "../components/BatchToolbar";
 import TaskDetailModal from "../components/TaskDetailModal";
+import EditTaskDialog from "../components/EditTaskDialog";
 import RoomView from "../components/RoomView";
 import TaskCalendar from "../components/TaskCalendar";
 import { differenceInDays, parseISO } from "date-fns";
@@ -33,6 +34,7 @@ export default function Tasks() {
   const [familyMembers, setFamilyMembers] = useState([]);
   const [groupBy, setGroupBy] = useState("none");
   const [selectedTask, setSelectedTask] = useState(null);
+  const [editingTask, setEditingTask] = useState(null);
   const [viewMode, setViewMode] = useState("list");
   const [assignedFilter, setAssignedFilter] = useState("all"); // "all" | "assigned" | "unassigned"
   const [roomFilter, setRoomFilter] = useState("all");
@@ -466,11 +468,12 @@ export default function Tasks() {
         open={!!selectedTask} 
         onOpenChange={(open) => { if (!open) setSelectedTask(null); }}
         onModify={(task) => {
-          setDialogOpen(true);
-          // Note: AddTaskDialog would need to be updated to support editing existing tasks
+          setSelectedTask(null);
+          setEditingTask(task);
         }}
         onDelete={handleDelete}
       />
+      <EditTaskDialog task={editingTask} open={!!editingTask} onOpenChange={(open) => { if (!open) setEditingTask(null); }} onTaskUpdated={loadTasks} />
       <BatchToolbar
         selectedCount={selectedIds.size}
         familyMembers={familyMembers}
