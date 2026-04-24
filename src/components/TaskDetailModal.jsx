@@ -1,10 +1,12 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { format, parseISO } from "date-fns";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Calendar } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import { useState } from "react";
 
-export default function TaskDetailModal({ task, open, onOpenChange, onModify, onDelete }) {
+export default function TaskDetailModal({ task, open, onOpenChange, onModify, onDelete, onChangeDueDate }) {
+  const [dueDateInput, setDueDateInput] = useState(task?.next_due_date || "");
   async function handleDelete() {
     if (!task) return;
     await base44.entities.Task.delete(task.id);
@@ -44,26 +46,45 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
           </div>
 
           {/* Action buttons */}
-          <div className="flex gap-2 border-t border-border pt-4">
+          <div className="space-y-2 border-t border-border pt-4">
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                className="flex-1 gap-2"
+                onClick={() => {
+                  onModify?.(task);
+                  onOpenChange(false);
+                }}
+              >
+                <Pencil className="w-4 h-4" />
+                Modify
+              </Button>
+              <Button
+                variant="destructive"
+                className="flex-1 gap-2"
+                onClick={handleDelete}
+              >
+                <Trash2 className="w-4 h-4" />
+                Delete
+              </Button>
+            </div>
             <Button
               variant="outline"
-              className="flex-1 gap-2"
+              className="w-full gap-2"
               onClick={() => {
-                onModify?.(task);
+                onChangeDueDate?.(task, dueDateInput);
                 onOpenChange(false);
               }}
             >
-              <Pencil className="w-4 h-4" />
-              Modify
+              <Calendar className="w-4 h-4" />
+              Change Due Date
             </Button>
-            <Button
-              variant="destructive"
-              className="flex-1 gap-2"
-              onClick={handleDelete}
-            >
-              <Trash2 className="w-4 h-4" />
-              Delete
-            </Button>
+            <input
+              type="date"
+              value={dueDateInput}
+              onChange={(e) => setDueDateInput(e.target.value)}
+              className="w-full px-3 py-2 border border-input rounded-md text-sm"
+            />
           </div>
         </div>
       </DialogContent>

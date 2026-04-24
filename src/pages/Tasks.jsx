@@ -104,6 +104,12 @@ export default function Tasks() {
     await base44.entities.Task.delete(task.id);
   }
 
+  async function handleChangeDueDate(task, newDate) {
+    if (!newDate) return;
+    await base44.entities.Task.update(task.id, { next_due_date: newDate });
+    loadTasks();
+  }
+
   function toggleSelect(id) {
     setSelectedIds(prev => {
       const next = new Set(prev);
@@ -472,6 +478,7 @@ export default function Tasks() {
           setEditingTask(task);
         }}
         onDelete={handleDelete}
+        onChangeDueDate={handleChangeDueDate}
       />
       <EditTaskDialog task={editingTask} open={!!editingTask} onOpenChange={(open) => { if (!open) setEditingTask(null); }} onTaskUpdated={loadTasks} />
       <BatchToolbar
