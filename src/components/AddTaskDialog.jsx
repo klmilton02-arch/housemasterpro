@@ -247,7 +247,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                     >
                       <div className="font-medium">{p.name}</div>
                       <div className={`text-xs mt-0.5 ${selectedPresets.has(p.id) ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
-                        {formatFrequency(p.frequency_days)} · {p.task_type}
+                        {p.category}{p.task_type ? ` · ${p.task_type}` : ""} · {formatFrequency(p.frequency_days)}
                       </div>
                     </button>
                   ))}
