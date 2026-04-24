@@ -86,8 +86,7 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
               </AlertDialog>
             </div>
             <Button
-              variant="outline"
-              className="w-full gap-2"
+              className="w-full gap-2 bg-blue-400 hover:bg-blue-500 text-white"
               onClick={() => {
                 onChangeDueDate?.(task, dueDateInput);
                 onOpenChange(false);
