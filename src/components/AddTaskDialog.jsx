@@ -241,6 +241,13 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                           newSelected.delete(p.id);
                         } else {
                           newSelected.add(p.id);
+                          // Set frequency from the last selected preset
+                          const days = p.frequency_days;
+                          if (days % 365 === 0) { setFreqValue(String(days / 365)); setFreqUnit("yearly"); }
+                          else if (days % 90 === 0) { setFreqValue(String(days / 90)); setFreqUnit("quarterly"); }
+                          else if (days % 30 === 0) { setFreqValue(String(days / 30)); setFreqUnit("months"); }
+                          else if (days % 7 === 0) { setFreqValue(String(days / 7)); setFreqUnit("weeks"); }
+                          else { setFreqValue(String(days)); setFreqUnit("days"); }
                         }
                         setSelectedPresets(newSelected);
                       }}
