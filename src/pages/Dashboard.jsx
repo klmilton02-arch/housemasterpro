@@ -199,7 +199,7 @@ export default function Dashboard() {
       </div>
 
       <div className="md:hidden space-y-6">
-        {/* Main cards: Tasks and Leaderboard */}
+        {/* Main cards: Tasks and Blast Mode */}
         <div className="grid grid-cols-2 gap-4">
           {/* Tasks Card */}
           <div className="bg-card border border-border rounded-lg overflow-hidden">
@@ -219,9 +219,20 @@ export default function Dashboard() {
             )}
           </div>
 
-          {/* Leaderboard Card */}
-          <LeaderboardSummary />
+          {/* Blast Mode Card */}
+          <div className="bg-card border border-border rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <Zap className="w-4 h-4 text-accent" />
+              <h2 className="font-heading font-semibold text-base text-foreground">Blast Mode</h2>
+            </div>
+            <Button onClick={startBlast} className="w-full text-sm" disabled={isBlastActive}>
+              {isBlastActive ? `Active (${duration}s)` : "Start"}
+            </Button>
+          </div>
         </div>
+
+        {/* Leaderboard */}
+        <LeaderboardSummary />
 
         {/* Stats cards row */}
         <div className="grid grid-cols-2 gap-3">
