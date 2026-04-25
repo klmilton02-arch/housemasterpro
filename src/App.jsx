@@ -58,7 +58,7 @@ const AuthenticatedApp = () => {
   }
 
   // Handle authentication errors (but allow public pages)
-  const publicPaths = ['/', '/landing', '/encryption', '/digital-services-act', '/copyright'];
+  const publicPaths = ['/', '/landing', '/encryption', '/digital-services-act', '/copyright', '/privacy'];
   const isPublicPath = publicPaths.some(p => window.location.pathname === p || window.location.pathname.startsWith(p + '/'));
   if (authError && !isPublicPath) {
     if (authError.type === 'user_not_registered') {
