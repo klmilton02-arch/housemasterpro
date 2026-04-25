@@ -8,6 +8,13 @@ export default function PointsToast({ reward, onDismiss }) {
     // confetti is fired in handleComplete, not here
   }, [reward]);
 
+  useEffect(() => {
+    if (reward) {
+      const timer = setTimeout(onDismiss, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [reward]);
+
   return (
     <AnimatePresence>
       {reward && (
