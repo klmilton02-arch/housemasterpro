@@ -136,9 +136,9 @@ export default function Dashboard() {
         <h1 className="font-heading text-3xl font-bold">Dashboard</h1>
 
         {/* Top row: Tasks and Blast Mode side by side */}
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-3 gap-6">
           {/* Tasks Section */}
-          <div className="bg-card border border-border rounded-lg overflow-hidden">
+          <div className="col-span-2 bg-card border border-border rounded-lg overflow-hidden">
             <button
               className="w-full flex items-center justify-between p-5 hover:bg-muted/40 transition-colors"
               onClick={() => setAllTasksOpen(o => !o)}
@@ -162,16 +162,14 @@ export default function Dashboard() {
           </div>
 
           {/* Blast Mode Section */}
-          <div className="space-y-4">
-            <div className="bg-card border border-border rounded-lg p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <Zap className="w-5 h-5 text-accent" />
-                <h2 className="font-heading font-semibold text-lg text-foreground">Blast Mode</h2>
-              </div>
-              <Button onClick={startBlast} className="w-full" disabled={isBlastActive}>
-                {isBlastActive ? `Active (${duration}s)` : "Start Blast Mode"}
-              </Button>
+          <div className="bg-card border border-border rounded-lg p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <Zap className="w-5 h-5 text-accent" />
+              <h2 className="font-heading font-semibold text-lg text-foreground">Blast Mode</h2>
             </div>
+            <Button onClick={startBlast} className="w-full" disabled={isBlastActive}>
+              {isBlastActive ? `Active (${duration}s)` : "Start Blast Mode"}
+            </Button>
           </div>
         </div>
 
