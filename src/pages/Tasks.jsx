@@ -73,9 +73,7 @@ export default function Tasks() {
         newStreak = daysSinceLast <= 2 ? (task.streak || 0) + 1 : 1;
       }
 
-      // Update UI immediately with Completed status so checkmark + green show
-      setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak } : t));
-      // Add to justCompleted to prevent sorting for 1 second
+      // Add to justCompleted to show visual feedback without sorting yet
       setJustCompleted(prev => new Set([...prev, task.id]));
 
       // Fire confetti + XP toast instantly
@@ -90,17 +88,17 @@ export default function Tasks() {
         }
       });
 
-      // Save to DB and remove from justCompleted after 1 second to allow sorting
-      base44.entities.Task.update(task.id, {
-        status: "Completed",
-        last_completed_date: todayStr,
-        next_due_date: nextDueStr,
-        streak: newStreak,
-      }).then(() => {
-        setTimeout(() => {
-          setJustCompleted(prev => { const next = new Set(prev); next.delete(task.id); return next; });
-        }, 1000);
-      });
+      // After 1 second: update status and DB, then allow sorting
+      setTimeout(async () => {
+        setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak } : t));
+        await base44.entities.Task.update(task.id, {
+          status: "Completed",
+          last_completed_date: todayStr,
+          next_due_date: nextDueStr,
+          streak: newStreak,
+        });
+        setJustCompleted(prev => { const next = new Set(prev); next.delete(task.id); return next; });
+      }, 1000);
     } else {
       setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Pending" } : t));
       await base44.entities.Task.update(task.id, { status: "Pending" });

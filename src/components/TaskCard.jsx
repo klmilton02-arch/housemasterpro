@@ -43,7 +43,7 @@ export { getStatusInfo, formatFrequency };
 
 export default function TaskCard({ task, onComplete, onRenamed, onViewDetails }) {
   const isCompleted = task.status === "Completed";
-  // Local visual state flips instantly on click; syncs back if parent resets
+  // Local visual state for immediate feedback; doesn't trigger sort until parent updates
   const [visuallyCompleted, setVisuallyCompleted] = useState(isCompleted);
   const status = getStatusInfo({ ...task, status: visuallyCompleted ? "Completed" : task.status });
   const StatusIcon = status.icon;
