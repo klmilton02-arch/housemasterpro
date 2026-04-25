@@ -128,106 +128,52 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-7 max-w-sm md:max-w-full mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
 
       <h1 className="font-heading text-3xl font-bold md:hidden">Dashboard</h1>
 
-      <div className="hidden md:grid grid-cols-1 gap-6">
-        <h1 className="font-heading text-3xl font-bold">Dashboard</h1>
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
+        <StatCard icon={ListChecks} label="Due" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'Due Tasks', tasks: dueTasks })} />
+        <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks })} />
+        <StatCard icon={Clock} label="Due Soon" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" onClick={() => setTaskListModal({ title: 'Due Soon', tasks: dueSoonTasks })} />
+        <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks })} />
+      </div>
 
-        {/* Top row: Tasks and Blast Mode side by side */}
-        <div className="grid grid-cols-3 gap-6">
-          {/* Tasks Section */}
-          <div className="col-span-2 bg-card border border-border rounded-lg overflow-hidden">
-            <button
-              className="w-full flex items-center justify-between p-5 hover:bg-muted/40 transition-colors"
-              onClick={() => setAllTasksOpen(o => !o)}
-            >
-              <h2 className="font-heading font-semibold text-lg text-foreground">Tasks</h2>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">{tasks.length} total</span>
-                {allTasksOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
-              </div>
-            </button>
-            {allTasksOpen && (
-              <div className="space-y-2 max-h-72 overflow-y-auto px-5 pb-5">
-                {tasks.slice(0, 10).map(task => (
-                  <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
-                ))}
-                {tasks.length > 10 && (
-                  <p className="text-center text-xs text-muted-foreground py-2">+{tasks.length - 10} more tasks</p>
-                )}
-              </div>
+      <LeaderboardSummary />
+
+      {profile && getEarnedBadges(profile).length > 0 && (
+        <div className="bg-card border border-border rounded-lg p-5">
+          <h2 className="font-heading font-semibold text-lg text-foreground mb-3">Your Badges</h2>
+          <BadgeDisplay badges={getEarnedBadges(profile)} size="sm" />
+        </div>
+      )}
+
+      <div className="bg-card border border-border rounded-lg overflow-hidden">
+        <button
+          className="w-full flex items-center justify-between p-5 hover:bg-muted/40 transition-colors"
+          onClick={() => setAllTasksOpen(o => !o)}
+        >
+          <h2 className="font-heading font-semibold text-lg text-foreground">All Tasks</h2>
+          <div className="flex items-center gap-2">
+            <span className="text-base text-muted-foreground">{tasks.length} total</span>
+            {allTasksOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+          </div>
+        </button>
+        {allTasksOpen && (
+          <div className="space-y-3 max-h-72 overflow-y-auto px-5 pb-5">
+            {tasks.slice(0, 10).map(task => (
+              <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
+            ))}
+            {tasks.length > 10 && (
+              <p className="text-center text-xs text-muted-foreground py-2">+{tasks.length - 10} more tasks</p>
             )}
-          </div>
-
-          {/* Blast Mode Section */}
-          <div className="bg-card border border-border rounded-lg p-5">
-            <div className="flex items-center gap-2 mb-4">
-              <Zap className="w-5 h-5 text-accent" />
-              <h2 className="font-heading font-semibold text-lg text-foreground">Blast Mode</h2>
-            </div>
-            <Button onClick={startBlast} className="w-full" disabled={isBlastActive}>
-              {isBlastActive ? `Active (${duration}s)` : "Start Blast Mode"}
-            </Button>
-          </div>
-        </div>
-
-        {/* Stats row */}
-        <div className="grid grid-cols-4 gap-3">
-          <StatCard icon={ListChecks} label="Due" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'Due Tasks', tasks: dueTasks })} />
-          <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks })} />
-          <StatCard icon={Clock} label="Due Soon" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" onClick={() => setTaskListModal({ title: 'Due Soon', tasks: dueSoonTasks })} />
-          <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks })} />
-        </div>
-
-        {/* Middle and bottom sections */}
-        <div className="grid grid-cols-2 gap-6">
-          <LeaderboardSummary />
-
-          <DashboardPresetBrowser onTaskAdded={loadTasks} />
-        </div>
-
-        {profile && getEarnedBadges(profile).length > 0 && (
-          <div className="bg-card border border-border rounded-lg p-5">
-            <h2 className="font-heading font-semibold text-lg text-foreground mb-3">Your Badges</h2>
-            <BadgeDisplay badges={getEarnedBadges(profile)} size="sm" />
           </div>
         )}
       </div>
 
-      <div className="md:hidden space-y-6">
-        <div className="grid grid-cols-2 gap-3">
-          <StatCard icon={ListChecks} label="Due" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'Due Tasks', tasks: dueTasks })} />
-          <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks })} />
-          <StatCard icon={Clock} label="Due Soon" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" onClick={() => setTaskListModal({ title: 'Due Soon', tasks: dueSoonTasks })} />
-          <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks })} />
-        </div>
+      <DashboardPresetBrowser onTaskAdded={loadTasks} />
 
-        <div className="bg-card border border-border rounded-lg overflow-hidden">
-          <button
-            className="w-full flex items-center justify-between p-4 hover:bg-muted/40 transition-colors"
-            onClick={() => setAllTasksOpen(o => !o)}
-          >
-            <h2 className="font-heading font-semibold text-foreground">Tasks</h2>
-            {allTasksOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
-          </button>
-          {allTasksOpen && (
-            <div className="space-y-2 max-h-64 overflow-y-auto px-4 pb-4">
-              {tasks.slice(0, 8).map(task => (
-                <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
-              ))}
-              {tasks.length === 0 && <p className="text-center text-sm text-muted-foreground py-4">No tasks yet</p>}
-            </div>
-          )}
-        </div>
-
-        <LeaderboardSummary />
-      </div>
-
-      <div className="md:hidden">
-        <QuickNav />
-      </div>
+      <QuickNav />
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />

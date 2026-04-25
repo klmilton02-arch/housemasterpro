@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { User, LogOut, Shield, Clock, Trash2 } from "lucide-react";
+import { User, LogOut, Shield, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import BadgeDisplay from "../components/BadgeDisplay";
 import SyncGoogleTasksButton from "../components/SyncGoogleTasksButton";
 import { getEarnedBadges } from "@/utils/badges";
@@ -20,7 +19,6 @@ export default function Profile() {
   const [homeSetup, setHomeSetup] = useState(null);
   const [dayStartHour, setDayStartHour] = useState("0");
   const [savingHour, setSavingHour] = useState(false);
-  const [clearing, setClearing] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -64,58 +62,6 @@ export default function Profile() {
       setHomeSetup(created);
     }
     setSavingHour(false);
-  }
-
-  async function handleStartOver() {
-    setClearing(true);
-    try {
-      const allTasks = await base44.entities.Task.list("-created_date", 1000);
-      for (const task of allTasks) {
-        await base44.entities.Task.delete(task.id);
-        await new Promise(r => setTimeout(r, 50)); // Small delay to avoid rate limiting
-      }
-      window.location.reload(); // Reload to refresh the UI
-    } catch (err) {
-      console.error("Failed to delete tasks:", err);
-      setClearing(false);
-    }
-  }
-
-  async function handleClearLeaderboard() {
-    setClearing(true);
-    try {
-      const profiles = await base44.entities.GamificationProfile.list("-created_date", 1000);
-      const completions = await base44.entities.CompletionHistory.list("-created_date", 1000);
-      await Promise.all([
-        ...profiles.map(p => base44.entities.GamificationProfile.delete(p.id)),
-        ...completions.map(c => base44.entities.CompletionHistory.delete(c.id))
-      ]);
-    } catch (err) {
-      console.error("Failed to clear leaderboard:", err);
-    } finally {
-      setClearing(false);
-    }
-  }
-
-  async function handleStartFresh() {
-    setClearing(true);
-    try {
-      const allTasks = await base44.entities.Task.list("-created_date", 1000);
-      const completedTasks = allTasks.filter(t => t.status === "Completed");
-      const today = new Date().toISOString().split("T")[0];
-      await Promise.all(completedTasks.map(task =>
-        base44.entities.Task.update(task.id, {
-          status: "Pending",
-          last_completed_date: null,
-          next_due_date: today,
-          streak: 0
-        })
-      ));
-    } catch (err) {
-      console.error("Failed to reset completed tasks:", err);
-    } finally {
-      setClearing(false);
-    }
   }
 
   if (loading) {
@@ -239,75 +185,6 @@ export default function Profile() {
             <Shield className="w-4 h-4" /> Encryption & Security
           </Button>
         </Link>
-      </div>
-
-      {/* Start Over */}
-      <div className="space-y-2">
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="outline" className="w-full gap-2 text-yellow-600 hover:text-yellow-700 border-yellow-200 hover:bg-yellow-50">
-              <Trash2 className="w-4 h-4" /> Start Fresh
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Reset Completed Tasks</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will mark all your completed tasks as pending with today's due date. This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleStartFresh} disabled={clearing} className="bg-yellow-600 hover:bg-yellow-700 text-white">
-                {clearing ? "Resetting..." : "Start Fresh"}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="outline" className="w-full gap-2 text-orange-600 hover:text-orange-700 border-orange-200 hover:bg-orange-50">
-              <Trash2 className="w-4 h-4" /> Delete All Tasks
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Delete All Tasks</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will permanently delete all tasks. This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleStartOver} disabled={clearing} className="bg-destructive text-destructive-foreground">
-                {clearing ? "Deleting..." : "Delete All Tasks"}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="outline" className="w-full gap-2 text-red-600 hover:text-red-700 border-red-200 hover:bg-red-50">
-              <Trash2 className="w-4 h-4" /> Clear Leaderboard
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Reset Leaderboard</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will clear all XP, levels, badges, and completion history for all players. This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleClearLeaderboard} disabled={clearing} className="bg-destructive text-destructive-foreground">
-                {clearing ? "Clearing..." : "Clear Leaderboard"}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </div>
 
       {/* Logout */}
