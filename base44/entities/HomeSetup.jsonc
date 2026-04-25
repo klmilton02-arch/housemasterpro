@@ -46,6 +46,12 @@
       "type": "boolean",
       "title": "Mixed Use Room",
       "default": false
+    },
+    "day_start_hour": {
+      "type": "number",
+      "title": "Day Start Hour (0\u201323)",
+      "default": 0,
+      "description": "Hour of day (0=midnight, 6=6am) when tasks reset to Pending"
     }
   },
   "required": []

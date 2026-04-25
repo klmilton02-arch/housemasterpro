@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { User, LogOut, Shield } from "lucide-react";
+import { User, LogOut, Shield, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BadgeDisplay from "../components/BadgeDisplay";
 import SyncGoogleTasksButton from "../components/SyncGoogleTasksButton";
 import { getEarnedBadges } from "@/utils/badges";
+import MobileSelect from "../components/MobileSelect";
 
 export default function Profile() {
   const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
@@ -15,6 +16,9 @@ export default function Profile() {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [homeSetup, setHomeSetup] = useState(null);
+  const [dayStartHour, setDayStartHour] = useState("0");
+  const [savingHour, setSavingHour] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -30,6 +34,11 @@ export default function Profile() {
             setProfile(profiles[0]);
           }
         }
+        const setups = await base44.entities.HomeSetup.list();
+        if (setups.length > 0) {
+          setHomeSetup(setups[0]);
+          setDayStartHour(String(setups[0].day_start_hour ?? 0));
+        }
       } catch (err) {
         console.error("Failed to load profile:", err);
       } finally {
@@ -41,6 +50,18 @@ export default function Profile() {
 
   async function handleLogout() {
     await base44.auth.logout("/");
+  }
+
+  async function handleSaveDayStart() {
+    setSavingHour(true);
+    const hour = parseInt(dayStartHour);
+    if (homeSetup) {
+      await base44.entities.HomeSetup.update(homeSetup.id, { day_start_hour: hour });
+    } else {
+      const created = await base44.entities.HomeSetup.create({ day_start_hour: hour });
+      setHomeSetup(created);
+    }
+    setSavingHour(false);
   }
 
   if (loading) {
@@ -113,6 +134,35 @@ export default function Profile() {
         <h3 className="font-heading font-semibold text-lg">Badges & Achievements</h3>
         <div className="bg-card border border-border rounded-lg p-6">
           <BadgeDisplay badges={earnedBadges} size="md" />
+        </div>
+      </div>
+
+      {/* Day Start Setting */}
+      <div className="space-y-3">
+        <h3 className="font-heading font-semibold text-lg">Task Reset Time</h3>
+        <div className="bg-card border border-border rounded-lg p-4 space-y-3">
+          <div className="flex items-start gap-3">
+            <Clock className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+            <div className="flex-1">
+              <p className="text-sm font-medium">New day starts at</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Completed tasks reset to Pending at this hour each day</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <MobileSelect
+              value={dayStartHour}
+              onValueChange={setDayStartHour}
+              title="Select time"
+              triggerClassName="flex-1"
+              options={Array.from({ length: 24 }, (_, i) => ({
+                value: String(i),
+                label: i === 0 ? "12:00 AM (Midnight)" : i < 12 ? `${i}:00 AM` : i === 12 ? "12:00 PM (Noon)" : `${i - 12}:00 PM`
+              }))}
+            />
+            <Button onClick={handleSaveDayStart} disabled={savingHour} size="sm">
+              {savingHour ? "Saving..." : "Save"}
+            </Button>
+          </div>
         </div>
       </div>
 
