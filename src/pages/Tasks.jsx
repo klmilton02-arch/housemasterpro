@@ -77,10 +77,6 @@ export default function Tasks() {
 
       // Prevent resorting for 1 second so green/check shows before task moves
       setJustCompleted(prev => new Set([...prev, task.id]));
-      setTimeout(() => {
-        setJustCompleted(prev => { const next = new Set(prev); next.delete(task.id); return next; });
-        loadTasks();
-      }, 1000);
 
       // Fire confetti + XP toast instantly (no waiting for DB)
       const immediatePoints = getTaskPoints(task) * (blastActive ? 2 : 1);
@@ -94,12 +90,17 @@ export default function Tasks() {
         }
       });
 
-      // Save to DB in background
+      // Save to DB first, then wait 1 second before moving to bottom
       base44.entities.Task.update(task.id, {
         status: "Completed",
         last_completed_date: todayStr,
         next_due_date: nextDue.toISOString().split("T")[0],
         streak: newStreak,
+      }).then(() => {
+        setTimeout(() => {
+          setJustCompleted(prev => { const next = new Set(prev); next.delete(task.id); return next; });
+          loadTasks();
+        }, 1000);
       });
     } else {
       setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Pending" } : t));
