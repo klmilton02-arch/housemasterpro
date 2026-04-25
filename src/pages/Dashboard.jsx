@@ -128,18 +128,39 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div className="space-y-7 max-w-sm md:max-w-full mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
 
       <h1 className="font-heading text-3xl font-bold md:hidden">Dashboard</h1>
 
-      <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
-        <StatCard icon={ListChecks} label="Due" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'Due Tasks', tasks: dueTasks })} />
-        <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks })} />
-        <StatCard icon={Clock} label="Due Soon" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" onClick={() => setTaskListModal({ title: 'Due Soon', tasks: dueSoonTasks })} />
-        <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks })} />
+      <div className="hidden md:grid grid-cols-3 gap-6">
+        {/* Left column: Quick nav */}
+        <div className="col-span-1">
+          <QuickNav />
+        </div>
+
+        {/* Right column: Stats and leaderboard */}
+        <div className="col-span-2 space-y-6">
+          <div className="grid grid-cols-2 gap-4">
+            <StatCard icon={ListChecks} label="Due" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'Due Tasks', tasks: dueTasks })} />
+            <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks })} />
+            <StatCard icon={Clock} label="Due Soon" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" onClick={() => setTaskListModal({ title: 'Due Soon', tasks: dueSoonTasks })} />
+            <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks })} />
+          </div>
+
+          <LeaderboardSummary />
+        </div>
       </div>
 
-      <LeaderboardSummary />
+      <div className="md:hidden space-y-6">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+          <StatCard icon={ListChecks} label="Due" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'Due Tasks', tasks: dueTasks })} />
+          <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks })} />
+          <StatCard icon={Clock} label="Due Soon" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" onClick={() => setTaskListModal({ title: 'Due Soon', tasks: dueSoonTasks })} />
+          <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks })} />
+        </div>
+
+        <LeaderboardSummary />
+      </div>
 
       {profile && getEarnedBadges(profile).length > 0 && (
         <div className="bg-card border border-border rounded-lg p-5">
@@ -173,7 +194,9 @@ export default function Dashboard() {
 
       <DashboardPresetBrowser onTaskAdded={loadTasks} />
 
-      <QuickNav />
+      <div className="md:hidden">
+        <QuickNav />
+      </div>
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
