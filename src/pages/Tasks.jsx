@@ -358,24 +358,7 @@ export default function Tasks() {
         </>
       )}
 
-      {viewMode === "list" && (
-        <div className="flex gap-2 w-full flex-col md:flex-row md:max-w-xs mx-auto md:mx-0">
 
-          <MobileSelect
-            value={groupBy}
-            onValueChange={setGroupBy}
-            title="Group By"
-            triggerClassName="flex-1 min-w-0 text-sm h-10"
-            options={[
-              { value: "none", label: "No Grouping" },
-              { value: "category", label: "Group by Category" },
-              { value: "xp", label: "Group by XP" },
-              { value: "frequency", label: "Group by Frequency" },
-            ]}
-          />
-
-        </div>
-      )}
 
       {viewMode === "list" ? (
         filtered.length === 0 ? (
