@@ -1,6 +1,13 @@
+import { Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+
 export default function Encryption() {
   return (
     <div className="space-y-6 max-w-xs md:max-w-2xl mx-auto px-2 sm:px-1 pt-6 pb-8">
+      <Link to="/profile" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors">
+        <ArrowLeft className="w-4 h-4" />
+        Back to Profile
+      </Link>
       <div>
         <h1 className="font-heading text-3xl sm:text-2xl font-bold">App Encryption & Security</h1>
         <p className="text-base sm:text-sm text-muted-foreground mt-1">How we protect your data</p>
