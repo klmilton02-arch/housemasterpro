@@ -67,7 +67,6 @@ export default function Tasks() {
       // Streak: increment if last completed within 2x frequency window (daily tasks only), else reset to 1
       let newStreak = 1;
       if (task.frequency_days <= 1 && task.last_completed_date) {
-        const { differenceInDays, parseISO } = await import("date-fns");
         const daysSinceLast = differenceInDays(today, parseISO(task.last_completed_date));
         newStreak = daysSinceLast <= 2 ? (task.streak || 0) + 1 : 1;
       }
@@ -79,19 +78,24 @@ export default function Tasks() {
         next_due_date: nextDue.toISOString().split("T")[0],
         streak: newStreak,
       };
-      setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
-      await base44.entities.Task.update(task.id, {
-        status: "Completed",
-        last_completed_date: updated.last_completed_date,
-        next_due_date: updated.next_due_date,
-        streak: newStreak,
-      });
+
+      // Fire confetti + XP toast immediately (same moment as checkmark)
       const result = await awardPoints(task, blastActive);
       if (result) {
         confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
         setReward(result);
       }
-      loadTasks();
+
+      // Save to DB in background
+      base44.entities.Task.update(task.id, {
+        status: "Completed",
+        last_completed_date: updated.last_completed_date,
+        next_due_date: updated.next_due_date,
+        streak: newStreak,
+      });
+
+      // Wait 1 second before reordering the list
+      setTimeout(() => loadTasks(), 1000);
     } else {
       setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Pending" } : t));
       await base44.entities.Task.update(task.id, { status: "Pending" });
