@@ -264,7 +264,7 @@ export default function Tasks() {
       <div className="grid grid-cols-2 gap-3">
         <button
           onClick={() => setDialogOpen(true)}
-          className="bg-blue-500 hover:bg-blue-600 text-white rounded-xl p-4 flex flex-col items-start gap-2 transition-colors shadow-sm"
+          className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex flex-col items-start gap-2 transition-colors shadow-sm"
         >
           <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
             <Plus className="w-5 h-5" />
@@ -273,7 +273,7 @@ export default function Tasks() {
         </button>
         <button
           onClick={() => setViewMode(viewMode === "calendar" ? "list" : "calendar")}
-          className="bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl p-4 flex flex-col items-start gap-2 transition-colors shadow-sm"
+          className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex flex-col items-start gap-2 transition-colors shadow-sm"
         >
           <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
             <Calendar className="w-5 h-5" />
@@ -282,7 +282,7 @@ export default function Tasks() {
         </button>
         <button
           onClick={() => { setViewMode("list"); setCategoryFilter("Bill Schedules"); }}
-          className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl p-4 flex flex-col items-start gap-2 transition-colors shadow-sm"
+          className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex flex-col items-start gap-2 transition-colors shadow-sm"
         >
           <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
             <Receipt className="w-5 h-5" />
@@ -291,7 +291,7 @@ export default function Tasks() {
         </button>
         <button
           onClick={() => setViewMode("rooms")}
-          className="bg-orange-500 hover:bg-orange-600 text-white rounded-xl p-4 flex flex-col items-start gap-2 transition-colors shadow-sm"
+          className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex flex-col items-start gap-2 transition-colors shadow-sm"
         >
           <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
             <Home className="w-5 h-5" />
