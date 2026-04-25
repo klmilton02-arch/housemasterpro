@@ -46,11 +46,17 @@ export { getStatusInfo, formatFrequency };
 
 export default function TaskCard({ task, onComplete, onRenamed, onViewDetails }) {
   const isCompleted = task.status === "Completed";
+  const [checked, setChecked] = useState(isCompleted);
   const status = getStatusInfo(task);
   const StatusIcon = status.icon;
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(task.name);
   const inputRef = useRef(null);
+
+  // Keep in sync when parent resets (e.g. uncomplete from detail modal)
+  if (isCompleted !== checked && isCompleted === false) {
+    setChecked(false);
+  }
 
   async function saveName() {
     const trimmed = name.trim();
@@ -61,14 +67,16 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails })
   }
 
   function handleCheckboxClick() {
-    if (isCompleted) {
+    const nowChecked = !checked;
+    setChecked(nowChecked);
+    if (!nowChecked) {
       onComplete({ ...task, status: "Pending" });
     } else {
       onComplete(task);
     }
   }
 
-  const cardBg = isCompleted
+  const cardBg = checked
     ? "border-green-400 bg-green-50/60 dark:border-green-700 dark:bg-green-950/30"
     : {
         "Overdue": "border-red-300 bg-red-50/60 dark:border-red-800 dark:bg-red-950/30",
@@ -76,7 +84,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails })
         "Due Soon": "border-yellow-300 bg-yellow-50/60 dark:border-yellow-800 dark:bg-yellow-950/30",
       }[status.label] || "border-border bg-card";
 
-  const showDate = ["Overdue", "Past Due", "Due Soon"].includes(status.label);
+  const showDate = !checked && ["Overdue", "Past Due", "Due Soon"].includes(status.label);
 
   return (
     <div className={cn(
@@ -97,7 +105,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails })
             />
           ) : (
             <div className="flex items-center gap-1 group/name">
-              <h3 className={cn("font-heading font-semibold text-base truncate", isCompleted ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
+              <h3 className={cn("font-heading font-semibold text-base truncate", checked ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
               <button
                 onClick={e => { e.stopPropagation(); setEditing(true); }}
                 className="opacity-0 group-hover/name:opacity-100 transition-opacity p-0.5 rounded hover:bg-muted"
@@ -127,14 +135,14 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails })
         <div className="flex items-center gap-1 shrink-0">
           <button
             className={`h-9 w-9 sm:h-8 sm:w-8 flex items-center justify-center rounded-md border-2 transition-all ${
-              isCompleted
+              checked
                 ? "border-green-500 bg-green-500"
                 : "border-muted-foreground/40 hover:border-primary bg-transparent"
             }`}
             onClick={e => { e.stopPropagation(); handleCheckboxClick(); }}
-            title={isCompleted ? "Mark incomplete" : "Mark complete"}
+            title={checked ? "Mark incomplete" : "Mark complete"}
           >
-            <Check className={`w-5 h-5 sm:w-4 sm:h-4 transition-opacity ${isCompleted ? "text-white opacity-100" : "opacity-0"}`} />
+            <Check className={`w-5 h-5 sm:w-4 sm:h-4 transition-opacity ${checked ? "text-white opacity-100" : "opacity-0"}`} />
           </button>
           <button
             onClick={e => { e.stopPropagation(); onViewDetails?.(task); }}
