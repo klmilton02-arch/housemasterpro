@@ -71,26 +71,20 @@ export default function Tasks() {
         newStreak = daysSinceLast <= 2 ? (task.streak || 0) + 1 : 1;
       }
 
-      const updated = {
-        ...task,
-        status: "Completed",
-        last_completed_date: todayStr,
-        next_due_date: nextDue.toISOString().split("T")[0],
-        streak: newStreak,
-      };
+      // Optimistically update UI instantly
+      setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDue.toISOString().split("T")[0], streak: newStreak } : t));
 
-      // Fire confetti + XP toast immediately (same moment as checkmark)
-      const result = await awardPoints(task, blastActive);
-      if (result) {
-        confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
-        setReward(result);
-      }
+      // Fire confetti + XP toast instantly
+      confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+      awardPoints(task, blastActive).then(result => {
+        if (result) setReward(result);
+      });
 
       // Save to DB in background
       base44.entities.Task.update(task.id, {
         status: "Completed",
-        last_completed_date: updated.last_completed_date,
-        next_due_date: updated.next_due_date,
+        last_completed_date: todayStr,
+        next_due_date: nextDue.toISOString().split("T")[0],
         streak: newStreak,
       });
 
