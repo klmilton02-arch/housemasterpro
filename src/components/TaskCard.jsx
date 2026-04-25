@@ -46,7 +46,15 @@ export { getStatusInfo, formatFrequency };
 
 export default function TaskCard({ task, onComplete, onRenamed, onViewDetails }) {
   const isCompleted = task.status === "Completed";
+  // Use a ref to track if we've locally toggled so we don't override optimistic state on re-render
   const [optimisticChecked, setOptimisticChecked] = useState(isCompleted);
+  const localOverride = useRef(false);
+
+  // Sync from props only when not in a local optimistic override window
+  if (!localOverride.current && optimisticChecked !== isCompleted) {
+    setOptimisticChecked(isCompleted);
+  }
+
   const status = getStatusInfo(task);
   const StatusIcon = status.icon;
   const [editing, setEditing] = useState(false);
@@ -64,6 +72,9 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails })
   function handleCheckboxClick() {
     const nowChecked = !optimisticChecked;
     setOptimisticChecked(nowChecked);
+    localOverride.current = true;
+    // Release override after list reorders (1.2s matches the 1s delay in Tasks + buffer)
+    setTimeout(() => { localOverride.current = false; }, 1200);
     if (!nowChecked) {
       onComplete({ ...task, status: "Pending" });
     } else {
