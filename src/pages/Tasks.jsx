@@ -264,36 +264,36 @@ export default function Tasks() {
       <div className="grid grid-cols-2 gap-3">
         <button
           onClick={() => setDialogOpen(true)}
-          className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex flex-col items-start gap-2 transition-colors shadow-sm"
+          className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex items-center gap-3 transition-colors shadow-sm"
         >
-          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
+          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
             <Plus className="w-5 h-5" />
           </div>
           <span className="font-heading font-bold text-base">Add Task</span>
         </button>
         <button
           onClick={() => setViewMode(viewMode === "calendar" ? "list" : "calendar")}
-          className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex flex-col items-start gap-2 transition-colors shadow-sm"
+          className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex items-center gap-3 transition-colors shadow-sm"
         >
-          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
+          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
             <Calendar className="w-5 h-5" />
           </div>
           <span className="font-heading font-bold text-base">Calendar</span>
         </button>
         <button
           onClick={() => { setViewMode("list"); setCategoryFilter("Bill Schedules"); }}
-          className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex flex-col items-start gap-2 transition-colors shadow-sm"
+          className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex items-center gap-3 transition-colors shadow-sm"
         >
-          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
+          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
             <Receipt className="w-5 h-5" />
           </div>
           <span className="font-heading font-bold text-base">Bills</span>
         </button>
         <button
           onClick={() => setViewMode("rooms")}
-          className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex flex-col items-start gap-2 transition-colors shadow-sm"
+          className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex items-center gap-3 transition-colors shadow-sm"
         >
-          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
+          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
             <Home className="w-5 h-5" />
           </div>
           <span className="font-heading font-bold text-base">Rooms</span>
