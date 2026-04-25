@@ -204,34 +204,22 @@ export default function Dashboard() {
           <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks })} />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-card border border-border rounded-lg overflow-hidden">
-            <button
-              className="w-full flex items-center justify-between p-4 hover:bg-muted/40 transition-colors"
-              onClick={() => setAllTasksOpen(o => !o)}
-            >
-              <h2 className="font-heading font-semibold text-foreground">Tasks</h2>
-              {allTasksOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
-            </button>
-            {allTasksOpen && (
-              <div className="space-y-2 max-h-64 overflow-y-auto px-4 pb-4">
-                {tasks.slice(0, 8).map(task => (
-                  <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
-                ))}
-                {tasks.length === 0 && <p className="text-center text-sm text-muted-foreground py-4">No tasks yet</p>}
-              </div>
-            )}
-          </div>
-
-          <div className="bg-card border border-border rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-4">
-              <Zap className="w-5 h-5 text-accent" />
-              <h2 className="font-heading font-semibold text-foreground text-sm">Blast Mode</h2>
+        <div className="bg-card border border-border rounded-lg overflow-hidden">
+          <button
+            className="w-full flex items-center justify-between p-4 hover:bg-muted/40 transition-colors"
+            onClick={() => setAllTasksOpen(o => !o)}
+          >
+            <h2 className="font-heading font-semibold text-foreground">Tasks</h2>
+            {allTasksOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+          </button>
+          {allTasksOpen && (
+            <div className="space-y-2 max-h-64 overflow-y-auto px-4 pb-4">
+              {tasks.slice(0, 8).map(task => (
+                <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
+              ))}
+              {tasks.length === 0 && <p className="text-center text-sm text-muted-foreground py-4">No tasks yet</p>}
             </div>
-            <Button onClick={startBlast} disabled={isBlastActive} className="w-full text-sm">
-              {isBlastActive ? `Active (${duration}s)` : "Start Blast"}
-            </Button>
-          </div>
+          )}
         </div>
 
         <LeaderboardSummary />
