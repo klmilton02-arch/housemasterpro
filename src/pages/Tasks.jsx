@@ -64,6 +64,7 @@ export default function Tasks() {
       const todayStr = today.toISOString().split("T")[0];
       const nextDue = new Date(today);
       nextDue.setDate(nextDue.getDate() + task.frequency_days);
+      const nextDueStr = nextDue.toISOString().split("T")[0];
 
       // Streak: increment if last completed within 2x frequency window (daily tasks only), else reset to 1
       let newStreak = 1;
@@ -91,11 +92,11 @@ export default function Tasks() {
       base44.entities.Task.update(task.id, {
         status: "Completed",
         last_completed_date: todayStr,
-        next_due_date: nextDue.toISOString().split("T")[0],
+        next_due_date: nextDueStr,
         streak: newStreak,
       }).then(() => {
         setTimeout(() => {
-          setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDue.toISOString().split("T")[0], streak: newStreak } : t));
+          setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak } : t));
           setJustCompleted(prev => { const next = new Set(prev); next.delete(task.id); return next; });
         }, 1000);
       });
