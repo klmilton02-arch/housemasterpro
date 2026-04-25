@@ -148,7 +148,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="bg-card border border-border rounded-lg overflow-hidden">
+      <div className="hidden md:block bg-card border border-border rounded-lg overflow-hidden">
         <button
           className="w-full flex items-center justify-between p-5 hover:bg-muted/40 transition-colors"
           onClick={() => setAllTasksOpen(o => !o)}
@@ -171,7 +171,9 @@ export default function Dashboard() {
         )}
       </div>
 
-      <DashboardPresetBrowser onTaskAdded={loadTasks} />
+      <div className="hidden md:block">
+        <DashboardPresetBrowser onTaskAdded={loadTasks} />
+      </div>
 
       <QuickNav />
 
