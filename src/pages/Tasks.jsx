@@ -373,16 +373,7 @@ export default function Tasks() {
               { value: "frequency", label: "Group by Frequency" },
             ]}
           />
-          <MobileSelect
-            value={roomFilter}
-            onValueChange={setRoomFilter}
-            title="Filter by Room"
-            triggerClassName="flex-1 min-w-0 text-sm h-10"
-            options={[
-              { value: "all", label: "All Rooms" },
-              ...rooms.map(r => ({ value: r, label: r })),
-            ]}
-          />
+
         </div>
       )}
 
