@@ -99,6 +99,7 @@ export default function Tasks() {
       }).then(() => {
         setTimeout(() => {
           setJustCompleted(prev => { const next = new Set(prev); next.delete(task.id); return next; });
+          loadTasks();
         }, 1000);
       });
     } else {
