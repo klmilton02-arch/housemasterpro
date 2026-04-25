@@ -70,10 +70,13 @@ export default function Profile() {
     setClearing(true);
     try {
       const allTasks = await base44.entities.Task.list("-created_date", 1000);
-      await Promise.all(allTasks.map(task => base44.entities.Task.delete(task.id)));
+      for (const task of allTasks) {
+        await base44.entities.Task.delete(task.id);
+        await new Promise(r => setTimeout(r, 50)); // Small delay to avoid rate limiting
+      }
+      window.location.reload(); // Reload to refresh the UI
     } catch (err) {
       console.error("Failed to delete tasks:", err);
-    } finally {
       setClearing(false);
     }
   }
