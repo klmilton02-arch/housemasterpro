@@ -73,22 +73,24 @@ export default function Tasks() {
         newStreak = daysSinceLast <= 2 ? (task.streak || 0) + 1 : 1;
       }
 
-      // Add to justCompleted to prevent sorting during 1-second delay
+      // Update UI immediately with Completed status so checkmark + green show
+      setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak } : t));
+      // Add to justCompleted to prevent sorting for 1 second
       setJustCompleted(prev => new Set([...prev, task.id]));
 
-      // Fire confetti + XP toast instantly (no waiting for DB)
+      // Fire confetti + XP toast instantly
       const immediatePoints = getTaskPoints(task) * (blastActive ? 2 : 1);
       confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
       setReward({ totalPoints: immediatePoints, blastBonus: blastActive });
 
-      // Award points in background (updates DB, may add badges/level-up)
+      // Award points in background
       awardPoints(task, blastActive).then(result => {
         if (result && (result.leveledUp || result.newBadges?.length > 0)) {
           setReward(result);
         }
       });
 
-      // Save to DB, then after 1 second update local state to move to bottom
+      // Save to DB and remove from justCompleted after 1 second to allow sorting
       base44.entities.Task.update(task.id, {
         status: "Completed",
         last_completed_date: todayStr,
@@ -96,7 +98,6 @@ export default function Tasks() {
         streak: newStreak,
       }).then(() => {
         setTimeout(() => {
-          setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak } : t));
           setJustCompleted(prev => { const next = new Set(prev); next.delete(task.id); return next; });
         }, 1000);
       });
