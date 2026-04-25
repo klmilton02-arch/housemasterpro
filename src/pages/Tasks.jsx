@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown, ListChecks, Clock, CheckCircle } from "lucide-react";
+import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown, ListChecks, Clock, CheckCircle, Tag } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { awardPoints, getTaskPoints } from "@/utils/gamification";
 import confetti from "canvas-confetti";
@@ -265,6 +265,42 @@ export default function Tasks() {
         <StatCard icon={Clock} label="Due Soon" value={dueSoon} color="bg-amber-100 text-amber-600" onClick={() => setStatusFilter("due_soon")} />
         <StatCard icon={CheckCircle} label="Completed" value={completedCount} color="bg-green-100 text-green-600" onClick={() => setStatusFilter("completed")} />
       </div>
+
+      {viewMode === "list" && categories.length > 0 && (
+        <div className="bg-card border border-border rounded-xl overflow-hidden">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted/40 transition-colors">
+                <div className="flex items-center gap-2">
+                  <div className="w-9 h-9 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center">
+                    <Tag className="w-5 h-5" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-heading font-bold text-xl text-foreground">{categories.length}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {categoryFilter === "all" ? "Categories" : categoryFilter}
+                    </p>
+                  </div>
+                </div>
+                <ChevronDown className="w-4 h-4 text-muted-foreground" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-56">
+              <DropdownMenuItem onClick={() => setCategoryFilter("all")}>
+                <span className={categoryFilter === "all" ? "font-semibold text-primary" : ""}>All Categories</span>
+              </DropdownMenuItem>
+              {categories.map(c => (
+                <DropdownMenuItem key={c} onClick={() => setCategoryFilter(c)}>
+                  <span className={categoryFilter === c ? "font-semibold text-primary" : ""}>{c}</span>
+                  <span className="ml-auto text-xs text-muted-foreground">
+                    {tasks.filter(t => t.category === c).length}
+                  </span>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )}
 
       {viewMode === "list" && (
         <>
