@@ -100,6 +100,11 @@ const AuthenticatedApp = () => {
             <Copyright />
           </motion.div>
         } />
+        <Route path="/privacy" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+            <Privacy />
+          </motion.div>
+        } />
         
         {/* Protected routes */}
         <Route element={<Layout />}>
