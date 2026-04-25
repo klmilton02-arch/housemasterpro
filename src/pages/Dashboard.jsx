@@ -132,14 +132,11 @@ export default function Dashboard() {
 
       <h1 className="font-heading text-3xl font-bold md:hidden">Dashboard</h1>
 
-      <div className="hidden md:grid grid-cols-3 gap-6">
-        {/* Left column: Quick nav */}
-        <div className="col-span-1">
-          <QuickNav />
-        </div>
+      <div className="hidden md:grid grid-cols-1 gap-6">
+        <h1 className="font-heading text-3xl font-bold">Dashboard</h1>
 
-        {/* Right column: Stats, leaderboard, badges, all tasks, presets */}
-        <div className="col-span-2 space-y-6">
+        {/* Stats, leaderboard, badges, all tasks, presets */}
+        <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <StatCard icon={ListChecks} label="Due" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'Due Tasks', tasks: dueTasks })} />
             <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks })} />
