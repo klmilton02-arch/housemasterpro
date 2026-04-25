@@ -39,6 +39,7 @@ export default function Tasks() {
   const [assignedFilter, setAssignedFilter] = useState("all"); // "all" | "assigned" | "unassigned"
   const [roomFilter, setRoomFilter] = useState("all");
   const [selectedMemberId, setSelectedMemberId] = useState(null);
+  const [justCompleted, setJustCompleted] = useState(new Set());
   const { isActive: blastActive } = useBlastMode();
   const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
   const { handleTouchStart, handleTouchEnd } = useSwipeNavigation(PAGES);
@@ -74,6 +75,13 @@ export default function Tasks() {
       // Optimistically update UI instantly
       setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDue.toISOString().split("T")[0], streak: newStreak } : t));
 
+      // Prevent resorting for 1 second so green/check shows before task moves
+      setJustCompleted(prev => new Set([...prev, task.id]));
+      setTimeout(() => {
+        setJustCompleted(prev => { const next = new Set(prev); next.delete(task.id); return next; });
+        loadTasks();
+      }, 1000);
+
       // Fire confetti + XP toast instantly
       confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
       awardPoints(task, blastActive).then(result => {
@@ -87,9 +95,6 @@ export default function Tasks() {
         next_due_date: nextDue.toISOString().split("T")[0],
         streak: newStreak,
       });
-
-      // Wait 1 second before reordering the list
-      setTimeout(() => loadTasks(), 1000);
     } else {
       setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Pending" } : t));
       await base44.entities.Task.update(task.id, { status: "Pending" });
@@ -171,8 +176,9 @@ export default function Tasks() {
     if (roomFilter !== "all" && t.room !== roomFilter) return false;
     return true;
   }).sort((a, b) => {
-    const aCompleted = a.status === "Completed";
-    const bCompleted = b.status === "Completed";
+    // Tasks that were just completed stay in place for 1 second
+    const aCompleted = a.status === "Completed" && !justCompleted.has(a.id);
+    const bCompleted = b.status === "Completed" && !justCompleted.has(b.id);
     // Completed tasks go to the bottom
     if (aCompleted && !bCompleted) return 1;
     if (!aCompleted && bCompleted) return -1;
