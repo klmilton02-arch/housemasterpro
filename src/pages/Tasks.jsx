@@ -82,10 +82,16 @@ export default function Tasks() {
         loadTasks();
       }, 1000);
 
-      // Fire confetti + XP toast instantly
+      // Fire confetti + XP toast instantly (no waiting for DB)
+      const immediatePoints = getTaskPoints(task) * (blastActive ? 2 : 1);
       confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+      setReward({ totalPoints: immediatePoints, blastBonus: blastActive });
+
+      // Award points in background (updates DB, may add badges/level-up)
       awardPoints(task, blastActive).then(result => {
-        if (result) setReward(result);
+        if (result && (result.leveledUp || result.newBadges?.length > 0)) {
+          setReward(result); // only update toast if there's something extra to show
+        }
       });
 
       // Save to DB in background
