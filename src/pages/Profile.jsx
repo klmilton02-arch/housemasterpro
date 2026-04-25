@@ -78,6 +78,22 @@ export default function Profile() {
     }
   }
 
+  async function handleClearLeaderboard() {
+    setClearing(true);
+    try {
+      const profiles = await base44.entities.GamificationProfile.list("-created_date", 1000);
+      const completions = await base44.entities.CompletionHistory.list("-created_date", 1000);
+      await Promise.all([
+        ...profiles.map(p => base44.entities.GamificationProfile.delete(p.id)),
+        ...completions.map(c => base44.entities.CompletionHistory.delete(c.id))
+      ]);
+    } catch (err) {
+      console.error("Failed to clear leaderboard:", err);
+    } finally {
+      setClearing(false);
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -202,27 +218,51 @@ export default function Profile() {
       </div>
 
       {/* Start Over */}
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button variant="outline" className="w-full gap-2 text-orange-600 hover:text-orange-700 border-orange-200 hover:bg-orange-50">
-            <Trash2 className="w-4 h-4" /> Start Over
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete All Tasks</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete all tasks. This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleStartOver} disabled={clearing} className="bg-destructive text-destructive-foreground">
-              {clearing ? "Deleting..." : "Delete All Tasks"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <div className="space-y-2">
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="outline" className="w-full gap-2 text-orange-600 hover:text-orange-700 border-orange-200 hover:bg-orange-50">
+              <Trash2 className="w-4 h-4" /> Start Over
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete All Tasks</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will permanently delete all tasks. This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleStartOver} disabled={clearing} className="bg-destructive text-destructive-foreground">
+                {clearing ? "Deleting..." : "Delete All Tasks"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="outline" className="w-full gap-2 text-red-600 hover:text-red-700 border-red-200 hover:bg-red-50">
+              <Trash2 className="w-4 h-4" /> Clear Leaderboard
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Reset Leaderboard</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will clear all XP, levels, badges, and completion history for all players. This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleClearLeaderboard} disabled={clearing} className="bg-destructive text-destructive-foreground">
+                {clearing ? "Clearing..." : "Clear Leaderboard"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
 
       {/* Logout */}
       <Button onClick={handleLogout} variant="destructive" className="w-full gap-2">
