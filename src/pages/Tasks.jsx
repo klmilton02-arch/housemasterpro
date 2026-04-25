@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown, ListChecks, Clock, CheckCircle, Tag } from "lucide-react";
+import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown, ListChecks, Clock, CheckCircle, Tag, Receipt, Home } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { awardPoints, getTaskPoints } from "@/utils/gamification";
 import confetti from "canvas-confetti";
@@ -261,6 +261,45 @@ export default function Tasks() {
       </div>
 
 
+      <div className="grid grid-cols-2 gap-3">
+        <button
+          onClick={() => setDialogOpen(true)}
+          className="bg-blue-500 hover:bg-blue-600 text-white rounded-xl p-4 flex flex-col items-start gap-2 transition-colors shadow-sm"
+        >
+          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
+            <Plus className="w-5 h-5" />
+          </div>
+          <span className="font-heading font-bold text-base">Add Task</span>
+        </button>
+        <button
+          onClick={() => setViewMode(viewMode === "calendar" ? "list" : "calendar")}
+          className="bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl p-4 flex flex-col items-start gap-2 transition-colors shadow-sm"
+        >
+          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
+            <Calendar className="w-5 h-5" />
+          </div>
+          <span className="font-heading font-bold text-base">Calendar</span>
+        </button>
+        <button
+          onClick={() => { setViewMode("list"); setCategoryFilter("Bill Schedules"); }}
+          className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl p-4 flex flex-col items-start gap-2 transition-colors shadow-sm"
+        >
+          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
+            <Receipt className="w-5 h-5" />
+          </div>
+          <span className="font-heading font-bold text-base">Bills</span>
+        </button>
+        <button
+          onClick={() => setViewMode("rooms")}
+          className="bg-orange-500 hover:bg-orange-600 text-white rounded-xl p-4 flex flex-col items-start gap-2 transition-colors shadow-sm"
+        >
+          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
+            <Home className="w-5 h-5" />
+          </div>
+          <span className="font-heading font-bold text-base">Rooms</span>
+        </button>
+      </div>
+
       {viewMode === "list" && categories.length > 0 && (
         <div className="bg-card border border-border rounded-xl overflow-hidden">
           <DropdownMenu>
@@ -438,65 +477,7 @@ export default function Tasks() {
         <RoomView tasks={tasks} onComplete={handleComplete} onViewDetails={setSelectedTask} onDelete={handleDelete} onAddTask={(room) => { setDialogOpen(true); /* pre-fill room if AddTaskDialog supports it */ }} />
       )}
 
-      <div className="flex gap-2 flex-col gap-3 pt-2">
-        <Button onClick={() => setDialogOpen(true)} className="gap-2 w-full h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500 border-blue-400">
-          <Plus className="w-5 h-5" /> Add Task
-        </Button>
-        <Button
-          onClick={() => setViewMode(viewMode === "calendar" ? "list" : "calendar")}
-          className="w-full h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
-        >
-          <Calendar className="w-4 h-4 mr-2" /> Calendar
-        </Button>
-        <div className="flex gap-2">
-          <Button
-            onClick={() => { setViewMode("list"); setCategoryFilter("Bill Schedules"); }}
-            className="flex-1 h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
-          >
-            Bills
-          </Button>
-          <Button
-            onClick={() => setViewMode("rooms")}
-            className="flex-1 h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
-          >
-            Rooms
-          </Button>
-        </div>
-        <div className="flex gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button className="flex-1 h-14 gap-1 text-lg font-medium bg-blue-400 hover:bg-blue-500">
-                {selectedMemberId ? familyMembers.find(m => m.id === selectedMemberId)?.name : "Assigned To"}
-                <ChevronDown className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-48">
-              {selectedMemberId && (
-                <DropdownMenuItem onClick={() => { setSelectedMemberId(null); setAssignedFilter("all"); setViewMode("list"); }}>
-                  All Members
-                </DropdownMenuItem>
-              )}
-              {familyMembers.map(member => (
-                <DropdownMenuItem
-                  key={member.id}
-                  onClick={() => { setSelectedMemberId(member.id); setAssignedFilter("all"); setViewMode("list"); }}
-                >
-                  <div className={`w-5 h-5 rounded-full bg-${member.avatar_color}-500 flex items-center justify-center text-white text-xs font-bold mr-2`}>
-                    {member.name[0]}
-                  </div>
-                  {member.name}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Button
-            onClick={() => { setViewMode("list"); setSelectedMemberId(null); setAssignedFilter(assignedFilter === "unassigned" ? "all" : "unassigned"); }}
-            className="flex-1 h-14 text-lg font-medium bg-blue-400 hover:bg-blue-500"
-          >
-            Unassigned
-          </Button>
-        </div>
-      </div>
+
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
