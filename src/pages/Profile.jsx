@@ -94,6 +94,27 @@ export default function Profile() {
     }
   }
 
+  async function handleStartFresh() {
+    setClearing(true);
+    try {
+      const allTasks = await base44.entities.Task.list("-created_date", 1000);
+      const completedTasks = allTasks.filter(t => t.status === "Completed");
+      const today = new Date().toISOString().split("T")[0];
+      await Promise.all(completedTasks.map(task =>
+        base44.entities.Task.update(task.id, {
+          status: "Pending",
+          last_completed_date: null,
+          next_due_date: today,
+          streak: 0
+        })
+      ));
+    } catch (err) {
+      console.error("Failed to reset completed tasks:", err);
+    } finally {
+      setClearing(false);
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -221,8 +242,30 @@ export default function Profile() {
       <div className="space-y-2">
         <AlertDialog>
           <AlertDialogTrigger asChild>
+            <Button variant="outline" className="w-full gap-2 text-yellow-600 hover:text-yellow-700 border-yellow-200 hover:bg-yellow-50">
+              <Trash2 className="w-4 h-4" /> Start Fresh
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Reset Completed Tasks</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will mark all your completed tasks as pending with today's due date. This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleStartFresh} disabled={clearing} className="bg-yellow-600 hover:bg-yellow-700 text-white">
+                {clearing ? "Resetting..." : "Start Fresh"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
             <Button variant="outline" className="w-full gap-2 text-orange-600 hover:text-orange-700 border-orange-200 hover:bg-orange-50">
-              <Trash2 className="w-4 h-4" /> Start Over
+              <Trash2 className="w-4 h-4" /> Delete All Tasks
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
