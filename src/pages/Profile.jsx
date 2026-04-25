@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { User, LogOut, Shield, Clock } from "lucide-react";
+import { User, LogOut, Shield, Clock, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import BadgeDisplay from "../components/BadgeDisplay";
 import SyncGoogleTasksButton from "../components/SyncGoogleTasksButton";
 import { getEarnedBadges } from "@/utils/badges";
@@ -19,6 +20,7 @@ export default function Profile() {
   const [homeSetup, setHomeSetup] = useState(null);
   const [dayStartHour, setDayStartHour] = useState("0");
   const [savingHour, setSavingHour] = useState(false);
+  const [clearing, setClearing] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -62,6 +64,18 @@ export default function Profile() {
       setHomeSetup(created);
     }
     setSavingHour(false);
+  }
+
+  async function handleStartOver() {
+    setClearing(true);
+    try {
+      const allTasks = await base44.entities.Task.list("-created_date", 1000);
+      await Promise.all(allTasks.map(task => base44.entities.Task.delete(task.id)));
+    } catch (err) {
+      console.error("Failed to delete tasks:", err);
+    } finally {
+      setClearing(false);
+    }
   }
 
   if (loading) {
@@ -186,6 +200,29 @@ export default function Profile() {
           </Button>
         </Link>
       </div>
+
+      {/* Start Over */}
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button variant="outline" className="w-full gap-2 text-orange-600 hover:text-orange-700 border-orange-200 hover:bg-orange-50">
+            <Trash2 className="w-4 h-4" /> Start Over
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete All Tasks</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete all tasks. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleStartOver} disabled={clearing} className="bg-destructive text-destructive-foreground">
+              {clearing ? "Deleting..." : "Delete All Tasks"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Logout */}
       <Button onClick={handleLogout} variant="destructive" className="w-full gap-2">
