@@ -138,7 +138,7 @@ export default function Dashboard() {
           <QuickNav />
         </div>
 
-        {/* Right column: Stats and leaderboard */}
+        {/* Right column: Stats, leaderboard, badges, all tasks, presets */}
         <div className="col-span-2 space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <StatCard icon={ListChecks} label="Due" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'Due Tasks', tasks: dueTasks })} />
@@ -148,6 +148,38 @@ export default function Dashboard() {
           </div>
 
           <LeaderboardSummary />
+
+          {profile && getEarnedBadges(profile).length > 0 && (
+            <div className="bg-card border border-border rounded-lg p-5">
+              <h2 className="font-heading font-semibold text-lg text-foreground mb-3">Your Badges</h2>
+              <BadgeDisplay badges={getEarnedBadges(profile)} size="sm" />
+            </div>
+          )}
+
+          <div className="bg-card border border-border rounded-lg overflow-hidden">
+            <button
+              className="w-full flex items-center justify-between p-5 hover:bg-muted/40 transition-colors"
+              onClick={() => setAllTasksOpen(o => !o)}
+            >
+              <h2 className="font-heading font-semibold text-lg text-foreground">All Tasks</h2>
+              <div className="flex items-center gap-2">
+                <span className="text-base text-muted-foreground">{tasks.length} total</span>
+                {allTasksOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+              </div>
+            </button>
+            {allTasksOpen && (
+              <div className="space-y-3 max-h-72 overflow-y-auto px-5 pb-5">
+                {tasks.slice(0, 10).map(task => (
+                  <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
+                ))}
+                {tasks.length > 10 && (
+                  <p className="text-center text-xs text-muted-foreground py-2">+{tasks.length - 10} more tasks</p>
+                )}
+              </div>
+            )}
+          </div>
+
+          <DashboardPresetBrowser onTaskAdded={loadTasks} />
         </div>
       </div>
 
@@ -160,39 +192,39 @@ export default function Dashboard() {
         </div>
 
         <LeaderboardSummary />
-      </div>
 
-      {profile && getEarnedBadges(profile).length > 0 && (
-        <div className="bg-card border border-border rounded-lg p-5">
-          <h2 className="font-heading font-semibold text-lg text-foreground mb-3">Your Badges</h2>
-          <BadgeDisplay badges={getEarnedBadges(profile)} size="sm" />
-        </div>
-      )}
-
-      <div className="bg-card border border-border rounded-lg overflow-hidden">
-        <button
-          className="w-full flex items-center justify-between p-5 hover:bg-muted/40 transition-colors"
-          onClick={() => setAllTasksOpen(o => !o)}
-        >
-          <h2 className="font-heading font-semibold text-lg text-foreground">All Tasks</h2>
-          <div className="flex items-center gap-2">
-            <span className="text-base text-muted-foreground">{tasks.length} total</span>
-            {allTasksOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
-          </div>
-        </button>
-        {allTasksOpen && (
-          <div className="space-y-3 max-h-72 overflow-y-auto px-5 pb-5">
-            {tasks.slice(0, 10).map(task => (
-              <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
-            ))}
-            {tasks.length > 10 && (
-              <p className="text-center text-xs text-muted-foreground py-2">+{tasks.length - 10} more tasks</p>
-            )}
+        {profile && getEarnedBadges(profile).length > 0 && (
+          <div className="bg-card border border-border rounded-lg p-5">
+            <h2 className="font-heading font-semibold text-lg text-foreground mb-3">Your Badges</h2>
+            <BadgeDisplay badges={getEarnedBadges(profile)} size="sm" />
           </div>
         )}
-      </div>
 
-      <DashboardPresetBrowser onTaskAdded={loadTasks} />
+        <div className="bg-card border border-border rounded-lg overflow-hidden">
+          <button
+            className="w-full flex items-center justify-between p-5 hover:bg-muted/40 transition-colors"
+            onClick={() => setAllTasksOpen(o => !o)}
+          >
+            <h2 className="font-heading font-semibold text-lg text-foreground">All Tasks</h2>
+            <div className="flex items-center gap-2">
+              <span className="text-base text-muted-foreground">{tasks.length} total</span>
+              {allTasksOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+            </div>
+          </button>
+          {allTasksOpen && (
+            <div className="space-y-3 max-h-72 overflow-y-auto px-5 pb-5">
+              {tasks.slice(0, 10).map(task => (
+                <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
+              ))}
+              {tasks.length > 10 && (
+                <p className="text-center text-xs text-muted-foreground py-2">+{tasks.length - 10} more tasks</p>
+              )}
+            </div>
+          )}
+        </div>
+
+        <DashboardPresetBrowser onTaskAdded={loadTasks} />
+      </div>
 
       <div className="md:hidden">
         <QuickNav />
