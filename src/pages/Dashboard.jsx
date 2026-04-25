@@ -199,14 +199,37 @@ export default function Dashboard() {
       </div>
 
       <div className="md:hidden space-y-6">
-        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+        {/* Main cards: Tasks and Leaderboard */}
+        <div className="grid grid-cols-2 gap-4">
+          {/* Tasks Card */}
+          <div className="bg-card border border-border rounded-lg overflow-hidden">
+            <button
+              className="w-full flex items-center justify-between p-4 hover:bg-muted/40 transition-colors"
+              onClick={() => setAllTasksOpen(o => !o)}
+            >
+              <h2 className="font-heading font-semibold text-base text-foreground">Tasks</h2>
+              {allTasksOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+            </button>
+            {allTasksOpen && (
+              <div className="space-y-2 max-h-56 overflow-y-auto px-4 pb-4">
+                {tasks.slice(0, 5).map(task => (
+                  <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Leaderboard Card */}
+          <LeaderboardSummary />
+        </div>
+
+        {/* Stats cards row */}
+        <div className="grid grid-cols-2 gap-3">
           <StatCard icon={ListChecks} label="Due" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'Due Tasks', tasks: dueTasks })} />
           <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks })} />
           <StatCard icon={Clock} label="Due Soon" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" onClick={() => setTaskListModal({ title: 'Due Soon', tasks: dueSoonTasks })} />
           <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks })} />
         </div>
-
-        <LeaderboardSummary />
       </div>
 
       <div className="md:hidden">
