@@ -64,13 +64,11 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails })
   function handleCheckboxClick() {
     const nowChecked = !optimisticChecked;
     setOptimisticChecked(nowChecked);
-    setTimeout(() => {
-      if (!nowChecked) {
-        onComplete({ ...task, status: "Pending" });
-      } else {
-        onComplete(task);
-      }
-    }, 2000);
+    if (!nowChecked) {
+      onComplete({ ...task, status: "Pending" });
+    } else {
+      onComplete(task);
+    }
   }
 
   const cardBg = optimisticChecked
