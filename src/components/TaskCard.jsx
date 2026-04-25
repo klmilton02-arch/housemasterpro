@@ -46,15 +46,6 @@ export { getStatusInfo, formatFrequency };
 
 export default function TaskCard({ task, onComplete, onRenamed, onViewDetails }) {
   const isCompleted = task.status === "Completed";
-  // Use a ref to track if we've locally toggled so we don't override optimistic state on re-render
-  const [optimisticChecked, setOptimisticChecked] = useState(isCompleted);
-  const localOverride = useRef(false);
-
-  // Sync from props only when not in a local optimistic override window
-  if (!localOverride.current && optimisticChecked !== isCompleted) {
-    setOptimisticChecked(isCompleted);
-  }
-
   const status = getStatusInfo(task);
   const StatusIcon = status.icon;
   const [editing, setEditing] = useState(false);
@@ -70,19 +61,14 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails })
   }
 
   function handleCheckboxClick() {
-    const nowChecked = !optimisticChecked;
-    setOptimisticChecked(nowChecked);
-    localOverride.current = true;
-    // Release override after list reorders (1.2s matches the 1s delay in Tasks + buffer)
-    setTimeout(() => { localOverride.current = false; }, 1200);
-    if (!nowChecked) {
+    if (isCompleted) {
       onComplete({ ...task, status: "Pending" });
     } else {
       onComplete(task);
     }
   }
 
-  const cardBg = optimisticChecked
+  const cardBg = isCompleted
     ? "border-green-400 bg-green-50/60 dark:border-green-700 dark:bg-green-950/30"
     : {
         "Overdue": "border-red-300 bg-red-50/60 dark:border-red-800 dark:bg-red-950/30",
@@ -111,7 +97,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails })
             />
           ) : (
             <div className="flex items-center gap-1 group/name">
-              <h3 className={cn("font-heading font-semibold text-base truncate", optimisticChecked ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
+              <h3 className={cn("font-heading font-semibold text-base truncate", isCompleted ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
               <button
                 onClick={e => { e.stopPropagation(); setEditing(true); }}
                 className="opacity-0 group-hover/name:opacity-100 transition-opacity p-0.5 rounded hover:bg-muted"
@@ -141,14 +127,14 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails })
         <div className="flex items-center gap-1 shrink-0">
           <button
             className={`h-9 w-9 sm:h-8 sm:w-8 flex items-center justify-center rounded-md border-2 transition-all ${
-              optimisticChecked
+              isCompleted
                 ? "border-green-500 bg-green-500"
                 : "border-muted-foreground/40 hover:border-primary bg-transparent"
             }`}
             onClick={e => { e.stopPropagation(); handleCheckboxClick(); }}
-            title={optimisticChecked ? "Mark incomplete" : "Mark complete"}
+            title={isCompleted ? "Mark incomplete" : "Mark complete"}
           >
-            <Check className={`w-5 h-5 sm:w-4 sm:h-4 transition-opacity ${optimisticChecked ? "text-white opacity-100" : "opacity-0"}`} />
+            <Check className={`w-5 h-5 sm:w-4 sm:h-4 transition-opacity ${isCompleted ? "text-white opacity-100" : "opacity-0"}`} />
           </button>
           <button
             onClick={e => { e.stopPropagation(); onViewDetails?.(task); }}
