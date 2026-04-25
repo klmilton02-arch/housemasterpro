@@ -21,6 +21,7 @@ import Support from './pages/Support';
 import Encryption from './pages/Encryption';
 import DigitalServicesAct from './pages/DigitalServicesAct';
 import Copyright from './pages/Copyright';
+import TermsOfService from './pages/TermsOfService';
 import Profile from './pages/Profile';
 import Stable from './pages/Stable';
 import Burst from './pages/Burst';
@@ -58,7 +59,7 @@ const AuthenticatedApp = () => {
   }
 
   // Handle authentication errors (but allow public pages)
-  const publicPaths = ['/', '/landing', '/encryption', '/digital-services-act', '/copyright', '/privacy'];
+  const publicPaths = ['/', '/landing', '/encryption', '/digital-services-act', '/copyright', '/privacy', '/terms'];
   const isPublicPath = publicPaths.some(p => window.location.pathname === p || window.location.pathname.startsWith(p + '/'));
   if (authError && !isPublicPath) {
     if (authError.type === 'user_not_registered') {
@@ -103,6 +104,11 @@ const AuthenticatedApp = () => {
         <Route path="/privacy" element={
           <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
             <Privacy />
+          </motion.div>
+        } />
+        <Route path="/terms" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+            <TermsOfService />
           </motion.div>
         } />
         
