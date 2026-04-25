@@ -204,6 +204,37 @@ export default function Dashboard() {
           <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks })} />
         </div>
 
+        <div className="grid grid-cols-3 gap-3">
+          {/* Tasks Section */}
+          <div className="col-span-2 bg-card border border-border rounded-lg overflow-hidden">
+            <button
+              className="w-full flex items-center justify-between p-3 hover:bg-muted/40 transition-colors"
+              onClick={() => setAllTasksOpen(o => !o)}
+            >
+              <h3 className="font-heading font-semibold text-sm text-foreground">Tasks</h3>
+              {allTasksOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+            </button>
+            {allTasksOpen && (
+              <div className="space-y-2 max-h-48 overflow-y-auto px-3 pb-3">
+                {tasks.slice(0, 5).map(task => (
+                  <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Blast Mode Section */}
+          <div className="bg-card border border-border rounded-lg p-3">
+            <div className="flex items-center gap-2 mb-2">
+              <Zap className="w-4 h-4 text-accent" />
+              <h3 className="font-heading font-semibold text-sm text-foreground">Blast</h3>
+            </div>
+            <Button onClick={startBlast} className="w-full text-xs py-1" disabled={isBlastActive}>
+              {isBlastActive ? `${duration}s` : "Start"}
+            </Button>
+          </div>
+        </div>
+
         <LeaderboardSummary />
       </div>
 
