@@ -327,41 +327,7 @@ export default function Tasks() {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {viewMode === "list" && categories.length > 0 && (
-        <div className="bg-card border border-border rounded-xl overflow-hidden">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted/40 transition-colors">
-                <div className="flex items-center gap-2">
-                  <div className="w-9 h-9 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center">
-                    <Tag className="w-5 h-5" />
-                  </div>
-                  <div className="text-left">
-                    <p className="font-heading font-bold text-xl text-foreground">{categories.length}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {categoryFilter === "all" ? "Categories" : categoryFilter}
-                    </p>
-                  </div>
-                </div>
-                <ChevronDown className="w-4 h-4 text-muted-foreground" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56">
-              <DropdownMenuItem onClick={() => setCategoryFilter("all")}>
-                <span className={categoryFilter === "all" ? "font-semibold text-primary" : ""}>All Categories</span>
-              </DropdownMenuItem>
-              {categories.map(c => (
-                <DropdownMenuItem key={c} onClick={() => setCategoryFilter(c)}>
-                  <span className={categoryFilter === c ? "font-semibold text-primary" : ""}>{c}</span>
-                  <span className="ml-auto text-xs text-muted-foreground">
-                    {tasks.filter(t => t.category === c).length}
-                  </span>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      )}
+
 
       {viewMode === "list" && (
         <>
@@ -394,16 +360,7 @@ export default function Tasks() {
 
       {viewMode === "list" && (
         <div className="flex gap-2 w-full flex-col md:flex-row md:max-w-xs mx-auto md:mx-0">
-          <MobileSelect
-            value={categoryFilter}
-            onValueChange={setCategoryFilter}
-            title="Filter by Category"
-            triggerClassName="flex-1 min-w-0 text-sm h-10"
-            options={[
-              { value: "all", label: "All Categories" },
-              ...categories.map(c => ({ value: c, label: c })),
-            ]}
-          />
+
           <MobileSelect
             value={groupBy}
             onValueChange={setGroupBy}
