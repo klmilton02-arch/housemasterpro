@@ -281,7 +281,7 @@ export default function Tasks() {
           <span className="font-heading font-bold text-base">Calendar</span>
         </button>
         <button
-          onClick={() => { setViewMode("list"); setCategoryFilter("Bill Schedules"); }}
+          onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }}
           className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex items-center gap-3 transition-colors shadow-sm"
         >
           <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
