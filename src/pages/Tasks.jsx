@@ -72,10 +72,7 @@ export default function Tasks() {
         newStreak = daysSinceLast <= 2 ? (task.streak || 0) + 1 : 1;
       }
 
-      // Optimistically update UI instantly
-      setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDue.toISOString().split("T")[0], streak: newStreak } : t));
-
-      // Prevent resorting for 1 second so green/check shows before task moves
+      // Add to justCompleted to prevent sorting during 1-second delay
       setJustCompleted(prev => new Set([...prev, task.id]));
 
       // Fire confetti + XP toast instantly (no waiting for DB)
@@ -86,11 +83,11 @@ export default function Tasks() {
       // Award points in background (updates DB, may add badges/level-up)
       awardPoints(task, blastActive).then(result => {
         if (result && (result.leveledUp || result.newBadges?.length > 0)) {
-          setReward(result); // only update toast if there's something extra to show
+          setReward(result);
         }
       });
 
-      // Save to DB first, then wait 1 second before moving to bottom
+      // Save to DB, then after 1 second update local state to move to bottom
       base44.entities.Task.update(task.id, {
         status: "Completed",
         last_completed_date: todayStr,
@@ -98,6 +95,7 @@ export default function Tasks() {
         streak: newStreak,
       }).then(() => {
         setTimeout(() => {
+          setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDue.toISOString().split("T")[0], streak: newStreak } : t));
           setJustCompleted(prev => { const next = new Set(prev); next.delete(task.id); return next; });
         }, 1000);
       });
