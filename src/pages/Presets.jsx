@@ -2,14 +2,13 @@ import { useState, useEffect } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { Search, Plus, ChevronRight, Trash2 } from "lucide-react";
+import { Search, Plus, ChevronRight } from "lucide-react";
 import AddTaskDialog from "../components/AddTaskDialog";
 import { Input } from "@/components/ui/input";
 import MobileSelect from "../components/MobileSelect";
 import { formatFrequency } from "../components/TaskCard";
 import EditPresetDialog from "../components/EditPresetDialog";
 import { Button } from "@/components/ui/button";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 
 const TASK_TYPE_STYLE = {
@@ -55,7 +54,6 @@ export default function Presets() {
   const [editingPreset, setEditingPreset] = useState(null);
   const [addTaskPreset, setAddTaskPreset] = useState(null);
   const [addTaskDialogOpen, setAddTaskDialogOpen] = useState(false);
-  const [clearing, setClearing] = useState(false);
 
   function handlePresetClick(preset) {
     setEditingPreset(preset);
@@ -73,18 +71,6 @@ export default function Presets() {
       setLoading(false);
     });
   }, []);
-
-  async function handleClearAllPresets() {
-    setClearing(true);
-    try {
-      await Promise.all(presets.map(p => base44.entities.PresetTask.delete(p.id)));
-      setPresets([]);
-    } catch (err) {
-      console.error("Failed to delete presets:", err);
-    } finally {
-      setClearing(false);
-    }
-  }
 
   const displayRooms = [...new Set(presets.map(p => p.category).filter(Boolean))].sort();
 
@@ -146,32 +132,9 @@ export default function Presets() {
           <h1 className="font-heading text-3xl font-bold">Preset Library</h1>
           <span className="text-sm text-muted-foreground">{presets.length} presets</span>
         </div>
-        <div className="flex gap-2">
-          <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} className="gap-2 flex-1 h-14 text-base font-medium bg-blue-400 hover:bg-blue-500 text-white border-0">
-            <Plus className="w-5 h-5" /> New Preset
-          </Button>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline" size="icon" className="h-14 w-14 text-red-600 border-red-200 hover:bg-red-50">
-                <Trash2 className="w-5 h-5" />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Clear All Presets</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will permanently delete all {presets.length} presets. This action cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleClearAllPresets} disabled={clearing} className="bg-destructive text-destructive-foreground">
-                  {clearing ? "Clearing..." : "Clear All"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
+        <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} className="gap-2 w-full h-14 text-base font-medium bg-blue-400 hover:bg-blue-500 text-white border-0">
+          <Plus className="w-5 h-5" /> New Preset
+        </Button>
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." className="pl-9 w-full h-14 text-base" />
