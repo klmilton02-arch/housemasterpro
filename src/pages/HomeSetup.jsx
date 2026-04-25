@@ -104,7 +104,7 @@ export default function HomeSetup() {
      // Full bathrooms
      for (let i = 1; i <= config.full_bathrooms; i++) {
        const label = config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i}`;
-       for (const p of presetsForRoom("Bathroom")) {
+       for (const p of presetsForRoom("Full Bathroom")) {
          const roomName = config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i}`;
          tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: roomName });
        }
@@ -113,7 +113,7 @@ export default function HomeSetup() {
      // Half bathrooms
      for (let i = 1; i <= config.half_bathrooms; i++) {
        const label = config.half_bathrooms === 1 ? "Half Bath" : `Half Bath ${i}`;
-       const halfPresets = presetsForRoom("Bathroom").filter(
+       const halfPresets = presetsForRoom("Half Bathroom").filter(
          p => p.task_type !== "Deep Cleaning"
        );
        for (const p of halfPresets) {
