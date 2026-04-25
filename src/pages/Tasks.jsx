@@ -73,9 +73,6 @@ export default function Tasks() {
         newStreak = daysSinceLast <= 2 ? (task.streak || 0) + 1 : 1;
       }
 
-      // Add to justCompleted to show visual feedback without sorting yet
-      setJustCompleted(prev => new Set([...prev, task.id]));
-
       // Fire confetti + XP toast instantly
       const immediatePoints = getTaskPoints(task) * (blastActive ? 2 : 1);
       confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
@@ -88,16 +85,17 @@ export default function Tasks() {
         }
       });
 
-      // After 1 second: update status and DB, then allow sorting
-      setTimeout(async () => {
+      // Update DB immediately in background
+      base44.entities.Task.update(task.id, {
+        status: "Completed",
+        last_completed_date: todayStr,
+        next_due_date: nextDueStr,
+        streak: newStreak,
+      });
+
+      // After 1 second: update UI to trigger sort to bottom
+      setTimeout(() => {
         setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak } : t));
-        await base44.entities.Task.update(task.id, {
-          status: "Completed",
-          last_completed_date: todayStr,
-          next_due_date: nextDueStr,
-          streak: newStreak,
-        });
-        setJustCompleted(prev => { const next = new Set(prev); next.delete(task.id); return next; });
       }, 1000);
     } else {
       setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Pending" } : t));
