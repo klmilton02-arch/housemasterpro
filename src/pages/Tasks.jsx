@@ -259,12 +259,7 @@ export default function Tasks() {
         <h1 className="font-heading text-3xl font-bold">Tasks</h1>
         <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
-        <StatCard icon={ListChecks} label="Due" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setStatusFilter("all")} />
-        <StatCard icon={AlertTriangle} label="Overdue" value={overdue} color="bg-red-100 text-red-600" onClick={() => setStatusFilter("overdue")} />
-        <StatCard icon={Clock} label="Due Soon" value={dueSoon} color="bg-amber-100 text-amber-600" onClick={() => setStatusFilter("due_soon")} />
-        <StatCard icon={CheckCircle} label="Completed" value={completedCount} color="bg-green-100 text-green-600" onClick={() => setStatusFilter("completed")} />
-      </div>
+
 
       {viewMode === "list" && categories.length > 0 && (
         <div className="bg-card border border-border rounded-xl overflow-hidden">
