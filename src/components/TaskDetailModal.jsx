@@ -38,14 +38,9 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
                 <span className="text-muted-foreground">Due:</span> {format(parseISO(task.next_due_date), "MMM d, yyyy")}
               </div>
             )}
-            {task?.room && (
-              <div>
-                <span className="text-muted-foreground">Room:</span> {task.room}
-              </div>
-            )}
             {task?.category && (
               <div>
-                <span className="text-muted-foreground">Category:</span> {task.category}
+                <span className="text-muted-foreground">Room:</span> {task.category}
               </div>
             )}
             {task?.description && (
