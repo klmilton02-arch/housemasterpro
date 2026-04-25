@@ -41,7 +41,7 @@ function formatFrequency(days) {
 
 export { getStatusInfo, formatFrequency };
 
-export default function TaskCard({ task, onComplete, onRenamed, onViewDetails }) {
+export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, isInJustCompleted }) {
   const isCompleted = task.status === "Completed";
   // Local visual state for immediate feedback; doesn't trigger sort until parent updates
   const [visuallyCompleted, setVisuallyCompleted] = useState(isCompleted);
@@ -51,8 +51,8 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails })
   const [name, setName] = useState(task.name);
   const inputRef = useRef(null);
 
-  // Sync if parent resets to Pending (e.g. uncomplete from detail modal)
-  if (!isCompleted && visuallyCompleted) {
+  // Sync if parent resets to Pending (e.g. uncomplete from detail modal), but not during animation
+  if (!isCompleted && visuallyCompleted && !isInJustCompleted) {
     setVisuallyCompleted(false);
   }
 

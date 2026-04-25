@@ -426,7 +426,7 @@ export default function Tasks() {
                         </button>
                       )}
                       <div className="flex-1 min-w-0" onClick={batchMode ? () => toggleSelect(task.id) : undefined}>
-                        <TaskCard task={task} onComplete={batchMode ? undefined : handleComplete} onViewDetails={batchMode ? undefined : setSelectedTask} />
+                        <TaskCard task={task} onComplete={batchMode ? undefined : handleComplete} onViewDetails={batchMode ? undefined : setSelectedTask} isInJustCompleted={justCompleted.has(task.id)} />
                       </div>
                       {!batchMode && (
                         <AlertDialog>
