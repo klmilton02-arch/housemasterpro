@@ -300,32 +300,60 @@ export default function Tasks() {
         </button>
       </div>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button className="w-full bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex items-center gap-3 transition-colors shadow-sm">
-            <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
-              <Filter className="w-5 h-5" />
-            </div>
-            <span className="font-heading font-bold text-base">
-              Status{statusFilter !== "all" ? `: ${statusFilter.replace("_", " ")}` : ""}
-            </span>
-            <ChevronDown className="w-4 h-4 ml-auto" />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-48">
-          {[
-            { value: "all", label: "All Status" },
-            { value: "pending", label: "Pending" },
-            { value: "overdue", label: "Overdue" },
-            { value: "due_soon", label: "Due Soon" },
-            { value: "completed", label: "Completed" },
-          ].map(opt => (
-            <DropdownMenuItem key={opt.value} onClick={() => { setViewMode("list"); setStatusFilter(opt.value); }}>
-              <span className={statusFilter === opt.value ? "font-semibold text-primary" : ""}>{opt.label}</span>
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="grid grid-cols-2 gap-3">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="w-full bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex items-center gap-3 transition-colors shadow-sm">
+              <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                <Filter className="w-5 h-5" />
+              </div>
+              <span className="font-heading font-bold text-base truncate">
+                {statusFilter === "all" ? "Status" : statusFilter.replace("_", " ")}
+              </span>
+              <ChevronDown className="w-4 h-4 ml-auto shrink-0" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-48">
+            {[
+              { value: "all", label: "All Status" },
+              { value: "pending", label: "Pending" },
+              { value: "overdue", label: "Overdue" },
+              { value: "due_soon", label: "Due Soon" },
+              { value: "completed", label: "Completed" },
+            ].map(opt => (
+              <DropdownMenuItem key={opt.value} onClick={() => { setViewMode("list"); setStatusFilter(opt.value); }}>
+                <span className={statusFilter === opt.value ? "font-semibold text-primary" : ""}>{opt.label}</span>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="w-full bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex items-center gap-3 transition-colors shadow-sm">
+              <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                <Tag className="w-5 h-5" />
+              </div>
+              <span className="font-heading font-bold text-base truncate">
+                {categoryFilter === "all" ? "Type" : categoryFilter}
+              </span>
+              <ChevronDown className="w-4 h-4 ml-auto shrink-0" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-48">
+            {[
+              { value: "all", label: "All Types" },
+              { value: "Bill Schedules", label: "Bills" },
+              { value: "Maintenance", label: "Maintenance" },
+              { value: "Cleaning", label: "Cleaning" },
+            ].map(opt => (
+              <DropdownMenuItem key={opt.value} onClick={() => { setViewMode("list"); setCategoryFilter(opt.value); }}>
+                <span className={categoryFilter === opt.value ? "font-semibold text-primary" : ""}>{opt.label}</span>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
 
 
