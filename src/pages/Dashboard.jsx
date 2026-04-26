@@ -42,6 +42,7 @@ export default function Dashboard() {
   const [selectedTask, setSelectedTask] = useState(null);
   const [profile, setProfile] = useState(null);
   const [revokedPoints, setRevokedPoints] = useState(null);
+  const [justCompletedIds, setJustCompletedIds] = useState(new Set());
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);
@@ -97,6 +98,8 @@ export default function Dashboard() {
       next_due_date: updated.next_due_date,
       streak: newStreak,
     });
+    // Mark as just-completed so the drawer keeps it visible with green state
+    setJustCompletedIds(prev => new Set([...prev, task.id]));
     const result = await awardPoints(task, isBlastActive);
     if (result) {
       setReward(result);
@@ -106,7 +109,11 @@ export default function Dashboard() {
         setTimeout(() => setBlastToastShow(false), 2000);
       }
     }
-    loadTasks();
+    // Delay reload so the green card + XP toast are visible first
+    setTimeout(() => {
+      setJustCompletedIds(prev => { const n = new Set(prev); n.delete(task.id); return n; });
+      loadTasks();
+    }, 1800);
   }
 
   async function handleUncomplete(task) {
@@ -140,8 +147,11 @@ export default function Dashboard() {
   ).slice(0, 8);
 
   // Always derive drawer tasks from live state so task objects are never stale
+  // Keep just-completed tasks pinned in the drawer until the delay elapses
   const drawerTaskMap = { 'Due Today': dueTasks, 'Overdue Tasks': overdueTasks, 'Pending Tasks': dueSoonTasks, 'Completed Tasks': completedTasks };
-  const drawerLiveTasks = taskListModal ? (drawerTaskMap[taskListModal.title] || []) : [];
+  const drawerBaseTasks = taskListModal ? (drawerTaskMap[taskListModal.title] || []) : [];
+  const pinnedTasks = tasks.filter(t => justCompletedIds.has(t.id) && !drawerBaseTasks.find(d => d.id === t.id));
+  const drawerLiveTasks = [...drawerBaseTasks, ...pinnedTasks];
 
   if (loading) {
     return (
@@ -219,6 +229,7 @@ export default function Dashboard() {
                 task={task}
                 onComplete={taskListModal?.title === 'Completed Tasks' ? handleUncomplete : handleComplete}
                 onViewDetails={setSelectedTask}
+                isInJustCompleted={justCompletedIds.has(task.id)}
               />
             ))}
             {drawerLiveTasks.length === 0 && (
