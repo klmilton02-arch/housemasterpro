@@ -85,36 +85,34 @@ export default function Dashboard() {
       newStreak = daysSinceLast <= 2 ? (task.streak || 0) + 1 : 1;
     }
 
-    const updated = {
-      ...task,
+    // Mark as just-completed immediately so TaskCard turns green and stays in place
+    setJustCompletedIds(prev => new Set([...prev, task.id]));
+
+    // Fire confetti + XP toast right away
+    confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+
+    // Do DB write + gamification in background
+    base44.entities.Task.update(task.id, {
       status: "Completed",
       last_completed_date: todayStr,
       next_due_date: nextDue.toISOString().split("T")[0],
       streak: newStreak,
-    };
-    setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
-    await base44.entities.Task.update(task.id, {
-      status: "Completed",
-      last_completed_date: updated.last_completed_date,
-      next_due_date: updated.next_due_date,
-      streak: newStreak,
     });
-    // Mark as just-completed so the drawer keeps it visible with green state
-    setJustCompletedIds(prev => new Set([...prev, task.id]));
-    const result = await awardPoints(task, isBlastActive);
-    if (result) {
-      setReward(result);
-      confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
-      if (result.blastBonus) {
-        setBlastToastShow(true);
-        setTimeout(() => setBlastToastShow(false), 2000);
+    awardPoints(task, isBlastActive).then(result => {
+      if (result) {
+        setReward(result);
+        if (result.blastBonus) {
+          setBlastToastShow(true);
+          setTimeout(() => setBlastToastShow(false), 2000);
+        }
       }
-    }
-    // Delay reload so the green card + XP toast are visible first
+    });
+
+    // After pause, reload tasks (which will update tasks state + re-derive lists)
     setTimeout(() => {
       setJustCompletedIds(prev => { const n = new Set(prev); n.delete(task.id); return n; });
       loadTasks();
-    }, 1800);
+    }, 2000);
   }
 
   async function handleUncomplete(task) {
@@ -147,11 +145,8 @@ export default function Dashboard() {
     new Date(a.next_due_date) - new Date(b.next_due_date)
   ).slice(0, 8);
 
-  // Use frozen order so checked tasks don't jump; merge live task data so status/visuals update
-  const taskById = Object.fromEntries(tasks.map(t => [t.id, t]));
-  const drawerLiveTasks = frozenDrawerTasks
-    ? frozenDrawerTasks.map(t => taskById[t.id] || t)
-    : [];
+  // Use the frozen snapshot as-is — task objects don't change during the pause
+  const drawerLiveTasks = frozenDrawerTasks || [];
 
   if (loading) {
     return (
