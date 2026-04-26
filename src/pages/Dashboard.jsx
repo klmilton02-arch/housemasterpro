@@ -134,6 +134,7 @@ export default function Dashboard() {
     return s.label === "Overdue" || s.label === "Past Due";
   });
   const dueSoonTasks = tasks.filter(t => getStatusInfo(t).label === "Due Soon");
+  const pendingTasks = tasks.filter(t => t.status !== "Completed");
   const completedTasks = tasks.filter(t => getStatusInfo(t).label === "Completed");
   const dueTasks = tasks.filter(t => {
     if (t.status === "Completed") return false;
@@ -164,7 +165,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
         <StatCard icon={ListChecks} label="Due Today" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => { setFrozenDrawerTasks(dueTasks); setTaskListModal({ title: 'Due Today', tasks: dueTasks }); }} />
         <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => { setFrozenDrawerTasks(overdueTasks); setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks }); }} />
-        <StatCard icon={Clock} label="Pending Tasks" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" onClick={() => { setFrozenDrawerTasks(dueSoonTasks); setTaskListModal({ title: 'Pending Tasks', tasks: dueSoonTasks }); }} />
+        <StatCard icon={Clock} label="Pending Tasks" value={pendingTasks.length} color="bg-amber-100 text-amber-600" onClick={() => { setFrozenDrawerTasks(pendingTasks); setTaskListModal({ title: 'Pending Tasks', tasks: pendingTasks }); }} />
         <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setFrozenDrawerTasks(completedTasks); setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks }); }} />
       </div>
 
