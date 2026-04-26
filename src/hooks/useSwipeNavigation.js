@@ -4,22 +4,30 @@ import { useNavigate } from "react-router-dom";
 export function useSwipeNavigation(pages) {
   const navigate = useNavigate();
   const touchStartX = useRef(null);
+  const touchStartY = useRef(null);
   const currentPageIndex = pages.indexOf(window.location.pathname);
 
   function handleTouchStart(e) {
     touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
   }
 
   function handleTouchEnd(e) {
     if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    
+    const diffX = touchStartX.current - e.changedTouches[0].clientX;
+    const diffY = touchStartY.current - e.changedTouches[0].clientY;
+
+    // Ignore if vertical movement is larger than horizontal (user is scrolling)
+    if (Math.abs(diffY) > Math.abs(diffX)) {
+      touchStartX.current = null;
+      touchStartY.current = null;
+      return;
+    }
+
     let nextIndex = currentPageIndex;
-    if (diff < -60) {
-      // Swipe right - go to previous page (circularly)
+    if (diffX < -80) {
       nextIndex = (currentPageIndex - 1 + pages.length) % pages.length;
-    } else if (diff > 60) {
-      // Swipe left - go to next page (circularly)
+    } else if (diffX > 80) {
       nextIndex = (currentPageIndex + 1) % pages.length;
     }
     
@@ -27,6 +35,7 @@ export function useSwipeNavigation(pages) {
       navigate(pages[nextIndex]);
     }
     touchStartX.current = null;
+    touchStartY.current = null;
   }
 
   return { handleTouchStart, handleTouchEnd };
