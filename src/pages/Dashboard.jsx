@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import CompletedTaskItem from "../components/CompletedTaskItem";
 import QuickNav from "../components/QuickNav";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
-import { awardPoints, revokePoints } from "@/utils/gamification";
+import { awardPoints, revokePoints, getTaskPoints } from "@/utils/gamification";
 import PointsToast from "../components/PointsToast";
 import BlastModeToast from "../components/BlastModeToast";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ import BadgeDisplay from "../components/BadgeDisplay";
 import { getEarnedBadges } from "@/utils/badges";
 import { useBlastMode } from "@/lib/BlastModeContext";
 import DashboardPresetBrowser from "../components/DashboardPresetBrowser";
+import RevokePointsToast from "../components/RevokePointsToast";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ export default function Dashboard() {
   const [allTasksOpen, setAllTasksOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [revokedPoints, setRevokedPoints] = useState(null);
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);
@@ -117,6 +119,7 @@ export default function Dashboard() {
     setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
     await base44.entities.Task.update(task.id, { status: "Pending", next_due_date: revertedDue });
     await revokePoints(task);
+    setRevokedPoints(getTaskPoints(task));
     loadTasks();
   }
 
@@ -196,6 +199,7 @@ export default function Dashboard() {
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
+      <RevokePointsToast points={revokedPoints} onDismiss={() => setRevokedPoints(null)} />
       <BlastModeToast show={blastToastShow} onDismiss={() => setBlastToastShow(false)} />
       <TaskDetailModal task={selectedTask} open={!!selectedTask} onOpenChange={(open) => { if (!open) setSelectedTask(null); }} />
 
