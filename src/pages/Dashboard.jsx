@@ -139,6 +139,10 @@ export default function Dashboard() {
     new Date(a.next_due_date) - new Date(b.next_due_date)
   ).slice(0, 8);
 
+  // Always derive drawer tasks from live state so task objects are never stale
+  const drawerTaskMap = { 'Due Today': dueTasks, 'Overdue Tasks': overdueTasks, 'Pending Tasks': dueSoonTasks, 'Completed Tasks': completedTasks };
+  const drawerLiveTasks = taskListModal ? (drawerTaskMap[taskListModal.title] || []) : [];
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -206,10 +210,10 @@ export default function Dashboard() {
       <Drawer open={!!taskListModal} onOpenChange={() => setTaskListModal(null)}>
         <DrawerContent className="max-h-[85vh]">
           <DrawerHeader>
-            <DrawerTitle className="font-heading">{taskListModal?.title} ({taskListModal?.tasks?.length})</DrawerTitle>
+            <DrawerTitle className="font-heading">{taskListModal?.title} ({drawerLiveTasks.length})</DrawerTitle>
           </DrawerHeader>
           <div className="space-y-2 px-4 pb-6 overflow-y-auto max-w-xl mx-auto w-full text-sm [&_.font-heading]:text-sm [&_.text-base]:text-xs [&_h3]:text-sm">
-            {taskListModal?.tasks?.map(task => (
+            {drawerLiveTasks.map(task => (
               <TaskCard
                 key={task.id}
                 task={task}
@@ -217,7 +221,7 @@ export default function Dashboard() {
                 onViewDetails={setSelectedTask}
               />
             ))}
-            {taskListModal?.tasks?.length === 0 && (
+            {drawerLiveTasks.length === 0 && (
               <p className="text-center text-muted-foreground py-8 text-sm">No tasks here.</p>
             )}
           </div>
