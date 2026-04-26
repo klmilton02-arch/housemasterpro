@@ -68,18 +68,16 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
           {/* Action buttons */}
           <div className="space-y-2 border-t border-border pt-4">
             <div className="flex gap-2">
-              {task?.status !== "Completed" && (
-                <Button
-                  className="flex-1 gap-2 bg-blue-400 hover:bg-blue-500 text-white"
-                  onClick={() => {
-                    onModify?.(task);
-                    onOpenChange(false);
-                  }}
-                >
-                  <Pencil className="w-4 h-4" />
-                  Modify
-                </Button>
-              )}
+              <Button
+                className="flex-1 gap-2 bg-blue-400 hover:bg-blue-500 text-white"
+                onClick={() => {
+                  onModify?.(task);
+                  onOpenChange(false);
+                }}
+              >
+                <Pencil className="w-4 h-4" />
+                Modify
+              </Button>
               <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                 <AlertDialogTrigger asChild>
                   <Button
