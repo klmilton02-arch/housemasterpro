@@ -39,7 +39,7 @@ function getRoomStatus(tasks) {
   return { pending: pending.length, hasOverdue, hasDueSoon, allDone };
 }
 
-export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, onAddTask, onRoomRenamed }) {
+export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, onAddTask, onRoomRenamed, justCompletedIds = new Set() }) {
   const [expandedRooms, setExpandedRooms] = useState(new Set());
   const [editingRoom, setEditingRoom] = useState(null);
   const [editingName, setEditingName] = useState("");
@@ -119,13 +119,18 @@ export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, o
       StatusIcon = <Clock className="w-3.5 h-3.5 text-amber-500" />;
     }
 
-    const pendingTasks = roomTaskList.filter(t => t.status !== "Completed");
-    const completedTasks = roomTaskList.filter(t => t.status === "Completed");
-    // Sort: pending first (by due date), then completed
-    const sortedTasks = [
-      ...pendingTasks.sort((a, b) => new Date(a.next_due_date) - new Date(b.next_due_date)),
-      ...completedTasks,
-    ];
+    // Sort: pending first (by due date), just-completed pinned before real completed, then completed
+    const sortedTasks = [...roomTaskList].sort((a, b) => {
+      const aJust = justCompletedIds.has(a.id);
+      const bJust = justCompletedIds.has(b.id);
+      const aCompleted = a.status === "Completed" && !aJust;
+      const bCompleted = b.status === "Completed" && !bJust;
+      if (aCompleted && !bCompleted) return 1;
+      if (!aCompleted && bCompleted) return -1;
+      if (aJust && !bJust) return 1;
+      if (!aJust && bJust) return -1;
+      return new Date(a.next_due_date) - new Date(b.next_due_date);
+    });
 
     const isRenaming = renamingRoom === room;
 
@@ -202,6 +207,7 @@ export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, o
                 task={task}
                 onComplete={onComplete}
                 onViewDetails={onViewDetails}
+                isInJustCompleted={justCompletedIds.has(task.id)}
               />
             ))}
           </div>
