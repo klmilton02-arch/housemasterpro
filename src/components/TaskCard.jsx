@@ -88,7 +88,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
 
   return (
     <div className={cn(
-      "border rounded-lg px-3 hover:shadow-md transition-all group w-full cursor-pointer h-16 flex items-center overflow-hidden",
+      "border rounded-lg px-3 hover:shadow-md transition-all group w-full cursor-pointer h-12 flex items-center overflow-hidden",
       cardBg
     )} onClick={() => onViewDetails?.(task)}>
       <div className="flex items-center justify-between gap-2 w-full">
@@ -101,11 +101,11 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
               onChange={e => setName(e.target.value)}
               onBlur={saveName}
               onKeyDown={e => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') { setEditing(false); setName(task.name); } }}
-              className="font-heading font-semibold text-base sm:text-sm text-foreground w-full border border-primary rounded px-1 py-0.5 outline-none bg-background"
+              className="font-heading font-semibold text-sm text-foreground w-full border border-primary rounded px-1 py-0.5 outline-none bg-background"
             />
           ) : (
             <div className="flex items-center gap-1 group/name">
-              <h3 className={cn("font-heading font-semibold text-base truncate", visuallyCompleted ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
+              <h3 className={cn("font-heading font-semibold text-sm truncate", visuallyCompleted ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
               <button
                 onClick={e => { e.stopPropagation(); setEditing(true); }}
                 className="opacity-0 group-hover/name:opacity-100 transition-opacity p-0.5 rounded hover:bg-muted"
@@ -114,27 +114,27 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
               </button>
             </div>
           )}
-          <div className="flex items-center gap-1.5 mt-0.5 overflow-hidden">
-           <span className={cn("inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-medium", status.color)}>
-             <StatusIcon className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
+          <div className="flex items-center gap-1 mt-0 overflow-hidden">
+           <span className={cn("inline-flex items-center gap-0.5 px-1 py-0 rounded-full text-[10px] font-medium", status.color)}>
+             <StatusIcon className="w-2.5 h-2.5" />
              {status.label}
            </span>
            {showDate && (
-             <span className="text-xs text-muted-foreground">{format(parseISO(task.next_due_date), "MMM d")}</span>
+             <span className="text-[10px] text-muted-foreground">{format(parseISO(task.next_due_date), "MMM d")}</span>
            )}
            {task.streak > 0 && (
-             <span className="inline-flex items-center gap-0.5 text-xs font-medium text-orange-500">
-               <Flame className="w-3 h-3" />{task.streak}
+             <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-orange-500">
+               <Flame className="w-2.5 h-2.5" />{task.streak}
              </span>
            )}
            {task.assigned_to_name && (
-             <span className="text-xs text-muted-foreground">· {task.assigned_to_name}</span>
+             <span className="text-[10px] text-muted-foreground">· {task.assigned_to_name}</span>
            )}
           </div>
         </div>
         <div className="flex items-center gap-1 shrink-0">
           <button
-            className={`h-9 w-9 sm:h-8 sm:w-8 flex items-center justify-center rounded-md border-2 transition-all ${
+            className={`h-7 w-7 flex items-center justify-center rounded-md border-2 transition-all ${
               visuallyCompleted
                 ? "border-green-500 bg-green-500"
                 : "border-muted-foreground/40 hover:border-primary bg-transparent"
@@ -142,7 +142,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
             onClick={handleCheckboxClick}
             title={visuallyCompleted ? "Mark incomplete" : "Mark complete"}
           >
-            <Check className={`w-5 h-5 sm:w-4 sm:h-4 transition-opacity ${visuallyCompleted ? "text-white opacity-100" : "opacity-0"}`} />
+            <Check className={`w-4 h-4 transition-opacity ${visuallyCompleted ? "text-white opacity-100" : "opacity-0"}`} />
           </button>
           <button
             onClick={e => { e.stopPropagation(); onViewDetails?.(task); }}
