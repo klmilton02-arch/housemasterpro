@@ -15,7 +15,7 @@ function getStatusInfo(task) {
   // Check if due today first (for recurring tasks completed yesterday)
   if (daysUntilDue === 0) {
     if (task.status !== "Completed") {
-      return { label: "Due Today", color: "bg-blue-500 text-white", icon: Zap, priority: 1 };
+      return { label: "Due Today", color: "bg-orange-500 text-white", icon: Zap, priority: 1 };
     }
     // If completed, check if it was completed today
     if (task.last_completed_date) {
