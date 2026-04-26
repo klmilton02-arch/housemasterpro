@@ -4,6 +4,7 @@ import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
 import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, ChevronDown, ChevronUp, Zap } from "lucide-react";
+import { differenceInDays, parseISO } from "date-fns";
 import confetti from "canvas-confetti";
 import { Link } from "react-router-dom";
 import CompletedTaskItem from "../components/CompletedTaskItem";
@@ -113,8 +114,10 @@ export default function Dashboard() {
   const dueSoonTasks = tasks.filter(t => getStatusInfo(t).label === "Due Soon");
   const completedTasks = tasks.filter(t => getStatusInfo(t).label === "Completed");
   const dueTasks = tasks.filter(t => {
-    const s = getStatusInfo(t);
-    return s.label === "Overdue" || s.label === "Past Due" || s.label === "Due Soon" || s.label === "Upcoming";
+    if (t.status === "Completed") return false;
+    const today = new Date(); today.setHours(0,0,0,0);
+    const due = parseISO(t.next_due_date); due.setHours(0,0,0,0);
+    return differenceInDays(due, today) === 0;
   });
   const urgentTasks = [...overdueTasks, ...dueSoonTasks].sort((a, b) =>
     new Date(a.next_due_date) - new Date(b.next_due_date)
