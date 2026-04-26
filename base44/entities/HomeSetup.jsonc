@@ -47,6 +47,11 @@
       "title": "Mixed Use Room",
       "default": false
     },
+    "has_office": {
+      "type": "boolean",
+      "title": "Office",
+      "default": false
+    },
     "day_start_hour": {
       "type": "number",
       "title": "Day Start Hour (0\u201323)",
