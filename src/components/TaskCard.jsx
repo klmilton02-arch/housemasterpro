@@ -12,6 +12,11 @@ function getStatusInfo(task) {
   const daysUntilDue = differenceInDays(due, today);
   const graceDays = task.overdue_grace_days || 3;
 
+  // Check if due today first (for recurring tasks completed yesterday)
+  if (daysUntilDue === 0 && task.status !== "Completed") {
+    return { label: "Due Today", color: "bg-blue-500 text-white", icon: Zap, priority: 1 };
+  }
+
   if (task.status === "Completed") {
     return { label: "Completed", color: "bg-green-100 text-green-700", icon: Check, priority: 3 };
   }
@@ -20,9 +25,6 @@ function getStatusInfo(task) {
   }
   if (daysUntilDue < 0) {
     return { label: "Past Due", color: "bg-orange-100 text-orange-700", icon: Clock, priority: 1 };
-  }
-  if (daysUntilDue === 0) {
-    return { label: "Due Today", color: "bg-blue-500 text-white", icon: Zap, priority: 1 };
   }
   if (daysUntilDue <= 3) {
     return { label: "Due Soon", color: "bg-amber-100 text-amber-700", icon: Clock, priority: 1 };
