@@ -95,21 +95,18 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
   }
 
   const cardBg = visuallyCompleted
-    ? "border-2 border-green-400 bg-green-50/60 dark:border-green-700 dark:bg-green-950/30"
+    ? "border-green-400 bg-green-50/60 dark:border-green-700 dark:bg-green-950/30"
     : {
-        "Overdue": "border-2 border-red-400 bg-red-50/60 dark:border-red-700 dark:bg-red-950/30",
-        "Past Due": "border-2 border-orange-400 bg-orange-50/60 dark:border-orange-700 dark:bg-orange-950/30",
-        "Due Soon": "border-2 border-yellow-400 bg-yellow-50/60 dark:border-yellow-700 dark:bg-yellow-950/30",
-        "Due Today": "border-2 border-orange-500 bg-orange-50/60 dark:border-orange-600 dark:bg-orange-950/30",
-        "Upcoming": "border-2 border-blue-300 bg-blue-50/60 dark:border-blue-700 dark:bg-blue-950/30",
-        "Completed": "border-2 border-green-400 bg-green-50/60 dark:border-green-700 dark:bg-green-950/30",
-      }[status.label] || "border-2 border-border bg-card";
+        "Overdue": "border-red-300 bg-red-50/60 dark:border-red-800 dark:bg-red-950/30",
+        "Past Due": "border-orange-300 bg-orange-50/60 dark:border-orange-800 dark:bg-orange-950/30",
+        "Due Soon": "border-yellow-300 bg-yellow-50/60 dark:border-yellow-800 dark:bg-yellow-950/30",
+      }[status.label] || "border-border bg-card";
 
   const showDate = !visuallyCompleted && ["Overdue", "Past Due", "Due Soon"].includes(status.label);
 
   return (
     <div className={cn(
-      "rounded-lg px-3 hover:shadow-lg transition-all group w-full cursor-pointer h-24 flex items-center overflow-hidden",
+      "border rounded-lg px-3 hover:shadow-md transition-all group w-full cursor-pointer h-24 flex items-center overflow-hidden",
       cardBg
     )} onClick={() => onViewDetails?.(task)}>
       <div className="flex items-center justify-between gap-2 w-full">
