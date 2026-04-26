@@ -33,9 +33,9 @@ export const SADDLES = [
 
 export const SHOES = [
   { id: "none",     label: "None",          emoji: "",   bonus: 0,  unlockLevel: 1 },
-  { id: "iron",     label: "Iron Shoes",    emoji: "🔩", bonus: 5,  unlockLevel: 1 },
-  { id: "silver",   label: "Silver Shoes",  emoji: "🥈", bonus: 12, unlockLevel: 4 },
-  { id: "gold",     label: "Gold Shoes",    emoji: "🥇", bonus: 20, unlockLevel: 7 },
+  { id: "iron",     label: "Iron Shoes",    emoji: "🧲", bonus: 5,  unlockLevel: 1 },
+  { id: "silver",   label: "Silver Shoes",  emoji: "🧲", bonus: 12, unlockLevel: 4 },
+  { id: "gold",     label: "Gold Shoes",    emoji: "🧲", bonus: 20, unlockLevel: 7 },
   { id: "rocket",   label: "Rocket Boots",  emoji: "🚀", bonus: 32, unlockLevel: 9 },
   { id: "lightning",label: "Lightning",     emoji: "⚡", bonus: 45, unlockLevel: 10 },
 ];
