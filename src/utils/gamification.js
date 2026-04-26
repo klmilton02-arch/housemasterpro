@@ -82,7 +82,7 @@ function checkNewBadges(profile) {
   return Object.keys(checks).filter(id => !earned.includes(id) && checks[id]);
 }
 
-export async function revokePoints(task) {
+export async function revokePoints(task, wasBlastRunning = false) {
   let memberId = task.assigned_to;
   let memberName = task.assigned_to_name;
 
@@ -93,7 +93,7 @@ export async function revokePoints(task) {
     memberName = me.full_name;
   }
 
-  const pointsToRevoke = getTaskPoints(task);
+  const pointsToRevoke = getTaskPoints(task) * (wasBlastRunning ? 2 : 1);
 
   const profiles = await base44.entities.GamificationProfile.filter({ family_member_id: memberId });
   const profile = profiles[0];

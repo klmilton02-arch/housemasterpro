@@ -4,7 +4,7 @@ import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
 import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown, ListChecks, Clock, CheckCircle, Tag, Receipt, Home, Filter } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { awardPoints, getTaskPoints } from "@/utils/gamification";
+import { awardPoints, getTaskPoints, revokePoints } from "@/utils/gamification";
 import confetti from "canvas-confetti";
 import { useBlastMode } from "@/lib/BlastModeContext";
 import PointsToast from "../components/PointsToast";
@@ -82,24 +82,25 @@ export default function Tasks() {
       confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
       setReward({ totalPoints: immediatePoints, blastBonus: blastActive });
 
-      // Award points in background
+      // Award points in background - store blast status with task
       awardPoints(task, blastActive).then(result => {
         if (result && (result.leveledUp || result.newBadges?.length > 0)) {
           setReward(result);
         }
       });
 
-      // Update DB immediately in background
+      // Update DB immediately in background - store whether blast was active
       base44.entities.Task.update(task.id, {
         status: "Completed",
         last_completed_date: todayStr,
         next_due_date: nextDueStr,
         streak: newStreak,
+        completed_with_blast: blastActive,
       });
 
       // After 2s: update task status in local state (triggers sort to bottom)
       setTimeout(() => {
-        setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak } : t));
+        setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak, completed_with_blast: blastActive } : t));
       }, 2000);
       // Remove from justCompleted slightly after so the green stays visible during the move
       setTimeout(() => {
@@ -107,6 +108,8 @@ export default function Tasks() {
       }, 2400);
     } else {
       setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Pending" } : t));
+      const wasBlastRunning = task.completed_with_blast || false;
+      revokePoints(task, wasBlastRunning);
       await base44.entities.Task.update(task.id, { status: "Pending" });
       loadTasks();
     }
