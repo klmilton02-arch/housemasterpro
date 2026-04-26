@@ -193,9 +193,7 @@ export default function Dashboard() {
           </DrawerHeader>
           <div className="space-y-2 px-4 pb-6 overflow-y-auto max-w-xl mx-auto w-full text-sm [&_.font-heading]:text-sm [&_.text-base]:text-xs [&_h3]:text-sm">
             {taskListModal?.tasks?.map(task => (
-              taskListModal.title === 'Completed Tasks'
-                ? <CompletedTaskItem key={task.id} task={task} />
-                : <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
+              <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
             ))}
             {taskListModal?.tasks?.length === 0 && (
               <p className="text-center text-muted-foreground py-8 text-sm">No tasks here.</p>
