@@ -5,7 +5,6 @@ import { getLevelInfo, ACHIEVEMENT_BADGES } from "@/utils/gamification";
 import { useNavigate } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { startOfWeek, startOfMonth, parseISO, isAfter } from "date-fns";
-import WeeklyCompletionsChart from "@/components/WeeklyCompletionsChart";
 
 const RANK_ICONS = ["🥇", "🥈", "🥉"];
 const RANK_COLORS = ["text-amber-500", "text-slate-400", "text-orange-600"];
@@ -97,8 +96,6 @@ export default function Leaderboard() {
   return (
     <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <h1 className="font-heading text-3xl font-bold md:hidden">Rewards</h1>
-      
-      <WeeklyCompletionsChart profiles={profiles} history={history} />
 
       <div className="space-y-3">
         <div className="flex gap-2 overflow-x-auto pb-2">
