@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Check, Clock, AlertTriangle, Calendar, Pencil, Flame, ChevronRight } from "lucide-react";
+import { Check, Clock, AlertTriangle, Calendar, Pencil, Flame, ChevronRight, Zap } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays, parseISO } from "date-fns";
@@ -20,6 +20,9 @@ function getStatusInfo(task) {
   }
   if (daysUntilDue < 0) {
     return { label: "Past Due", color: "bg-orange-100 text-orange-700", icon: Clock, priority: 1 };
+  }
+  if (daysUntilDue === 0) {
+    return { label: "Due Today", color: "bg-blue-500 text-white", icon: Zap, priority: 1 };
   }
   if (daysUntilDue <= 3) {
     return { label: "Due Soon", color: "bg-amber-100 text-amber-700", icon: Clock, priority: 1 };
