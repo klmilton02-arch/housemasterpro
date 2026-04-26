@@ -43,6 +43,7 @@ export default function Dashboard() {
   const [profile, setProfile] = useState(null);
   const [revokedPoints, setRevokedPoints] = useState(null);
   const [justCompletedIds, setJustCompletedIds] = useState(new Set());
+  const [frozenDrawerTasks, setFrozenDrawerTasks] = useState(null);
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);
@@ -146,12 +147,11 @@ export default function Dashboard() {
     new Date(a.next_due_date) - new Date(b.next_due_date)
   ).slice(0, 8);
 
-  // Always derive drawer tasks from live state so task objects are never stale
-  // Keep just-completed tasks pinned in the drawer until the delay elapses
-  const drawerTaskMap = { 'Due Today': dueTasks, 'Overdue Tasks': overdueTasks, 'Pending Tasks': dueSoonTasks, 'Completed Tasks': completedTasks };
-  const drawerBaseTasks = taskListModal ? (drawerTaskMap[taskListModal.title] || []) : [];
-  const pinnedTasks = tasks.filter(t => justCompletedIds.has(t.id) && !drawerBaseTasks.find(d => d.id === t.id));
-  const drawerLiveTasks = [...drawerBaseTasks, ...pinnedTasks];
+  // Use frozen order so checked tasks don't jump; merge live task data so status/visuals update
+  const taskById = Object.fromEntries(tasks.map(t => [t.id, t]));
+  const drawerLiveTasks = frozenDrawerTasks
+    ? frozenDrawerTasks.map(t => taskById[t.id] || t)
+    : [];
 
   if (loading) {
     return (
@@ -167,10 +167,10 @@ export default function Dashboard() {
       <h1 className="font-heading text-3xl font-bold md:hidden">Dashboard</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
-        <StatCard icon={ListChecks} label="Due Today" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => setTaskListModal({ title: 'Due Today', tasks: dueTasks })} />
-        <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks })} />
-        <StatCard icon={Clock} label="Pending Tasks" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" onClick={() => setTaskListModal({ title: 'Pending Tasks', tasks: dueSoonTasks })} />
-        <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks })} />
+        <StatCard icon={ListChecks} label="Due Today" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => { setFrozenDrawerTasks(dueTasks); setTaskListModal({ title: 'Due Today', tasks: dueTasks }); }} />
+        <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => { setFrozenDrawerTasks(overdueTasks); setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks }); }} />
+        <StatCard icon={Clock} label="Pending Tasks" value={dueSoonTasks.length} color="bg-amber-100 text-amber-600" onClick={() => { setFrozenDrawerTasks(dueSoonTasks); setTaskListModal({ title: 'Pending Tasks', tasks: dueSoonTasks }); }} />
+        <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setFrozenDrawerTasks(completedTasks); setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks }); }} />
       </div>
 
       <LeaderboardSummary />
@@ -217,7 +217,7 @@ export default function Dashboard() {
       <BlastModeToast show={blastToastShow} onDismiss={() => setBlastToastShow(false)} />
       <TaskDetailModal task={selectedTask} open={!!selectedTask} onOpenChange={(open) => { if (!open) setSelectedTask(null); }} />
 
-      <Drawer open={!!taskListModal} onOpenChange={() => setTaskListModal(null)}>
+      <Drawer open={!!taskListModal} onOpenChange={(open) => { if (!open) { setTaskListModal(null); setFrozenDrawerTasks(null); setJustCompletedIds(new Set()); } }}>
         <DrawerContent className="max-h-[85vh]">
           <DrawerHeader>
             <DrawerTitle className="font-heading">{taskListModal?.title} ({drawerLiveTasks.length})</DrawerTitle>
