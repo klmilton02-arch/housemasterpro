@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { base44 } from "@/api/base44Client";
 import { getLevelInfo, ACHIEVEMENT_BADGES } from "@/utils/gamification";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { startOfWeek, startOfMonth, parseISO, isAfter } from "date-fns";
+import { Zap } from "lucide-react";
 
 const RANK_ICONS = ["🥇", "🥈", "🥉"];
 const RANK_COLORS = ["text-amber-500", "text-slate-400", "text-orange-600"];
@@ -95,7 +96,12 @@ export default function Leaderboard() {
 
   return (
     <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-      <h1 className="font-heading text-3xl font-bold md:hidden">Rewards</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="font-heading text-3xl font-bold md:hidden">Rewards</h1>
+        <Link to="/stable" className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 text-sm font-medium transition-colors">
+          🐴 Stable
+        </Link>
+      </div>
 
       <div className="space-y-3">
         <div className="flex gap-2 overflow-x-auto pb-2">
