@@ -245,7 +245,15 @@ export default function Tasks() {
   const dueToday = tasks.filter(t => {
     const due = parseISO(t.next_due_date);
     due.setHours(0, 0, 0, 0);
-    return differenceInDays(due, today) === 0 && t.status !== "Completed";
+    if (differenceInDays(due, today) !== 0) return false;
+    // Include if not completed, OR if completed but not today (recurring task due again)
+    if (t.status !== "Completed") return true;
+    if (t.last_completed_date) {
+      const lastCompleted = parseISO(t.last_completed_date);
+      lastCompleted.setHours(0, 0, 0, 0);
+      return differenceInDays(today, lastCompleted) !== 0;
+    }
+    return false;
   }).length;
   
   const dueSoon = tasks.filter(t => {
