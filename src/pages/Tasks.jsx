@@ -41,8 +41,9 @@ export default function Tasks() {
   const [selectedMemberId, setSelectedMemberId] = useState(null);
   const [justCompleted, setJustCompleted] = useState(new Set());
   const { isActive: blastActive } = useBlastMode();
-  const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
-  const { handleTouchStart, handleTouchEnd } = useSwipeNavigation(PAGES);
+  // Swipe navigation disabled on Tasks — conflicts with vertical scrolling
+  const handleTouchStart = () => {};
+  const handleTouchEnd = () => {};
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);

@@ -27,8 +27,9 @@ import DashboardPresetBrowser from "../components/DashboardPresetBrowser";
 export default function Dashboard() {
   const navigate = useNavigate();
   const { isActive: isBlastActive, startBlast, duration } = useBlastMode();
-  const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
-  const { handleTouchStart, handleTouchEnd } = useSwipeNavigation(PAGES);
+  // Swipe navigation disabled — conflicts with vertical scrolling
+  const handleTouchStart = () => {};
+  const handleTouchEnd = () => {};
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
