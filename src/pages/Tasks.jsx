@@ -74,6 +74,9 @@ export default function Tasks() {
         newStreak = daysSinceLast <= 2 ? (task.streak || 0) + 1 : 1;
       }
 
+      // Update local state immediately to prevent double-clicks
+      setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak, completed_with_blast: blastActive } : t));
+
       // Mark as visually complete immediately (shows green + checkmark)
       setJustCompleted(prev => new Set([...prev, task.id]));
 
