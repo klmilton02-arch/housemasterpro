@@ -13,8 +13,21 @@ function getStatusInfo(task) {
   const graceDays = task.overdue_grace_days || 3;
 
   // Check if due today first (for recurring tasks completed yesterday)
-  if (daysUntilDue === 0 && task.status !== "Completed") {
-    return { label: "Due Today", color: "bg-blue-500 text-white", icon: Zap, priority: 1 };
+  if (daysUntilDue === 0) {
+    if (task.status !== "Completed") {
+      return { label: "Due Today", color: "bg-blue-500 text-white", icon: Zap, priority: 1 };
+    }
+    // If completed, check if it was completed today
+    if (task.last_completed_date) {
+      const lastCompleted = parseISO(task.last_completed_date);
+      lastCompleted.setHours(0, 0, 0, 0);
+      const isCompletedToday = differenceInDays(today, lastCompleted) === 0;
+      if (!isCompletedToday) {
+        // Completed before today, so it's due again today (recurring task)
+        return { label: "Due Today", color: "bg-blue-500 text-white", icon: Zap, priority: 1 };
+      }
+    }
+    return { label: "Completed", color: "bg-green-100 text-green-700", icon: Check, priority: 3 };
   }
 
   if (task.status === "Completed") {
