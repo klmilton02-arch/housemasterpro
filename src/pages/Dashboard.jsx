@@ -20,6 +20,7 @@ import AddTaskDialog from "../components/AddTaskDialog";
 import LeaderboardSummary from "../components/LeaderboardSummary";
 import SyncCalendarButton from "../components/SyncCalendarButton";
 import TaskDetailModal from "../components/TaskDetailModal";
+import EditTaskDialog from "../components/EditTaskDialog";
 import BadgeDisplay from "../components/BadgeDisplay";
 import { getEarnedBadges } from "@/utils/badges";
 import { useBlastMode } from "@/lib/BlastModeContext";
@@ -40,6 +41,7 @@ export default function Dashboard() {
   const [taskListModal, setTaskListModal] = useState(null);
   const [allTasksOpen, setAllTasksOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [editingTask, setEditingTask] = useState(null);
   const [profile, setProfile] = useState(null);
   const [revokedPoints, setRevokedPoints] = useState(null);
   const [justCompletedIds, setJustCompletedIds] = useState(new Set());
@@ -233,12 +235,13 @@ export default function Dashboard() {
         task={selectedTask} 
         open={!!selectedTask} 
         onOpenChange={(open) => { if (!open) setSelectedTask(null); }} 
-        onModify={() => {
+        onModify={(task) => {
           setSelectedTask(null);
-          navigate('/tasks');
+          setEditingTask(task);
         }}
         onChangeDueDate={handleChangeDueDate} 
       />
+      <EditTaskDialog task={editingTask} open={!!editingTask} onOpenChange={(open) => { if (!open) setEditingTask(null); }} onTaskUpdated={loadTasks} />
 
       <Drawer open={!!taskListModal} onOpenChange={(open) => { if (!open) { setTaskListModal(null); setDrawerTaskIds(null); setJustCompletedIds(new Set()); } }}>
         <DrawerContent className="max-h-[85vh]">
