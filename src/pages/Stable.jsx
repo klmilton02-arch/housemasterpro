@@ -40,7 +40,7 @@ function ColorGrid({ items, equipped, onEquip, level }) {
   );
 }
 
-function ItemGrid({ items, equipped, onEquip, level }) {
+function ItemGrid({ items, equipped, onEquip, level, hideEmoji = false }) {
   return (
     <div className="grid grid-cols-3 gap-2">
       {items.map(item => {
@@ -58,7 +58,7 @@ function ItemGrid({ items, equipped, onEquip, level }) {
           >
             {locked && <Lock className="absolute top-1.5 right-1.5 w-3 h-3 text-muted-foreground" />}
             {isEquipped && <CheckCircle2 className="absolute top-1.5 right-1.5 w-3 h-3 text-primary" />}
-            <span className="text-2xl">{item.emoji || "—"}</span>
+            {!hideEmoji && <span className="text-2xl">{item.emoji || "—"}</span>}
             <span className="text-xs font-medium text-center leading-tight">{item.label}</span>
             {item.bonus > 0 && (
               <span className="text-xs text-amber-600 font-bold">+{item.bonus}%</span>
@@ -359,7 +359,7 @@ export default function Stable() {
               {/* Saddle */}
               <section>
                 <h2 className="font-heading font-semibold text-sm mb-2 text-muted-foreground uppercase tracking-wide">🏇 Saddle</h2>
-                <ItemGrid items={SADDLES} equipped={selectedHorse?.saddle} onEquip={v => update("saddle", v)} level={level} />
+                <ItemGrid items={SADDLES} equipped={selectedHorse?.saddle} onEquip={v => update("saddle", v)} level={level} hideEmoji={true} />
               </section>
 
               {/* Shoes */}
