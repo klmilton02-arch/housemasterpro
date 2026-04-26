@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { ChevronDown, ChevronRight, CheckCircle2, AlertTriangle, Clock, Plus } from "lucide-react";
+import { useState, useRef } from "react";
+import { ChevronDown, ChevronRight, CheckCircle2, AlertTriangle, Clock, Plus, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { base44 } from "@/api/base44Client";
 import TaskCard, { getStatusInfo } from "./TaskCard";
 
 const ROOM_ORDER = [
@@ -38,8 +39,12 @@ function getRoomStatus(tasks) {
   return { pending: pending.length, hasOverdue, hasDueSoon, allDone };
 }
 
-export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, onAddTask }) {
+export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, onAddTask, onRoomRenamed }) {
   const [expandedRooms, setExpandedRooms] = useState(new Set());
+  const [editingRoom, setEditingRoom] = useState(null);
+  const [editingName, setEditingName] = useState("");
+  const [renamingRoom, setRenamingRoom] = useState(null);
+  const inputRef = useRef(null);
 
   // Build dynamic room list from actual task data, ordered by ROOM_ORDER
   const taskRooms = [...new Set(tasks.map(t => t.room).filter(Boolean))];
@@ -55,6 +60,30 @@ export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, o
 
   const unassigned = tasks.filter(t => !t.room);
   const roomsWithTasks = orderedRooms.filter(room => roomTasks[room].length > 0);
+
+  async function saveRoomName(oldRoom) {
+    const newName = editingName.trim();
+    if (!newName || newName === oldRoom) { setEditingRoom(null); return; }
+    setRenamingRoom(oldRoom);
+    setEditingRoom(null);
+    // Bulk update all tasks in this room
+    const roomTaskList = tasks.filter(t => t.room === oldRoom);
+    await Promise.all(roomTaskList.map(t =>
+      base44.entities.Task.update(t.id, {
+        room: newName,
+        name: t.name.startsWith(oldRoom + " –") ? t.name.replace(oldRoom + " –", newName + " –") : t.name,
+      })
+    ));
+    setRenamingRoom(null);
+    onRoomRenamed?.();
+  }
+
+  function startEdit(e, room) {
+    e.stopPropagation();
+    setEditingName(room);
+    setEditingRoom(room);
+    setTimeout(() => inputRef.current?.focus(), 50);
+  }
 
   function toggleRoom(room) {
     setExpandedRooms(prev => {
@@ -98,27 +127,62 @@ export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, o
       ...completedTasks,
     ];
 
+    const isRenaming = renamingRoom === room;
+
     return (
       <div key={room}>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => toggleRoom(room)}
+            onClick={() => !editingRoom && toggleRoom(room)}
             className={`border rounded-lg w-full flex items-center justify-between hover:shadow-md transition-all px-3 py-2.5 h-14 ${borderColor} ${bgColor}`}
           >
             <div className="flex items-center gap-2.5 flex-1 text-left">
               <span className="text-base">{getRoomIcon(room)}</span>
-              <span className="font-heading font-semibold text-sm">{room}</span>
-              <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-medium ${badgeBg}`}>
-                {StatusIcon}
-                {allDone ? "All done" : `${pending} pending`}
-              </span>
+              {editingRoom === room ? (
+                <input
+                  ref={inputRef}
+                  value={editingName}
+                  onChange={e => setEditingName(e.target.value)}
+                  onBlur={() => saveRoomName(room)}
+                  onKeyDown={e => {
+                    if (e.key === "Enter") saveRoomName(room);
+                    if (e.key === "Escape") setEditingRoom(null);
+                    e.stopPropagation();
+                  }}
+                  onClick={e => e.stopPropagation()}
+                  className="font-heading font-semibold text-sm border border-primary rounded px-1.5 py-0.5 outline-none bg-background w-32"
+                />
+              ) : (
+                <span className="font-heading font-semibold text-sm">
+                  {isRenaming ? <span className="text-muted-foreground italic">Saving…</span> : room}
+                </span>
+              )}
+              {editingRoom !== room && (
+                <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-medium ${badgeBg}`}>
+                  {StatusIcon}
+                  {allDone ? "All done" : `${pending} pending`}
+                </span>
+              )}
             </div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span>{roomTaskList.length} total</span>
-              {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-            </div>
+            {editingRoom !== room && (
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <span>{roomTaskList.length} total</span>
+                {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+              </div>
+            )}
           </button>
-          {room !== "Unassigned" && (
+          {room !== "Unassigned" && editingRoom !== room && (
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={e => startEdit(e, room)}
+              className="shrink-0"
+              title="Rename room"
+            >
+              <Pencil className="w-4 h-4" />
+            </Button>
+          )}
+          {room !== "Unassigned" && editingRoom !== room && (
             <Button
               size="icon"
               variant="ghost"
