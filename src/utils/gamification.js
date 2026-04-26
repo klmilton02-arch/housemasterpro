@@ -82,6 +82,33 @@ function checkNewBadges(profile) {
   return Object.keys(checks).filter(id => !earned.includes(id) && checks[id]);
 }
 
+export async function revokePoints(task) {
+  let memberId = task.assigned_to;
+  let memberName = task.assigned_to_name;
+
+  if (!memberId || !memberName) {
+    const me = await base44.auth.me();
+    if (!me) return;
+    memberId = me.id;
+    memberName = me.full_name;
+  }
+
+  const pointsToRevoke = getTaskPoints(task);
+
+  const profiles = await base44.entities.GamificationProfile.filter({ family_member_id: memberId });
+  const profile = profiles[0];
+  if (!profile) return;
+
+  const newXP = Math.max(0, (profile.total_xp || 0) - pointsToRevoke);
+  const newCompletions = Math.max(0, (profile.total_completions || 0) - 1);
+
+  await base44.entities.GamificationProfile.update(profile.id, {
+    total_xp: newXP,
+    level: getLevelInfo(newXP).level,
+    total_completions: newCompletions,
+  });
+}
+
 export async function awardPoints(task, isBlastRunning = false) {
   let memberId = task.assigned_to;
   let memberName = task.assigned_to_name;

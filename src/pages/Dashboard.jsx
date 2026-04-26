@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import CompletedTaskItem from "../components/CompletedTaskItem";
 import QuickNav from "../components/QuickNav";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
-import { awardPoints } from "@/utils/gamification";
+import { awardPoints, revokePoints } from "@/utils/gamification";
 import PointsToast from "../components/PointsToast";
 import BlastModeToast from "../components/BlastModeToast";
 import { Button } from "@/components/ui/button";
@@ -107,6 +107,19 @@ export default function Dashboard() {
     loadTasks();
   }
 
+  async function handleUncomplete(task) {
+    // Revert task to Pending and undo the next_due_date advancement
+    const prevDue = new Date(task.next_due_date);
+    prevDue.setDate(prevDue.getDate() - task.frequency_days);
+    const revertedDue = prevDue.toISOString().split("T")[0];
+
+    const updated = { ...task, status: "Pending", next_due_date: revertedDue };
+    setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
+    await base44.entities.Task.update(task.id, { status: "Pending", next_due_date: revertedDue });
+    await revokePoints(task);
+    loadTasks();
+  }
+
   const overdueTasks = tasks.filter(t => {
     const s = getStatusInfo(t);
     return s.label === "Overdue" || s.label === "Past Due";
@@ -193,7 +206,12 @@ export default function Dashboard() {
           </DrawerHeader>
           <div className="space-y-2 px-4 pb-6 overflow-y-auto max-w-xl mx-auto w-full text-sm [&_.font-heading]:text-sm [&_.text-base]:text-xs [&_h3]:text-sm">
             {taskListModal?.tasks?.map(task => (
-              <TaskCard key={task.id} task={task} onComplete={handleComplete} onViewDetails={setSelectedTask} />
+              <TaskCard
+                key={task.id}
+                task={task}
+                onComplete={taskListModal?.title === 'Completed Tasks' ? handleUncomplete : handleComplete}
+                onViewDetails={setSelectedTask}
+              />
             ))}
             {taskListModal?.tasks?.length === 0 && (
               <p className="text-center text-muted-foreground py-8 text-sm">No tasks here.</p>
