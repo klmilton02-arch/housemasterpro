@@ -1,8 +1,8 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { format, parseISO } from "date-fns";
-import { Pencil, Trash2, Calendar } from "lucide-react";
+import { format, parseISO, addDays } from "date-fns";
+import { Pencil, Trash2, Calendar, Clock } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useState } from "react";
 
@@ -23,6 +23,14 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
     if (!dueDateInput || !task?.id) return;
     await onChangeDueDate?.(task, dueDateInput);
     setChangeDueDateOpen(false);
+    onOpenChange(false);
+  }
+
+  async function handleDefer(daysToAdd) {
+    if (!task?.id) return;
+    const newDate = addDays(parseISO(task.next_due_date), daysToAdd);
+    const newDateStr = newDate.toISOString().split("T")[0];
+    await onChangeDueDate?.(task, newDateStr);
     onOpenChange(false);
   }
   return (
@@ -106,19 +114,43 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
                 <AlertDialogHeader>
                   <AlertDialogTitle>Change Due Date</AlertDialogTitle>
                 </AlertDialogHeader>
-                <input
-                  type="date"
-                  value={dueDateInput}
-                  onChange={(e) => setDueDateInput(e.target.value)}
-                  className="w-full px-3 py-2 border border-input rounded-md text-sm"
-                />
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-sm font-medium text-foreground mb-2">Quick Defer:</p>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => handleDefer(1)}
+                        className="flex-1 gap-2 bg-amber-400 hover:bg-amber-500 text-white"
+                      >
+                        <Clock className="w-4 h-4" />
+                        Tomorrow
+                      </Button>
+                      <Button
+                        onClick={() => handleDefer(task?.frequency_days || 1)}
+                        className="flex-1 gap-2 bg-amber-400 hover:bg-amber-500 text-white"
+                      >
+                        <Clock className="w-4 h-4" />
+                        Next Schedule
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="border-t border-border pt-3">
+                    <p className="text-sm font-medium text-foreground mb-2">Custom Date:</p>
+                    <input
+                      type="date"
+                      value={dueDateInput}
+                      onChange={(e) => setDueDateInput(e.target.value)}
+                      className="w-full px-3 py-2 border border-input rounded-md text-sm"
+                    />
+                  </div>
+                </div>
                 <div className="flex gap-2 justify-end">
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleChangeDueDate}
                     className="bg-blue-500 hover:bg-blue-600"
                   >
-                    Save
+                    Save Custom Date
                   </AlertDialogAction>
                 </div>
               </AlertDialogContent>
