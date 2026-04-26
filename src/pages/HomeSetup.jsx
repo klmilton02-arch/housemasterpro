@@ -36,6 +36,9 @@ export default function HomeSetup() {
     has_mixed_use: false,
     start_date: format(new Date(), "yyyy-MM-dd"),
   });
+  const [bedroomNames, setBedroomNames] = useState([]);
+  const [bathroomNames, setBathroomNames] = useState([]);
+  const [halfBathroomNames, setHalfBathroomNames] = useState([]);
   const [setupId, setSetupId] = useState(null);
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -93,34 +96,34 @@ export default function HomeSetup() {
     }
 
     // Bedrooms
-     for (let i = 1; i <= config.bedrooms; i++) {
-       const label = config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i}`;
-       for (const p of presetsForRoom("Bedroom") || []) {
-         const roomName = config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i}`;
-         tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: roomName });
-       }
-     }
+    for (let i = 1; i <= config.bedrooms; i++) {
+      const defaultName = config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i}`;
+      const label = bedroomNames[i - 1]?.trim() || defaultName;
+      for (const p of presetsForRoom("Bedroom") || []) {
+        tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: label });
+      }
+    }
 
-     // Full bathrooms
-     for (let i = 1; i <= config.full_bathrooms; i++) {
-       const label = config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i}`;
-       for (const p of presetsForRoom("Full Bathroom")) {
-         const roomName = config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i}`;
-         tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: roomName });
-       }
-     }
+    // Full bathrooms
+    for (let i = 1; i <= config.full_bathrooms; i++) {
+      const defaultName = config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i}`;
+      const label = bathroomNames[i - 1]?.trim() || defaultName;
+      for (const p of presetsForRoom("Full Bathroom")) {
+        tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: label });
+      }
+    }
 
-     // Half bathrooms
-     for (let i = 1; i <= config.half_bathrooms; i++) {
-       const label = config.half_bathrooms === 1 ? "Half Bath" : `Half Bath ${i}`;
-       const halfPresets = presetsForRoom("Half Bathroom").filter(
-         p => p.task_type !== "Deep Cleaning"
-       );
-       for (const p of halfPresets) {
-         const roomName = config.half_bathrooms === 1 ? "Half Bath" : `Half Bath ${i}`;
-         tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: roomName });
-       }
-     }
+    // Half bathrooms
+    for (let i = 1; i <= config.half_bathrooms; i++) {
+      const defaultName = config.half_bathrooms === 1 ? "Half Bath" : `Half Bath ${i}`;
+      const label = halfBathroomNames[i - 1]?.trim() || defaultName;
+      const halfPresets = presetsForRoom("Half Bathroom").filter(
+        p => p.task_type !== "Deep Cleaning"
+      );
+      for (const p of halfPresets) {
+        tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: label });
+      }
+    }
 
      // Single-instance rooms
      const singleRooms = [
@@ -222,8 +225,65 @@ export default function HomeSetup() {
       <div className="space-y-4">
         <h2 className="font-heading font-semibold text-lg">Rooms with multiple instances</h2>
         <NumberInput label="Bedrooms" icon={BedDouble} field="bedrooms" />
+        {config.bedrooms > 0 && (
+          <div className="space-y-2 pl-2">
+            {Array.from({ length: config.bedrooms }, (_, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground w-20 shrink-0">Bedroom {i + 1}</span>
+                <Input
+                  placeholder={config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i + 1}`}
+                  value={bedroomNames[i] || ""}
+                  onChange={e => {
+                    const updated = [...bedroomNames];
+                    updated[i] = e.target.value;
+                    setBedroomNames(updated);
+                  }}
+                  className="h-9 text-sm"
+                />
+              </div>
+            ))}
+          </div>
+        )}
         <NumberInput label="Full Bathrooms" icon={Bath} field="full_bathrooms" />
+        {config.full_bathrooms > 0 && (
+          <div className="space-y-2 pl-2">
+            {Array.from({ length: config.full_bathrooms }, (_, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground w-20 shrink-0">Bath {i + 1}</span>
+                <Input
+                  placeholder={config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i + 1}`}
+                  value={bathroomNames[i] || ""}
+                  onChange={e => {
+                    const updated = [...bathroomNames];
+                    updated[i] = e.target.value;
+                    setBathroomNames(updated);
+                  }}
+                  className="h-9 text-sm"
+                />
+              </div>
+            ))}
+          </div>
+        )}
         <NumberInput label="Half Bathrooms" icon={Bath} field="half_bathrooms" />
+        {config.half_bathrooms > 0 && (
+          <div className="space-y-2 pl-2">
+            {Array.from({ length: config.half_bathrooms }, (_, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground w-20 shrink-0">Half Bath {i + 1}</span>
+                <Input
+                  placeholder={config.half_bathrooms === 1 ? "Half Bath" : `Half Bath ${i + 1}`}
+                  value={halfBathroomNames[i] || ""}
+                  onChange={e => {
+                    const updated = [...halfBathroomNames];
+                    updated[i] = e.target.value;
+                    setHalfBathroomNames(updated);
+                  }}
+                  className="h-9 text-sm"
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="space-y-3">
