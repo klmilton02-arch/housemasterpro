@@ -97,11 +97,14 @@ export default function Tasks() {
         streak: newStreak,
       });
 
-      // After 1 second: update UI to trigger sort to bottom
+      // After 2s: update task status in local state (triggers sort to bottom)
       setTimeout(() => {
         setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak } : t));
+      }, 2000);
+      // Remove from justCompleted slightly after so the green stays visible during the move
+      setTimeout(() => {
         setJustCompleted(prev => { const next = new Set(prev); next.delete(task.id); return next; });
-      }, 1000);
+      }, 2400);
     } else {
       setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Pending" } : t));
       await base44.entities.Task.update(task.id, { status: "Pending" });
