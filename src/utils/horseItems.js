@@ -2,21 +2,24 @@
 // unlockLevel = minimum level required to use the item
 
 export const JOCKEY_COLORS = [
-  { id: "chestnut",  label: "Chestnut",  color: "#A0522D", unlockLevel: 1 },
-  { id: "bay",       label: "Bay",       color: "#3E2723", unlockLevel: 1 },
-  { id: "black",     label: "Black",     color: "#1e293b", unlockLevel: 1 },
-  { id: "dun",       label: "Dun",       color: "#D4A574", unlockLevel: 2 },
-  { id: "roan",      label: "Roan",      color: "#8B7355", unlockLevel: 3 },
-  { id: "gray",      label: "Gray",      color: "#A9A9A9", unlockLevel: 4 },
-  { id: "palomino",  label: "Palomino",  color: "#FFD700", unlockLevel: 5 },
-  { id: "pinto",     label: "Pinto",     color: "#F5DEB3", unlockLevel: 5 },
+  { id: "red",    label: "Red",    color: "#ef4444", unlockLevel: 1 },
+  { id: "blue",   label: "Blue",   color: "#3b82f6", unlockLevel: 1 },
+  { id: "green",  label: "Green",  color: "#22c55e", unlockLevel: 1 },
+  { id: "purple", label: "Purple", color: "#a855f7", unlockLevel: 2 },
+  { id: "gold",   label: "Gold",   color: "#f59e0b", unlockLevel: 3 },
+  { id: "black",  label: "Black",  color: "#1e293b", unlockLevel: 4 },
+  { id: "pink",   label: "Pink",   color: "#ec4899", unlockLevel: 5 },
 ];
 
 export const HORSE_SKINS = [
-  { id: "brown",   label: "Brown",   emoji: "🐴", unlockLevel: 1 },
-  { id: "white",   label: "White",   emoji: "🐇", unlockLevel: 2 },
-  { id: "unicorn", label: "Unicorn", emoji: "🦄", unlockLevel: 5 },
-  { id: "dark",    label: "Dark",    emoji: "🐴", unlockLevel: 10 },
+  { id: "chestnut",  label: "Chestnut",  emoji: "🐴", unlockLevel: 1 },
+  { id: "bay",       label: "Bay",       emoji: "🐴", unlockLevel: 1 },
+  { id: "black",     label: "Black",     emoji: "🐴", unlockLevel: 2 },
+  { id: "dun",       label: "Dun",       emoji: "🐴", unlockLevel: 3 },
+  { id: "roan",      label: "Roan",      emoji: "🐴", unlockLevel: 4 },
+  { id: "gray",      label: "Gray",      emoji: "🐴", unlockLevel: 5 },
+  { id: "palomino",  label: "Palomino",  emoji: "🐴", unlockLevel: 6 },
+  { id: "pinto",     label: "Pinto",     emoji: "🐴", unlockLevel: 7 },
 ];
 
 export const SADDLES = [
