@@ -12,7 +12,7 @@ export const JOCKEY_COLORS = [
 ];
 
 export const HORSE_SKINS = [
-  { id: "chestnut",  label: "Chestnut",  emoji: "🐴", unlockLevel: 1 },
+  { id: "chestnut",  label: "Chestnut",  emoji: "🟤", unlockLevel: 1 },
   { id: "bay",       label: "Bay",       emoji: "🐴", unlockLevel: 1 },
   { id: "black",     label: "Black",     emoji: "🐴", unlockLevel: 2 },
   { id: "dun",       label: "Dun",       emoji: "🐴", unlockLevel: 3 },
