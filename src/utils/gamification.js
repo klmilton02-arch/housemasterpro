@@ -4,8 +4,8 @@ import { parseISO, differenceInDays } from "date-fns";
 const DIFFICULTY_POINTS = {
   "Trivial": 1,
   "Easy": 2,
-  "Medium": 2,
-  "Hard": 3,
+  "Medium": 3,
+  "Hard": 4,
   "Very Hard": 5,
 };
 
