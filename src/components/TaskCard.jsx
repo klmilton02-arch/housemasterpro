@@ -106,7 +106,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
 
   return (
     <div className={cn(
-      "border rounded-lg px-3 hover:shadow-md transition-all group w-full cursor-pointer h-12 flex items-center overflow-hidden",
+      "border rounded-lg px-3 hover:shadow-md transition-all group w-full cursor-pointer h-16 flex items-center overflow-hidden",
       cardBg
     )} onClick={() => onViewDetails?.(task)}>
       <div className="flex items-center justify-between gap-2 w-full">
@@ -123,7 +123,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
             />
           ) : (
             <div className="flex items-center gap-1 group/name">
-              <h3 className={cn("font-heading font-semibold text-sm truncate", visuallyCompleted ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
+              <h3 className={cn("font-heading font-semibold text-base truncate", visuallyCompleted ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
               <button
                 onClick={e => { e.stopPropagation(); setEditing(true); }}
                 className="opacity-0 group-hover/name:opacity-100 transition-opacity p-0.5 rounded hover:bg-muted"
@@ -132,21 +132,21 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
               </button>
             </div>
           )}
-          <div className="flex items-center gap-1 mt-0 overflow-hidden">
-           <span className={cn("inline-flex items-center gap-0.5 px-1 py-0 rounded-full text-[10px] font-medium", status.color)}>
-             <StatusIcon className="w-2.5 h-2.5" />
+          <div className="flex items-center gap-1 mt-0.5 overflow-hidden">
+           <span className={cn("inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-medium", status.color)}>
+             <StatusIcon className="w-3 h-3" />
              {status.label}
            </span>
            {showDate && (
-             <span className="text-[10px] text-muted-foreground">{format(parseISO(task.next_due_date), "MMM d")}</span>
+             <span className="text-xs text-muted-foreground">{format(parseISO(task.next_due_date), "MMM d")}</span>
            )}
            {task.streak > 0 && (
-             <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-orange-500">
-               <Flame className="w-2.5 h-2.5" />{task.streak}
+             <span className="inline-flex items-center gap-0.5 text-xs font-medium text-orange-500">
+               <Flame className="w-3 h-3" />{task.streak}
              </span>
            )}
            {task.assigned_to_name && (
-             <span className="text-[10px] text-muted-foreground">· {task.assigned_to_name}</span>
+             <span className="text-xs text-muted-foreground">· {task.assigned_to_name}</span>
            )}
           </div>
         </div>
