@@ -368,12 +368,6 @@ export default function Stable() {
                 <ItemGrid items={SHOES} equipped={selectedHorse?.shoes} onEquip={v => update("shoes", v)} level={level} hideEmoji={true} />
               </section>
 
-              {/* Armor */}
-              <section>
-                <h2 className="font-heading font-semibold text-sm mb-2 text-muted-foreground uppercase tracking-wide">🛡️ Armor</h2>
-                <ItemGrid items={ARMORS} equipped={selectedHorse?.armor} onEquip={v => update("armor", v)} level={level} />
-              </section>
-
               {/* Accessories */}
               <section>
                 <h2 className="font-heading font-semibold text-sm mb-2 text-muted-foreground uppercase tracking-wide">✨ Accessories</h2>
