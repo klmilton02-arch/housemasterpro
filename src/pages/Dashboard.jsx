@@ -229,7 +229,16 @@ export default function Dashboard() {
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
       <RevokePointsToast points={revokedPoints} onDismiss={() => setRevokedPoints(null)} />
       <BlastModeToast show={blastToastShow} onDismiss={() => setBlastToastShow(false)} />
-      <TaskDetailModal task={selectedTask} open={!!selectedTask} onOpenChange={(open) => { if (!open) setSelectedTask(null); }} onChangeDueDate={handleChangeDueDate} />
+      <TaskDetailModal 
+        task={selectedTask} 
+        open={!!selectedTask} 
+        onOpenChange={(open) => { if (!open) setSelectedTask(null); }} 
+        onModify={() => {
+          setSelectedTask(null);
+          navigate('/tasks');
+        }}
+        onChangeDueDate={handleChangeDueDate} 
+      />
 
       <Drawer open={!!taskListModal} onOpenChange={(open) => { if (!open) { setTaskListModal(null); setDrawerTaskIds(null); setJustCompletedIds(new Set()); } }}>
         <DrawerContent className="max-h-[85vh]">
