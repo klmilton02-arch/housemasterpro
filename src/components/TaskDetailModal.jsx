@@ -14,7 +14,7 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
   async function handleDelete() {
     if (!task || !task.id) return;
     await base44.entities.Task.delete(task.id);
-    onDelete?.(task.id);
+    onDelete?.(task);
     setDeleteDialogOpen(false);
     onOpenChange(false);
   }
