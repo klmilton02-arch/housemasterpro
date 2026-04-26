@@ -103,7 +103,7 @@ export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, o
         <div className="flex items-center gap-2">
           <button
             onClick={() => toggleRoom(room)}
-            className={`border rounded-lg w-full flex items-center justify-between hover:shadow-md transition-all px-3 py-2.5 ${borderColor} ${bgColor}`}
+            className={`border rounded-lg w-full flex items-center justify-between hover:shadow-md transition-all px-3 py-2.5 h-14 ${borderColor} ${bgColor}`}
           >
             <div className="flex items-center gap-2.5 flex-1 text-left">
               <span className="text-base">{getRoomIcon(room)}</span>
