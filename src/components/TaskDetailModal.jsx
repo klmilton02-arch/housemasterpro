@@ -23,6 +23,7 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
     if (!dueDateInput || !task?.id) return;
     await onChangeDueDate?.(task, dueDateInput);
     setChangeDueDateOpen(false);
+    onOpenChange(false);
   }
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
