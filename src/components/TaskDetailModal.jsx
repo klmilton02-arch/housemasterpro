@@ -18,6 +18,12 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
     setDeleteDialogOpen(false);
     onOpenChange(false);
   }
+
+  async function handleChangeDueDate() {
+    if (!dueDateInput || !task?.id) return;
+    await onChangeDueDate?.(task, dueDateInput);
+    setChangeDueDateOpen(false);
+  }
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-sm max-h-[85vh] overflow-y-auto">
@@ -108,11 +114,7 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
                 <div className="flex gap-2 justify-end">
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction
-                    onClick={() => {
-                      onChangeDueDate?.(task, dueDateInput);
-                      setChangeDueDateOpen(false);
-                      onOpenChange(false);
-                    }}
+                    onClick={handleChangeDueDate}
                     className="bg-blue-500 hover:bg-blue-600"
                   >
                     Save
