@@ -109,7 +109,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
               </button>
             </div>
           )}
-          <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+          <div className="flex items-center gap-1.5 mt-0.5 overflow-hidden">
            <span className={cn("inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-medium", status.color)}>
              <StatusIcon className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
              {status.label}
