@@ -3,14 +3,11 @@ import { ChevronDown, ChevronRight, CheckCircle2, AlertTriangle, Clock, Plus } f
 import { Button } from "@/components/ui/button";
 import TaskCard, { getStatusInfo } from "./TaskCard";
 
-const ROOMS = [
+const ROOM_ORDER = [
   "Kitchen",
-  "Bathroom",
-  "Half Bath",
-  "Bedroom 1",
-  "Bedroom 2",
-  "Bedroom 3",
-  "Bedroom 4",
+  "Bathroom", "Bathroom 1", "Bathroom 2", "Bathroom 3", "Bathroom 4", "Bathroom 5",
+  "Half Bath", "Half Bath 1", "Half Bath 2", "Half Bath 3",
+  "Bedroom", "Bedroom 1", "Bedroom 2", "Bedroom 3", "Bedroom 4", "Bedroom 5",
   "Living Room",
   "Dining Room",
   "Garage",
@@ -18,20 +15,17 @@ const ROOMS = [
   "Mixed Use Room",
 ];
 
-const ROOM_ICONS = {
-  "Kitchen": "🍳",
-  "Bathroom": "🚿",
-  "Half Bath": "🪥",
-  "Bedroom 1": "🛏️",
-  "Bedroom 2": "🛏️",
-  "Bedroom 3": "🛏️",
-  "Bedroom 4": "🛏️",
-  "Living Room": "🛋️",
-  "Dining Room": "🍽️",
-  "Garage": "🚗",
-  "Laundry Room": "🧺",
-  "Mixed Use Room": "📦",
-};
+function getRoomIcon(room) {
+  if (room.startsWith("Kitchen")) return "🍳";
+  if (room.startsWith("Bathroom")) return "🚿";
+  if (room.startsWith("Half Bath")) return "🪥";
+  if (room.startsWith("Bedroom")) return "🛏️";
+  if (room.startsWith("Living")) return "🛋️";
+  if (room.startsWith("Dining")) return "🍽️";
+  if (room.startsWith("Garage")) return "🚗";
+  if (room.startsWith("Laundry")) return "🧺";
+  return "📦";
+}
 
 function getRoomStatus(tasks) {
   const pending = tasks.filter(t => t.status !== "Completed");
@@ -47,15 +41,20 @@ function getRoomStatus(tasks) {
 export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, onAddTask }) {
   const [expandedRooms, setExpandedRooms] = useState(new Set());
 
-  const roomTasks = ROOMS.reduce((acc, room) => {
+  // Build dynamic room list from actual task data, ordered by ROOM_ORDER
+  const taskRooms = [...new Set(tasks.map(t => t.room).filter(Boolean))];
+  const orderedRooms = [
+    ...ROOM_ORDER.filter(r => taskRooms.includes(r)),
+    ...taskRooms.filter(r => !ROOM_ORDER.includes(r)).sort(),
+  ];
+
+  const roomTasks = orderedRooms.reduce((acc, room) => {
     acc[room] = tasks.filter(t => t.room === room);
     return acc;
   }, {});
 
-  // Also collect tasks with no room
-  const unassigned = tasks.filter(t => !t.room || !ROOMS.includes(t.room));
-
-  const roomsWithTasks = ROOMS.filter(room => roomTasks[room].length > 0);
+  const unassigned = tasks.filter(t => !t.room);
+  const roomsWithTasks = orderedRooms.filter(room => roomTasks[room].length > 0);
 
   function toggleRoom(room) {
     setExpandedRooms(prev => {
@@ -107,7 +106,7 @@ export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, o
             className={`border rounded-lg w-full flex items-center justify-between hover:shadow-md transition-all px-3 py-2.5 ${borderColor} ${bgColor}`}
           >
             <div className="flex items-center gap-2.5 flex-1 text-left">
-              <span className="text-base">{ROOM_ICONS[room] || "🏠"}</span>
+              <span className="text-base">{getRoomIcon(room)}</span>
               <span className="font-heading font-semibold text-sm">{room}</span>
               <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-medium ${badgeBg}`}>
                 {StatusIcon}
