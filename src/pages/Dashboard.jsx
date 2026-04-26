@@ -43,7 +43,7 @@ export default function Dashboard() {
   const [profile, setProfile] = useState(null);
   const [revokedPoints, setRevokedPoints] = useState(null);
   const [justCompletedIds, setJustCompletedIds] = useState(new Set());
-  const [frozenDrawerTasks, setFrozenDrawerTasks] = useState(null);
+  const [drawerTaskIds, setDrawerTaskIds] = useState(null); // ordered list of task ids for the drawer
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);
@@ -88,6 +88,15 @@ export default function Dashboard() {
     // Mark as just-completed immediately so TaskCard turns green and stays in place
     setJustCompletedIds(prev => new Set([...prev, task.id]));
 
+    // Move completed task to bottom of drawer list after a short visual pause
+    setTimeout(() => {
+      setDrawerTaskIds(prev => {
+        if (!prev) return prev;
+        const without = prev.filter(id => id !== task.id);
+        return [...without, task.id];
+      });
+    }, 800);
+
     // Fire confetti + XP toast right away
     confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
 
@@ -108,7 +117,7 @@ export default function Dashboard() {
       }
     });
 
-    // After pause, reload tasks (which will update tasks state + re-derive lists)
+    // After pause, reload tasks and clear just-completed
     setTimeout(() => {
       setJustCompletedIds(prev => { const n = new Set(prev); n.delete(task.id); return n; });
       loadTasks();
@@ -146,8 +155,11 @@ export default function Dashboard() {
     new Date(a.next_due_date) - new Date(b.next_due_date)
   ).slice(0, 8);
 
-  // Use the frozen snapshot as-is — task objects don't change during the pause
-  const drawerLiveTasks = frozenDrawerTasks || [];
+  // Build live ordered task list for the drawer (looks up current task objects by id order)
+  const taskById = Object.fromEntries(tasks.map(t => [t.id, t]));
+  const drawerLiveTasks = drawerTaskIds
+    ? drawerTaskIds.map(id => taskById[id]).filter(Boolean)
+    : [];
 
   if (loading) {
     return (
@@ -163,10 +175,10 @@ export default function Dashboard() {
       <h1 className="font-heading text-3xl font-bold md:hidden">Dashboard</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
-        <StatCard icon={ListChecks} label="Due Today" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => { setFrozenDrawerTasks(dueTasks); setTaskListModal({ title: 'Due Today', tasks: dueTasks }); }} />
-        <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => { setFrozenDrawerTasks(overdueTasks); setTaskListModal({ title: 'Overdue Tasks', tasks: overdueTasks }); }} />
-        <StatCard icon={Clock} label="Pending Tasks" value={pendingTasks.length} color="bg-amber-100 text-amber-600" onClick={() => { setFrozenDrawerTasks(pendingTasks); setTaskListModal({ title: 'Pending Tasks', tasks: pendingTasks }); }} />
-        <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setFrozenDrawerTasks(completedTasks); setTaskListModal({ title: 'Completed Tasks', tasks: completedTasks }); }} />
+        <StatCard icon={ListChecks} label="Due Today" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => { setDrawerTaskIds(dueTasks.map(t => t.id)); setTaskListModal({ title: 'Due Today' }); }} />
+        <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => { setDrawerTaskIds(overdueTasks.map(t => t.id)); setTaskListModal({ title: 'Overdue Tasks' }); }} />
+        <StatCard icon={Clock} label="Pending Tasks" value={pendingTasks.length} color="bg-amber-100 text-amber-600" onClick={() => { setDrawerTaskIds(pendingTasks.map(t => t.id)); setTaskListModal({ title: 'Pending Tasks' }); }} />
+        <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setDrawerTaskIds(completedTasks.map(t => t.id)); setTaskListModal({ title: 'Completed Tasks' }); }} />
       </div>
 
       <LeaderboardSummary />
@@ -213,7 +225,7 @@ export default function Dashboard() {
       <BlastModeToast show={blastToastShow} onDismiss={() => setBlastToastShow(false)} />
       <TaskDetailModal task={selectedTask} open={!!selectedTask} onOpenChange={(open) => { if (!open) setSelectedTask(null); }} />
 
-      <Drawer open={!!taskListModal} onOpenChange={(open) => { if (!open) { setTaskListModal(null); setFrozenDrawerTasks(null); setJustCompletedIds(new Set()); } }}>
+      <Drawer open={!!taskListModal} onOpenChange={(open) => { if (!open) { setTaskListModal(null); setDrawerTaskIds(null); setJustCompletedIds(new Set()); } }}>
         <DrawerContent className="max-h-[85vh]">
           <DrawerHeader>
             <DrawerTitle className="font-heading">{taskListModal?.title} ({drawerLiveTasks.length})</DrawerTitle>
