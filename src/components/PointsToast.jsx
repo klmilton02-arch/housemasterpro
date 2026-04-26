@@ -1,18 +1,15 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { TrendingUp, Award } from "lucide-react";
-import confetti from "canvas-confetti";
 
 export default function PointsToast({ reward, onDismiss }) {
-  useEffect(() => {
-    // confetti is fired in handleComplete, not here
-  }, [reward]);
+  const dismissRef = useRef(onDismiss);
+  dismissRef.current = onDismiss;
 
   useEffect(() => {
-    if (reward) {
-      const timer = setTimeout(onDismiss, 2000);
-      return () => clearTimeout(timer);
-    }
+    if (!reward) return;
+    const timer = setTimeout(() => dismissRef.current(), 2000);
+    return () => clearTimeout(timer);
   }, [reward]);
 
   return (
@@ -24,7 +21,7 @@ export default function PointsToast({ reward, onDismiss }) {
           exit={{ opacity: 0, y: -20, scale: 0.9 }}
           transition={{ type: "spring", damping: 18, stiffness: 200 }}
           onClick={onDismiss}
-          className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 cursor-pointer select-none"
+          className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[300] cursor-pointer select-none"
         >
           <div className="bg-card border border-border rounded-2xl shadow-2xl px-6 py-4 text-center min-w-[200px]">
             <div className="text-4xl font-heading font-bold text-primary">+{reward.totalPoints}</div>
