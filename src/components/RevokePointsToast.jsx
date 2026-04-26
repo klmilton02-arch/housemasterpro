@@ -1,12 +1,15 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export default function RevokePointsToast({ points, onDismiss }) {
+  const dismissRef = useRef(onDismiss);
+  dismissRef.current = onDismiss;
+
   useEffect(() => {
     if (!points) return;
-    const t = setTimeout(onDismiss, 2500);
+    const t = setTimeout(() => dismissRef.current(), 2500);
     return () => clearTimeout(t);
-  }, [points, onDismiss]);
+  }, [points]);
 
   return (
     <AnimatePresence>
@@ -16,7 +19,7 @@ export default function RevokePointsToast({ points, onDismiss }) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 60, scale: 0.8 }}
           transition={{ type: "spring", stiffness: 300, damping: 22 }}
-          className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-1"
+          className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[300] flex flex-col items-center gap-1"
           onClick={onDismiss}
         >
           <div className="bg-white dark:bg-slate-800 border border-red-200 dark:border-red-700 rounded-2xl shadow-xl px-6 py-4 flex flex-col items-center gap-2 min-w-[160px]">
