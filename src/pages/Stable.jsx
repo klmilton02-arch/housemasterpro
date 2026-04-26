@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { getLevelInfo } from "@/utils/gamification";
 import {
-  JOCKEY_COLORS, SADDLES, SHOES, ARMORS, ACCESSORIES,
+  JOCKEY_COLORS, SADDLES, SHOES, BRANDS,
   getHorseEmoji, getTotalBonus, getEquippedEmojis
 } from "@/utils/horseItems";
 import { Lock, CheckCircle2, Zap, Plus, Trash2, Heart } from "lucide-react";
@@ -163,8 +163,7 @@ export default function Stable() {
       horse_skin: "brown",
       saddle: "none",
       shoes: "none",
-      armor: "none",
-      accessory: "none",
+      brand: "none",
       health: 100,
       last_fed_date: new Date().toISOString().split("T")[0],
       last_activity_date: new Date().toISOString().split("T")[0],
@@ -368,10 +367,10 @@ export default function Stable() {
                 <ItemGrid items={SHOES} equipped={selectedHorse?.shoes} onEquip={v => update("shoes", v)} level={level} hideEmoji={true} />
               </section>
 
-              {/* Accessories */}
+              {/* Brands */}
               <section>
-                <h2 className="font-heading font-semibold text-sm mb-2 text-muted-foreground uppercase tracking-wide">✨ Accessories</h2>
-                <ItemGrid items={ACCESSORIES} equipped={selectedHorse?.accessory} onEquip={v => update("accessory", v)} level={level} />
+                <h2 className="font-heading font-semibold text-sm mb-2 text-muted-foreground uppercase tracking-wide">🏷️ Brand</h2>
+                <ItemGrid items={BRANDS} equipped={selectedHorse?.brand} onEquip={v => update("brand", v)} level={level} />
               </section>
             </>
           )}

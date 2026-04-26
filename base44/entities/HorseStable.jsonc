@@ -34,14 +34,9 @@
       "title": "Shoes Equipped",
       "default": "none"
     },
-    "armor": {
+    "brand": {
       "type": "string",
-      "title": "Armor Equipped",
-      "default": "none"
-    },
-    "accessory": {
-      "type": "string",
-      "title": "Accessory Equipped",
+      "title": "Brand Equipped",
       "default": "none"
     },
     "health": {

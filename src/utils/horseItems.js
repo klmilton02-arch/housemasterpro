@@ -49,14 +49,14 @@ export const ARMORS = [
   { id: "dragon",   label: "Dragon Scale",  emoji: "🐉", bonus: 38, unlockLevel: 5 },
 ];
 
-export const ACCESSORIES = [
-  { id: "none",      label: "None",          emoji: "",   bonus: 0,  unlockLevel: 1 },
-  { id: "ribbon",    label: "Ribbon",        emoji: "🎀", bonus: 2,  unlockLevel: 1 },
-  { id: "hat",       label: "Lucky Hat",     emoji: "🎩", bonus: 6,  unlockLevel: 2 },
-  { id: "clover",    label: "Lucky Clover",  emoji: "🍀", bonus: 10, unlockLevel: 2 },
-  { id: "star",      label: "Star Power",    emoji: "⭐", bonus: 16, unlockLevel: 3 },
-  { id: "flame",     label: "Flame Aura",    emoji: "🔥", bonus: 24, unlockLevel: 4 },
-  { id: "crown",     label: "Champion Crown",emoji: "👑", bonus: 35, unlockLevel: 5 },
+export const BRANDS = [
+  { id: "none",    label: "None",       emoji: "",   bonus: 0,  unlockLevel: 1 },
+  { id: "heart",   label: "Heart",      emoji: "❤️", bonus: 5,  unlockLevel: 1 },
+  { id: "clover",  label: "Clover",     emoji: "🍀", bonus: 10, unlockLevel: 2 },
+  { id: "magnet",  label: "Magnet",     emoji: "🧲", bonus: 15, unlockLevel: 3 },
+  { id: "diamond", label: "Diamond",    emoji: "💎", bonus: 25, unlockLevel: 4 },
+  { id: "bolt",    label: "Bolt",       emoji: "⚡", bonus: 35, unlockLevel: 5 },
+  { id: "fire",    label: "Fire",       emoji: "🔥", bonus: 45, unlockLevel: 6 },
 ];
 
 export function getHorseEmoji(skin) {
@@ -66,17 +66,15 @@ export function getHorseEmoji(skin) {
 export function getTotalBonus(stable) {
   const saddleBonus = SADDLES.find(s => s.id === stable?.saddle)?.bonus || 0;
   const shoesBonus  = SHOES.find(s => s.id === stable?.shoes)?.bonus  || 0;
-  const armorBonus  = ARMORS.find(s => s.id === stable?.armor)?.bonus  || 0;
-  const accBonus    = ACCESSORIES.find(s => s.id === stable?.accessory)?.bonus || 0;
-  return saddleBonus + shoesBonus + armorBonus + accBonus;
+  const brandBonus  = BRANDS.find(s => s.id === stable?.brand)?.bonus  || 0;
+  return saddleBonus + shoesBonus + brandBonus;
 }
 
 export function getEquippedEmojis(stable) {
   const saddle = SADDLES.find(s => s.id === stable?.saddle);
   const shoes  = SHOES.find(s => s.id === stable?.shoes);
-  const armor  = ARMORS.find(s => s.id === stable?.armor);
-  const acc    = ACCESSORIES.find(s => s.id === stable?.accessory);
-  return [saddle, shoes, armor, acc]
+  const brand  = BRANDS.find(s => s.id === stable?.brand);
+  return [saddle, shoes, brand]
     .filter(i => i && i.emoji)
     .map(i => i.emoji);
 }
