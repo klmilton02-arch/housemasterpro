@@ -119,16 +119,15 @@ export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, o
       StatusIcon = <Clock className="w-3.5 h-3.5 text-amber-500" />;
     }
 
-    // Sort: pending first (by due date), just-completed pinned before real completed, then completed
+    // Sort: pending first (by due date), just-completed pinned in place, then real completed at bottom
     const sortedTasks = [...roomTaskList].sort((a, b) => {
       const aJust = justCompletedIds.has(a.id);
       const bJust = justCompletedIds.has(b.id);
-      const aCompleted = a.status === "Completed" && !aJust;
-      const bCompleted = b.status === "Completed" && !bJust;
-      if (aCompleted && !bCompleted) return 1;
-      if (!aCompleted && bCompleted) return -1;
-      if (aJust && !bJust) return 1;
-      if (!aJust && bJust) return -1;
+      // Treat just-completed as NOT completed for sorting purposes (keep in place)
+      const aIsBottom = a.status === "Completed" && !aJust;
+      const bIsBottom = b.status === "Completed" && !bJust;
+      if (aIsBottom && !bIsBottom) return 1;
+      if (!aIsBottom && bIsBottom) return -1;
       return new Date(a.next_due_date) - new Date(b.next_due_date);
     });
 
