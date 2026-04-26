@@ -138,6 +138,12 @@ export default function Dashboard() {
     loadTasks();
   }
 
+  async function handleChangeDueDate(task, newDate) {
+    if (!newDate) return;
+    await base44.entities.Task.update(task.id, { next_due_date: newDate });
+    loadTasks();
+  }
+
   const overdueTasks = tasks.filter(t => {
     const s = getStatusInfo(t);
     return s.label === "Overdue" || s.label === "Past Due";
@@ -223,7 +229,7 @@ export default function Dashboard() {
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
       <RevokePointsToast points={revokedPoints} onDismiss={() => setRevokedPoints(null)} />
       <BlastModeToast show={blastToastShow} onDismiss={() => setBlastToastShow(false)} />
-      <TaskDetailModal task={selectedTask} open={!!selectedTask} onOpenChange={(open) => { if (!open) setSelectedTask(null); }} />
+      <TaskDetailModal task={selectedTask} open={!!selectedTask} onOpenChange={(open) => { if (!open) setSelectedTask(null); }} onChangeDueDate={handleChangeDueDate} />
 
       <Drawer open={!!taskListModal} onOpenChange={(open) => { if (!open) { setTaskListModal(null); setDrawerTaskIds(null); setJustCompletedIds(new Set()); } }}>
         <DrawerContent className="max-h-[85vh]">
