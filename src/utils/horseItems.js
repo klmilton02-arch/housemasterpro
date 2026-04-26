@@ -8,14 +8,14 @@ export const JOCKEY_COLORS = [
   { id: "purple", label: "Purple", color: "#a855f7", unlockLevel: 2 },
   { id: "gold",   label: "Gold",   color: "#f59e0b", unlockLevel: 3 },
   { id: "black",  label: "Black",  color: "#1e293b", unlockLevel: 4 },
-  { id: "rainbow",label: "Rainbow",color: "linear-gradient(90deg,#f59e0b,#22c55e,#3b82f6,#a855f7)", unlockLevel: 5 },
+  { id: "pink",   label: "Pink",   color: "#ec4899", unlockLevel: 5 },
 ];
 
 export const HORSE_SKINS = [
-  { id: "brown",   label: "Brown",   emoji: "🏇", unlockLevel: 1 },
-  { id: "white",   label: "White",   emoji: "🏇", unlockLevel: 2 },
-  { id: "unicorn", label: "Unicorn", emoji: "🏇", unlockLevel: 3 },
-  { id: "dark",    label: "Dark",    emoji: "🏇", unlockLevel: 4 },
+  { id: "brown",   label: "Brown",   emoji: "🐴", unlockLevel: 1 },
+  { id: "white",   label: "White",   emoji: "🐇", unlockLevel: 2 },
+  { id: "unicorn", label: "Unicorn", emoji: "🦄", unlockLevel: 5 },
+  { id: "dark",    label: "Dark",    emoji: "🐴", unlockLevel: 10 },
 ];
 
 export const SADDLES = [
@@ -30,10 +30,10 @@ export const SADDLES = [
 export const SHOES = [
   { id: "none",     label: "None",          emoji: "",   bonus: 0,  unlockLevel: 1 },
   { id: "iron",     label: "Iron Shoes",    emoji: "🔩", bonus: 5,  unlockLevel: 1 },
-  { id: "silver",   label: "Silver Shoes",  emoji: "🥈", bonus: 12, unlockLevel: 2 },
-  { id: "gold",     label: "Gold Shoes",    emoji: "🥇", bonus: 20, unlockLevel: 3 },
-  { id: "rocket",   label: "Rocket Boots",  emoji: "🚀", bonus: 32, unlockLevel: 4 },
-  { id: "lightning",label: "Lightning",     emoji: "⚡", bonus: 45, unlockLevel: 5 },
+  { id: "silver",   label: "Silver Shoes",  emoji: "🥈", bonus: 12, unlockLevel: 4 },
+  { id: "gold",     label: "Gold Shoes",    emoji: "🥇", bonus: 20, unlockLevel: 7 },
+  { id: "rocket",   label: "Rocket Boots",  emoji: "🚀", bonus: 32, unlockLevel: 9 },
+  { id: "lightning",label: "Lightning",     emoji: "⚡", bonus: 45, unlockLevel: 10 },
 ];
 
 export const ARMORS = [

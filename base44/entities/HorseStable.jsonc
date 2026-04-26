@@ -10,6 +10,10 @@
       "type": "string",
       "title": "Family Member Name"
     },
+    "horse_name": {
+      "type": "string",
+      "title": "Horse Name"
+    },
     "jockey_color": {
       "type": "string",
       "title": "Jockey Color",
@@ -39,10 +43,45 @@
       "type": "string",
       "title": "Accessory Equipped",
       "default": "none"
+    },
+    "health": {
+      "type": "number",
+      "title": "Health (0-100)",
+      "default": 100
+    },
+    "last_fed_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Last Fed Date"
+    },
+    "last_activity_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Last Activity Date"
+    },
+    "is_alive": {
+      "type": "boolean",
+      "title": "Horse is Alive",
+      "default": true
     }
   },
   "required": [
     "family_member_id",
-    "family_member_name"
-  ]
+    "family_member_name",
+    "horse_name"
+  ],
+  "rls": {
+    "create": {
+      "data.family_group_id": "{{user.family_group_id}}"
+    },
+    "read": {
+      "data.family_group_id": "{{user.family_group_id}}"
+    },
+    "update": {
+      "data.family_group_id": "{{user.family_group_id}}"
+    },
+    "delete": {
+      "data.family_group_id": "{{user.family_group_id}}"
+    }
+  }
 }
