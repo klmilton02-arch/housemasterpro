@@ -95,11 +95,13 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
   }
 
   const cardBg = visuallyCompleted
-    ? "border-green-400 bg-green-50/60 dark:border-green-700 dark:bg-green-950/30"
+    ? "border-green-400 bg-gradient-to-br from-green-100 to-green-50 dark:border-green-700 dark:bg-gradient-to-br dark:from-green-900 dark:to-green-950"
     : {
-        "Overdue": "border-red-300 bg-red-50/60 dark:border-red-800 dark:bg-red-950/30",
-        "Past Due": "border-orange-300 bg-orange-50/60 dark:border-orange-800 dark:bg-orange-950/30",
-        "Due Soon": "border-yellow-300 bg-yellow-50/60 dark:border-yellow-800 dark:bg-yellow-950/30",
+        "Overdue": "border-red-400 bg-gradient-to-br from-red-100 to-red-50 dark:border-red-700 dark:bg-gradient-to-br dark:from-red-900 dark:to-red-950",
+        "Past Due": "border-orange-400 bg-gradient-to-br from-orange-100 to-orange-50 dark:border-orange-700 dark:bg-gradient-to-br dark:from-orange-900 dark:to-orange-950",
+        "Due Soon": "border-yellow-400 bg-gradient-to-br from-yellow-100 to-yellow-50 dark:border-yellow-700 dark:bg-gradient-to-br dark:from-yellow-900 dark:to-yellow-950",
+        "Due Today": "border-orange-500 bg-gradient-to-br from-orange-200 to-orange-100 dark:border-orange-600 dark:bg-gradient-to-br dark:from-orange-900 dark:to-orange-950",
+        "Upcoming": "border-blue-400 bg-gradient-to-br from-blue-100 to-blue-50 dark:border-blue-700 dark:bg-gradient-to-br dark:from-blue-900 dark:to-blue-950",
       }[status.label] || "border-border bg-card";
 
   const showDate = !visuallyCompleted && ["Overdue", "Past Due", "Due Soon"].includes(status.label);
@@ -133,8 +135,8 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
             </div>
           )}
           <div className="flex items-center gap-1 mt-0.5 overflow-hidden">
-           <span className={cn("inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-medium", status.color)}>
-             <StatusIcon className="w-3 h-3" />
+           <span className={cn("inline-flex items-center gap-0.5 px-2 py-1 rounded-full text-xs font-semibold shadow-sm", status.color)}>
+             <StatusIcon className="w-3.5 h-3.5" />
              {status.label}
            </span>
            {showDate && (
