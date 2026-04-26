@@ -23,12 +23,12 @@ export const HORSE_SKINS = [
 ];
 
 export const SADDLES = [
-  { id: "none",    label: "None",         emoji: "",   bonus: 0,  unlockLevel: 1 },
-  { id: "basic",   label: "Basic Saddle", emoji: "🏅", bonus: 5,  unlockLevel: 1 },
-  { id: "leather", label: "Leather",      emoji: "🟤", bonus: 10, unlockLevel: 2 },
-  { id: "silver",  label: "Silver",       emoji: "⚪", bonus: 18, unlockLevel: 3 },
-  { id: "golden",  label: "Golden",       emoji: "🟡", bonus: 28, unlockLevel: 4 },
-  { id: "royal",   label: "Royal Throne", emoji: "👑", bonus: 40, unlockLevel: 5 },
+  { id: "none",      label: "None",           emoji: "",   bonus: 0,  unlockLevel: 1 },
+  { id: "bareback",  label: "Bareback Pad",   emoji: "🟤", bonus: 5,  unlockLevel: 1 },
+  { id: "basic",     label: "Basic Saddle",   emoji: "🏅", bonus: 10, unlockLevel: 2 },
+  { id: "silver",    label: "Silver Saddle",  emoji: "⚪", bonus: 18, unlockLevel: 3 },
+  { id: "golden",    label: "Golden Saddle",  emoji: "🟡", bonus: 28, unlockLevel: 4 },
+  { id: "platinum",  label: "Platinum Saddle", emoji: "💎", bonus: 40, unlockLevel: 5 },
 ];
 
 export const SHOES = [
