@@ -2,13 +2,43 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { getLevelInfo } from "@/utils/gamification";
 import {
-  HORSE_SKINS, SADDLES, SHOES, ARMORS, ACCESSORIES,
+  JOCKEY_COLORS, SADDLES, SHOES, ARMORS, ACCESSORIES,
   getHorseEmoji, getTotalBonus, getEquippedEmojis
 } from "@/utils/horseItems";
 import { Lock, CheckCircle2, Zap, Plus, Trash2, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { format, parseISO, differenceInDays } from "date-fns";
+
+function ColorGrid({ items, equipped, onEquip, level }) {
+  return (
+    <div className="grid grid-cols-4 gap-2">
+      {items.map(item => {
+        const locked = item.unlockLevel > level;
+        const isEquipped = equipped === item.id;
+        return (
+          <button
+            key={item.id}
+            disabled={locked}
+            onClick={() => !locked && onEquip(item.id)}
+            className={`relative rounded-xl border-2 p-2 flex flex-col items-center gap-1 transition-all
+              ${isEquipped ? "border-primary" : "border-border"}
+              ${locked ? "opacity-40 cursor-not-allowed" : "cursor-pointer active:scale-95"}
+            `}
+          >
+            {locked && <Lock className="absolute top-1 right-1 w-3 h-3 text-muted-foreground" />}
+            <div
+              className="w-7 h-7 rounded-full border border-border"
+              style={{ background: item.color }}
+            />
+            <span className="text-xs">{item.label}</span>
+            {locked && <span className="text-xs text-muted-foreground">Lv.{item.unlockLevel}</span>}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 function ItemGrid({ items, equipped, onEquip, level }) {
   return (
@@ -320,31 +350,10 @@ export default function Stable() {
                 {saving && <p className="text-xs text-muted-foreground animate-pulse">Saving...</p>}
               </div>
 
-              {/* Horse Skin */}
+              {/* Jockey Color */}
               <section>
-                <h2 className="font-heading font-semibold text-sm mb-2 text-muted-foreground uppercase tracking-wide">🐴 Horse</h2>
-                <div className="grid grid-cols-4 gap-2">
-                  {HORSE_SKINS.map(skin => {
-                    const locked = skin.unlockLevel > level;
-                    const isEquipped = selectedHorse?.horse_skin === skin.id;
-                    return (
-                      <button
-                        key={skin.id}
-                        disabled={locked}
-                        onClick={() => !locked && update("horse_skin", skin.id)}
-                        className={`relative rounded-xl border-2 p-2 flex flex-col items-center gap-1 transition-all
-                          ${isEquipped ? "border-primary bg-primary/10" : "border-border bg-card hover:bg-muted/50"}
-                          ${locked ? "opacity-40 cursor-not-allowed" : "cursor-pointer active:scale-95"}
-                        `}
-                      >
-                        {locked && <Lock className="absolute top-1 right-1 w-3 h-3 text-muted-foreground" />}
-                        <span className="text-2xl">{skin.emoji}</span>
-                        <span className="text-xs">{skin.label}</span>
-                        {locked && <span className="text-xs text-muted-foreground">Lv.{skin.unlockLevel}</span>}
-                      </button>
-                    );
-                  })}
-                </div>
+                <h2 className="font-heading font-semibold text-sm mb-2 text-muted-foreground uppercase tracking-wide">🎨 Jockey Color</h2>
+                <ColorGrid items={JOCKEY_COLORS} equipped={selectedHorse?.jockey_color} onEquip={v => update("jockey_color", v)} level={level} />
               </section>
 
               {/* Saddle */}
