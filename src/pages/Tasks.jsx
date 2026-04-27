@@ -296,10 +296,10 @@ export default function Tasks() {
       <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
         <button
           onClick={() => setDialogOpen(true)}
-          className="group relative overflow-hidden border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900 dark:to-blue-950 dark:border-blue-700 h-22 flex items-center"
+          className="group relative overflow-hidden border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
         >
           <div className="flex items-center gap-3 w-full">
-            <span className="text-2xl shrink-0">➕</span>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded bg-blue-500 flex items-center justify-center text-xl shrink-0">➕</div>
             <div className="flex-1 text-left">
               <div className="text-xs sm:text-sm text-muted-foreground mb-1">Add</div>
               <div className="font-heading font-semibold text-sm sm:text-base text-foreground">New Task</div>
@@ -308,10 +308,10 @@ export default function Tasks() {
         </button>
         <button
           onClick={() => navigate("/presets")}
-          className="group relative overflow-hidden border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900 dark:to-purple-950 dark:border-purple-700 h-22 flex items-center"
+          className="group relative overflow-hidden border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
         >
           <div className="flex items-center gap-3 w-full">
-            <span className="text-2xl shrink-0">⭐</span>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded bg-purple-500 flex items-center justify-center text-xl shrink-0">⭐</div>
             <div className="flex-1 text-left">
               <div className="text-xs sm:text-sm text-muted-foreground mb-1">Browse</div>
               <div className="font-heading font-semibold text-sm sm:text-base text-foreground">Presets Library</div>
@@ -320,10 +320,10 @@ export default function Tasks() {
         </button>
         <button
           onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }}
-          className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900 dark:to-green-950 dark:border-green-700 h-22 flex items-center"
+          className="group relative overflow-hidden border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
         >
           <div className="flex items-center gap-3 w-full">
-            <span className="text-2xl shrink-0">💰</span>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded bg-green-500 flex items-center justify-center text-xl shrink-0">💰</div>
             <div className="flex-1 text-left">
               <div className="text-sm text-muted-foreground mb-1">View</div>
               <div className="font-heading font-semibold text-base text-foreground">Bills</div>
@@ -332,10 +332,10 @@ export default function Tasks() {
         </button>
         <button
           onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")}
-          className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-orange-100 to-orange-50 dark:from-orange-900 dark:to-orange-950 dark:border-orange-700 h-22 flex items-center"
+          className="group relative overflow-hidden border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
         >
           <div className="flex items-center gap-3 w-full">
-            <span className="text-2xl shrink-0">🏠</span>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded bg-orange-500 flex items-center justify-center text-xl shrink-0">🏠</div>
             <div className="flex-1 text-left">
               <div className="text-sm text-muted-foreground mb-1">View</div>
               <div className="font-heading font-semibold text-base text-foreground">Rooms</div>
