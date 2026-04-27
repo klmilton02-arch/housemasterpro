@@ -6,7 +6,6 @@ import { User, LogOut, Shield, Clock, Pencil, Plus, Trash2, Copy, Check } from "
 import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import BadgeDisplay from "../components/BadgeDisplay";
-import SyncGoogleTasksButton from "../components/SyncGoogleTasksButton";
 import { getEarnedBadges } from "@/utils/badges";
 import MobileSelect from "../components/MobileSelect";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -388,18 +387,6 @@ export default function Profile() {
               {savingHour ? "Saving..." : "Save"}
             </Button>
           </div>
-        </div>
-      </div>
-
-      {/* Integrations */}
-      <div className="space-y-3">
-        <h3 className="font-heading font-semibold text-lg">Integrations</h3>
-        <div className="bg-card border border-border rounded-lg p-4 flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium">Google Tasks</p>
-            <p className="text-xs text-muted-foreground">Sync upcoming maintenance tasks to your to-do list</p>
-          </div>
-          <SyncGoogleTasksButton />
         </div>
       </div>
 
