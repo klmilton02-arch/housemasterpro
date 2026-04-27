@@ -350,16 +350,16 @@ export default function Tasks() {
             <button className="w-full border border-border rounded-lg p-4 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-20">
               <span className="text-xs text-muted-foreground font-medium">Filter</span>
               <span className="font-heading font-semibold text-base text-foreground">
-                {statusFilter === "all" ? "Status" : statusFilter.replace("_", " ")}
+                {statusFilter === "all" ? "Due Date" : statusFilter.replace("_", " ")}
               </span>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
             {[
-              { value: "all", label: "All Status" },
-              { value: "pending", label: "Pending" },
+              { value: "all", label: "All Dates" },
               { value: "overdue", label: "Overdue" },
               { value: "due_soon", label: "Due Soon" },
+              { value: "pending", label: "Upcoming" },
               { value: "completed", label: "Completed" },
             ].map(opt => (
               <DropdownMenuItem key={opt.value} onClick={() => { setViewMode("list"); setStatusFilter(opt.value); }}>
