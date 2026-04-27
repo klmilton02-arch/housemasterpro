@@ -298,11 +298,11 @@ export default function Tasks() {
            onClick={() => setDialogOpen(true)}
            className="group relative overflow-hidden border border-border rounded-xl p-4 hover:shadow-md transition-all bg-white dark:bg-card h-24 flex items-center"
          >
-           <div className="flex items-center gap-3 w-full">
+           <div className="flex items-center gap-1 w-full">
              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-2xl shrink-0">➕</div>
              <div className="flex-1 text-left">
                <div className="text-xs sm:text-sm text-muted-foreground mb-1">Add</div>
-               <div className="font-heading font-semibold text-base sm:text-lg text-foreground">New Task</div>
+                 <div className="font-heading font-semibold text-lg sm:text-xl text-foreground">New Task</div>
              </div>
            </div>
          </button>
@@ -314,7 +314,7 @@ export default function Tasks() {
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-purple-500/20 flex items-center justify-center text-2xl shrink-0">⭐</div>
               <div className="flex-1 text-left">
                 <div className="text-xs sm:text-sm text-muted-foreground mb-1">Browse</div>
-                <div className="font-heading font-semibold text-base sm:text-lg text-foreground">Presets Library</div>
+                <div className="font-heading font-semibold text-lg sm:text-xl text-foreground">Presets Library</div>
               </div>
             </div>
           </button>
@@ -326,7 +326,7 @@ export default function Tasks() {
              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-green-500/20 flex items-center justify-center text-2xl shrink-0">💰</div>
              <div className="flex-1 text-left">
                <div className="text-sm text-muted-foreground mb-1">View</div>
-               <div className="font-heading font-semibold text-base sm:text-lg text-foreground">Bills</div>
+               <div className="font-heading font-semibold text-lg sm:text-xl text-foreground">Bills</div>
              </div>
            </div>
          </button>
@@ -338,7 +338,7 @@ export default function Tasks() {
              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-orange-500/20 flex items-center justify-center text-2xl shrink-0">🏠</div>
              <div className="flex-1 text-left">
                <div className="text-xs sm:text-sm text-muted-foreground mb-1">View by</div>
-               <div className="font-heading font-semibold text-base sm:text-lg text-foreground">Room</div>
+               <div className="font-heading font-semibold text-lg sm:text-xl text-foreground">Room</div>
              </div>
            </div>
          </button>
