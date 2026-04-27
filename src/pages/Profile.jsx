@@ -175,9 +175,11 @@ export default function Profile() {
   return (
     <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7 pb-8" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
 
-      {/* User Info */}
-      <div className="space-y-4">
-        <h1 className="font-heading text-3xl font-bold">Profile</h1>
+      <h1 className="font-heading text-3xl font-bold">Profile</h1>
+
+      {/* My Information */}
+      <div className="space-y-3">
+        <h3 className="font-heading font-semibold text-lg">My Information</h3>
         <div className="bg-card border border-border rounded-lg p-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
@@ -193,7 +195,6 @@ export default function Profile() {
           </div>
         </div>
       </div>
-
 
       {/* Household */}
       <div className="space-y-3">
@@ -218,6 +219,19 @@ export default function Profile() {
                 </div>
               );
             })}
+          </div>
+        )}
+
+
+
+        {/* Switch to family if solo */}
+        {user.account_type === "solo" && (
+          <div className="bg-muted/50 border border-border rounded-lg p-3 flex flex-col gap-2">
+            <p className="font-medium text-xs">Running solo?</p>
+            <p className="text-xs text-muted-foreground">Switch to a family account to share with others.</p>
+            <Button variant="outline" size="sm" onClick={handleJoinFamily} className="w-full text-xs">
+              Join / Create Family
+            </Button>
           </div>
         )}
 
@@ -254,21 +268,10 @@ export default function Profile() {
           </div>
         )}
 
-        {/* Switch to family if solo */}
-        {user.account_type === "solo" && (
-          <div className="bg-muted/50 border border-border rounded-lg p-3 flex flex-col gap-2">
-            <p className="font-medium text-xs">Running solo?</p>
-            <p className="text-xs text-muted-foreground">Switch to a family account to share with others.</p>
-            <Button variant="outline" size="sm" onClick={handleJoinFamily} className="w-full text-xs">
-              Join / Create Family
-            </Button>
-          </div>
-        )}
-
-        {/* Household app users */}
+        {/* Family Members */}
         {familyUsers.length > 0 && (
           <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">App Users</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Family Members</p>
             <div className="grid gap-2">
               {familyUsers.map(u => (
                 <div key={u.id} className="bg-card border border-border rounded-lg p-3 flex items-center gap-3">
