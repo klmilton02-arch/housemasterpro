@@ -296,17 +296,27 @@ export default function Tasks() {
       <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
         <button
            onClick={() => setDialogOpen(true)}
-           className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex flex-col items-start gap-2"
+           className="group relative overflow-hidden border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
          >
-           <span className="text-xs text-muted-foreground font-medium">Add</span>
-           <span className="font-heading font-semibold text-base text-foreground">New Task</span>
+           <div className="flex items-center gap-3 w-full">
+             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded bg-blue-500/50 flex items-center justify-center text-xl shrink-0">➕</div>
+             <div className="flex-1 text-left">
+               <div className="text-xs sm:text-sm text-muted-foreground mb-1">Add</div>
+               <div className="font-heading font-semibold text-sm sm:text-base text-foreground">New Task</div>
+             </div>
+           </div>
          </button>
         <button
            onClick={() => navigate("/presets")}
-           className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex flex-col items-start gap-2"
+           className="group relative overflow-hidden border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
          >
-           <span className="text-xs text-muted-foreground font-medium">Browse</span>
-           <span className="font-heading font-semibold text-base text-foreground">Presets Library</span>
+           <div className="flex items-center gap-3 w-full">
+             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded bg-purple-500/50 flex items-center justify-center text-xl shrink-0">⭐</div>
+             <div className="flex-1 text-left">
+               <div className="text-xs sm:text-sm text-muted-foreground mb-1">Browse</div>
+               <div className="font-heading font-semibold text-sm sm:text-base text-foreground">Presets Library</div>
+             </div>
+           </div>
          </button>
         <button
           onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }}
