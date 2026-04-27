@@ -48,6 +48,16 @@ function DarkModeSync() {
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
+  const publicPaths = ['/', '/landing', '/encryption', '/digital-services-act', '/copyright'];
+  const isPublicPath = publicPaths.some(p => window.location.pathname === p || window.location.pathname.startsWith(p + '/'));
+
+  // Redirect to login in an effect (not during render) to avoid infinite loops
+  useEffect(() => {
+    if (!isLoadingAuth && !isLoadingPublicSettings && authError?.type === 'auth_required' && !isPublicPath) {
+      navigateToLogin();
+    }
+  }, [isLoadingAuth, isLoadingPublicSettings, authError, isPublicPath]);
+
   // Show loading spinner while checking app public settings or auth
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
@@ -58,14 +68,11 @@ const AuthenticatedApp = () => {
   }
 
   // Handle authentication errors (but allow public pages)
-  const publicPaths = ['/', '/landing', '/encryption', '/digital-services-act', '/copyright'];
-  const isPublicPath = publicPaths.some(p => window.location.pathname === p || window.location.pathname.startsWith(p + '/'));
   if (authError && !isPublicPath) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
-      // Redirect to login automatically
-      navigateToLogin();
+      // Redirect happening in useEffect above
       return null;
     }
   }
