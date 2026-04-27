@@ -150,8 +150,8 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
            {task.assigned_to_name && !visuallyCompleted && (
               <span className="text-xs text-muted-foreground">· {task.assigned_to_name}</span>
             )}
-           {visuallyCompleted && task.assigned_to_name && (
-              <span className="text-xs font-medium text-green-700 dark:text-green-400">· ✓ {task.assigned_to_name}</span>
+           {visuallyCompleted && (task.completed_by_name || task.assigned_to_name) && (
+              <span className="text-xs font-medium text-green-700 dark:text-green-400">· ✓ {task.completed_by_name || task.assigned_to_name}</span>
             )}
           </div>
         </div>

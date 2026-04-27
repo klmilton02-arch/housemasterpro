@@ -77,6 +77,10 @@
       "format": "date",
       "title": "Last Completed Date"
     },
+    "completed_by_name": {
+      "type": "string",
+      "title": "Completed By Name"
+    },
     "status": {
       "type": "string",
       "title": "Status",

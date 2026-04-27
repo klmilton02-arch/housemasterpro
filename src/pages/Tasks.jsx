@@ -67,6 +67,10 @@ export default function Tasks() {
       nextDue.setDate(nextDue.getDate() + task.frequency_days);
       const nextDueStr = nextDue.toISOString().split("T")[0];
 
+      // Get current user's name for completed_by_name
+      const currentUser = await base44.auth.me();
+      const completedByName = currentUser?.full_name || currentUser?.email || "Someone";
+
       // Streak: increment if last completed within 2x frequency window (daily tasks only), else reset to 1
       let newStreak = 1;
       if (task.frequency_days <= 1 && task.last_completed_date) {
@@ -75,7 +79,7 @@ export default function Tasks() {
       }
 
       // Update local state immediately to prevent double-clicks
-      setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak, completed_with_blast: blastActive } : t));
+      setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak, completed_with_blast: blastActive, completed_by_name: completedByName } : t));
 
       // Mark as visually complete immediately (shows green + checkmark)
       setJustCompleted(prev => new Set([...prev, task.id]));
@@ -99,6 +103,7 @@ export default function Tasks() {
         next_due_date: nextDueStr,
         streak: newStreak,
         completed_with_blast: blastActive,
+        completed_by_name: completedByName,
       });
 
       // After 2s: update task status in local state (triggers sort to bottom)
