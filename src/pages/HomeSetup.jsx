@@ -229,6 +229,16 @@ export default function HomeSetup() {
         <p className="text-sm text-muted-foreground mt-1">Configure your rooms to auto-generate cleaning tasks</p>
       </div>
 
+      <div className="space-y-3">
+        <Label className="text-sm font-medium">Start Date</Label>
+        <Input
+          type="date"
+          value={config.start_date}
+          onChange={(e) => setConfig(c => ({ ...c, start_date: e.target.value }))}
+          className="w-full"
+        />
+      </div>
+
       <div className="space-y-4">
          <h2 className="font-heading font-semibold text-lg">Rooms with multiple instances</h2>
         <NumberInput label="Bedrooms" icon={BedDouble} field="bedrooms" />
@@ -291,16 +301,6 @@ export default function HomeSetup() {
             ))}
           </div>
         )}
-      </div>
-
-      <div className="space-y-3">
-        <Label className="text-sm font-medium">Start Date</Label>
-        <Input
-          type="date"
-          value={config.start_date}
-          onChange={(e) => setConfig(c => ({ ...c, start_date: e.target.value }))}
-          className="w-full"
-        />
       </div>
 
       <div className="space-y-4">
