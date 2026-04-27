@@ -338,7 +338,7 @@ export default function Tasks() {
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded bg-orange-500/50 flex items-center justify-center text-xl shrink-0">🏠</div>
             <div className="flex-1 text-left">
               <div className="text-xs sm:text-sm text-muted-foreground mb-1">View by</div>
-              <div className="font-heading font-semibold text-base text-foreground">Rooms</div>
+              <div className="font-heading font-semibold text-base text-foreground">Room</div>
             </div>
           </div>
         </button>
