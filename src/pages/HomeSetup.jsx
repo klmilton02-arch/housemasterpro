@@ -206,14 +206,16 @@ export default function HomeSetup() {
     const active = config[field];
     return (
       <button
-        className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all text-center ${
+        className={`flex items-center justify-between gap-2 p-3 rounded-xl border transition-all h-22 ${
           active ? "bg-primary/10 border-primary/30 text-primary" : "bg-card border-border text-muted-foreground"
         }`}
         onClick={() => setConfig(c => ({ ...c, [field]: !c[field] }))}
       >
-        <Icon className="w-5 h-5" />
-        <span className="text-xs font-medium">{label}</span>
-        {active && <CheckCircle className="w-3 h-3" />}
+        <span className="text-xs font-medium text-left">{label}</span>
+        <div className="flex items-center gap-1.5">
+          <Icon className="w-5 h-5" />
+          {active && <CheckCircle className="w-3 h-3" />}
+        </div>
       </button>
     );
   }
