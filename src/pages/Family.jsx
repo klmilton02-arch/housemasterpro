@@ -26,6 +26,7 @@ export default function Family() {
   const { handleTouchStart, handleTouchEnd } = useSwipeNavigation(PAGES);
 
   const [members, setMembers] = useState([]);
+  const [familyUsers, setFamilyUsers] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [familyGroup, setFamilyGroup] = useState(null);
@@ -41,9 +42,10 @@ export default function Family() {
     const user = await base44.auth.me();
     setCurrentUser(user);
 
-    const [m, t] = await Promise.all([
+    const [m, t, allUsers] = await Promise.all([
       base44.entities.FamilyMember.list(),
       base44.entities.Task.list("-created_date", 500),
+      base44.entities.User.list(),
     ]);
     setMembers(m);
     setTasks(t);
@@ -51,6 +53,9 @@ export default function Family() {
     if (user?.family_group_id) {
       const groups = await base44.entities.FamilyGroup.filter({ id: user.family_group_id });
       if (groups.length > 0) setFamilyGroup(groups[0]);
+      // Filter users who belong to the same family group
+      const fUsers = allUsers.filter(u => u.family_group_id === user.family_group_id);
+      setFamilyUsers(fUsers);
     }
 
     setLoading(false);
@@ -188,6 +193,29 @@ export default function Family() {
           <Button variant="outline" size="sm" onClick={handleJoinFamily} className="w-full text-xs">
             Join Family
           </Button>
+        </div>
+      )}
+
+      {/* App users in this family group */}
+      {familyUsers.length > 0 && (
+        <div className="space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Household Members</p>
+          <div className="grid gap-2">
+            {familyUsers.map(u => (
+              <div key={u.id} className="bg-card border border-border rounded-lg p-3 flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold font-heading text-primary">
+                  {(u.full_name || u.email || "?").charAt(0).toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-heading font-semibold text-sm truncate">{u.full_name || u.email}</p>
+                  <p className="text-xs text-muted-foreground truncate">{u.email}</p>
+                </div>
+                {u.role === "admin" && (
+                  <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">Admin</span>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
