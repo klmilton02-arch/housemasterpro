@@ -1,5 +1,6 @@
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { LayoutDashboard, ListChecks, Sparkles, Trophy, Home, User, Zap } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 import MobileHeader from "./MobileHeader";
 import { useBlastMode } from "@/lib/BlastModeContext";
@@ -7,13 +8,12 @@ import { useBlastMode } from "@/lib/BlastModeContext";
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard, iconColor: "text-black dark:text-white" },
   { path: "/tasks", label: "Tasks", icon: ListChecks, iconColor: "text-black dark:text-white" },
-  { path: "/burst", label: "Blast Mode", icon: Zap, iconColor: "text-black dark:text-white" },
   { path: "/leaderboard", label: "Rewards", icon: Trophy, iconColor: "text-black dark:text-white" },
   { path: "/presets", label: "Presets", icon: Sparkles, iconColor: "text-black dark:text-white" },
   { path: "/home-setup", label: "Home Setup", icon: Home, iconColor: "text-black dark:text-white" },
 ];
 
-const rootPaths = ["/", "/tasks", "/burst", "/presets", "/leaderboard", "/home-setup"];
+const rootPaths = ["/", "/tasks", "/presets", "/leaderboard", "/home-setup"];
 
 export default function Layout() {
   const location = useLocation();
@@ -78,9 +78,9 @@ export default function Layout() {
 
       {/* Global Blast Mode Banner */}
       {isActive && (
-        <Link to="/burst" className="fixed left-0 right-0 z-50 md:left-64 flex items-center justify-center gap-2 bg-yellow-300 text-black text-sm font-bold py-1.5 shadow-md" style={{ top: 'calc(3rem + env(safe-area-inset-top))' }}>
+        <div className="fixed left-0 right-0 z-50 md:left-64 flex items-center justify-center gap-2 bg-yellow-300 text-black text-sm font-bold py-1.5 shadow-md" style={{ top: 'calc(3rem + env(safe-area-inset-top))' }}>
           <Zap className="w-4 h-4" /> Blast Mode Active — {blastMins}:{blastSecs} remaining
-        </Link>
+        </div>
       )}
 
       {/* Main content */}
