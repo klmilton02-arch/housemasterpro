@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ListTodo, Zap, Trophy, Sparkles, Home, Calendar, User } from "lucide-react";
+import { ListTodo, Zap, Trophy, Home, Calendar, User } from "lucide-react";
 
 const rows = [
   [
@@ -8,7 +8,6 @@ const rows = [
   ],
   [
     { to: "/leaderboard", label: "Leaderboard", icon: Trophy, cardClass: "bg-blue-400 border-blue-400 hover:bg-blue-500 hover:border-blue-500", textClass: "text-white", iconClass: "text-white" },
-    { to: "/presets", label: "Presets", icon: Sparkles, cardClass: "bg-blue-400 border-blue-400 hover:bg-blue-500 hover:border-blue-500", textClass: "text-white", iconClass: "text-white" },
   ],
   [
     { to: "/home-setup", label: "Home Setup", icon: Home, cardClass: "bg-blue-400 border-blue-400 hover:bg-blue-500 hover:border-blue-500", textClass: "text-white", iconClass: "text-white" },
