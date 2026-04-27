@@ -372,9 +372,9 @@ export default function Tasks() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="w-full border border-border rounded-lg p-4 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-20">
-              <span className="text-xs text-muted-foreground font-medium">Type</span>
-              <span className="font-heading font-semibold text-base text-foreground">
-                {typeFilter === "all" ? "All" : typeFilter.charAt(0).toUpperCase() + typeFilter.slice(1)}
+             <span className="text-xs text-muted-foreground font-medium">Category</span>
+             <span className="font-heading font-semibold text-base text-foreground">
+               {typeFilter === "all" ? "All" : typeFilter.charAt(0).toUpperCase() + typeFilter.slice(1)}
               </span>
             </button>
           </DropdownMenuTrigger>
