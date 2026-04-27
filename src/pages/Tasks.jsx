@@ -287,63 +287,68 @@ export default function Tasks() {
   });
 
   return (
-    <div className="space-y-4 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-      <div>
-        <h1 className="font-heading text-3xl font-bold">Tasks</h1>
-        <p className="text-sm text-muted-foreground mt-1">{filtered.length} tasks</p>
-      </div>
+    <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+      <h1 className="font-heading text-3xl font-bold md:hidden">Tasks</h1>
 
-
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
         <button
           onClick={() => setDialogOpen(true)}
-          className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex items-center gap-3 transition-colors shadow-sm"
+          className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900 dark:to-blue-950 dark:border-blue-700"
         >
-          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
-            <Plus className="w-5 h-5" />
+          <div className="flex items-center justify-between w-full">
+            <div className="flex-1">
+              <div className="text-sm text-muted-foreground mb-1">Add</div>
+              <div className="font-heading font-semibold text-base text-foreground">New Task</div>
+            </div>
+            <Plus className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           </div>
-          <span className="font-heading font-bold text-base">Add Task</span>
         </button>
         <button
           onClick={() => setViewMode(viewMode === "calendar" ? "list" : "calendar")}
-          className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex items-center gap-3 transition-colors shadow-sm"
+          className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900 dark:to-purple-950 dark:border-purple-700"
         >
-          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
-            <Calendar className="w-5 h-5" />
+          <div className="flex items-center justify-between w-full">
+            <div className="flex-1">
+              <div className="text-sm text-muted-foreground mb-1">View</div>
+              <div className="font-heading font-semibold text-base text-foreground">Calendar</div>
+            </div>
+            <Calendar className="w-6 h-6 text-purple-600 dark:text-purple-400" />
           </div>
-          <span className="font-heading font-bold text-base">Calendar</span>
         </button>
         <button
           onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }}
-          className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex items-center gap-3 transition-colors shadow-sm"
+          className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900 dark:to-green-950 dark:border-green-700"
         >
-          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
-            <Receipt className="w-5 h-5" />
+          <div className="flex items-center justify-between w-full">
+            <div className="flex-1">
+              <div className="text-sm text-muted-foreground mb-1">View</div>
+              <div className="font-heading font-semibold text-base text-foreground">Bills</div>
+            </div>
+            <Receipt className="w-6 h-6 text-green-600 dark:text-green-400" />
           </div>
-          <span className="font-heading font-bold text-base">Bills</span>
         </button>
         <button
           onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")}
-          className="bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex items-center gap-3 transition-colors shadow-sm"
+          className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-orange-100 to-orange-50 dark:from-orange-900 dark:to-orange-950 dark:border-orange-700"
         >
-          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
-            <Home className="w-5 h-5" />
+          <div className="flex items-center justify-between w-full">
+            <div className="flex-1">
+              <div className="text-sm text-muted-foreground mb-1">View</div>
+              <div className="font-heading font-semibold text-base text-foreground">Rooms</div>
+            </div>
+            <Home className="w-6 h-6 text-orange-600 dark:text-orange-400" />
           </div>
-          <span className="font-heading font-bold text-base">Rooms</span>
         </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="w-full bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex items-center gap-3 transition-colors shadow-sm">
-              <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
-                <Filter className="w-5 h-5" />
-              </div>
-              <span className="font-heading font-bold text-base truncate">
+            <button className="w-full border border-border rounded-lg p-5 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2">
+              <span className="text-xs text-muted-foreground font-medium">Filter</span>
+              <span className="font-heading font-semibold text-base text-foreground">
                 {statusFilter === "all" ? "Status" : statusFilter.replace("_", " ")}
               </span>
-              <ChevronDown className="w-4 h-4 ml-auto shrink-0" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
@@ -363,14 +368,11 @@ export default function Tasks() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="w-full bg-blue-400 hover:bg-blue-600 text-white rounded-xl p-4 flex items-center gap-3 transition-colors shadow-sm">
-              <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
-                <Tag className="w-5 h-5" />
-              </div>
-              <span className="font-heading font-bold text-base truncate">
-                {categoryFilter === "all" ? "Type" : categoryFilter}
+            <button className="w-full border border-border rounded-lg p-5 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2">
+              <span className="text-xs text-muted-foreground font-medium">Type</span>
+              <span className="font-heading font-semibold text-base text-foreground">
+                {categoryFilter === "all" ? "All" : categoryFilter}
               </span>
-              <ChevronDown className="w-4 h-4 ml-auto shrink-0" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
