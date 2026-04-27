@@ -26,6 +26,7 @@ import { getEarnedBadges } from "@/utils/badges";
 import { useBlastMode } from "@/lib/BlastModeContext";
 import DashboardPresetBrowser from "../components/DashboardPresetBrowser";
 import RevokePointsToast from "../components/RevokePointsToast";
+import BlastModeOptionsDialog from "../components/BlastModeOptionsDialog";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -48,6 +49,7 @@ export default function Dashboard() {
   const [editingTask, setEditingTask] = useState(null);
   const [profile, setProfile] = useState(null);
   const [revokedPoints, setRevokedPoints] = useState(null);
+  const [blastOptionsOpen, setBlastOptionsOpen] = useState(false);
   const [justCompletedIds, setJustCompletedIds] = useState(new Set());
   const [drawerTaskIds, setDrawerTaskIds] = useState(null); // ordered list of task ids for the drawer
 
@@ -193,7 +195,7 @@ export default function Dashboard() {
         <StatCard icon={Clock} label="Pending Tasks" value={pendingTasks.length} color="bg-amber-100 text-amber-600" onClick={() => { setDrawerTaskIds(pendingTasks.map(t => t.id)); setTaskListModal({ title: 'Pending Tasks' }); }} />
         <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setDrawerTaskIds(completedTasks.map(t => t.id)); setTaskListModal({ title: 'Completed Tasks' }); }} />
         <div className="col-span-2">
-          <StatCard icon={Flame} label="Blast Mode" value={blastDisplay} color={isBlastActive ? "bg-orange-500 text-white" : "bg-orange-100 text-orange-600"} onClick={() => isBlastActive ? stopBlast() : startBlast(30)} />
+          <StatCard icon={Flame} label="Blast Mode" value={blastDisplay} color={isBlastActive ? "bg-orange-500 text-white" : "bg-orange-100 text-orange-600"} onClick={() => isBlastActive ? setBlastOptionsOpen(true) : startBlast(30)} />
         </div>
       </div>
 
@@ -233,6 +235,14 @@ export default function Dashboard() {
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
       <RevokePointsToast points={revokedPoints} onDismiss={() => setRevokedPoints(null)} />
+      <BlastModeOptionsDialog
+        open={blastOptionsOpen}
+        onOpenChange={setBlastOptionsOpen}
+        timeLeft={timeLeft}
+        onContinue={() => {}}
+        onRestart={() => startBlast(30)}
+        onStop={stopBlast}
+      />
       <BlastModeToast show={blastToastShow} onDismiss={() => setBlastToastShow(false)} />
       <TaskDetailModal 
         task={selectedTask} 
