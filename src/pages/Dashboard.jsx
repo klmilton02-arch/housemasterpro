@@ -198,12 +198,7 @@ export default function Dashboard() {
 
       <LeaderboardSummary />
 
-      {profile && getEarnedBadges(profile).length > 0 && (
-        <div className="bg-card border border-border rounded-lg p-5">
-          <h2 className="font-heading font-semibold text-lg text-foreground mb-3">Your Badges</h2>
-          <BadgeDisplay badges={getEarnedBadges(profile)} size="xs" />
-        </div>
-      )}
+
 
       <div className="hidden md:block bg-card border border-border rounded-lg overflow-hidden">
         <button
