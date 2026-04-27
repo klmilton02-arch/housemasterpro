@@ -194,30 +194,6 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* Stats */}
-      {profile && (
-        <div className="space-y-4">
-          <h3 className="font-heading font-semibold text-lg">Stats</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-card border border-border rounded-lg p-3 text-center">
-              <p className="text-xs text-muted-foreground">Level</p>
-              <p className="font-heading font-bold text-2xl text-primary mt-1">{profile.level}</p>
-            </div>
-            <div className="bg-card border border-border rounded-lg p-3 text-center">
-              <p className="text-xs text-muted-foreground">Total XP</p>
-              <p className="font-heading font-bold text-2xl text-accent mt-1">{profile.total_xp}</p>
-            </div>
-            <div className="bg-card border border-border rounded-lg p-3 text-center">
-              <p className="text-xs text-muted-foreground">Completions</p>
-              <p className="font-heading font-bold text-2xl text-blue-600 mt-1">{profile.total_completions}</p>
-            </div>
-            <div className="bg-card border border-border rounded-lg p-3 text-center">
-              <p className="text-xs text-muted-foreground">Badges</p>
-              <p className="font-heading font-bold text-2xl text-orange-600 mt-1">{earnedBadges.length}</p>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Badges */}
       <div className="space-y-4">
