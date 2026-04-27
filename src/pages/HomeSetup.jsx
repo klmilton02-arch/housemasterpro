@@ -245,7 +245,7 @@ export default function HomeSetup() {
                     updated[i] = e.target.value;
                     setBedroomNames(updated);
                   }}
-                  className="h-9 text-sm"
+                  className="h-12 text-sm"
                 />
               </div>
             ))}
@@ -265,7 +265,7 @@ export default function HomeSetup() {
                     updated[i] = e.target.value;
                     setBathroomNames(updated);
                   }}
-                  className="h-9 text-sm"
+                  className="h-12 text-sm"
                 />
               </div>
             ))}
@@ -285,7 +285,7 @@ export default function HomeSetup() {
                     updated[i] = e.target.value;
                     setHalfBathroomNames(updated);
                   }}
-                  className="h-9 text-sm"
+                  className="h-12 text-sm"
                 />
               </div>
             ))}
