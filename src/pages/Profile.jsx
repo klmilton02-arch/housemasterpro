@@ -2,12 +2,15 @@ import { useState, useEffect } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { User, LogOut, Shield, Clock } from "lucide-react";
+import { User, LogOut, Shield, Clock, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BadgeDisplay from "../components/BadgeDisplay";
 import SyncGoogleTasksButton from "../components/SyncGoogleTasksButton";
 import { getEarnedBadges } from "@/utils/badges";
 import MobileSelect from "../components/MobileSelect";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function Profile() {
   const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
@@ -19,6 +22,9 @@ export default function Profile() {
   const [homeSetup, setHomeSetup] = useState(null);
   const [dayStartHour, setDayStartHour] = useState("0");
   const [savingHour, setSavingHour] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editName, setEditName] = useState("");
+  const [savingName, setSavingName] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -47,6 +53,20 @@ export default function Profile() {
     }
     loadData();
   }, []);
+
+  async function handleEditProfile() {
+    setEditName(user.full_name || "");
+    setEditOpen(true);
+  }
+
+  async function handleSaveName() {
+    if (!editName.trim()) return;
+    setSavingName(true);
+    await base44.auth.updateMe({ full_name: editName.trim() });
+    setUser({ ...user, full_name: editName.trim() });
+    setSavingName(false);
+    setEditOpen(false);
+  }
 
   async function handleLogout() {
     await base44.auth.logout("/");
@@ -96,10 +116,13 @@ export default function Profile() {
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
               <User className="w-6 h-6 text-primary" />
             </div>
-            <div>
+            <div className="flex-1">
               <h2 className="font-semibold text-foreground">{user.full_name}</h2>
               <p className="text-sm text-muted-foreground">{user.email}</p>
             </div>
+            <Button variant="outline" size="sm" onClick={handleEditProfile} className="gap-1">
+              <Pencil className="w-3 h-3" /> Edit
+            </Button>
           </div>
         </div>
       </div>
@@ -191,6 +214,23 @@ export default function Profile() {
       <Button onClick={handleLogout} variant="destructive" className="w-full gap-2">
         <LogOut className="w-4 h-4" /> Sign Out
       </Button>
+
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="font-heading">Edit Profile</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Display Name</Label>
+              <Input value={editName} onChange={e => setEditName(e.target.value)} placeholder="Your name" className="mt-1" />
+            </div>
+            <Button className="w-full" onClick={handleSaveName} disabled={savingName || !editName.trim()}>
+              {savingName ? "Saving..." : "Save Changes"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
