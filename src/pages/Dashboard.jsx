@@ -198,7 +198,7 @@ export default function Dashboard() {
           <StatCard icon={Flame} label="Blast Mode" value={blastDisplay} color={isBlastActive ? "bg-orange-500 text-white" : "bg-orange-100 text-orange-600"} onClick={() => isBlastActive ? setBlastOptionsOpen(true) : startBlast(30)} />
         </div>
         <div className="col-span-2">
-          <Link to="/tasks" className="block">
+          <Link to="/calendar" className="block">
             <StatCard icon={CalendarDays} label="Calendar" value="View" color="bg-purple-100 text-purple-600" />
           </Link>
         </div>
