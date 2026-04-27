@@ -296,7 +296,7 @@ export default function Tasks() {
       <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
         <button
            onClick={() => setDialogOpen(true)}
-           className="group relative overflow-hidden border border-border rounded-xl p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
+           className="group relative overflow-hidden border border-border rounded-xl p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-21 flex items-center"
          >
            <div className="flex items-center gap-3 w-full">
              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-2xl shrink-0">➕</div>
