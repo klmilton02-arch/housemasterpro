@@ -431,12 +431,14 @@ export default function Tasks() {
             <p className="text-xs text-muted-foreground">No tasks match your filters.</p>
           </div>
         ) : (
-          <div className="space-y-3">
-            {groups.map(({ label, tasks: groupTasks }) => (
-              <div key={label || "all"}>
-                {label && (
-                  <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-2 px-0.5">{label}</h2>
-                )}
+          <>
+            <h2 className="text-lg font-semibold text-foreground">Tasks</h2>
+            <div className="space-y-3">
+              {groups.map(({ label, tasks: groupTasks }) => (
+                <div key={label || "all"}>
+                  {label && (
+                    <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-2 px-0.5">{label}</h3>
+                  )}
                 <div className="space-y-3">
                   {groupTasks.map(task => (
                     <div key={task.id} className="relative group w-full flex items-center gap-2">
@@ -477,10 +479,11 @@ export default function Tasks() {
                     </div>
                   ))}
                 </div>
-              </div>
-            ))}
-          </div>
-        )
+                </div>
+                ))}
+                </div>
+                </>
+                )
       ) : viewMode === "calendar" ? (
         <TaskCalendar tasks={tasks} onViewDetails={setSelectedTask} />
       ) : (
