@@ -5,7 +5,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Home, Sparkles, CheckCircle, BedDouble, Bath, ChefHat, Sofa, UtensilsCrossed, Car, Shirt, LayoutGrid, Monitor } from "lucide-react";
+import { Home, Sparkles, CheckCircle, BedDouble, Bath, ChefHat, Sofa, UtensilsCrossed, Car, Shirt, LayoutGrid, Monitor, Wind } from "lucide-react";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 
@@ -35,6 +35,8 @@ export default function HomeSetup() {
     has_laundry_room: false,
     has_mixed_use: false,
     has_office: false,
+    has_whole_house: false,
+    has_whole_house: false,
     start_date: format(new Date(), "yyyy-MM-dd"),
   });
   const [bedroomNames, setBedroomNames] = useState([]);
@@ -304,14 +306,15 @@ export default function HomeSetup() {
       <div className="space-y-4">
         <h2 className="font-heading font-semibold text-lg">Other rooms</h2>
         <div className="grid grid-cols-2 gap-2">
-          <ToggleRoom label="Kitchen" icon={ChefHat} field="has_kitchen" />
-          <ToggleRoom label="Living Room" icon={Sofa} field="has_living_room" />
-          <ToggleRoom label="Dining Room" icon={UtensilsCrossed} field="has_dining_room" />
-          <ToggleRoom label="Garage" icon={Car} field="has_garage" />
-          <ToggleRoom label="Laundry Room" icon={Shirt} field="has_laundry_room" />
-          <ToggleRoom label="Mixed Use" icon={LayoutGrid} field="has_mixed_use" />
-          <ToggleRoom label="Office" icon={Monitor} field="has_office" />
-        </div>
+           <ToggleRoom label="Kitchen" icon={ChefHat} field="has_kitchen" />
+           <ToggleRoom label="Living Room" icon={Sofa} field="has_living_room" />
+           <ToggleRoom label="Dining Room" icon={UtensilsCrossed} field="has_dining_room" />
+           <ToggleRoom label="Garage" icon={Car} field="has_garage" />
+           <ToggleRoom label="Laundry Room" icon={Shirt} field="has_laundry_room" />
+           <ToggleRoom label="Mixed Use" icon={LayoutGrid} field="has_mixed_use" />
+           <ToggleRoom label="Office" icon={Monitor} field="has_office" />
+           <ToggleRoom label="Whole House" icon={Wind} field="has_whole_house" />
+         </div>
       </div>
 
       {generated !== null && (
@@ -332,7 +335,7 @@ export default function HomeSetup() {
           {generating ? "Generating..." : "Generate Tasks"}
         </Button>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false, has_office: false, start_date: format(new Date(), "yyyy-MM-dd") })} className="flex-1 h-11 text-base">
+          <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false, has_office: false, has_whole_house: false, start_date: format(new Date(), "yyyy-MM-dd") })} className="flex-1 h-11 text-base">
             Reset
           </Button>
           <Button variant="outline" onClick={saveConfig} disabled={saving} className="flex-1 h-11 text-base">
