@@ -32,7 +32,7 @@ export default function Tasks() {
   const [batchMode, setBatchMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [familyMembers, setFamilyMembers] = useState([]);
-  const [groupBy, setGroupBy] = useState("none");
+  const [groupBy, setGroupBy] = useState("category");
   const [selectedTask, setSelectedTask] = useState(null);
   const [editingTask, setEditingTask] = useState(null);
   const [viewMode, setViewMode] = useState("list");

@@ -119,17 +119,27 @@ export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, o
       StatusIcon = <Clock className="w-3.5 h-3.5 text-amber-500" />;
     }
 
-    // Sort: pending first (by due date), just-completed pinned in place, then real completed at bottom
-    const sortedTasks = [...roomTaskList].sort((a, b) => {
-      const aJust = justCompletedIds.has(a.id);
-      const bJust = justCompletedIds.has(b.id);
-      // Treat just-completed as NOT completed for sorting purposes (keep in place)
-      const aIsBottom = a.status === "Completed" && !aJust;
-      const bIsBottom = b.status === "Completed" && !bJust;
-      if (aIsBottom && !bIsBottom) return 1;
-      if (!aIsBottom && bIsBottom) return -1;
-      return new Date(a.next_due_date) - new Date(b.next_due_date);
-    });
+    function sortTaskList(list) {
+      return [...list].sort((a, b) => {
+        const aJust = justCompletedIds.has(a.id);
+        const bJust = justCompletedIds.has(b.id);
+        const aIsBottom = a.status === "Completed" && !aJust;
+        const bIsBottom = b.status === "Completed" && !bJust;
+        if (aIsBottom && !bIsBottom) return 1;
+        if (!aIsBottom && bIsBottom) return -1;
+        return new Date(a.next_due_date) - new Date(b.next_due_date);
+      });
+    }
+
+    const CATEGORY_ORDER = ["Cleaning", "Maintenance", "Bill Schedules"];
+    const categoryGroups = CATEGORY_ORDER
+      .map(cat => ({ cat, tasks: sortTaskList(roomTaskList.filter(t => t.category === cat)) }))
+      .filter(g => g.tasks.length > 0);
+    // Any tasks with other categories
+    const otherTasks = sortTaskList(roomTaskList.filter(t => !CATEGORY_ORDER.includes(t.category)));
+    if (otherTasks.length > 0) categoryGroups.push({ cat: "Other", tasks: otherTasks });
+
+    const categoryLabels = { Cleaning: "🧹 Cleaning", Maintenance: "🔧 Maintenance", "Bill Schedules": "💳 Bills", Other: "📋 Other" };
 
     const isRenaming = renamingRoom === room;
 
@@ -199,15 +209,22 @@ export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, o
           )}
         </div>
         {isExpanded && (
-          <div className="mt-2 ml-2 pl-3 border-l-2 border-muted space-y-2">
-            {sortedTasks.map(task => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                onComplete={onComplete}
-                onViewDetails={onViewDetails}
-                isInJustCompleted={justCompletedIds.has(task.id)}
-              />
+          <div className="mt-2 ml-2 pl-3 border-l-2 border-muted space-y-3">
+            {categoryGroups.map(({ cat, tasks: catTasks }) => (
+              <div key={cat}>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">{categoryLabels[cat] || cat}</p>
+                <div className="space-y-2">
+                  {catTasks.map(task => (
+                    <TaskCard
+                      key={task.id}
+                      task={task}
+                      onComplete={onComplete}
+                      onViewDetails={onViewDetails}
+                      isInJustCompleted={justCompletedIds.has(task.id)}
+                    />
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         )}
