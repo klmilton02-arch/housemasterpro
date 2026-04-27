@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -15,6 +16,7 @@ const colorMap = {
 const medals = ["🥇", "🥈", "🥉"];
 
 export default function LeaderboardSummary() {
+  const navigate = useNavigate();
   const [profiles, setProfiles] = useState([]);
   const [members, setMembers] = useState([]);
 
@@ -33,7 +35,7 @@ export default function LeaderboardSummary() {
   const getMember = (id) => members.find(m => m.id === id);
 
   return (
-    <div className="bg-card border border-border rounded-xl p-4">
+    <div className="bg-card border border-border rounded-xl p-4 cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate("/leaderboard")}>
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Trophy className="w-4 h-4 text-amber-500" />
