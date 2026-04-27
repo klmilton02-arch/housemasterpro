@@ -208,7 +208,7 @@ export default function HomeSetup() {
     const active = config[field];
     return (
       <button
-        className={`flex items-center justify-between gap-2 p-3 rounded-xl border transition-all h-22 ${
+        className={`flex items-center justify-between gap-2 p-3 rounded-xl border transition-all h-24 ${
           active ? "bg-primary/10 border-primary/30 text-primary" : "bg-card border-border text-muted-foreground"
         }`}
         onClick={() => setConfig(c => ({ ...c, [field]: !c[field] }))}
@@ -330,15 +330,15 @@ export default function HomeSetup() {
       )}
 
       <div className="space-y-3">
-         <Button onClick={generateTasks} disabled={generating} className="w-full gap-2 h-22 text-lg font-medium bg-blue-400 hover:bg-blue-500">
+         <Button onClick={generateTasks} disabled={generating} className="w-full gap-2 h-24 text-lg font-medium bg-blue-400 hover:bg-blue-500">
           <Sparkles className="w-5 h-5" />
           {generating ? "Generating..." : "Generate Tasks"}
         </Button>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false, has_office: false, has_whole_house: false, start_date: format(new Date(), "yyyy-MM-dd") })} className="flex-1 h-22 text-base">
+          <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false, has_office: false, has_whole_house: false, start_date: format(new Date(), "yyyy-MM-dd") })} className="flex-1 h-24 text-base">
             Reset
           </Button>
-          <Button variant="outline" onClick={saveConfig} disabled={saving} className="flex-1 h-22 text-base">
+          <Button variant="outline" onClick={saveConfig} disabled={saving} className="flex-1 h-24 text-base">
             {saving ? "Saving..." : "Save Config"}
           </Button>
         </div>
