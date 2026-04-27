@@ -344,7 +344,7 @@ export default function Tasks() {
          </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 -mt-4">
+      <div className="grid grid-cols-2 gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="w-full border border-border rounded-lg p-4 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-20">
