@@ -225,7 +225,7 @@ export default function Dashboard() {
         <DashboardPresetBrowser onTaskAdded={loadTasks} />
       </div>
 
-      <QuickNav />
+
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
