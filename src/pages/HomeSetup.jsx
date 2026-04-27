@@ -39,6 +39,8 @@ export default function HomeSetup() {
     start_date_cleaning: format(new Date(), "yyyy-MM-dd"),
     start_date_maintenance: format(new Date(), "yyyy-MM-dd"),
   });
+  const [useStartDateCleaning, setUseStartDateCleaning] = useState(true);
+  const [useStartDateMaintenance, setUseStartDateMaintenance] = useState(true);
   const [bedroomNames, setBedroomNames] = useState([]);
   const [bathroomNames, setBathroomNames] = useState([]);
   const [halfBathroomNames, setHalfBathroomNames] = useState([]);
@@ -159,7 +161,9 @@ export default function HomeSetup() {
 
     // Create all tasks using bulkCreate to avoid rate limit
       const taskData = tasksToCreate.map(t => {
-        const startDate = t.task_type === "Cleaning" ? config.start_date_cleaning : config.start_date_maintenance;
+        const isCleaning = t.task_type === "Cleaning";
+        const hasStartDate = isCleaning ? useStartDateCleaning : useStartDateMaintenance;
+        const startDate = hasStartDate ? (isCleaning ? config.start_date_cleaning : config.start_date_maintenance) : null;
         return {
           name: t.name,
           category: t.task_type,
@@ -167,7 +171,7 @@ export default function HomeSetup() {
           frequency_days: t.frequency_days,
           description: t.description || "",
           start_date: startDate,
-          next_due_date: startDate,
+          next_due_date: startDate || format(new Date(), "yyyy-MM-dd"),
           status: "Pending",
           overdue_grace_days: 3,
         };
@@ -235,22 +239,42 @@ export default function HomeSetup() {
 
       <div className="space-y-3">
         <div>
-          <Label className="text-sm font-medium">Start Date - Cleaning Tasks</Label>
-          <Input
-            type="date"
-            value={config.start_date_cleaning}
-            onChange={(e) => setConfig(c => ({ ...c, start_date_cleaning: e.target.value }))}
-            className="w-full mt-2"
-          />
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={useStartDateCleaning}
+              onChange={(e) => setUseStartDateCleaning(e.target.checked)}
+              className="w-4 h-4"
+            />
+            <span className="text-sm font-medium">Set Start Date - Cleaning Tasks</span>
+          </label>
+          {useStartDateCleaning && (
+            <Input
+              type="date"
+              value={config.start_date_cleaning}
+              onChange={(e) => setConfig(c => ({ ...c, start_date_cleaning: e.target.value }))}
+              className="w-full mt-2"
+            />
+          )}
         </div>
         <div>
-          <Label className="text-sm font-medium">Start Date - Maintenance Tasks</Label>
-          <Input
-            type="date"
-            value={config.start_date_maintenance}
-            onChange={(e) => setConfig(c => ({ ...c, start_date_maintenance: e.target.value }))}
-            className="w-full mt-2"
-          />
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={useStartDateMaintenance}
+              onChange={(e) => setUseStartDateMaintenance(e.target.checked)}
+              className="w-4 h-4"
+            />
+            <span className="text-sm font-medium">Set Start Date - Maintenance Tasks</span>
+          </label>
+          {useStartDateMaintenance && (
+            <Input
+              type="date"
+              value={config.start_date_maintenance}
+              onChange={(e) => setConfig(c => ({ ...c, start_date_maintenance: e.target.value }))}
+              className="w-full mt-2"
+            />
+          )}
         </div>
       </div>
 
