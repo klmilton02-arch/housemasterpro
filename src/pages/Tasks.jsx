@@ -294,25 +294,25 @@ export default function Tasks() {
       <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
         <button
           onClick={() => setDialogOpen(true)}
-          className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900 dark:to-blue-950 dark:border-blue-700 h-22 flex items-center"
+          className="group relative overflow-hidden border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900 dark:to-blue-950 dark:border-blue-700 h-22 flex items-center"
         >
           <div className="flex items-center gap-3 w-full">
             <span className="text-2xl shrink-0">➕</span>
             <div className="flex-1 text-left">
-              <div className="text-sm text-muted-foreground mb-1">Add</div>
-              <div className="font-heading font-semibold text-base text-foreground">New Task</div>
+              <div className="text-xs sm:text-sm text-muted-foreground mb-1">Add</div>
+              <div className="font-heading font-semibold text-sm sm:text-base text-foreground">New Task</div>
             </div>
           </div>
         </button>
         <button
           onClick={() => navigate("/presets")}
-          className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900 dark:to-purple-950 dark:border-purple-700 h-22 flex items-center"
+          className="group relative overflow-hidden border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900 dark:to-purple-950 dark:border-purple-700 h-22 flex items-center"
         >
           <div className="flex items-center gap-3 w-full">
             <span className="text-2xl shrink-0">⭐</span>
             <div className="flex-1 text-left">
-              <div className="text-sm text-muted-foreground mb-1">Browse</div>
-              <div className="font-heading font-semibold text-base text-foreground">Presets Library</div>
+              <div className="text-xs sm:text-sm text-muted-foreground mb-1">Browse</div>
+              <div className="font-heading font-semibold text-sm sm:text-base text-foreground">Presets Library</div>
             </div>
           </div>
         </button>
