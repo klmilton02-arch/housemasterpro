@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { User, LogOut, Shield, Clock, Pencil } from "lucide-react";
+import { User, LogOut, Shield, Clock, Pencil, Plus, Trash2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BadgeDisplay from "../components/BadgeDisplay";
 import SyncGoogleTasksButton from "../components/SyncGoogleTasksButton";
@@ -25,6 +25,15 @@ export default function Profile() {
   const [editOpen, setEditOpen] = useState(false);
   const [editName, setEditName] = useState("");
   const [savingName, setSavingName] = useState(false);
+  const [familyMembers, setFamilyMembers] = useState([]);
+  const [memberDialogOpen, setMemberDialogOpen] = useState(false);
+  const [newMemberName, setNewMemberName] = useState("");
+  const [newMemberColor, setNewMemberColor] = useState("blue");
+
+  const colorMap = {
+    blue: "bg-blue-500", green: "bg-green-500", purple: "bg-purple-500",
+    orange: "bg-orange-500", pink: "bg-pink-500", teal: "bg-teal-500",
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -40,6 +49,9 @@ export default function Profile() {
             setProfile(profiles[0]);
           }
         }
+        const members = await base44.entities.FamilyMember.list();
+        setFamilyMembers(members);
+
         const setups = await base44.entities.HomeSetup.list();
         if (setups.length > 0) {
           setHomeSetup(setups[0]);
@@ -66,6 +78,19 @@ export default function Profile() {
     setUser({ ...user, full_name: editName.trim() });
     setSavingName(false);
     setEditOpen(false);
+  }
+
+  async function handleAddMember() {
+    if (!newMemberName.trim()) return;
+    const created = await base44.entities.FamilyMember.create({ name: newMemberName.trim(), avatar_color: newMemberColor });
+    setFamilyMembers(prev => [...prev, created]);
+    setNewMemberName("");
+    setMemberDialogOpen(false);
+  }
+
+  async function handleDeleteMember(id) {
+    await base44.entities.FamilyMember.delete(id);
+    setFamilyMembers(prev => prev.filter(m => m.id !== id));
   }
 
   async function handleLogout() {
@@ -201,6 +226,37 @@ export default function Profile() {
         </div>
       </div>
 
+      {/* Family Members */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="font-heading font-semibold text-lg">Family Members</h3>
+          <Button size="sm" variant="outline" onClick={() => setMemberDialogOpen(true)} className="gap-1">
+            <Plus className="w-3 h-3" /> Add
+          </Button>
+        </div>
+        <div className="space-y-2">
+          {familyMembers.length === 0 && (
+            <div className="bg-card border border-border rounded-lg p-4 text-center">
+              <p className="text-xs text-muted-foreground">No family members yet.</p>
+            </div>
+          )}
+          {familyMembers.map(m => (
+            <div key={m.id} className="bg-card border border-border rounded-lg p-3 flex items-center gap-3 group">
+              <div className={`w-9 h-9 rounded-full ${colorMap[m.avatar_color] || "bg-blue-500"} flex items-center justify-center text-white text-sm font-bold font-heading shrink-0`}>
+                {m.name.charAt(0).toUpperCase()}
+              </div>
+              <span className="font-heading font-semibold text-sm flex-1">{m.name}</span>
+              <button
+                onClick={() => handleDeleteMember(m.id)}
+                className="p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Info Links */}
       <div className="space-y-2">
         <Link to="/encryption">
@@ -214,6 +270,35 @@ export default function Profile() {
       <Button onClick={handleLogout} variant="destructive" className="w-full gap-2">
         <LogOut className="w-4 h-4" /> Sign Out
       </Button>
+
+      <Dialog open={memberDialogOpen} onOpenChange={setMemberDialogOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="font-heading">Add Family Member</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Name</Label>
+              <Input value={newMemberName} onChange={e => setNewMemberName(e.target.value)} placeholder="Enter name" className="mt-1" onKeyDown={e => e.key === "Enter" && handleAddMember()} />
+            </div>
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Color</Label>
+              <div className="flex gap-2 mt-2">
+                {Object.entries(colorMap).map(([c, cls]) => (
+                  <button
+                    key={c}
+                    className={`w-8 h-8 rounded-full ${cls} transition-all ${newMemberColor === c ? "ring-2 ring-offset-2 ring-foreground scale-110" : "opacity-60 hover:opacity-100"}`}
+                    onClick={() => setNewMemberColor(c)}
+                  />
+                ))}
+              </div>
+            </div>
+            <Button className="w-full" onClick={handleAddMember} disabled={!newMemberName.trim()}>
+              Add Member
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent className="max-w-sm">
