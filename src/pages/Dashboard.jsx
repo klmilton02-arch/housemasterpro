@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, ChevronDown, ChevronUp, Zap, Flame } from "lucide-react";
+import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, ChevronDown, ChevronUp, Zap, Flame, CalendarDays } from "lucide-react";
 import { differenceInDays, parseISO } from "date-fns";
 import confetti from "canvas-confetti";
 import { Link } from "react-router-dom";
@@ -196,6 +196,11 @@ export default function Dashboard() {
         <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setDrawerTaskIds(completedTasks.map(t => t.id)); setTaskListModal({ title: 'Completed Tasks' }); }} />
         <div className="col-span-2">
           <StatCard icon={Flame} label="Blast Mode" value={blastDisplay} color={isBlastActive ? "bg-orange-500 text-white" : "bg-orange-100 text-orange-600"} onClick={() => isBlastActive ? setBlastOptionsOpen(true) : startBlast(30)} />
+        </div>
+        <div className="col-span-2">
+          <Link to="/tasks" className="block">
+            <StatCard icon={CalendarDays} label="Calendar" value="View" color="bg-purple-100 text-purple-600" />
+          </Link>
         </div>
       </div>
 
