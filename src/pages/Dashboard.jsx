@@ -29,7 +29,11 @@ import RevokePointsToast from "../components/RevokePointsToast";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { isActive: isBlastActive, startBlast, duration } = useBlastMode();
+  const { isActive: isBlastActive, startBlast, stopBlast, timeLeft } = useBlastMode();
+
+  const blastDisplay = isBlastActive
+    ? `${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, "0")}`
+    : "Start";
   // Swipe navigation disabled — conflicts with vertical scrolling
   const handleTouchStart = () => {};
   const handleTouchEnd = () => {};
@@ -188,7 +192,7 @@ export default function Dashboard() {
         <StatCard icon={Clock} label="Pending Tasks" value={pendingTasks.length} color="bg-amber-100 text-amber-600" onClick={() => { setDrawerTaskIds(pendingTasks.map(t => t.id)); setTaskListModal({ title: 'Pending Tasks' }); }} />
         <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setDrawerTaskIds(completedTasks.map(t => t.id)); setTaskListModal({ title: 'Completed Tasks' }); }} />
         <div className="col-span-2">
-          <StatCard icon={Flame} label="Blast Mode" value={isBlastActive ? "Active" : "Off"} color="bg-orange-100 text-orange-600" onClick={startBlast} />
+          <StatCard icon={Flame} label="Blast Mode" value={blastDisplay} color={isBlastActive ? "bg-orange-500 text-white" : "bg-orange-100 text-orange-600"} onClick={() => isBlastActive ? stopBlast() : startBlast(30)} />
         </div>
       </div>
 
