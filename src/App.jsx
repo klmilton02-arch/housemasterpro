@@ -13,7 +13,6 @@ import Dashboard from './pages/Dashboard';
 import Tasks from './pages/Tasks';
 import NeedsAttention from './pages/NeedsAttention';
 import Presets from './pages/Presets';
-import Family from './pages/Family';
 import Leaderboard from './pages/Leaderboard';
 import HomeSetup from './pages/HomeSetup';
 import Privacy from './pages/Privacy';
@@ -110,7 +109,7 @@ const AuthenticatedApp = () => {
         
         {/* Protected routes */}
         <Route element={<Layout />}>
-          {[{ path: "/dashboard", el: <Dashboard /> }, { path: "/tasks", el: <Tasks /> }, { path: "/needs-attention", el: <NeedsAttention /> }, { path: "/presets", el: <Presets /> }, { path: "/family", el: <Family /> }, { path: "/leaderboard", el: <Leaderboard /> }, { path: "/home-setup", el: <HomeSetup /> }, { path: "/burst", el: <Burst /> }, { path: "/profile", el: <Profile /> },
+          {[{ path: "/dashboard", el: <Dashboard /> }, { path: "/tasks", el: <Tasks /> }, { path: "/needs-attention", el: <NeedsAttention /> }, { path: "/presets", el: <Presets /> }, { path: "/leaderboard", el: <Leaderboard /> }, { path: "/home-setup", el: <HomeSetup /> }, { path: "/burst", el: <Burst /> }, { path: "/profile", el: <Profile /> },
           { path: "/stable", el: <Stable /> }, { path: "/privacy", el: <Privacy /> }, { path: "/support", el: <Support /> }, { path: "/faq", el: <FAQ /> }, { path: "*", el: <PageNotFound /> }].map(({ path, el }) => (
             <Route key={path} path={path} element={
               <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">

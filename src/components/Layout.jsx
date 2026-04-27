@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, ListChecks, Sparkles, Users, Trophy, Home, User, Zap } from "lucide-react";
+import { LayoutDashboard, ListChecks, Sparkles, Trophy, Home, User, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import MobileHeader from "./MobileHeader";
 import { useBlastMode } from "@/lib/BlastModeContext";
@@ -10,11 +10,10 @@ const navItems = [
   { path: "/burst", label: "Blast Mode", icon: Zap, iconColor: "text-black dark:text-white" },
   { path: "/leaderboard", label: "Rewards", icon: Trophy, iconColor: "text-black dark:text-white" },
   { path: "/presets", label: "Presets", icon: Sparkles, iconColor: "text-black dark:text-white" },
-  { path: "/family", label: "Family", icon: Users, iconColor: "text-black dark:text-white" },
   { path: "/home-setup", label: "Home Setup", icon: Home, iconColor: "text-black dark:text-white" },
 ];
 
-const rootPaths = ["/", "/tasks", "/burst", "/presets", "/family", "/leaderboard", "/home-setup"];
+const rootPaths = ["/", "/tasks", "/burst", "/presets", "/leaderboard", "/home-setup"];
 
 export default function Layout() {
   const location = useLocation();
@@ -119,7 +118,7 @@ export default function Layout() {
               )}
             >
               <Icon className={cn("w-5 h-5", iconColor)} />
-              <span className={cn("text-[10px] font-medium leading-tight text-center", label === "Family" ? "text-black dark:text-white" : "")}>{label}</span>
+              <span className="text-[10px] font-medium leading-tight text-center text-black dark:text-white">{label}</span>
             </Link>
           );
         })}

@@ -1,20 +1,35 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { User, LogOut, Shield, Clock, Pencil, Plus, Trash2, Users } from "lucide-react";
+import { User, LogOut, Shield, Clock, Pencil, Plus, Trash2, Copy, Check } from "lucide-react";
+import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import BadgeDisplay from "../components/BadgeDisplay";
 import SyncGoogleTasksButton from "../components/SyncGoogleTasksButton";
 import { getEarnedBadges } from "@/utils/badges";
 import MobileSelect from "../components/MobileSelect";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
+import { getStatusInfo } from "../components/TaskCard";
+import AccountSetup from "../components/AccountSetup";
+
+const colorMap = {
+  blue: { bg: "bg-blue-100", text: "text-blue-700", dot: "bg-blue-500" },
+  green: { bg: "bg-green-100", text: "text-green-700", dot: "bg-green-500" },
+  purple: { bg: "bg-purple-100", text: "text-purple-700", dot: "bg-purple-500" },
+  orange: { bg: "bg-orange-100", text: "text-orange-700", dot: "bg-orange-500" },
+  pink: { bg: "bg-pink-100", text: "text-pink-700", dot: "bg-pink-500" },
+  teal: { bg: "bg-teal-100", text: "text-teal-700", dot: "bg-teal-500" },
+};
 
 export default function Profile() {
-  const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
+  const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/home-setup", "/profile"];
   const { handleTouchStart, handleTouchEnd } = useSwipeNavigation(PAGES);
+  const { deleteAccount } = useAuth();
 
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -25,76 +40,61 @@ export default function Profile() {
   const [editOpen, setEditOpen] = useState(false);
   const [editName, setEditName] = useState("");
   const [savingName, setSavingName] = useState(false);
-  const [familyMembers, setFamilyMembers] = useState([]);
+
+  // Family state
+  const [members, setMembers] = useState([]);
+  const [familyUsers, setFamilyUsers] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [familyGroup, setFamilyGroup] = useState(null);
   const [memberDialogOpen, setMemberDialogOpen] = useState(false);
   const [newMemberName, setNewMemberName] = useState("");
   const [newMemberColor, setNewMemberColor] = useState("blue");
+  const [copied, setCopied] = useState(false);
+  const [setupStep, setSetupStep] = useState("choose");
 
-  const colorMap = {
-    blue: "bg-blue-500", green: "bg-green-500", purple: "bg-purple-500",
-    orange: "bg-orange-500", pink: "bg-pink-500", teal: "bg-teal-500",
-  };
+  const loadData = useCallback(async () => {
+    try {
+      const me = await base44.auth.me();
+      setUser(me);
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const me = await base44.auth.me();
-        setUser(me);
-        
-        if (me) {
-          const profiles = await base44.entities.GamificationProfile.filter({
-            family_member_name: me.full_name
-          });
-          if (profiles.length > 0) {
-            setProfile(profiles[0]);
-          }
-        }
-        const members = await base44.entities.FamilyMember.list();
-        setFamilyMembers(members);
+      const [profiles, m, t, allUsers, setups] = await Promise.all([
+        me ? base44.entities.GamificationProfile.filter({ family_member_name: me.full_name }) : Promise.resolve([]),
+        base44.entities.FamilyMember.list(),
+        base44.entities.Task.list("-created_date", 500),
+        base44.entities.User.list(),
+        base44.entities.HomeSetup.list(),
+      ]);
 
-        const setups = await base44.entities.HomeSetup.list();
-        if (setups.length > 0) {
-          setHomeSetup(setups[0]);
-          setDayStartHour(String(setups[0].day_start_hour ?? 0));
-        }
-      } catch (err) {
-        console.error("Failed to load profile:", err);
-      } finally {
-        setLoading(false);
+      if (profiles.length > 0) setProfile(profiles[0]);
+      setMembers(m);
+      setTasks(t);
+
+      if (me?.family_group_id) {
+        const groups = await base44.entities.FamilyGroup.filter({ id: me.family_group_id });
+        if (groups.length > 0) setFamilyGroup(groups[0]);
+        setFamilyUsers(allUsers.filter(u => u.family_group_id === me.family_group_id));
       }
+
+      if (setups.length > 0) {
+        setHomeSetup(setups[0]);
+        setDayStartHour(String(setups[0].day_start_hour ?? 0));
+      }
+    } catch (err) {
+      console.error("Failed to load profile:", err);
+    } finally {
+      setLoading(false);
     }
-    loadData();
   }, []);
 
-  async function handleEditProfile() {
-    setEditName(user.full_name || "");
-    setEditOpen(true);
-  }
+  useEffect(() => { loadData(); }, [loadData]);
 
   async function handleSaveName() {
     if (!editName.trim()) return;
     setSavingName(true);
     await base44.auth.updateMe({ full_name: editName.trim() });
-    setUser({ ...user, full_name: editName.trim() });
+    setUser(prev => ({ ...prev, full_name: editName.trim() }));
     setSavingName(false);
     setEditOpen(false);
-  }
-
-  async function handleAddMember() {
-    if (!newMemberName.trim()) return;
-    const created = await base44.entities.FamilyMember.create({ name: newMemberName.trim(), avatar_color: newMemberColor });
-    setFamilyMembers(prev => [...prev, created]);
-    setNewMemberName("");
-    setMemberDialogOpen(false);
-  }
-
-  async function handleDeleteMember(id) {
-    await base44.entities.FamilyMember.delete(id);
-    setFamilyMembers(prev => prev.filter(m => m.id !== id));
-  }
-
-  async function handleLogout() {
-    await base44.auth.logout("/");
   }
 
   async function handleSaveDayStart() {
@@ -107,6 +107,47 @@ export default function Profile() {
       setHomeSetup(created);
     }
     setSavingHour(false);
+  }
+
+  async function handleAddMember() {
+    if (!newMemberName.trim()) return;
+    await base44.entities.FamilyMember.create({ name: newMemberName.trim(), avatar_color: newMemberColor });
+    setNewMemberName("");
+    setMemberDialogOpen(false);
+    loadData();
+  }
+
+  async function handleDeleteMember(id) {
+    await base44.entities.FamilyMember.delete(id);
+    setMembers(prev => prev.filter(m => m.id !== id));
+  }
+
+  async function handleLeaveFamily() {
+    await base44.auth.updateMe({ account_type: "solo", family_group_id: "" });
+    setFamilyGroup(null);
+    loadData();
+  }
+
+  async function handleJoinFamily() {
+    setSetupStep("family-choice");
+    await base44.auth.updateMe({ account_type: null });
+    loadData();
+  }
+
+  function copyCode() {
+    navigator.clipboard.writeText(familyGroup.invite_code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  function getMemberStats(memberId) {
+    const memberTasks = tasks.filter(t => t.assigned_to === memberId);
+    const overdue = memberTasks.filter(t => {
+      const s = getStatusInfo(t);
+      return s.label === "Overdue" || s.label === "Past Due";
+    }).length;
+    const completed = memberTasks.filter(t => getStatusInfo(t).label === "Completed").length;
+    return { total: memberTasks.length, overdue, completed };
   }
 
   if (loading) {
@@ -125,18 +166,20 @@ export default function Profile() {
     );
   }
 
+  // Show onboarding if account type not yet set
+  if (!user.account_type) {
+    return <AccountSetup currentUser={user} onDone={loadData} initialStep={setupStep} />;
+  }
+
   const earnedBadges = profile ? getEarnedBadges(profile) : [];
 
   return (
     <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7 pb-8" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+
       {/* User Info */}
       <div className="space-y-4">
-        <div>
-          <h1 className="font-heading text-3xl font-bold">Profile</h1>
-          <p className="text-base sm:text-sm text-muted-foreground mt-1">Your account and achievements</p>
-        </div>
-
-        <div className="bg-card border border-border rounded-lg p-4 space-y-3">
+        <h1 className="font-heading text-3xl font-bold">Profile</h1>
+        <div className="bg-card border border-border rounded-lg p-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
               <User className="w-6 h-6 text-primary" />
@@ -145,7 +188,7 @@ export default function Profile() {
               <h2 className="font-semibold text-foreground">{user.full_name}</h2>
               <p className="text-sm text-muted-foreground">{user.email}</p>
             </div>
-            <Button variant="outline" size="sm" onClick={handleEditProfile} className="gap-1">
+            <Button variant="outline" size="sm" onClick={() => { setEditName(user.full_name || ""); setEditOpen(true); }} className="gap-1">
               <Pencil className="w-3 h-3" /> Edit
             </Button>
           </div>
@@ -156,7 +199,7 @@ export default function Profile() {
       {profile && (
         <div className="space-y-4">
           <h3 className="font-heading font-semibold text-lg">Stats</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <div className="bg-card border border-border rounded-lg p-3 text-center">
               <p className="text-xs text-muted-foreground">Level</p>
               <p className="font-heading font-bold text-2xl text-primary mt-1">{profile.level}</p>
@@ -185,7 +228,141 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* Day Start Setting */}
+      {/* Household */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="font-heading font-semibold text-lg">Household</h3>
+          <Button size="sm" variant="outline" onClick={() => setMemberDialogOpen(true)} className="gap-1">
+            <Plus className="w-3 h-3" /> Add Member
+          </Button>
+        </div>
+
+        {/* Avatars row */}
+        {members.length > 0 && (
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {members.map(m => {
+              const c = colorMap[m.avatar_color] || colorMap.blue;
+              return (
+                <div key={m.id} className="flex flex-col items-center gap-0.5 shrink-0">
+                  <div className={cn("w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold font-heading", c.bg, c.text)}>
+                    {m.name.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="text-xs text-muted-foreground font-medium">{m.name.split(' ')[0]}</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Family invite code */}
+        {user.account_type === "family" && familyGroup && (
+          <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 flex flex-col gap-2">
+            <div>
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-0.5">Family Code</p>
+              <p className="font-heading font-bold text-lg tracking-widest">{familyGroup.invite_code}</p>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={copyCode} className="gap-1 flex-1 text-xs">
+                {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                {copied ? "Copied" : "Copy"}
+              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground text-xs">
+                    <LogOut className="w-3 h-3" /> Leave
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Leave Family?</AlertDialogTitle>
+                    <AlertDialogDescription>You'll switch to a solo account. Your tasks will remain.</AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleLeaveFamily}>Leave Family</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          </div>
+        )}
+
+        {/* Switch to family if solo */}
+        {user.account_type === "solo" && (
+          <div className="bg-muted/50 border border-border rounded-lg p-3 flex flex-col gap-2">
+            <p className="font-medium text-xs">Running solo?</p>
+            <p className="text-xs text-muted-foreground">Switch to a family account to share with others.</p>
+            <Button variant="outline" size="sm" onClick={handleJoinFamily} className="w-full text-xs">
+              Join / Create Family
+            </Button>
+          </div>
+        )}
+
+        {/* Household app users */}
+        {familyUsers.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">App Users</p>
+            <div className="grid gap-2">
+              {familyUsers.map(u => (
+                <div key={u.id} className="bg-card border border-border rounded-lg p-3 flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold font-heading text-primary">
+                    {(u.full_name || u.email || "?").charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-heading font-semibold text-sm truncate">{u.full_name || u.email}</p>
+                    <p className="text-xs text-muted-foreground truncate">{u.email}</p>
+                  </div>
+                  {u.role === "admin" && (
+                    <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">Admin</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Member cards with stats */}
+        {members.length > 0 && (
+          <div className="grid gap-2">
+            {members.map(m => {
+              const c = colorMap[m.avatar_color] || colorMap.blue;
+              const stats = getMemberStats(m.id);
+              return (
+                <div key={m.id} className="bg-card border border-border rounded-lg p-2 group relative">
+                  <button
+                    onClick={() => handleDeleteMember(m.id)}
+                    className="absolute top-1 right-1 p-0.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </button>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className={cn("w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold font-heading", c.bg, c.text)}>
+                      {m.name.charAt(0).toUpperCase()}
+                    </div>
+                    <h3 className="font-heading font-semibold text-sm">{m.name}</h3>
+                  </div>
+                  <div className="grid grid-cols-3 gap-1 text-center">
+                    <div className="bg-muted rounded-md py-1">
+                      <p className="text-sm font-bold font-heading">{stats.total}</p>
+                      <p className="text-xs text-muted-foreground">Tasks</p>
+                    </div>
+                    <div className="bg-muted rounded-md py-1">
+                      <p className="text-sm font-bold font-heading text-red-600">{stats.overdue}</p>
+                      <p className="text-xs text-muted-foreground">Overdue</p>
+                    </div>
+                    <div className="bg-muted rounded-md py-1">
+                      <p className="text-sm font-bold font-heading text-green-600">{stats.completed}</p>
+                      <p className="text-xs text-muted-foreground">Done</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Task Reset Time */}
       <div className="space-y-3">
         <h3 className="font-heading font-semibold text-lg">Task Reset Time</h3>
         <div className="bg-card border border-border rounded-lg p-4 space-y-3">
@@ -214,7 +391,7 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* Google Tasks Sync */}
+      {/* Integrations */}
       <div className="space-y-3">
         <h3 className="font-heading font-semibold text-lg">Integrations</h3>
         <div className="bg-card border border-border rounded-lg p-4 flex items-center justify-between">
@@ -223,37 +400,6 @@ export default function Profile() {
             <p className="text-xs text-muted-foreground">Sync upcoming maintenance tasks to your to-do list</p>
           </div>
           <SyncGoogleTasksButton />
-        </div>
-      </div>
-
-      {/* Family Members */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="font-heading font-semibold text-lg">Family Members</h3>
-          <Button size="sm" variant="outline" onClick={() => setMemberDialogOpen(true)} className="gap-1">
-            <Plus className="w-3 h-3" /> Add
-          </Button>
-        </div>
-        <div className="space-y-2">
-          {familyMembers.length === 0 && (
-            <div className="bg-card border border-border rounded-lg p-4 text-center">
-              <p className="text-xs text-muted-foreground">No family members yet.</p>
-            </div>
-          )}
-          {familyMembers.map(m => (
-            <div key={m.id} className="bg-card border border-border rounded-lg p-3 flex items-center gap-3 group">
-              <div className={`w-9 h-9 rounded-full ${colorMap[m.avatar_color] || "bg-blue-500"} flex items-center justify-center text-white text-sm font-bold font-heading shrink-0`}>
-                {m.name.charAt(0).toUpperCase()}
-              </div>
-              <span className="font-heading font-semibold text-sm flex-1">{m.name}</span>
-              <button
-                onClick={() => handleDeleteMember(m.id)}
-                className="p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
-          ))}
         </div>
       </div>
 
@@ -266,11 +412,31 @@ export default function Profile() {
         </Link>
       </div>
 
-      {/* Logout */}
-      <Button onClick={handleLogout} variant="destructive" className="w-full gap-2">
-        <LogOut className="w-4 h-4" /> Sign Out
-      </Button>
+      {/* Danger Zone */}
+      <div className="pt-2 border-t border-border space-y-2">
+        <Button onClick={() => base44.auth.logout("/")} variant="destructive" className="w-full gap-2">
+          <LogOut className="w-4 h-4" /> Sign Out
+        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="outline" className="w-full text-sm text-destructive border-destructive/30 hover:bg-destructive/10">
+              Delete My Account
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Account</AlertDialogTitle>
+              <AlertDialogDescription>This will permanently delete your account and all associated data. This cannot be undone.</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={deleteAccount} className="bg-destructive text-destructive-foreground">Delete Account</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
 
+      {/* Add Member Dialog */}
       <Dialog open={memberDialogOpen} onOpenChange={setMemberDialogOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
@@ -287,7 +453,7 @@ export default function Profile() {
                 {Object.entries(colorMap).map(([c, cls]) => (
                   <button
                     key={c}
-                    className={`w-8 h-8 rounded-full ${cls} transition-all ${newMemberColor === c ? "ring-2 ring-offset-2 ring-foreground scale-110" : "opacity-60 hover:opacity-100"}`}
+                    className={cn("w-8 h-8 rounded-full transition-all", cls.dot, newMemberColor === c ? "ring-2 ring-offset-2 ring-foreground scale-110" : "opacity-60 hover:opacity-100")}
                     onClick={() => setNewMemberColor(c)}
                   />
                 ))}
@@ -300,6 +466,7 @@ export default function Profile() {
         </DialogContent>
       </Dialog>
 
+      {/* Edit Profile Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
