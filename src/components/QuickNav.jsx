@@ -22,7 +22,7 @@ const rows = [
 
 export default function QuickNav() {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 md:hidden">
       {rows.map((row, i) => (
         <div key={i} className={`grid gap-2 ${row.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
           {row.map(({ to, label, icon: Icon, cardClass, textClass, iconClass }) => (
