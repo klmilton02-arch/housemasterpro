@@ -11,6 +11,7 @@ export default function BadgeDisplay({ badges = [], size = "md", interactive = t
   }
 
   const sizeClasses = {
+    xs: "w-8 h-8 text-sm",
     sm: "w-12 h-12 text-lg",
     md: "w-16 h-16 text-2xl",
     lg: "w-24 h-24 text-4xl"

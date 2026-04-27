@@ -194,7 +194,7 @@ export default function Dashboard() {
       {profile && getEarnedBadges(profile).length > 0 && (
         <div className="bg-card border border-border rounded-lg p-5">
           <h2 className="font-heading font-semibold text-lg text-foreground mb-3">Your Badges</h2>
-          <BadgeDisplay badges={getEarnedBadges(profile)} size="sm" />
+          <BadgeDisplay badges={getEarnedBadges(profile)} size="xs" />
         </div>
       )}
 
