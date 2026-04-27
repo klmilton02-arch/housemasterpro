@@ -63,10 +63,15 @@
       "default": 0,
       "description": "Hour of day (0=midnight, 6=6am) when tasks reset to Pending"
     },
-    "start_date": {
+    "start_date_cleaning": {
       "type": "string",
       "format": "date",
-      "title": "Start Date"
+      "title": "Start Date for Cleaning Tasks"
+    },
+    "start_date_maintenance": {
+      "type": "string",
+      "format": "date",
+      "title": "Start Date for Maintenance Tasks"
     }
   },
   "required": []
