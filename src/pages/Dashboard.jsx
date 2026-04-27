@@ -17,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import StatCard from "../components/StatCard";
 import TaskCard, { getStatusInfo } from "../components/TaskCard";
 import AddTaskDialog from "../components/AddTaskDialog";
-import LeaderboardSummary from "../components/LeaderboardSummary";
 import SyncCalendarButton from "../components/SyncCalendarButton";
 import TaskDetailModal from "../components/TaskDetailModal";
 import EditTaskDialog from "../components/EditTaskDialog";
@@ -188,8 +187,6 @@ export default function Dashboard() {
         <StatCard icon={Clock} label="Pending Tasks" value={pendingTasks.length} color="bg-amber-100 text-amber-600" onClick={() => { setDrawerTaskIds(pendingTasks.map(t => t.id)); setTaskListModal({ title: 'Pending Tasks' }); }} />
         <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setDrawerTaskIds(completedTasks.map(t => t.id)); setTaskListModal({ title: 'Completed Tasks' }); }} />
       </div>
-
-      <LeaderboardSummary />
 
       {profile && getEarnedBadges(profile).length > 0 && (
         <div className="bg-card border border-border rounded-lg p-5">
