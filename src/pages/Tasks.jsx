@@ -23,6 +23,7 @@ import TaskCalendar from "../components/TaskCalendar";
 import { differenceInDays, parseISO } from "date-fns";
 
 export default function Tasks() {
+  const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -304,14 +305,14 @@ export default function Tasks() {
           </div>
         </button>
         <button
-          onClick={() => setViewMode(viewMode === "calendar" ? "list" : "calendar")}
+          onClick={() => navigate("/presets")}
           className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900 dark:to-purple-950 dark:border-purple-700 h-22 flex items-center"
         >
           <div className="flex items-center gap-3 w-full">
-            <span className="text-2xl shrink-0">📅</span>
+            <span className="text-2xl shrink-0">⭐</span>
             <div className="flex-1 text-left">
-              <div className="text-sm text-muted-foreground mb-1">View</div>
-              <div className="font-heading font-semibold text-base text-foreground">Calendar</div>
+              <div className="text-sm text-muted-foreground mb-1">Browse</div>
+              <div className="font-heading font-semibold text-base text-foreground">Presets Library</div>
             </div>
           </div>
         </button>
