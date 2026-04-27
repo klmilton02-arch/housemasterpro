@@ -80,11 +80,11 @@ export default function Layout() {
       {isActive && (
         <div
           className="fixed left-0 right-0 z-50 md:left-64 flex items-center justify-center gap-2 text-sm font-bold py-1.5 shadow-md overflow-hidden"
-          style={{ top: 'calc(3rem + env(safe-area-inset-top))', background: 'white' }}
+          style={{ top: 'calc(3rem + env(safe-area-inset-top))', background: '#fde68a' }}
         >
           {/* Fill bar growing left-to-right */}
           <div
-            className="absolute inset-0 bg-orange-400 transition-none"
+            className="absolute inset-0 bg-orange-600 transition-none"
             style={{ width: `${((duration * 60 - timeLeft) / (duration * 60)) * 100}%` }}
           />
           {/* Text sits above the fill */}
