@@ -18,7 +18,7 @@ const rootPaths = ["/", "/tasks", "/presets", "/leaderboard", "/home-setup"];
 export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isActive, timeLeft } = useBlastMode();
+  const { isActive, timeLeft, duration } = useBlastMode();
 
   const blastMins = Math.floor(timeLeft / 60);
   const blastSecs = String(timeLeft % 60).padStart(2, "0");
@@ -78,8 +78,19 @@ export default function Layout() {
 
       {/* Global Blast Mode Banner */}
       {isActive && (
-        <div className="fixed left-0 right-0 z-50 md:left-64 flex items-center justify-center gap-2 bg-yellow-300 text-black text-sm font-bold py-1.5 shadow-md" style={{ top: 'calc(3rem + env(safe-area-inset-top))' }}>
-          <Zap className="w-4 h-4" /> Blast Mode Active — {blastMins}:{blastSecs} remaining
+        <div
+          className="fixed left-0 right-0 z-50 md:left-64 flex items-center justify-center gap-2 text-sm font-bold py-1.5 shadow-md overflow-hidden"
+          style={{ top: 'calc(3rem + env(safe-area-inset-top))', background: 'white' }}
+        >
+          {/* Fill bar growing left-to-right */}
+          <div
+            className="absolute inset-0 bg-orange-400 transition-none"
+            style={{ width: `${((duration * 60 - timeLeft) / (duration * 60)) * 100}%` }}
+          />
+          {/* Text sits above the fill */}
+          <span className="relative z-10 flex items-center gap-2 text-black mix-blend-multiply">
+            <Zap className="w-4 h-4" /> Blast Mode Active — {blastMins}:{blastSecs} remaining
+          </span>
         </div>
       )}
 
