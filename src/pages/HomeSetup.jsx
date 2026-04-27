@@ -217,7 +217,7 @@ export default function HomeSetup() {
           <Icon className="w-6 h-6" />
           {active && <CheckCircle className="w-4 h-4" />}
         </div>
-        <span className="text-sm font-medium text-left">{label}</span>
+        <span className="text-base font-medium text-left">{label}</span>
       </button>
     );
   }
