@@ -41,6 +41,7 @@ export default function Tasks() {
   const [roomFilter, setRoomFilter] = useState("all");
   const [selectedMemberId, setSelectedMemberId] = useState(null);
   const [justCompleted, setJustCompleted] = useState(new Set());
+  const [typeFilter, setTypeFilter] = useState("all"); // "all" | "cleaning" | "maintenance"
   const { isActive: blastActive } = useBlastMode();
   // Swipe navigation disabled on Tasks — conflicts with vertical scrolling
   const handleTouchStart = () => {};
@@ -192,6 +193,7 @@ export default function Tasks() {
     if (statusFilter === "completed" && status.label !== "Completed") return false;
     if (statusFilter === "pending" && status.label === "Completed") return false;
     if (categoryFilter !== "all" && t.category !== categoryFilter) return false;
+    if (typeFilter !== "all" && t.category?.toLowerCase() !== typeFilter) return false;
     if (assignedFilter === "assigned" && !t.assigned_to) return false;
     if (assignedFilter === "unassigned" && t.assigned_to) return false;
     if (selectedMemberId && t.assigned_to !== selectedMemberId) return false;
@@ -372,19 +374,18 @@ export default function Tasks() {
             <button className="w-full border border-border rounded-lg p-5 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2">
               <span className="text-xs text-muted-foreground font-medium">Type</span>
               <span className="font-heading font-semibold text-base text-foreground">
-                {categoryFilter === "all" ? "All" : categoryFilter}
+                {typeFilter === "all" ? "All" : typeFilter.charAt(0).toUpperCase() + typeFilter.slice(1)}
               </span>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
             {[
               { value: "all", label: "All Types" },
-              { value: "Bill Schedules", label: "Bills" },
-              { value: "Maintenance", label: "Maintenance" },
-              { value: "Cleaning", label: "Cleaning" },
+              { value: "cleaning", label: "Cleaning" },
+              { value: "maintenance", label: "Maintenance" },
             ].map(opt => (
-              <DropdownMenuItem key={opt.value} onClick={() => { setViewMode("list"); setCategoryFilter(opt.value); }}>
-                <span className={categoryFilter === opt.value ? "font-semibold text-primary" : ""}>{opt.label}</span>
+              <DropdownMenuItem key={opt.value} onClick={() => { setTypeFilter(opt.value); }}>
+                <span className={typeFilter === opt.value ? "font-semibold text-primary" : ""}>{opt.label}</span>
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
