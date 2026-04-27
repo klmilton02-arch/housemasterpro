@@ -408,7 +408,7 @@ export default function Tasks() {
                       setStatusFilter("all");
                       setGroupBy("none");
                     }}
-                    className="bg-card border border-border rounded-lg p-3 h-11 flex items-center gap-2 hover:bg-muted/40 transition-colors"
+                    className="bg-card border border-border rounded-lg p-3 h-22 flex items-center gap-2 hover:bg-muted/40 transition-colors"
                   >
                     <div className={`w-6 h-6 rounded-full bg-${member.avatar_color}-500 shrink-0 flex items-center justify-center text-white text-xs font-bold`}>
                       {member.name[0]}
