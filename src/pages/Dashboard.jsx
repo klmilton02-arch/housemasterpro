@@ -189,6 +189,8 @@ export default function Dashboard() {
         <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setDrawerTaskIds(completedTasks.map(t => t.id)); setTaskListModal({ title: 'Completed Tasks' }); }} />
       </div>
 
+      <LeaderboardSummary />
+
       {profile && getEarnedBadges(profile).length > 0 && (
         <div className="bg-card border border-border rounded-lg p-5">
           <h2 className="font-heading font-semibold text-lg text-foreground mb-3">Your Badges</h2>
