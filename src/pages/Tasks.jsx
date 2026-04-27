@@ -320,7 +320,7 @@ export default function Tasks() {
           </button>
          <button
            onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }}
-           className="group relative overflow-hidden border border-border rounded-xl p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
+           className="group relative overflow-hidden border border-border rounded-xl p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-20 flex items-center"
          >
            <div className="flex items-center gap-3 w-full">
              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-green-500/20 flex items-center justify-center text-2xl shrink-0">💰</div>
@@ -332,7 +332,7 @@ export default function Tasks() {
          </button>
          <button
            onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")}
-           className="group relative overflow-hidden border border-border rounded-xl p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
+           className="group relative overflow-hidden border border-border rounded-xl p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-20 flex items-center"
          >
            <div className="flex items-center gap-3 w-full">
              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-orange-500/20 flex items-center justify-center text-2xl shrink-0">🏠</div>
@@ -347,7 +347,7 @@ export default function Tasks() {
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="w-full border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-22">
+            <button className="w-full border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-20">
               <span className="text-xs text-muted-foreground font-medium">Filter</span>
               <span className="font-heading font-semibold text-base text-foreground">
                 {statusFilter === "all" ? "Status" : statusFilter.replace("_", " ")}
@@ -371,7 +371,7 @@ export default function Tasks() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="w-full border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-22">
+            <button className="w-full border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-20">
               <span className="text-xs text-muted-foreground font-medium">Type</span>
               <span className="font-heading font-semibold text-base text-foreground">
                 {typeFilter === "all" ? "All" : typeFilter.charAt(0).toUpperCase() + typeFilter.slice(1)}
