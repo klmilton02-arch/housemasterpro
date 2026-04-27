@@ -290,13 +290,13 @@ export default function Tasks() {
   });
 
   return (
-    <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div className="space-y-6 max-w-sm md:max-w-2xl mx-auto px-4 sm:px-4 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <h1 className="font-heading text-3xl font-bold md:hidden">Tasks</h1>
 
-      <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
         <button
            onClick={() => setDialogOpen(true)}
-           className="group relative overflow-hidden border border-border rounded-xl p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-20 flex items-center"
+           className="group relative overflow-hidden border border-border rounded-xl p-4 hover:shadow-md transition-all bg-white dark:bg-card h-20 flex items-center"
          >
            <div className="flex items-center gap-3 w-full">
              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-2xl shrink-0">➕</div>
@@ -308,7 +308,7 @@ export default function Tasks() {
          </button>
          <button
             onClick={() => navigate("/presets")}
-            className="group relative overflow-hidden border border-border rounded-xl p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-20 flex items-center"
+            className="group relative overflow-hidden border border-border rounded-xl p-4 hover:shadow-md transition-all bg-white dark:bg-card h-20 flex items-center"
           >
             <div className="flex items-center gap-3 w-full">
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-purple-500/20 flex items-center justify-center text-2xl shrink-0">⭐</div>
@@ -320,7 +320,7 @@ export default function Tasks() {
           </button>
          <button
            onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }}
-           className="group relative overflow-hidden border border-border rounded-xl p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-20 flex items-center"
+           className="group relative overflow-hidden border border-border rounded-xl p-4 hover:shadow-md transition-all bg-white dark:bg-card h-20 flex items-center"
          >
            <div className="flex items-center gap-3 w-full">
              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-green-500/20 flex items-center justify-center text-2xl shrink-0">💰</div>
@@ -332,7 +332,7 @@ export default function Tasks() {
          </button>
          <button
            onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")}
-           className="group relative overflow-hidden border border-border rounded-xl p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-20 flex items-center"
+           className="group relative overflow-hidden border border-border rounded-xl p-4 hover:shadow-md transition-all bg-white dark:bg-card h-20 flex items-center"
          >
            <div className="flex items-center gap-3 w-full">
              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-orange-500/20 flex items-center justify-center text-2xl shrink-0">🏠</div>
@@ -347,7 +347,7 @@ export default function Tasks() {
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="w-full border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-20">
+            <button className="w-full border border-border rounded-lg p-4 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-20">
               <span className="text-xs text-muted-foreground font-medium">Filter</span>
               <span className="font-heading font-semibold text-base text-foreground">
                 {statusFilter === "all" ? "Status" : statusFilter.replace("_", " ")}
@@ -371,7 +371,7 @@ export default function Tasks() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="w-full border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-20">
+            <button className="w-full border border-border rounded-lg p-4 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-20">
               <span className="text-xs text-muted-foreground font-medium">Type</span>
               <span className="font-heading font-semibold text-base text-foreground">
                 {typeFilter === "all" ? "All" : typeFilter.charAt(0).toUpperCase() + typeFilter.slice(1)}
@@ -397,7 +397,7 @@ export default function Tasks() {
       {viewMode === "list" && (
         <>
           {familyMembers.length > 0 && (
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-4">
               {familyMembers.map(member => {
                 const count = tasks.filter(t => t.assigned_to === member.id && t.status !== "Completed").length;
                 return (
@@ -431,13 +431,13 @@ export default function Tasks() {
             <p className="text-xs text-muted-foreground">No tasks match your filters.</p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {groups.map(({ label, tasks: groupTasks }) => (
               <div key={label || "all"}>
                 {label && (
                   <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-2 px-0.5">{label}</h2>
                 )}
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {groupTasks.map(task => (
                     <div key={task.id} className="relative group w-full flex items-center gap-2">
                       {batchMode && (
