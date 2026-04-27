@@ -196,7 +196,7 @@ export default function Dashboard() {
         <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setDrawerTaskIds(completedTasks.map(t => t.id)); setTaskListModal({ title: 'Completed Tasks' }); }} />
         <div className="col-span-2">
           <Link to="/tasks" className="block">
-            <StatCard icon={ListChecks} label="Create tasks, organize, and schedule tasks" value="Tasks" color="bg-slate-100 text-slate-600" />
+            <StatCard icon={ListChecks} label="Create, organize, and schedule tasks" value="Tasks" color="bg-slate-100 text-slate-600" />
           </Link>
         </div>
         <div className="col-span-2">
