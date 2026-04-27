@@ -295,48 +295,48 @@ export default function Tasks() {
           onClick={() => setDialogOpen(true)}
           className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900 dark:to-blue-950 dark:border-blue-700"
         >
-          <div className="flex items-center justify-between w-full">
-            <div className="flex-1">
+          <div className="flex items-center gap-3 w-full">
+            <span className="text-2xl shrink-0">➕</span>
+            <div className="flex-1 text-left">
               <div className="text-sm text-muted-foreground mb-1">Add</div>
               <div className="font-heading font-semibold text-base text-foreground">New Task</div>
             </div>
-            <Plus className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           </div>
         </button>
         <button
           onClick={() => setViewMode(viewMode === "calendar" ? "list" : "calendar")}
           className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900 dark:to-purple-950 dark:border-purple-700"
         >
-          <div className="flex items-center justify-between w-full">
-            <div className="flex-1">
+          <div className="flex items-center gap-3 w-full">
+            <span className="text-2xl shrink-0">📅</span>
+            <div className="flex-1 text-left">
               <div className="text-sm text-muted-foreground mb-1">View</div>
               <div className="font-heading font-semibold text-base text-foreground">Calendar</div>
             </div>
-            <Calendar className="w-6 h-6 text-purple-600 dark:text-purple-400" />
           </div>
         </button>
         <button
           onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }}
           className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900 dark:to-green-950 dark:border-green-700"
         >
-          <div className="flex items-center justify-between w-full">
-            <div className="flex-1">
+          <div className="flex items-center gap-3 w-full">
+            <span className="text-2xl shrink-0">💰</span>
+            <div className="flex-1 text-left">
               <div className="text-sm text-muted-foreground mb-1">View</div>
               <div className="font-heading font-semibold text-base text-foreground">Bills</div>
             </div>
-            <Receipt className="w-6 h-6 text-green-600 dark:text-green-400" />
           </div>
         </button>
         <button
           onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")}
           className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-orange-100 to-orange-50 dark:from-orange-900 dark:to-orange-950 dark:border-orange-700"
         >
-          <div className="flex items-center justify-between w-full">
-            <div className="flex-1">
+          <div className="flex items-center gap-3 w-full">
+            <span className="text-2xl shrink-0">🏠</span>
+            <div className="flex-1 text-left">
               <div className="text-sm text-muted-foreground mb-1">View</div>
               <div className="font-heading font-semibold text-base text-foreground">Rooms</div>
             </div>
-            <Home className="w-6 h-6 text-orange-600 dark:text-orange-400" />
           </div>
         </button>
       </div>
