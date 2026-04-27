@@ -22,7 +22,6 @@ import DigitalServicesAct from './pages/DigitalServicesAct';
 import Copyright from './pages/Copyright';
 import Profile from './pages/Profile';
 import Stable from './pages/Stable';
-import Burst from './pages/Burst';
 import Landing from './pages/Landing';
 import FAQ from './pages/FAQ';
 
@@ -109,7 +108,7 @@ const AuthenticatedApp = () => {
         
         {/* Protected routes */}
         <Route element={<Layout />}>
-          {[{ path: "/dashboard", el: <Dashboard /> }, { path: "/tasks", el: <Tasks /> }, { path: "/needs-attention", el: <NeedsAttention /> }, { path: "/presets", el: <Presets /> }, { path: "/leaderboard", el: <Leaderboard /> }, { path: "/home-setup", el: <HomeSetup /> }, { path: "/burst", el: <Burst /> }, { path: "/profile", el: <Profile /> },
+          {[{ path: "/dashboard", el: <Dashboard /> }, { path: "/tasks", el: <Tasks /> }, { path: "/needs-attention", el: <NeedsAttention /> }, { path: "/presets", el: <Presets /> }, { path: "/leaderboard", el: <Leaderboard /> }, { path: "/home-setup", el: <HomeSetup /> }, { path: "/profile", el: <Profile /> },
           { path: "/stable", el: <Stable /> }, { path: "/privacy", el: <Privacy /> }, { path: "/support", el: <Support /> }, { path: "/faq", el: <FAQ /> }, { path: "*", el: <PageNotFound /> }].map(({ path, el }) => (
             <Route key={path} path={path} element={
               <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">

@@ -188,7 +188,7 @@ export default function Dashboard() {
         <StatCard icon={Clock} label="Pending Tasks" value={pendingTasks.length} color="bg-amber-100 text-amber-600" onClick={() => { setDrawerTaskIds(pendingTasks.map(t => t.id)); setTaskListModal({ title: 'Pending Tasks' }); }} />
         <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setDrawerTaskIds(completedTasks.map(t => t.id)); setTaskListModal({ title: 'Completed Tasks' }); }} />
         <div className="col-span-2">
-          <StatCard icon={Flame} label="Blast Mode" value={isBlastActive ? "Active" : "Off"} color="bg-orange-100 text-orange-600" onClick={() => navigate("/burst")} />
+          <StatCard icon={Flame} label="Blast Mode" value={isBlastActive ? "Active" : "Off"} color="bg-orange-100 text-orange-600" onClick={startBlast} />
         </div>
       </div>
 
