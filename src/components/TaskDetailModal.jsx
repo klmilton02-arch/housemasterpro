@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { format, parseISO, addDays } from "date-fns";
-import { Pencil, Trash2, Calendar, Clock } from "lucide-react";
+import { Pencil, Trash2, Calendar, Clock, X } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useState } from "react";
 
@@ -10,6 +10,7 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
   const [dueDateInput, setDueDateInput] = useState(task?.next_due_date || "");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [changeDueDateOpen, setChangeDueDateOpen] = useState(false);
+  const [deletingCalendar, setDeletingCalendar] = useState(false);
   
   async function handleDelete() {
     if (!task || !task.id) return;
@@ -32,6 +33,18 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
     const newDateStr = newDate.toISOString().split("T")[0];
     await onChangeDueDate?.(task, newDateStr);
     onOpenChange(false);
+  }
+
+  async function handleDeleteCalendarEvent() {
+    if (!task?.id || !task?.calendar_event_id) return;
+    setDeletingCalendar(true);
+    try {
+      await base44.functions.invoke('deleteCalendarEvent', { taskId: task.id });
+    } catch (error) {
+      console.error('Failed to delete calendar event:', error);
+    } finally {
+      setDeletingCalendar(false);
+    }
   }
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -61,6 +74,11 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
             {task?.description && (
               <div>
                 <span className="text-muted-foreground">Notes:</span> {task.description}
+              </div>
+            )}
+            {task?.calendar_event_id && (
+              <div className="text-xs text-green-600">
+                ✓ Synced to Google Calendar
               </div>
             )}
           </div>
@@ -101,6 +119,16 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
                 </AlertDialogContent>
               </AlertDialog>
             </div>
+            {task?.calendar_event_id && (
+              <Button
+                className="w-full gap-2 bg-red-300 hover:bg-red-400 text-white"
+                onClick={handleDeleteCalendarEvent}
+                disabled={deletingCalendar}
+              >
+                <X className="w-4 h-4" />
+                {deletingCalendar ? 'Removing...' : 'Remove from Calendar'}
+              </Button>
+            )}
             <AlertDialog open={changeDueDateOpen} onOpenChange={setChangeDueDateOpen}>
               <AlertDialogTrigger asChild>
                 <Button
