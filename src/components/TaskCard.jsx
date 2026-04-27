@@ -134,24 +134,24 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
               </button>
             </div>
           )}
-          <div className="flex items-center gap-1 mt-0.5 overflow-hidden">
-           <span className={cn("inline-flex items-center gap-0.5 px-2 py-1 rounded-full text-xs font-semibold shadow-sm", status.color)}>
+          <div className="flex items-center gap-1 mt-0.5 overflow-hidden whitespace-nowrap">
+           <span className={cn("inline-flex items-center gap-0.5 px-2 py-1 rounded-full text-xs font-semibold shadow-sm flex-shrink-0", status.color)}>
              <StatusIcon className="w-3.5 h-3.5" />
              {status.label}
            </span>
            {showDate && (
-             <span className="text-xs text-muted-foreground">{format(parseISO(task.next_due_date), "MMM d")}</span>
+             <span className="text-xs text-muted-foreground flex-shrink-0">{format(parseISO(task.next_due_date), "MMM d")}</span>
            )}
            {task.streak > 0 && (
-             <span className="inline-flex items-center gap-0.5 text-xs font-medium text-orange-500">
+             <span className="inline-flex items-center gap-0.5 text-xs font-medium text-orange-500 flex-shrink-0">
                <Flame className="w-3 h-3" />{task.streak}
              </span>
            )}
            {task.assigned_to_name && !visuallyCompleted && (
-              <span className="text-xs text-muted-foreground">· {task.assigned_to_name}</span>
+              <span className="text-xs text-muted-foreground flex-shrink-0 truncate">· {task.assigned_to_name}</span>
             )}
            {visuallyCompleted && (task.completed_by_name || task.assigned_to_name) && (
-              <span className="text-xs font-medium text-green-700 dark:text-green-400">· ✓ {task.completed_by_name || task.assigned_to_name}</span>
+              <span className="text-xs font-medium text-green-700 dark:text-green-400 flex-shrink-0 truncate">· ✓ {task.completed_by_name || task.assigned_to_name}</span>
             )}
           </div>
         </div>
