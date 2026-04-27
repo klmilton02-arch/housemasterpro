@@ -112,6 +112,7 @@ export default function Dashboard() {
       last_completed_date: todayStr,
       next_due_date: nextDue.toISOString().split("T")[0],
       streak: newStreak,
+      completed_with_blast: isBlastActive,
     });
     awardPoints(task, isBlastActive).then(result => {
       if (result) {
@@ -138,9 +139,9 @@ export default function Dashboard() {
 
     const updated = { ...task, status: "Pending", next_due_date: revertedDue };
     setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
-    await base44.entities.Task.update(task.id, { status: "Pending", next_due_date: revertedDue });
-    await revokePoints(task);
-    setRevokedPoints(getTaskPoints(task));
+    await base44.entities.Task.update(task.id, { status: "Pending", next_due_date: revertedDue, completed_with_blast: false });
+    await revokePoints(task, task.completed_with_blast === true);
+    setRevokedPoints(getTaskPoints(task) * (task.completed_with_blast ? 2 : 1));
     loadTasks();
   }
 
