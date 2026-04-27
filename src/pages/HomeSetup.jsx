@@ -36,7 +36,6 @@ export default function HomeSetup() {
     has_mixed_use: false,
     has_office: false,
     has_whole_house: false,
-    has_whole_house: false,
     start_date: format(new Date(), "yyyy-MM-dd"),
   });
   const [bedroomNames, setBedroomNames] = useState([]);
@@ -63,6 +62,7 @@ export default function HomeSetup() {
           has_laundry_room: r.has_laundry_room ?? false,
           has_mixed_use: r.has_mixed_use ?? false,
           has_office: r.has_office ?? false,
+          has_whole_house: r.has_whole_house ?? false,
           start_date: r.start_date ?? format(new Date(), "yyyy-MM-dd"),
         });
       }
@@ -330,15 +330,15 @@ export default function HomeSetup() {
       )}
 
       <div className="space-y-3">
-        <Button onClick={generateTasks} disabled={generating} className="w-full gap-2 h-11 text-lg font-medium bg-blue-400 hover:bg-blue-500">
+         <Button onClick={generateTasks} disabled={generating} className="w-full gap-2 h-22 text-lg font-medium bg-blue-400 hover:bg-blue-500">
           <Sparkles className="w-5 h-5" />
           {generating ? "Generating..." : "Generate Tasks"}
         </Button>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false, has_office: false, has_whole_house: false, start_date: format(new Date(), "yyyy-MM-dd") })} className="flex-1 h-11 text-base">
+          <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false, has_office: false, has_whole_house: false, start_date: format(new Date(), "yyyy-MM-dd") })} className="flex-1 h-22 text-base">
             Reset
           </Button>
-          <Button variant="outline" onClick={saveConfig} disabled={saving} className="flex-1 h-11 text-base">
+          <Button variant="outline" onClick={saveConfig} disabled={saving} className="flex-1 h-22 text-base">
             {saving ? "Saving..." : "Save Config"}
           </Button>
         </div>
