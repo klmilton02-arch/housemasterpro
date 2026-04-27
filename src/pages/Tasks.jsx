@@ -347,7 +347,7 @@ export default function Tasks() {
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="w-full border border-border rounded-lg p-5 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-22">
+            <button className="w-full border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-22">
               <span className="text-xs text-muted-foreground font-medium">Filter</span>
               <span className="font-heading font-semibold text-base text-foreground">
                 {statusFilter === "all" ? "Status" : statusFilter.replace("_", " ")}
@@ -371,7 +371,7 @@ export default function Tasks() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="w-full border border-border rounded-lg p-5 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-22">
+            <button className="w-full border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-22">
               <span className="text-xs text-muted-foreground font-medium">Type</span>
               <span className="font-heading font-semibold text-base text-foreground">
                 {typeFilter === "all" ? "All" : typeFilter.charAt(0).toUpperCase() + typeFilter.slice(1)}
