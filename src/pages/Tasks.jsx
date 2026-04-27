@@ -299,7 +299,7 @@ export default function Tasks() {
           className="group relative overflow-hidden border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
         >
           <div className="flex items-center gap-3 w-full">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded bg-blue-500 flex items-center justify-center text-xl shrink-0">➕</div>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded bg-blue-500/50 flex items-center justify-center text-xl shrink-0">➕</div>
             <div className="flex-1 text-left">
               <div className="text-xs sm:text-sm text-muted-foreground mb-1">Add</div>
               <div className="font-heading font-semibold text-sm sm:text-base text-foreground">New Task</div>
@@ -311,7 +311,7 @@ export default function Tasks() {
           className="group relative overflow-hidden border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
         >
           <div className="flex items-center gap-3 w-full">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded bg-purple-500 flex items-center justify-center text-xl shrink-0">⭐</div>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded bg-purple-500/50 flex items-center justify-center text-xl shrink-0">⭐</div>
             <div className="flex-1 text-left">
               <div className="text-xs sm:text-sm text-muted-foreground mb-1">Browse</div>
               <div className="font-heading font-semibold text-sm sm:text-base text-foreground">Presets Library</div>
@@ -323,7 +323,7 @@ export default function Tasks() {
           className="group relative overflow-hidden border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
         >
           <div className="flex items-center gap-3 w-full">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded bg-green-500 flex items-center justify-center text-xl shrink-0">💰</div>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded bg-green-500/50 flex items-center justify-center text-xl shrink-0">💰</div>
             <div className="flex-1 text-left">
               <div className="text-sm text-muted-foreground mb-1">View</div>
               <div className="font-heading font-semibold text-base text-foreground">Bills</div>
@@ -335,7 +335,7 @@ export default function Tasks() {
           className="group relative overflow-hidden border border-border rounded-lg p-3 sm:p-5 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
         >
           <div className="flex items-center gap-3 w-full">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded bg-orange-500 flex items-center justify-center text-xl shrink-0">🏠</div>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded bg-orange-500/50 flex items-center justify-center text-xl shrink-0">🏠</div>
             <div className="flex-1 text-left">
               <div className="text-sm text-muted-foreground mb-1">View</div>
               <div className="font-heading font-semibold text-base text-foreground">Rooms</div>
