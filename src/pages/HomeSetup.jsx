@@ -226,7 +226,7 @@ export default function HomeSetup() {
       </div>
 
       <div className="space-y-4">
-        <h2 className="font-heading font-semibold text-lg">Rooms with multiple instances</h2>
+         <h2 className="font-heading font-semibold text-lg">Rooms with multiple instances</h2>
         <NumberInput label="Bedrooms" icon={BedDouble} field="bedrooms" />
         {config.bedrooms > 0 && (
           <div className="space-y-2 pl-2">
