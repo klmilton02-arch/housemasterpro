@@ -293,7 +293,7 @@ export default function Tasks() {
       <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
         <button
           onClick={() => setDialogOpen(true)}
-          className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900 dark:to-blue-950 dark:border-blue-700"
+          className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900 dark:to-blue-950 dark:border-blue-700 h-24 flex items-center"
         >
           <div className="flex items-center gap-3 w-full">
             <span className="text-2xl shrink-0">➕</span>
@@ -305,7 +305,7 @@ export default function Tasks() {
         </button>
         <button
           onClick={() => setViewMode(viewMode === "calendar" ? "list" : "calendar")}
-          className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900 dark:to-purple-950 dark:border-purple-700"
+          className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900 dark:to-purple-950 dark:border-purple-700 h-24 flex items-center"
         >
           <div className="flex items-center gap-3 w-full">
             <span className="text-2xl shrink-0">📅</span>
@@ -317,7 +317,7 @@ export default function Tasks() {
         </button>
         <button
           onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }}
-          className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900 dark:to-green-950 dark:border-green-700"
+          className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900 dark:to-green-950 dark:border-green-700 h-24 flex items-center"
         >
           <div className="flex items-center gap-3 w-full">
             <span className="text-2xl shrink-0">💰</span>
@@ -329,7 +329,7 @@ export default function Tasks() {
         </button>
         <button
           onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")}
-          className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-orange-100 to-orange-50 dark:from-orange-900 dark:to-orange-950 dark:border-orange-700"
+          className="group relative overflow-hidden border border-border rounded-lg p-5 hover:shadow-md transition-all bg-gradient-to-br from-orange-100 to-orange-50 dark:from-orange-900 dark:to-orange-950 dark:border-orange-700 h-24 flex items-center"
         >
           <div className="flex items-center gap-3 w-full">
             <span className="text-2xl shrink-0">🏠</span>
