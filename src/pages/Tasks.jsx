@@ -293,7 +293,7 @@ export default function Tasks() {
     <div className="space-y-6 max-w-sm md:max-w-2xl mx-auto px-4 sm:px-4 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <h1 className="font-heading text-3xl font-bold md:hidden">Tasks</h1>
 
-      <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-2">
         <button
            onClick={() => setDialogOpen(true)}
            className="group relative overflow-hidden border border-border rounded-xl p-4 hover:shadow-md transition-all bg-white dark:bg-card h-20 flex items-center"
@@ -344,7 +344,7 @@ export default function Tasks() {
          </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="w-full border border-border rounded-lg p-4 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-20">
