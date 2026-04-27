@@ -195,14 +195,6 @@ export default function Profile() {
       </div>
 
 
-      {/* Badges */}
-      <div className="space-y-4">
-        <h3 className="font-heading font-semibold text-lg">Badges & Achievements</h3>
-        <div className="bg-card border border-border rounded-lg p-6">
-          <BadgeDisplay badges={earnedBadges} size="md" />
-        </div>
-      </div>
-
       {/* Household */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
