@@ -147,9 +147,12 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
                <Flame className="w-3 h-3" />{task.streak}
              </span>
            )}
-           {task.assigned_to_name && (
-             <span className="text-xs text-muted-foreground">· {task.assigned_to_name}</span>
-           )}
+           {task.assigned_to_name && !visuallyCompleted && (
+              <span className="text-xs text-muted-foreground">· {task.assigned_to_name}</span>
+            )}
+           {visuallyCompleted && task.assigned_to_name && (
+              <span className="text-xs font-medium text-green-700 dark:text-green-400">· ✓ {task.assigned_to_name}</span>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-1 shrink-0">
