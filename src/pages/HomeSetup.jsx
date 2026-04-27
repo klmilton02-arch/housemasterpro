@@ -164,6 +164,15 @@ export default function HomeSetup() {
         const isCleaning = t.task_type === "Cleaning";
         const hasStartDate = isCleaning ? useStartDateCleaning : useStartDateMaintenance;
         const startDate = hasStartDate ? (isCleaning ? config.start_date_cleaning : config.start_date_maintenance) : null;
+        let nextDueDate;
+        if (startDate) {
+          nextDueDate = startDate;
+        } else {
+          // Spread out by frequency_days to avoid inundating on day 1
+          const dueDate = new Date();
+          dueDate.setDate(dueDate.getDate() + t.frequency_days);
+          nextDueDate = format(dueDate, "yyyy-MM-dd");
+        }
         return {
           name: t.name,
           category: t.task_type,
@@ -171,7 +180,7 @@ export default function HomeSetup() {
           frequency_days: t.frequency_days,
           description: t.description || "",
           start_date: startDate,
-          next_due_date: startDate || format(new Date(), "yyyy-MM-dd"),
+          next_due_date: nextDueDate,
           status: "Pending",
           overdue_grace_days: 3,
         };
