@@ -13,31 +13,42 @@ Deno.serve(async (req) => {
     const userEmail = user.email;
     const familyGroupId = user.family_group_id;
 
-    // Helper function to delete records by filter
+    // Helper function to batch delete records by filter
     const deleteByFilter = async (entity, filter) => {
       try {
         const records = await base44.asServiceRole.entities[entity].filter(filter, '-created_date', 1000);
-        for (const record of records) {
-          await base44.asServiceRole.entities[entity].delete(record.id);
+        // Batch delete in groups of 10 with small delays to avoid rate limits
+        for (let i = 0; i < records.length; i += 10) {
+          const batch = records.slice(i, i + 10);
+          await Promise.all(batch.map(r => base44.asServiceRole.entities[entity].delete(r.id)));
+          if (i + 10 < records.length) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+          }
         }
       } catch (err) {
         console.log(`Error deleting ${entity}:`, err.message);
       }
     };
 
-    // Delete all user-associated data
-    await deleteByFilter('Task', { created_by: userEmail });
-    await deleteByFilter('GamificationProfile', { family_member_id: userId });
-    await deleteByFilter('CompletionHistory', { family_member_id: userId });
-    await deleteByFilter('FamilyMember', { created_by: userEmail });
-    await deleteByFilter('HorseStable', { family_member_id: userId });
-    await deleteByFilter('Subtask', { created_by: userEmail });
+    // Delete all user-associated data in parallel
+    await Promise.all([
+      deleteByFilter('Task', { created_by: userEmail }),
+      deleteByFilter('GamificationProfile', { family_member_id: userId }),
+      deleteByFilter('CompletionHistory', { family_member_id: userId }),
+      deleteByFilter('FamilyMember', { created_by: userEmail }),
+      deleteByFilter('HorseStable', { family_member_id: userId }),
+      deleteByFilter('Subtask', { created_by: userEmail }),
+    ]);
 
     // Delete family groups where user is owner
     if (familyGroupId) {
       const familyGroups = await base44.asServiceRole.entities.FamilyGroup.filter({ owner_email: userEmail }, '-created_date', 100);
-      for (const group of familyGroups) {
-        await base44.asServiceRole.entities.FamilyGroup.delete(group.id);
+      for (let i = 0; i < familyGroups.length; i += 10) {
+        const batch = familyGroups.slice(i, i + 10);
+        await Promise.all(batch.map(g => base44.asServiceRole.entities.FamilyGroup.delete(g.id)));
+        if (i + 10 < familyGroups.length) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
       }
     }
 
