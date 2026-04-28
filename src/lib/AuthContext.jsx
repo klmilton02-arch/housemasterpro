@@ -77,8 +77,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const deleteAccount = async () => {
-    await base44.auth.deleteMe();
-    logout(true);
+    try {
+      await base44.auth.deleteMe();
+      logout(true);
+    } catch (error) {
+      console.error('Failed to delete account:', error);
+      throw error;
+    }
   };
 
   const logout = (shouldRedirect = true) => {

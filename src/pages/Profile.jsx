@@ -50,6 +50,8 @@ export default function Profile() {
   const [newMemberColor, setNewMemberColor] = useState("blue");
   const [copied, setCopied] = useState(false);
   const [setupStep, setSetupStep] = useState("choose");
+  const [deletingAccount, setDeletingAccount] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   const loadData = useCallback(async () => {
     try {
@@ -388,9 +390,25 @@ export default function Profile() {
               <AlertDialogDescription>This will permanently delete your account and all associated data. This cannot be undone.</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={deleteAccount} className="bg-destructive text-destructive-foreground">Delete Account</AlertDialogAction>
+              <AlertDialogCancel disabled={deletingAccount}>Cancel</AlertDialogCancel>
+              <AlertDialogAction 
+                onClick={async () => {
+                  setDeletingAccount(true);
+                  setDeleteError("");
+                  try {
+                    await deleteAccount();
+                  } catch (error) {
+                    setDeleteError(error.message || "Failed to delete account. Please try again.");
+                    setDeletingAccount(false);
+                  }
+                }}
+                disabled={deletingAccount}
+                className="bg-destructive text-destructive-foreground"
+              >
+                {deletingAccount ? "Deleting..." : "Delete Account"}
+              </AlertDialogAction>
             </AlertDialogFooter>
+            {deleteError && <p className="text-xs text-destructive mt-2">{deleteError}</p>}
           </AlertDialogContent>
         </AlertDialog>
       </div>
