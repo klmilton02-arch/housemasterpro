@@ -259,22 +259,35 @@ export default function HomeSetup() {
       <h1 className="font-heading text-3xl font-bold md:hidden">Home Setup</h1>
 
       {/* Quick stat cards */}
-      <div className="space-y-3">
-        <button onClick={() => setBedroomModalOpen(true)} className="h-22 w-full">
-          <StatCard icon={BedDouble} label="Bedrooms" value={config.bedrooms} color="bg-blue-100 text-blue-600" labelRight />
-        </button>
-        <button onClick={() => setBathroomModalOpen(true)} className="h-22 w-full">
-          <StatCard icon={Bath} label="Full Bathrooms" value={config.full_bathrooms} color="bg-purple-100 text-purple-600" labelRight />
-        </button>
-        <button onClick={() => setHalfBathroomModalOpen(true)} className="h-22 w-full">
-          <StatCard icon={Bath} label="Half Bathrooms" value={config.half_bathrooms} color="bg-pink-100 text-pink-600" labelRight />
-        </button>
-        <button onClick={() => setKitchenModalOpen(true)} className="h-22 w-full">
-          <StatCard icon={ChefHat} label="Kitchen" value={config.has_kitchen ? "✓" : "○"} color={config.has_kitchen ? "bg-orange-100 text-orange-600" : "bg-slate-100 text-slate-600"} />
-        </button>
-        <div className="h-22">
-          <StatCard icon={Sparkles} label="Generate your tasks" value={generated !== null ? `${generated} created` : "Start"} color={generated !== null ? "bg-green-100 text-green-600" : "bg-slate-100 text-slate-600"} />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {/* Left column - bedrooms and bathrooms */}
+        <div className="space-y-3">
+          <button onClick={() => setBedroomModalOpen(true)} className="h-22 w-full">
+            <StatCard icon={BedDouble} label="Bedrooms" value={config.bedrooms} color="bg-blue-100 text-blue-600" labelRight />
+          </button>
+          <button onClick={() => setBathroomModalOpen(true)} className="h-22 w-full">
+            <StatCard icon={Bath} label="Full Bathrooms" value={config.full_bathrooms} color="bg-purple-100 text-purple-600" labelRight />
+          </button>
+          <button onClick={() => setHalfBathroomModalOpen(true)} className="h-22 w-full">
+            <StatCard icon={Bath} label="Half Bathrooms" value={config.half_bathrooms} color="bg-pink-100 text-pink-600" labelRight />
+          </button>
         </div>
+        
+        {/* Right column - other rooms */}
+        <div className="col-span-1 md:col-span-2 grid grid-cols-2 gap-2">
+          <ToggleRoom label="Kitchen" icon={ChefHat} field="has_kitchen" />
+          <ToggleRoom label="Living Room" icon={Sofa} field="has_living_room" />
+          <ToggleRoom label="Dining Room" icon={UtensilsCrossed} field="has_dining_room" />
+          <ToggleRoom label="Garage" icon={Car} field="has_garage" />
+          <ToggleRoom label="Laundry Room" icon={Shirt} field="has_laundry_room" />
+          <ToggleRoom label="Mixed Use" icon={LayoutGrid} field="has_mixed_use" />
+          <ToggleRoom label="Office" icon={Monitor} field="has_office" />
+          <ToggleRoom label="Whole House" icon={Wind} field="has_whole_house" />
+        </div>
+      </div>
+      
+      <div className="h-22">
+        <StatCard icon={Sparkles} label="Generate your tasks" value={generated !== null ? `${generated} created` : "Start"} color={generated !== null ? "bg-green-100 text-green-600" : "bg-slate-100 text-slate-600"} />
       </div>
 
       {/* Date pickers */}
@@ -368,20 +381,7 @@ export default function HomeSetup() {
         </div>
       </div>
 
-      {/* Other rooms */}
-      <div className="bg-card border border-border rounded-lg p-4 space-y-3">
-        <h2 className="font-heading font-semibold text-base">Other Rooms</h2>
-        <div className="grid grid-cols-2 gap-2">
-           <ToggleRoom label="Kitchen" icon={ChefHat} field="has_kitchen" />
-           <ToggleRoom label="Living Room" icon={Sofa} field="has_living_room" />
-           <ToggleRoom label="Dining Room" icon={UtensilsCrossed} field="has_dining_room" />
-           <ToggleRoom label="Garage" icon={Car} field="has_garage" />
-           <ToggleRoom label="Laundry Room" icon={Shirt} field="has_laundry_room" />
-           <ToggleRoom label="Mixed Use" icon={LayoutGrid} field="has_mixed_use" />
-           <ToggleRoom label="Office" icon={Monitor} field="has_office" />
-           <ToggleRoom label="Whole House" icon={Wind} field="has_whole_house" />
-         </div>
-      </div>
+
 
       {/* Success message */}
       {generated !== null && (
