@@ -29,16 +29,22 @@ export default function AccountSetup({ currentUser, onDone, initialStep = "choos
   async function handleCreateFamily() {
     if (!familyName.trim()) return;
     setLoading(true);
-    const code = generateCode();
-    const group = await base44.entities.FamilyGroup.create({
-      name: familyName.trim(),
-      invite_code: code,
-      owner_email: currentUser.email,
-    });
-    await base44.auth.updateMe({ account_type: "family", family_group_id: group.id });
-    setCreatedCode(code);
-    setLoading(false);
-    setStep("created");
+    setError("");
+    try {
+      const code = generateCode();
+      const group = await base44.entities.FamilyGroup.create({
+        name: familyName.trim(),
+        invite_code: code,
+        owner_email: currentUser.email,
+      });
+      await base44.auth.updateMe({ account_type: "family", family_group_id: group.id });
+      setCreatedCode(code);
+      setStep("created");
+    } catch (err) {
+      setError("Failed to create family. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function handleJoinFamily() {
@@ -141,6 +147,7 @@ export default function AccountSetup({ currentUser, onDone, initialStep = "choos
               <Label className="text-xs font-medium text-muted-foreground">Family Name</Label>
               <Input value={familyName} onChange={e => setFamilyName(e.target.value)} placeholder="e.g., The Smiths" className="mt-1" onKeyDown={e => e.key === "Enter" && handleCreateFamily()} />
             </div>
+            {error && <p className="text-xs text-destructive">{error}</p>}
             <Button className="w-full" onClick={handleCreateFamily} disabled={loading || !familyName.trim()}>
               {loading ? "Creating..." : "Create Family"}
             </Button>

@@ -59,7 +59,7 @@ export default function Profile() {
       const [profiles, m, t, allUsers, setups] = await Promise.all([
         me ? base44.entities.GamificationProfile.filter({ family_member_name: me.full_name }) : Promise.resolve([]),
         base44.entities.FamilyMember.list(),
-        base44.entities.Task.list("-created_date", 500),
+        me?.family_group_id ? base44.entities.Task.filter({ family_group_id: me.family_group_id }, "-created_date", 500) : Promise.resolve([]),
         base44.entities.User.list(),
         base44.entities.HomeSetup.list(),
       ]);
@@ -69,8 +69,9 @@ export default function Profile() {
       setTasks(t);
 
       if (me?.family_group_id) {
-        const groups = await base44.entities.FamilyGroup.filter({ id: me.family_group_id });
-        if (groups.length > 0) setFamilyGroup(groups[0]);
+        const groups = await base44.entities.FamilyGroup.list().catch(() => []);
+        const myGroup = groups.find(g => g.id === me.family_group_id);
+        if (myGroup) setFamilyGroup(myGroup);
         setFamilyUsers(allUsers.filter(u => u.family_group_id === me.family_group_id));
       }
 
@@ -129,7 +130,7 @@ export default function Profile() {
 
   async function handleJoinFamily() {
     setSetupStep("family-choice");
-    await base44.auth.updateMe({ account_type: null });
+    await base44.auth.updateMe({ account_type: "" });
     loadData();
   }
 
