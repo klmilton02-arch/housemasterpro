@@ -52,6 +52,7 @@ export default function HomeSetup() {
   const [generated, setGenerated] = useState(null);
   const [bedroomModalOpen, setBedroomModalOpen] = useState(false);
   const [bathroomModalOpen, setBathroomModalOpen] = useState(false);
+  const [halfBathroomModalOpen, setHalfBathroomModalOpen] = useState(false);
 
   useEffect(() => {
     base44.entities.HomeSetup.list().then(records => {
@@ -264,7 +265,10 @@ export default function HomeSetup() {
         <button onClick={() => setBathroomModalOpen(true)} className="h-22">
           <StatCard icon={Bath} label="Full Bathrooms" value={config.full_bathrooms} color="bg-purple-100 text-purple-600" />
         </button>
-        <div className="col-span-2 h-22">
+        <button onClick={() => setHalfBathroomModalOpen(true)} className="h-22">
+          <StatCard icon={Bath} label="Half Bathrooms" value={config.half_bathrooms} color="bg-pink-100 text-pink-600" />
+        </button>
+        <div className="col-span-1 h-22">
           <StatCard icon={Sparkles} label="Generate your tasks" value={generated !== null ? `${generated} created` : "Start"} color={generated !== null ? "bg-green-100 text-green-600" : "bg-slate-100 text-slate-600"} />
         </div>
       </div>
@@ -444,6 +448,50 @@ export default function HomeSetup() {
               </div>
             )}
             <Button onClick={() => setBathroomModalOpen(false)} className="w-full">Done</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Half Bathroom Modal */}
+      <Dialog open={halfBathroomModalOpen} onOpenChange={setHalfBathroomModalOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Configure Half Bathrooms</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between px-4 bg-muted border border-border rounded-lg h-12">
+              <span className="font-medium text-base">Number of Half Bathrooms</span>
+              <div className="flex items-center gap-2">
+                <button
+                  className="w-6 h-6 rounded border border-border flex items-center justify-center text-muted-foreground hover:bg-background transition-colors"
+                  onClick={() => setConfig(c => ({ ...c, half_bathrooms: Math.max(0, c.half_bathrooms - 1) }))}
+                >−</button>
+                <span className="w-4 text-center font-semibold text-xs">{config.half_bathrooms}</span>
+                <button
+                  className="w-6 h-6 rounded border border-border flex items-center justify-center text-muted-foreground hover:bg-background transition-colors"
+                  onClick={() => setConfig(c => ({ ...c, half_bathrooms: c.half_bathrooms + 1 }))}
+                >+</button>
+              </div>
+            </div>
+            {config.half_bathrooms > 0 && (
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-muted-foreground">Half Bathroom Names</label>
+                {Array.from({ length: config.half_bathrooms }, (_, i) => (
+                  <Input
+                    key={i}
+                    placeholder={config.half_bathrooms === 1 ? "Half Bath" : `Half Bath ${i + 1}`}
+                    value={halfBathroomNames[i] || ""}
+                    onChange={e => {
+                      const updated = [...halfBathroomNames];
+                      updated[i] = e.target.value;
+                      setHalfBathroomNames(updated);
+                    }}
+                    className="h-9 text-sm"
+                  />
+                ))}
+              </div>
+            )}
+            <Button onClick={() => setHalfBathroomModalOpen(false)} className="w-full">Done</Button>
           </div>
         </DialogContent>
       </Dialog>
