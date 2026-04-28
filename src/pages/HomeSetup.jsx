@@ -86,82 +86,83 @@ export default function HomeSetup() {
 
   async function generateTasks() {
     setGenerating(true);
-    const me = await base44.auth.me();
-    const family_group_id = me?.family_group_id || null;
+    try {
+      const me = await base44.auth.me();
+      const family_group_id = me?.family_group_id || null;
 
-    // Save config first
-    if (setupId) {
-      await base44.entities.HomeSetup.update(setupId, config);
-    } else {
-      const record = await base44.entities.HomeSetup.create(config);
-      setSetupId(record.id);
-    }
-
-    const presets = await base44.entities.PresetTask.list();
-    const tasksToCreate = [];
-
-    function presetsForRoom(roomName) {
-      return presets.filter(p => p.category === roomName);
-    }
-
-    // Bedrooms
-    for (let i = 1; i <= config.bedrooms; i++) {
-      const defaultName = config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i}`;
-      const label = bedroomNames[i - 1]?.trim() || defaultName;
-      for (const p of presetsForRoom("Bedroom") || []) {
-        tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: label });
+      // Save config first
+      if (setupId) {
+        await base44.entities.HomeSetup.update(setupId, config);
+      } else {
+        const record = await base44.entities.HomeSetup.create(config);
+        setSetupId(record.id);
       }
-    }
 
-    // Full bathrooms
-    for (let i = 1; i <= config.full_bathrooms; i++) {
-      const defaultName = config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i}`;
-      const label = bathroomNames[i - 1]?.trim() || defaultName;
-      for (const p of presetsForRoom("Full Bathroom")) {
-        tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: label });
+      const presets = await base44.entities.PresetTask.list();
+      const tasksToCreate = [];
+
+      function presetsForRoom(roomName) {
+        return presets.filter(p => p.category === roomName);
       }
-    }
 
-    // Half bathrooms
-    for (let i = 1; i <= config.half_bathrooms; i++) {
-      const defaultName = config.half_bathrooms === 1 ? "Half Bath" : `Half Bath ${i}`;
-      const label = halfBathroomNames[i - 1]?.trim() || defaultName;
-      const halfPresets = presetsForRoom("Half Bathroom").filter(
-        p => p.task_type !== "Deep Cleaning"
-      );
-      for (const p of halfPresets) {
-        tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: label });
+      // Bedrooms
+      for (let i = 1; i <= config.bedrooms; i++) {
+        const defaultName = config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i}`;
+        const label = bedroomNames[i - 1]?.trim() || defaultName;
+        for (const p of presetsForRoom("Bedroom") || []) {
+          tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: label });
+        }
       }
-    }
 
-     // Single-instance rooms
-     const singleRooms = [
-       { key: "has_kitchen", label: "Kitchen", room: "Kitchen" },
-       { key: "has_living_room", label: "Living Room", room: "Living Room" },
-       { key: "has_dining_room", label: "Dining Room", room: "Dining Room" },
-       { key: "has_garage", label: "Garage", room: "Garage" },
-       { key: "has_laundry_room", label: "Laundry Room", room: "Laundry Room" },
-       { key: "has_mixed_use", label: "Mixed Use Room", room: "Mixed Use Room" },
-       { key: "has_office", label: "Office", room: "Office" },
-     ];
+      // Full bathrooms
+      for (let i = 1; i <= config.full_bathrooms; i++) {
+        const defaultName = config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i}`;
+        const label = bathroomNames[i - 1]?.trim() || defaultName;
+        for (const p of presetsForRoom("Full Bathroom")) {
+          tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: label });
+        }
+      }
 
-     for (const room of singleRooms) {
-       if (config[room.key]) {
-         for (const p of presetsForRoom(room.room)) {
-           tasksToCreate.push({ ...p, name: `${room.label} – ${p.name}`, room: room.room });
+      // Half bathrooms
+      for (let i = 1; i <= config.half_bathrooms; i++) {
+        const defaultName = config.half_bathrooms === 1 ? "Half Bath" : `Half Bath ${i}`;
+        const label = halfBathroomNames[i - 1]?.trim() || defaultName;
+        const halfPresets = presetsForRoom("Half Bathroom").filter(
+          p => p.task_type !== "Deep Cleaning"
+        );
+        for (const p of halfPresets) {
+          tasksToCreate.push({ ...p, name: `${label} – ${p.name}`, room: label });
+        }
+      }
+
+       // Single-instance rooms
+       const singleRooms = [
+         { key: "has_kitchen", label: "Kitchen", room: "Kitchen" },
+         { key: "has_living_room", label: "Living Room", room: "Living Room" },
+         { key: "has_dining_room", label: "Dining Room", room: "Dining Room" },
+         { key: "has_garage", label: "Garage", room: "Garage" },
+         { key: "has_laundry_room", label: "Laundry Room", room: "Laundry Room" },
+         { key: "has_mixed_use", label: "Mixed Use Room", room: "Mixed Use Room" },
+         { key: "has_office", label: "Office", room: "Office" },
+       ];
+
+       for (const room of singleRooms) {
+         if (config[room.key]) {
+           for (const p of presetsForRoom(room.room)) {
+             tasksToCreate.push({ ...p, name: `${room.label} – ${p.name}`, room: room.room });
+           }
          }
        }
-     }
 
-    // Floors (if any rooms selected)
-    const hasRooms = config.bedrooms > 0 || config.has_living_room || config.has_dining_room;
-    if (hasRooms) {
-      for (const p of presetsForRoom("Whole House")) {
-        tasksToCreate.push({ ...p, name: p.name });
+      // Whole House tasks (if any rooms selected)
+      const hasRooms = config.bedrooms > 0 || config.has_living_room || config.has_dining_room;
+      if (hasRooms) {
+        for (const p of presetsForRoom("Whole House")) {
+          tasksToCreate.push({ ...p, name: p.name });
+        }
       }
-    }
 
-    // Create all tasks using bulkCreate to avoid rate limit
+      // Create all tasks using bulkCreate to avoid rate limit
       const taskData = tasksToCreate.map(t => {
         const isCleaning = t.task_type === "Cleaning";
         const hasStartDate = isCleaning ? useStartDateCleaning : useStartDateMaintenance;
@@ -190,14 +191,19 @@ export default function HomeSetup() {
       });
 
       if (taskData.length === 0) {
+        alert("No tasks to generate. Make sure you have presets and rooms configured.");
         setGenerating(false);
         return;
       }
 
       const created = await base44.entities.Task.bulkCreate(taskData);
-
-    setGenerated(created.length);
-    setGenerating(false);
+      setGenerated(created.length);
+    } catch (error) {
+      alert(`Error generating tasks: ${error.message}`);
+      console.error("Generate tasks error:", error);
+    } finally {
+      setGenerating(false);
+    }
   }
 
   function NumberInput({ label, icon: Icon, field }) {
