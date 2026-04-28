@@ -260,15 +260,17 @@ export default function HomeSetup() {
 
       {/* Quick stat cards */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
-        <button onClick={() => setBedroomModalOpen(true)} className="h-22">
-          <StatCard icon={BedDouble} label="Bedrooms" value={config.bedrooms} color="bg-blue-100 text-blue-600" />
-        </button>
-        <button onClick={() => setBathroomModalOpen(true)} className="h-22">
-          <StatCard icon={Bath} label="Full Bathrooms" value={config.full_bathrooms} color="bg-purple-100 text-purple-600" />
-        </button>
-        <button onClick={() => setHalfBathroomModalOpen(true)} className="h-22">
-          <StatCard icon={Bath} label="Half Bathrooms" value={config.half_bathrooms} color="bg-pink-100 text-pink-600" />
-        </button>
+        <div className="space-y-3">
+          <button onClick={() => setBedroomModalOpen(true)} className="h-22 w-full">
+            <StatCard icon={BedDouble} label="Bedrooms" value={config.bedrooms} color="bg-blue-100 text-blue-600" />
+          </button>
+          <button onClick={() => setBathroomModalOpen(true)} className="h-22 w-full">
+            <StatCard icon={Bath} label="Full Bathrooms" value={config.full_bathrooms} color="bg-purple-100 text-purple-600" />
+          </button>
+          <button onClick={() => setHalfBathroomModalOpen(true)} className="h-22 w-full">
+            <StatCard icon={Bath} label="Half Bathrooms" value={config.half_bathrooms} color="bg-pink-100 text-pink-600" />
+          </button>
+        </div>
         <button onClick={() => setKitchenModalOpen(true)} className="h-22">
           <StatCard icon={ChefHat} label="Kitchen" value={config.has_kitchen ? "✓" : "○"} color={config.has_kitchen ? "bg-orange-100 text-orange-600" : "bg-slate-100 text-slate-600"} />
         </button>
