@@ -9,14 +9,19 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Delete all tasks for this user's family group
-    const allTasks = await base44.asServiceRole.entities.Task.list("-created_date", 1000);
-    const tasksToDelete = allTasks.filter(t => t.family_group_id === user.family_group_id);
-    
-    for (let i = 0; i < tasksToDelete.length; i += 10) {
-      const batch = tasksToDelete.slice(i, i + 10);
-      await Promise.all(batch.map(t => base44.asServiceRole.entities.Task.delete(t.id)));
-      await new Promise(resolve => setTimeout(resolve, 100));
+    // Delete all tasks for this user's family group (in batches with delays)
+    let hasMore = true;
+    while (hasMore) {
+      const tasks = await base44.asServiceRole.entities.Task.filter({ family_group_id: user.family_group_id }, "-created_date", 20);
+      if (tasks.length === 0) {
+        hasMore = false;
+      } else {
+        for (const task of tasks) {
+          await base44.asServiceRole.entities.Task.delete(task.id);
+        }
+        // Longer delay between batches
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
     }
 
     // Delete completion history for this user
