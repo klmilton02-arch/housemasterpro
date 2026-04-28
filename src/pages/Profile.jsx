@@ -52,6 +52,7 @@ export default function Profile() {
   const [setupStep, setSetupStep] = useState("choose");
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [deleteError, setDeleteError] = useState("");
+  const [resettingData, setResettingData] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -378,6 +379,39 @@ export default function Profile() {
         <Button onClick={() => base44.auth.logout("/")} variant="destructive" className="w-full gap-2">
           <LogOut className="w-4 h-4" /> Sign Out
         </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="outline" className="w-full text-sm text-destructive border-destructive/30 hover:bg-destructive/10">
+              Reset All Data
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Reset All Data?</AlertDialogTitle>
+              <AlertDialogDescription>This will delete all your tasks and reset your XP, level, and badges to start fresh. This cannot be undone.</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={resettingData}>Cancel</AlertDialogCancel>
+              <Button
+                onClick={async () => {
+                  setResettingData(true);
+                  try {
+                    await base44.functions.invoke('resetUserData', {});
+                    loadData();
+                    setResettingData(false);
+                  } catch (error) {
+                    console.error("Failed to reset data:", error);
+                    setResettingData(false);
+                  }
+                }}
+                disabled={resettingData}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {resettingData ? "Resetting..." : "Reset Data"}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         <AlertDialog open={deleteError ? true : undefined}>
           <AlertDialogTrigger asChild>
             <Button variant="outline" className="w-full text-sm text-destructive border-destructive/30 hover:bg-destructive/10">
