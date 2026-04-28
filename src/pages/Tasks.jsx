@@ -48,13 +48,7 @@ export default function Tasks() {
   const handleTouchEnd = () => {};
 
   const loadTasks = useCallback(async () => {
-    const me = await base44.auth.me();
-    if (!me?.family_group_id) {
-      setTasks([]);
-      setLoading(false);
-      return;
-    }
-    const all = await base44.entities.Task.filter({ family_group_id: me.family_group_id }, "-created_date", 500);
+    const all = await base44.entities.Task.list("-created_date", 500);
     setTasks(all);
     setLoading(false);
   }, []);
