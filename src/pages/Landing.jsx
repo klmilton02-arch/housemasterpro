@@ -57,6 +57,10 @@ export default function Landing() {
     });
   }, []);
 
+  const handleSignIn = () => {
+    base44.auth.redirectToLogin(window.location.origin + "/dashboard");
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
     if (!email) return;
@@ -79,9 +83,7 @@ export default function Landing() {
           <Home className="w-6 h-6 text-primary" />
           <span className="font-heading font-bold text-lg">HomeLifeFocus</span>
         </div>
-        <Link to="/dashboard">
-          <Button size="sm">Sign In</Button>
-        </Link>
+        <Button size="sm" onClick={handleSignIn}>Sign In</Button>
       </nav>
 
       {/* Hero */}
@@ -116,9 +118,7 @@ export default function Landing() {
                 <span className="font-heading font-bold text-lg">HomeLifeFocus</span>
               </div>
               <p className="text-sm text-muted-foreground mb-6">Sign in to manage your home</p>
-              <Link to="/dashboard" className="block">
-                <Button size="lg" className="w-full mb-3">Sign In / Get Started</Button>
-              </Link>
+              <Button size="lg" className="w-full mb-3" onClick={handleSignIn}>Sign In / Get Started</Button>
               <p className="text-xs text-muted-foreground">Free to use · No credit card needed</p>
               <div className="mt-5 pt-5 border-t border-border space-y-2 text-left">
                 {["Track tasks for every room", "Assign chores to family members", "Earn XP and level up", "Sync with Google Calendar"].map(item => (
@@ -248,7 +248,7 @@ export default function Landing() {
         <div className="flex justify-center gap-6 mb-3">
           <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
           <Link to="/support" className="hover:text-foreground transition-colors">Support</Link>
-          <Link to="/dashboard" className="hover:text-foreground transition-colors">Sign In</Link>
+          <button onClick={handleSignIn} className="hover:text-foreground transition-colors">Sign In</button>
         </div>
         <p>© {new Date().getFullYear()} HomeLifeFocus. All rights reserved.</p>
       </footer>
