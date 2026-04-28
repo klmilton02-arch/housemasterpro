@@ -53,6 +53,7 @@ export default function HomeSetup() {
   const [bedroomModalOpen, setBedroomModalOpen] = useState(false);
   const [bathroomModalOpen, setBathroomModalOpen] = useState(false);
   const [halfBathroomModalOpen, setHalfBathroomModalOpen] = useState(false);
+  const [kitchenModalOpen, setKitchenModalOpen] = useState(false);
 
   useEffect(() => {
     base44.entities.HomeSetup.list().then(records => {
@@ -268,7 +269,10 @@ export default function HomeSetup() {
         <button onClick={() => setHalfBathroomModalOpen(true)} className="h-22">
           <StatCard icon={Bath} label="Half Bathrooms" value={config.half_bathrooms} color="bg-pink-100 text-pink-600" />
         </button>
-        <div className="col-span-1 h-22">
+        <button onClick={() => setKitchenModalOpen(true)} className="h-22">
+          <StatCard icon={ChefHat} label="Kitchen" value={config.has_kitchen ? "✓" : "○"} color={config.has_kitchen ? "bg-orange-100 text-orange-600" : "bg-slate-100 text-slate-600"} />
+        </button>
+        <div className="col-span-2 h-22">
           <StatCard icon={Sparkles} label="Generate your tasks" value={generated !== null ? `${generated} created` : "Start"} color={generated !== null ? "bg-green-100 text-green-600" : "bg-slate-100 text-slate-600"} />
         </div>
       </div>
@@ -448,6 +452,27 @@ export default function HomeSetup() {
               </div>
             )}
             <Button onClick={() => setBathroomModalOpen(false)} className="w-full">Done</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Kitchen Modal */}
+      <Dialog open={kitchenModalOpen} onOpenChange={setKitchenModalOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Kitchen</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="font-medium text-base">Include Kitchen</span>
+              <button
+                onClick={() => setConfig(c => ({ ...c, has_kitchen: !c.has_kitchen }))}
+                className={`px-4 py-2 rounded-lg border transition-all ${config.has_kitchen ? "bg-orange-100 text-orange-600 border-orange-300" : "bg-muted border-border"}`}
+              >
+                {config.has_kitchen ? "Yes" : "No"}
+              </button>
+            </div>
+            <Button onClick={() => setKitchenModalOpen(false)} className="w-full">Done</Button>
           </div>
         </DialogContent>
       </Dialog>
