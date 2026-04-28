@@ -9,27 +9,27 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Delete all user-associated data
     const userId = user.id;
     const userEmail = user.email;
 
-    // Delete tasks
-    await base44.asServiceRole.entities.Task.deleteMany({ created_by: userEmail });
+    // Helper function to delete records by filter
+    const deleteByFilter = async (entity, filter) => {
+      const records = await base44.asServiceRole.entities[entity].filter(filter, '-created_date', 1000);
+      for (const record of records) {
+        await base44.asServiceRole.entities[entity].delete(record.id);
+      }
+    };
 
-    // Delete gamification profile
-    await base44.asServiceRole.entities.GamificationProfile.deleteMany({ family_member_id: userId });
+    // Delete all user-associated data
+    await deleteByFilter('Task', { created_by: userEmail });
+    await deleteByFilter('GamificationProfile', { family_member_id: userId });
+    await deleteByFilter('CompletionHistory', { family_member_id: userId });
+    await deleteByFilter('FamilyMember', { created_by: userEmail });
+    await deleteByFilter('HorseStable', { family_member_id: userId });
+    await deleteByFilter('Subtask', { created_by: userEmail });
 
-    // Delete completion history
-    await base44.asServiceRole.entities.CompletionHistory.deleteMany({ family_member_id: userId });
-
-    // Delete family members (if any)
-    await base44.asServiceRole.entities.FamilyMember.deleteMany({ created_by: userEmail });
-
-    // Delete horse stable data
-    await base44.asServiceRole.entities.HorseStable.deleteMany({ family_member_id: userId });
-
-    // Delete family group if user is owner
-    const familyGroups = await base44.asServiceRole.entities.FamilyGroup.filter({ owner_email: userEmail });
+    // Delete family groups where user is owner
+    const familyGroups = await base44.asServiceRole.entities.FamilyGroup.filter({ owner_email: userEmail }, '-created_date', 100);
     for (const group of familyGroups) {
       await base44.asServiceRole.entities.FamilyGroup.delete(group.id);
     }
