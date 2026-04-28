@@ -5,9 +5,10 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Home, Sparkles, CheckCircle, BedDouble, Bath, ChefHat, Sofa, UtensilsCrossed, Car, Shirt, LayoutGrid, Monitor, Wind } from "lucide-react";
+import { Sparkles, CheckCircle, BedDouble, Bath, ChefHat, Sofa, UtensilsCrossed, Car, Shirt, LayoutGrid, Monitor, Wind, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
+import StatCard from "@/components/StatCard";
 
 const ROOM_CATEGORY_MAP = {
   bedroom: "Bedroom Cleaning",
@@ -250,12 +251,19 @@ export default function HomeSetup() {
 
   return (
     <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-      <div>
-        <h1 className="font-heading text-3xl font-bold">Home Setup</h1>
-        <p className="text-sm text-muted-foreground mt-1">Configure your rooms to auto-generate cleaning tasks</p>
+      <h1 className="font-heading text-3xl font-bold md:hidden">Home Setup</h1>
+
+      {/* Quick stat cards */}
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
+        <StatCard icon={BedDouble} label="Bedrooms" value={config.bedrooms} color="bg-blue-100 text-blue-600" className="h-22" />
+        <StatCard icon={Bath} label="Bathrooms" value={config.full_bathrooms + config.half_bathrooms} color="bg-purple-100 text-purple-600" className="h-22" />
+        <div className="col-span-2 h-22">
+          <StatCard icon={Sparkles} label="Generate your tasks" value={generated !== null ? `${generated} created` : "Start"} color={generated !== null ? "bg-green-100 text-green-600" : "bg-slate-100 text-slate-600"} />
+        </div>
       </div>
 
-      <div className="space-y-3">
+      {/* Date pickers */}
+      <div className="bg-card border border-border rounded-lg p-4 space-y-3">
         <div>
           <label className="flex items-center gap-3 cursor-pointer">
             <input
@@ -296,35 +304,43 @@ export default function HomeSetup() {
         </div>
       </div>
 
-      <div className="space-y-4">
-         <h2 className="font-heading font-semibold text-lg">Rooms with multiple instances</h2>
-        <NumberInput label="Bedrooms" icon={BedDouble} field="bedrooms" />
+      {/* Bedrooms */}
+      <div className="bg-card border border-border rounded-lg p-4 space-y-3">
+        <h2 className="font-heading font-semibold text-base flex items-center gap-2">
+          <BedDouble className="w-4 h-4" /> Bedrooms ({config.bedrooms})
+        </h2>
+        <NumberInput label="Count" icon={BedDouble} field="bedrooms" />
         {config.bedrooms > 0 && (
-          <div className="space-y-2 pl-2">
+          <div className="space-y-2 pt-2 border-t border-border">
             {Array.from({ length: config.bedrooms }, (_, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground w-20 shrink-0">Bedroom {i + 1}</span>
-                <Input
-                  placeholder={config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i + 1}`}
-                  value={bedroomNames[i] || ""}
-                  onChange={e => {
-                    const updated = [...bedroomNames];
-                    updated[i] = e.target.value;
-                    setBedroomNames(updated);
-                  }}
-                  className="h-12 text-sm"
-                />
-              </div>
+              <Input
+                key={i}
+                placeholder={config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i + 1}`}
+                value={bedroomNames[i] || ""}
+                onChange={e => {
+                  const updated = [...bedroomNames];
+                  updated[i] = e.target.value;
+                  setBedroomNames(updated);
+                }}
+                className="h-10 text-sm"
+              />
             ))}
           </div>
         )}
-        <NumberInput label="Full Bathrooms" icon={Bath} field="full_bathrooms" />
-        {config.full_bathrooms > 0 && (
-          <div className="space-y-2 pl-2">
-            {Array.from({ length: config.full_bathrooms }, (_, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground w-20 shrink-0">Bath {i + 1}</span>
+      </div>
+
+      {/* Bathrooms */}
+      <div className="bg-card border border-border rounded-lg p-4 space-y-3">
+        <h2 className="font-heading font-semibold text-base flex items-center gap-2">
+          <Bath className="w-4 h-4" /> Bathrooms
+        </h2>
+        <div className="space-y-3">
+          <NumberInput label="Full Bathrooms" icon={Bath} field="full_bathrooms" />
+          {config.full_bathrooms > 0 && (
+            <div className="space-y-2 pt-2 border-t border-border">
+              {Array.from({ length: config.full_bathrooms }, (_, i) => (
                 <Input
+                  key={i}
                   placeholder={config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i + 1}`}
                   value={bathroomNames[i] || ""}
                   onChange={e => {
@@ -332,19 +348,19 @@ export default function HomeSetup() {
                     updated[i] = e.target.value;
                     setBathroomNames(updated);
                   }}
-                  className="h-12 text-sm"
+                  className="h-10 text-sm"
                 />
-              </div>
-            ))}
-          </div>
-        )}
-        <NumberInput label="Half Bathrooms" icon={Bath} field="half_bathrooms" />
-        {config.half_bathrooms > 0 && (
-          <div className="space-y-2 pl-2">
-            {Array.from({ length: config.half_bathrooms }, (_, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground w-20 shrink-0">Half Bath {i + 1}</span>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="space-y-3 pt-3 border-t border-border">
+          <NumberInput label="Half Bathrooms" icon={Bath} field="half_bathrooms" />
+          {config.half_bathrooms > 0 && (
+            <div className="space-y-2 pt-2 border-t border-border">
+              {Array.from({ length: config.half_bathrooms }, (_, i) => (
                 <Input
+                  key={i}
                   placeholder={config.half_bathrooms === 1 ? "Half Bath" : `Half Bath ${i + 1}`}
                   value={halfBathroomNames[i] || ""}
                   onChange={e => {
@@ -352,16 +368,17 @@ export default function HomeSetup() {
                     updated[i] = e.target.value;
                     setHalfBathroomNames(updated);
                   }}
-                  className="h-12 text-sm"
+                  className="h-10 text-sm"
                 />
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="space-y-4">
-        <h2 className="font-heading font-semibold text-lg">Other rooms</h2>
+      {/* Other rooms */}
+      <div className="bg-card border border-border rounded-lg p-4 space-y-3">
+        <h2 className="font-heading font-semibold text-base">Other Rooms</h2>
         <div className="grid grid-cols-2 gap-2">
            <ToggleRoom label="Kitchen" icon={ChefHat} field="has_kitchen" />
            <ToggleRoom label="Living Room" icon={Sofa} field="has_living_room" />
@@ -374,8 +391,9 @@ export default function HomeSetup() {
          </div>
       </div>
 
+      {/* Success message */}
       {generated !== null && (
-        <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center justify-between gap-3 text-green-700">
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center justify-between gap-3 text-green-700">
           <div className="flex items-center gap-3">
             <CheckCircle className="w-5 h-5 shrink-0" />
             <p className="text-sm font-medium">Successfully generated {generated} tasks!</p>
@@ -386,21 +404,21 @@ export default function HomeSetup() {
         </div>
       )}
 
-      <div className="space-y-3">
-         <Button onClick={generateTasks} disabled={generating} className="w-full gap-2 h-24 text-lg font-medium bg-blue-400 hover:bg-blue-500">
-          <Sparkles className="w-5 h-5" />
+      {/* Action buttons */}
+      <div className="space-y-2">
+         <Button onClick={generateTasks} disabled={generating} className="w-full gap-2 h-12 text-base font-medium bg-blue-400 hover:bg-blue-500">
+          <Sparkles className="w-4 h-4" />
           {generating ? "Generating..." : "Generate Tasks"}
         </Button>
-        <div className="flex gap-3">
-          <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false, has_office: false, has_whole_house: false, start_date_cleaning: format(new Date(), "yyyy-MM-dd"), start_date_maintenance: format(new Date(), "yyyy-MM-dd") })} className="flex-1 h-24 text-base">
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false, has_office: false, has_whole_house: false, start_date_cleaning: format(new Date(), "yyyy-MM-dd"), start_date_maintenance: format(new Date(), "yyyy-MM-dd") })} className="flex-1 h-12 text-sm">
             Reset
           </Button>
-          <Button variant="outline" onClick={saveConfig} disabled={saving} className="flex-1 h-24 text-base">
+          <Button variant="outline" onClick={saveConfig} disabled={saving} className="flex-1 h-12 text-sm">
             {saving ? "Saving..." : "Save Config"}
           </Button>
         </div>
       </div>
-      <p className="text-xs text-muted-foreground text-center">Generating tasks will add new tasks based on your presets library. Existing tasks won't be removed.</p>
     </div>
   );
 }
