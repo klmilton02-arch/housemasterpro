@@ -18,7 +18,6 @@ import StatCard from "../components/StatCard";
 import TaskCard, { getStatusInfo } from "../components/TaskCard";
 import AddTaskDialog from "../components/AddTaskDialog";
 import SyncCalendarButton from "../components/SyncCalendarButton";
-import LeaderboardSummary from "../components/LeaderboardSummary";
 import TaskDetailModal from "../components/TaskDetailModal";
 import EditTaskDialog from "../components/EditTaskDialog";
 import BadgeDisplay from "../components/BadgeDisplay";
@@ -209,7 +208,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <LeaderboardSummary />
+
 
 
 

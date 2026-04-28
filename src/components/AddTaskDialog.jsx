@@ -83,6 +83,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
   async function handleSubmit() {
     setLoading(true);
+    const me = await base44.auth.me();
+    const family_group_id = me?.family_group_id || null;
     const member = familyMembers.find(m => m.id === assignedTo);
 
     const getRoomFromCategory = (cat) => {
@@ -136,6 +138,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
           next_due_date: nextDueDate,
           status: "Pending",
           overdue_grace_days: 3,
+          family_group_id,
         });
       }
     } else {
@@ -155,6 +158,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
         next_due_date: startDate,
         status: "Pending",
         overdue_grace_days: 3,
+        family_group_id,
       });
     }
 

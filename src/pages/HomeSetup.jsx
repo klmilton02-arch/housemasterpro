@@ -86,6 +86,8 @@ export default function HomeSetup() {
 
   async function generateTasks() {
     setGenerating(true);
+    const me = await base44.auth.me();
+    const family_group_id = me?.family_group_id || null;
 
     // Save config first
     if (setupId) {
@@ -183,6 +185,7 @@ export default function HomeSetup() {
           next_due_date: nextDueDate,
           status: "Pending",
           overdue_grace_days: 3,
+          family_group_id,
         };
       });
 
