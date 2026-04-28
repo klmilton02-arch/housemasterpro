@@ -412,13 +412,13 @@ export default function HomeSetup() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="flex items-center justify-between px-4 bg-muted border border-border rounded-lg h-12">
-              <span className="font-medium text-sm">Number of Full Bathrooms</span>
+              <span className="font-medium text-base">Number of Full Bathrooms</span>
               <div className="flex items-center gap-2">
                 <button
                   className="w-6 h-6 rounded border border-border flex items-center justify-center text-muted-foreground hover:bg-background transition-colors"
                   onClick={() => setConfig(c => ({ ...c, full_bathrooms: Math.max(0, c.full_bathrooms - 1) }))}
                 >−</button>
-                <span className="w-4 text-center font-semibold">{config.full_bathrooms}</span>
+                <span className="w-4 text-center font-semibold text-xs">{config.full_bathrooms}</span>
                 <button
                   className="w-6 h-6 rounded border border-border flex items-center justify-center text-muted-foreground hover:bg-background transition-colors"
                   onClick={() => setConfig(c => ({ ...c, full_bathrooms: c.full_bathrooms + 1 }))}
@@ -456,13 +456,13 @@ export default function HomeSetup() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="flex items-center justify-between px-4 bg-muted border border-border rounded-lg h-12">
-              <span className="font-medium text-sm">Number of Bedrooms</span>
+              <span className="font-medium text-base">Number of Bedrooms</span>
               <div className="flex items-center gap-2">
                 <button
                   className="w-6 h-6 rounded border border-border flex items-center justify-center text-muted-foreground hover:bg-background transition-colors"
                   onClick={() => setConfig(c => ({ ...c, bedrooms: Math.max(0, c.bedrooms - 1) }))}
                 >−</button>
-                <span className="w-4 text-center font-semibold">{config.bedrooms}</span>
+                <span className="w-4 text-center font-semibold text-xs">{config.bedrooms}</span>
                 <button
                   className="w-6 h-6 rounded border border-border flex items-center justify-center text-muted-foreground hover:bg-background transition-colors"
                   onClick={() => setConfig(c => ({ ...c, bedrooms: c.bedrooms + 1 }))}
