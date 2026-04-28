@@ -264,10 +264,6 @@ export default function HomeSetup() {
         </div>
       </div>
       
-      <div className="h-22">
-        <StatCard icon={Sparkles} label="Generate your tasks" value={generated !== null ? `${generated} created` : "Start"} color={generated !== null ? "bg-green-100 text-green-600" : "bg-slate-100 text-slate-600"} />
-      </div>
-
       {/* Date pickers */}
       <div className="bg-card border border-border rounded-lg p-4 space-y-3">
         <div>
