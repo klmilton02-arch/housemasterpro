@@ -15,9 +15,9 @@ export default function StatCard({ icon: Icon, label, value, color, onClick, lab
           <p className={cn("font-medium text-muted-foreground", smallLabel ? "text-xs" : "text-base")}>{label}</p>
         </div>
       ) : labelOnTop ? (
-        <div className="min-w-0">
+        <div className="min-w-0 flex flex-col">
           <p className="text-xs text-muted-foreground">{label}</p>
-          <p className="text-xl sm:text-xl font-heading font-bold text-foreground">{value}</p>
+          <p className="text-lg sm:text-lg font-heading font-bold text-foreground">{value}</p>
         </div>
       ) : (
         <div className="min-w-0">
