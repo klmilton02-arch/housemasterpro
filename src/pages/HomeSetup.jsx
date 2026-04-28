@@ -236,23 +236,7 @@ export default function HomeSetup() {
     );
   }
 
-  function ToggleRoom({ label, icon: Icon, field }) {
-    const active = config[field];
-    return (
-      <button
-        className={`flex items-center gap-2 p-3 rounded-xl border transition-all h-24 ${
-          active ? "bg-primary/10 border-primary/30 text-primary" : "bg-card border-border text-muted-foreground"
-        }`}
-        onClick={() => setConfig(c => ({ ...c, [field]: !c[field] }))}
-      >
-        <div className="flex items-center gap-1.5 shrink-0">
-          <Icon className="w-6 h-6" />
-          {active && <CheckCircle className="w-4 h-4" />}
-        </div>
-        <span className="text-base font-medium text-left">{label}</span>
-      </button>
-    );
-  }
+
 
   return (
     <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
@@ -274,15 +258,31 @@ export default function HomeSetup() {
         </div>
         
         {/* Right column - other rooms */}
-        <div className="col-span-1 md:col-span-2 grid grid-cols-2 gap-2">
-          <ToggleRoom label="Kitchen" icon={ChefHat} field="has_kitchen" />
-          <ToggleRoom label="Living Room" icon={Sofa} field="has_living_room" />
-          <ToggleRoom label="Dining Room" icon={UtensilsCrossed} field="has_dining_room" />
-          <ToggleRoom label="Garage" icon={Car} field="has_garage" />
-          <ToggleRoom label="Laundry Room" icon={Shirt} field="has_laundry_room" />
-          <ToggleRoom label="Mixed Use" icon={LayoutGrid} field="has_mixed_use" />
-          <ToggleRoom label="Office" icon={Monitor} field="has_office" />
-          <ToggleRoom label="Whole House" icon={Wind} field="has_whole_house" />
+        <div className="col-span-1 md:col-span-2 grid grid-cols-2 gap-3">
+          <button onClick={() => setConfig(c => ({ ...c, has_kitchen: !c.has_kitchen }))} className="h-22">
+            <StatCard icon={ChefHat} label="Kitchen" value={config.has_kitchen ? "✓" : "○"} color={config.has_kitchen ? "bg-orange-100 text-orange-600" : "bg-slate-100 text-slate-600"} />
+          </button>
+          <button onClick={() => setConfig(c => ({ ...c, has_living_room: !c.has_living_room }))} className="h-22">
+            <StatCard icon={Sofa} label="Living Room" value={config.has_living_room ? "✓" : "○"} color={config.has_living_room ? "bg-teal-100 text-teal-600" : "bg-slate-100 text-slate-600"} />
+          </button>
+          <button onClick={() => setConfig(c => ({ ...c, has_dining_room: !c.has_dining_room }))} className="h-22">
+            <StatCard icon={UtensilsCrossed} label="Dining Room" value={config.has_dining_room ? "✓" : "○"} color={config.has_dining_room ? "bg-red-100 text-red-600" : "bg-slate-100 text-slate-600"} />
+          </button>
+          <button onClick={() => setConfig(c => ({ ...c, has_garage: !c.has_garage }))} className="h-22">
+            <StatCard icon={Car} label="Garage" value={config.has_garage ? "✓" : "○"} color={config.has_garage ? "bg-yellow-100 text-yellow-600" : "bg-slate-100 text-slate-600"} />
+          </button>
+          <button onClick={() => setConfig(c => ({ ...c, has_laundry_room: !c.has_laundry_room }))} className="h-22">
+            <StatCard icon={Shirt} label="Laundry" value={config.has_laundry_room ? "✓" : "○"} color={config.has_laundry_room ? "bg-pink-100 text-pink-600" : "bg-slate-100 text-slate-600"} />
+          </button>
+          <button onClick={() => setConfig(c => ({ ...c, has_mixed_use: !c.has_mixed_use }))} className="h-22">
+            <StatCard icon={LayoutGrid} label="Mixed Use" value={config.has_mixed_use ? "✓" : "○"} color={config.has_mixed_use ? "bg-indigo-100 text-indigo-600" : "bg-slate-100 text-slate-600"} />
+          </button>
+          <button onClick={() => setConfig(c => ({ ...c, has_office: !c.has_office }))} className="h-22">
+            <StatCard icon={Monitor} label="Office" value={config.has_office ? "✓" : "○"} color={config.has_office ? "bg-cyan-100 text-cyan-600" : "bg-slate-100 text-slate-600"} />
+          </button>
+          <button onClick={() => setConfig(c => ({ ...c, has_whole_house: !c.has_whole_house }))} className="h-22">
+            <StatCard icon={Wind} label="Whole House" value={config.has_whole_house ? "✓" : "○"} color={config.has_whole_house ? "bg-lime-100 text-lime-600" : "bg-slate-100 text-slate-600"} />
+          </button>
         </div>
       </div>
       
