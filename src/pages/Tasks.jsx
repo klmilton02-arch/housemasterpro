@@ -295,16 +295,16 @@ export default function Tasks() {
 
       <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
          <button onClick={() => setDialogOpen(true)} className="h-22">
-           <StatCard icon={Plus} label="Add" value="New Task" color="bg-blue-100 text-blue-600" />
+           <StatCard icon={Plus} label="Add" value="New Task" color="bg-blue-100 text-blue-600" labelOnTop />
          </button>
          <button onClick={() => navigate("/presets")} className="h-22">
-           <StatCard icon={CheckCircle} label="Browse" value="Presets" color="bg-purple-100 text-purple-600" />
+           <StatCard icon={CheckCircle} label="Browse" value="Presets" color="bg-purple-100 text-purple-600" labelOnTop />
          </button>
          <button onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }} className="h-22">
-           <StatCard icon={Receipt} label="View" value="Bills" color="bg-green-100 text-green-600" />
+           <StatCard icon={Receipt} label="View" value="Bills" color="bg-green-100 text-green-600" labelOnTop />
          </button>
          <button onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")} className="h-22">
-           <StatCard icon={Home} label="View by" value="Room" color="bg-orange-100 text-orange-600" />
+           <StatCard icon={Home} label="View by" value="Room" color="bg-orange-100 text-orange-600" labelOnTop />
          </button>
        </div>
 
