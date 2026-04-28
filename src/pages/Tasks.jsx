@@ -293,56 +293,20 @@ export default function Tasks() {
     <div className="space-y-2 md:space-y-6 max-w-sm md:max-w-2xl mx-auto px-4 sm:px-4 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <h1 className="font-heading text-3xl font-bold md:hidden">Tasks</h1>
 
-      <div className="grid grid-cols-2 md:grid-cols-2 gap-2">
-        <button
-           onClick={() => setDialogOpen(true)}
-           className="group relative overflow-hidden border border-border rounded-xl p-4 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
-         >
-           <div className="flex items-center gap-1 w-full">
-             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-2xl shrink-0">➕</div>
-             <div className="flex-1 text-left">
-               <div className="text-xs sm:text-sm text-muted-foreground mb-1">Add</div>
-                 <div className="font-heading font-semibold text-lg sm:text-xl text-foreground">New Task</div>
-             </div>
-           </div>
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
+         <button onClick={() => setDialogOpen(true)} className="h-22">
+           <StatCard icon={Plus} label="Add" value="New Task" color="bg-blue-100 text-blue-600" />
          </button>
-         <button
-            onClick={() => navigate("/presets")}
-            className="group relative overflow-hidden border border-border rounded-xl p-4 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
-          >
-            <div className="flex items-center gap-3 w-full">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-purple-500/20 flex items-center justify-center text-2xl shrink-0">⭐</div>
-              <div className="flex-1 text-left">
-                <div className="text-xs sm:text-sm text-muted-foreground mb-1">Browse</div>
-                <div className="font-heading font-semibold text-lg sm:text-xl text-foreground">Presets Library</div>
-              </div>
-            </div>
-          </button>
-         <button
-           onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }}
-           className="group relative overflow-hidden border border-border rounded-xl p-4 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
-         >
-           <div className="flex items-center gap-3 w-full">
-             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-green-500/20 flex items-center justify-center text-2xl shrink-0">💰</div>
-             <div className="flex-1 text-left">
-               <div className="text-sm text-muted-foreground mb-1">View</div>
-               <div className="font-heading font-semibold text-lg sm:text-xl text-foreground">Bills</div>
-             </div>
-           </div>
+         <button onClick={() => navigate("/presets")} className="h-22">
+           <StatCard icon={CheckCircle} label="Browse" value="Presets" color="bg-purple-100 text-purple-600" />
          </button>
-         <button
-           onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")}
-           className="group relative overflow-hidden border border-border rounded-xl p-4 hover:shadow-md transition-all bg-white dark:bg-card h-22 flex items-center"
-         >
-           <div className="flex items-center gap-3 w-full">
-             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-orange-500/20 flex items-center justify-center text-2xl shrink-0">🏠</div>
-             <div className="flex-1 text-left">
-               <div className="text-xs sm:text-sm text-muted-foreground mb-1">View by</div>
-               <div className="font-heading font-semibold text-lg sm:text-xl text-foreground">Room</div>
-             </div>
-           </div>
+         <button onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }} className="h-22">
+           <StatCard icon={Receipt} label="View" value="Bills" color="bg-green-100 text-green-600" />
          </button>
-      </div>
+         <button onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")} className="h-22">
+           <StatCard icon={Home} label="View by" value="Room" color="bg-orange-100 text-orange-600" />
+         </button>
+       </div>
 
       <div className="grid grid-cols-2 gap-2 -mt-2">
         <DropdownMenu>
