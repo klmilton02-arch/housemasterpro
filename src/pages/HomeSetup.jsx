@@ -225,13 +225,13 @@ export default function HomeSetup() {
         {/* Left column - bedrooms and bathrooms */}
         <div className="space-y-3">
           <button onClick={() => setBedroomModalOpen(true)} className="h-22 w-full">
-            <StatCard icon={BedDouble} label={config.bedrooms === 1 ? "Bedroom" : "Bedrooms"} value={config.bedrooms} color="bg-blue-100 text-blue-600" labelRight />
+            <StatCard icon={BedDouble} label={config.bedrooms === 1 ? "Bedroom" : "Bedrooms"} value={config.bedrooms} color="bg-blue-100 text-blue-600" labelRight smallLabel />
           </button>
           <button onClick={() => setBathroomModalOpen(true)} className="h-22 w-full">
-            <StatCard icon={Bath} label="Full Bathrooms" value={config.full_bathrooms} color="bg-purple-100 text-purple-600" labelRight />
+            <StatCard icon={Bath} label="Full Bathrooms" value={config.full_bathrooms} color="bg-purple-100 text-purple-600" labelRight smallLabel />
           </button>
           <button onClick={() => setHalfBathroomModalOpen(true)} className="h-22 w-full">
-            <StatCard icon={Bath} label="Half Bathrooms" value={config.half_bathrooms} color="bg-pink-100 text-pink-600" labelRight />
+            <StatCard icon={Bath} label="Half Bathrooms" value={config.half_bathrooms} color="bg-pink-100 text-pink-600" labelRight smallLabel />
           </button>
         </div>
         

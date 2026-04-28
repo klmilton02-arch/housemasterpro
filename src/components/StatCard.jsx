@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default function StatCard({ icon: Icon, label, value, color, onClick, labelRight }) {
+export default function StatCard({ icon: Icon, label, value, color, onClick, labelRight, smallLabel }) {
   return (
     <div
       className={cn("bg-card border border-border rounded-xl p-3 sm:p-4 flex items-center gap-2 sm:gap-4 transition-all h-22", onClick && "cursor-pointer hover:shadow-md hover:border-primary/30 active:scale-95")}
@@ -12,7 +12,7 @@ export default function StatCard({ icon: Icon, label, value, color, onClick, lab
       {labelRight ? (
         <div className="min-w-0 flex items-center gap-3">
           <p className="text-2xl font-heading font-bold text-foreground">{value}</p>
-          <p className="text-base font-medium text-muted-foreground">{label}</p>
+          <p className={cn("font-medium text-muted-foreground", smallLabel ? "text-xs" : "text-base")}>{label}</p>
         </div>
       ) : (
         <div className="min-w-0">
