@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Trophy, Medal } from "lucide-react";
+import { Trophy, Zap, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const colorMap = {
   blue: "bg-blue-500",
@@ -16,15 +17,21 @@ const medals = ["🥇", "🥈", "🥉"];
 export default function Leaderboard() {
   const [profiles, setProfiles] = useState([]);
   const [members, setMembers] = useState([]);
+  const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
       base44.entities.GamificationProfile.list("-total_xp", 100),
       base44.entities.FamilyMember.list(),
-    ]).then(([p, m]) => {
+      base44.auth.me(),
+    ]).then(([p, m, user]) => {
       setProfiles(p);
       setMembers(m);
+      if (user) {
+        const myProfile = p.find(prof => prof.family_member_name === user.full_name);
+        setUserProfile(myProfile);
+      }
       setLoading(false);
     });
   }, []);
@@ -41,7 +48,31 @@ export default function Leaderboard() {
 
   return (
     <div className="space-y-6 max-w-sm md:max-w-2xl mx-auto px-4 sm:px-4 pt-6">
-      <h1 className="font-heading text-3xl font-bold">Leaderboard</h1>
+      <h1 className="font-heading text-3xl font-bold">Rewards</h1>
+
+      {userProfile && (
+        <div className="bg-card border border-border rounded-lg p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground mb-2">Your Progress</p>
+              <div className="flex items-baseline gap-2">
+                <p className="font-heading font-bold text-3xl text-primary">{userProfile.total_xp}</p>
+                <p className="text-muted-foreground">XP</p>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">Level {userProfile.level}</p>
+            </div>
+            <Zap className="w-12 h-12 text-amber-500" />
+          </div>
+          <Link to="/stable" className="block bg-primary text-primary-foreground rounded-lg p-3 text-center font-semibold hover:bg-primary/90 transition-colors">
+            <div className="flex items-center justify-center gap-2">
+              <Sparkles className="w-4 h-4" />
+              Visit Stable
+            </div>
+          </Link>
+        </div>
+      )}
+
+      <h2 className="font-heading text-2xl font-bold">Leaderboard</h2>
 
       {profiles.length === 0 ? (
         <div className="bg-card border border-border rounded-lg p-6 text-center">
