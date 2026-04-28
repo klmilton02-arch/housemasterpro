@@ -5,10 +5,11 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sparkles, CheckCircle, BedDouble, Bath, ChefHat, Sofa, UtensilsCrossed, Car, Shirt, LayoutGrid, Monitor, Wind, Clock } from "lucide-react";
+import { Sparkles, CheckCircle, BedDouble, Bath, ChefHat, Sofa, UtensilsCrossed, Car, Shirt, LayoutGrid, Monitor, Wind, Clock, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import StatCard from "@/components/StatCard";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const ROOM_CATEGORY_MAP = {
   bedroom: "Bedroom Cleaning",
@@ -49,6 +50,7 @@ export default function HomeSetup() {
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [generated, setGenerated] = useState(null);
+  const [bedroomModalOpen, setBedroomModalOpen] = useState(false);
 
   useEffect(() => {
     base44.entities.HomeSetup.list().then(records => {
@@ -255,7 +257,9 @@ export default function HomeSetup() {
 
       {/* Quick stat cards */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
-        <StatCard icon={BedDouble} label="Bedrooms" value={config.bedrooms} color="bg-blue-100 text-blue-600" className="h-22" />
+        <button onClick={() => setBedroomModalOpen(true)} className="h-22">
+          <StatCard icon={BedDouble} label="Bedrooms" value={config.bedrooms} color="bg-blue-100 text-blue-600" />
+        </button>
         <StatCard icon={Bath} label="Bathrooms" value={config.full_bathrooms + config.half_bathrooms} color="bg-purple-100 text-purple-600" className="h-22" />
         <div className="col-span-2 h-22">
           <StatCard icon={Sparkles} label="Generate your tasks" value={generated !== null ? `${generated} created` : "Start"} color={generated !== null ? "bg-green-100 text-green-600" : "bg-slate-100 text-slate-600"} />
@@ -304,30 +308,7 @@ export default function HomeSetup() {
         </div>
       </div>
 
-      {/* Bedrooms */}
-      <div className="bg-card border border-border rounded-lg p-4 space-y-3">
-        <h2 className="font-heading font-semibold text-base flex items-center gap-2">
-          <BedDouble className="w-4 h-4" /> Bedrooms ({config.bedrooms})
-        </h2>
-        <NumberInput label="Count" icon={BedDouble} field="bedrooms" />
-        {config.bedrooms > 0 && (
-          <div className="space-y-2 pt-2 border-t border-border">
-            {Array.from({ length: config.bedrooms }, (_, i) => (
-              <Input
-                key={i}
-                placeholder={config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i + 1}`}
-                value={bedroomNames[i] || ""}
-                onChange={e => {
-                  const updated = [...bedroomNames];
-                  updated[i] = e.target.value;
-                  setBedroomNames(updated);
-                }}
-                className="h-10 text-sm"
-              />
-            ))}
-          </div>
-        )}
-      </div>
+
 
       {/* Bathrooms */}
       <div className="bg-card border border-border rounded-lg p-4 space-y-3">
@@ -419,6 +400,50 @@ export default function HomeSetup() {
           </Button>
         </div>
       </div>
+
+      {/* Bedroom Modal */}
+      <Dialog open={bedroomModalOpen} onOpenChange={setBedroomModalOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Configure Bedrooms</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between px-4 bg-muted border border-border rounded-lg h-12">
+              <span className="font-medium text-sm">Number of Bedrooms</span>
+              <div className="flex items-center gap-2">
+                <button
+                  className="w-6 h-6 rounded border border-border flex items-center justify-center text-muted-foreground hover:bg-background transition-colors"
+                  onClick={() => setConfig(c => ({ ...c, bedrooms: Math.max(0, c.bedrooms - 1) }))}
+                >−</button>
+                <span className="w-4 text-center font-semibold">{config.bedrooms}</span>
+                <button
+                  className="w-6 h-6 rounded border border-border flex items-center justify-center text-muted-foreground hover:bg-background transition-colors"
+                  onClick={() => setConfig(c => ({ ...c, bedrooms: c.bedrooms + 1 }))}
+                >+</button>
+              </div>
+            </div>
+            {config.bedrooms > 0 && (
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-muted-foreground">Bedroom Names</label>
+                {Array.from({ length: config.bedrooms }, (_, i) => (
+                  <Input
+                    key={i}
+                    placeholder={config.bedrooms === 1 ? "Bedroom" : `Bedroom ${i + 1}`}
+                    value={bedroomNames[i] || ""}
+                    onChange={e => {
+                      const updated = [...bedroomNames];
+                      updated[i] = e.target.value;
+                      setBedroomNames(updated);
+                    }}
+                    className="h-9 text-sm"
+                  />
+                ))}
+              </div>
+            )}
+            <Button onClick={() => setBedroomModalOpen(false)} className="w-full">Done</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
