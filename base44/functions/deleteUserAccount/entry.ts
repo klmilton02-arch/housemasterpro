@@ -11,12 +11,17 @@ Deno.serve(async (req) => {
 
     const userId = user.id;
     const userEmail = user.email;
+    const familyGroupId = user.family_group_id;
 
     // Helper function to delete records by filter
     const deleteByFilter = async (entity, filter) => {
-      const records = await base44.asServiceRole.entities[entity].filter(filter, '-created_date', 1000);
-      for (const record of records) {
-        await base44.asServiceRole.entities[entity].delete(record.id);
+      try {
+        const records = await base44.asServiceRole.entities[entity].filter(filter, '-created_date', 1000);
+        for (const record of records) {
+          await base44.asServiceRole.entities[entity].delete(record.id);
+        }
+      } catch (err) {
+        console.log(`Error deleting ${entity}:`, err.message);
       }
     };
 
@@ -29,17 +34,16 @@ Deno.serve(async (req) => {
     await deleteByFilter('Subtask', { created_by: userEmail });
 
     // Delete family groups where user is owner
-    const familyGroups = await base44.asServiceRole.entities.FamilyGroup.filter({ owner_email: userEmail }, '-created_date', 100);
-    for (const group of familyGroups) {
-      await base44.asServiceRole.entities.FamilyGroup.delete(group.id);
+    if (familyGroupId) {
+      const familyGroups = await base44.asServiceRole.entities.FamilyGroup.filter({ owner_email: userEmail }, '-created_date', 100);
+      for (const group of familyGroups) {
+        await base44.asServiceRole.entities.FamilyGroup.delete(group.id);
+      }
     }
 
-    // Delete the user record
-    await base44.asServiceRole.entities.User.delete(userId);
-
-    return Response.json({ success: true, message: 'Account deleted successfully' });
+    return Response.json({ success: true, message: 'Account deletion initiated' });
   } catch (error) {
-    console.error('Failed to delete account:', error);
+    console.error('Failed to delete account data:', error);
     return Response.json({ error: error.message || 'Failed to delete account' }, { status: 500 });
   }
 });
