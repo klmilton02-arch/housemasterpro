@@ -378,7 +378,7 @@ export default function Profile() {
         <Button onClick={() => base44.auth.logout("/")} variant="destructive" className="w-full gap-2">
           <LogOut className="w-4 h-4" /> Sign Out
         </Button>
-        <AlertDialog>
+        <AlertDialog open={deleteError ? true : undefined}>
           <AlertDialogTrigger asChild>
             <Button variant="outline" className="w-full text-sm text-destructive border-destructive/30 hover:bg-destructive/10">
               Delete My Account
@@ -389,9 +389,10 @@ export default function Profile() {
               <AlertDialogTitle>Delete Account</AlertDialogTitle>
               <AlertDialogDescription>This will permanently delete your account and all associated data. This cannot be undone.</AlertDialogDescription>
             </AlertDialogHeader>
+            {deleteError && <p className="text-xs text-destructive">{deleteError}</p>}
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={deletingAccount}>Cancel</AlertDialogCancel>
-              <AlertDialogAction 
+              <AlertDialogCancel disabled={deletingAccount} onClick={() => setDeleteError("")}>Cancel</AlertDialogCancel>
+              <Button
                 onClick={async () => {
                   setDeletingAccount(true);
                   setDeleteError("");
@@ -403,12 +404,11 @@ export default function Profile() {
                   }
                 }}
                 disabled={deletingAccount}
-                className="bg-destructive text-destructive-foreground"
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               >
                 {deletingAccount ? "Deleting..." : "Delete Account"}
-              </AlertDialogAction>
+              </Button>
             </AlertDialogFooter>
-            {deleteError && <p className="text-xs text-destructive mt-2">{deleteError}</p>}
           </AlertDialogContent>
         </AlertDialog>
       </div>
