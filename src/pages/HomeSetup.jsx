@@ -212,29 +212,7 @@ export default function HomeSetup() {
     }
   }
 
-  function NumberInput({ label, icon: Icon, field }) {
-    return (
-      <div className="flex items-center justify-between px-4 bg-card border border-border rounded-xl h-14">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Icon className="w-5 h-5 text-primary" />
-          </div>
-          <span className="font-medium text-sm">{label}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors text-lg"
-            onClick={() => setConfig(c => ({ ...c, [field]: Math.max(0, (c[field] || 0) - 1) }))}
-          >−</button>
-          <span className="w-6 text-center font-semibold">{config[field] || 0}</span>
-          <button
-            className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors text-lg"
-            onClick={() => setConfig(c => ({ ...c, [field]: (c[field] || 0) + 1 }))}
-          >+</button>
-        </div>
-      </div>
-    );
-  }
+
 
 
 
@@ -334,52 +312,7 @@ export default function HomeSetup() {
 
 
 
-      {/* Bathrooms */}
-      <div className="bg-card border border-border rounded-lg p-4 space-y-3">
-        <h2 className="font-heading font-semibold text-base flex items-center gap-2">
-          <Bath className="w-4 h-4" /> Bathrooms
-        </h2>
-        <div className="space-y-3">
-          <NumberInput label="Full Bathrooms" icon={Bath} field="full_bathrooms" />
-          {config.full_bathrooms > 0 && (
-            <div className="space-y-2 pt-2 border-t border-border">
-              {Array.from({ length: config.full_bathrooms }, (_, i) => (
-                <Input
-                  key={i}
-                  placeholder={config.full_bathrooms === 1 ? "Bathroom" : `Bathroom ${i + 1}`}
-                  value={bathroomNames[i] || ""}
-                  onChange={e => {
-                    const updated = [...bathroomNames];
-                    updated[i] = e.target.value;
-                    setBathroomNames(updated);
-                  }}
-                  className="h-10 text-sm"
-                />
-              ))}
-            </div>
-          )}
-        </div>
-        <div className="space-y-3 pt-3 border-t border-border">
-          <NumberInput label="Half Bathrooms" icon={Bath} field="half_bathrooms" />
-          {config.half_bathrooms > 0 && (
-            <div className="space-y-2 pt-2 border-t border-border">
-              {Array.from({ length: config.half_bathrooms }, (_, i) => (
-                <Input
-                  key={i}
-                  placeholder={config.half_bathrooms === 1 ? "Half Bath" : `Half Bath ${i + 1}`}
-                  value={halfBathroomNames[i] || ""}
-                  onChange={e => {
-                    const updated = [...halfBathroomNames];
-                    updated[i] = e.target.value;
-                    setHalfBathroomNames(updated);
-                  }}
-                  className="h-10 text-sm"
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+
 
 
 
