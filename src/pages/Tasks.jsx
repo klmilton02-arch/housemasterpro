@@ -493,7 +493,7 @@ export default function Tasks() {
       ) : viewMode === "calendar" ? (
         <TaskCalendar tasks={tasks} onViewDetails={setSelectedTask} />
       ) : (
-        <RoomView tasks={filtered} onComplete={handleComplete} onViewDetails={setSelectedTask} onDelete={handleDelete} onAddTask={(room) => { setDialogOpen(true); }} onRoomRenamed={loadTasks} justCompletedIds={justCompleted} />
+        <RoomView tasks={tasks} onComplete={handleComplete} onViewDetails={setSelectedTask} onDelete={handleDelete} onAddTask={(room) => { setDialogOpen(true); }} onRoomRenamed={loadTasks} justCompletedIds={justCompleted} />
       )}
 
 
