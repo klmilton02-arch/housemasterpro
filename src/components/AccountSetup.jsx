@@ -31,11 +31,12 @@ export default function AccountSetup({ currentUser, onDone, initialStep = "choos
     setLoading(true);
     setError("");
     try {
+      const me = await base44.auth.me();
       const code = generateCode();
       const group = await base44.entities.FamilyGroup.create({
         name: familyName.trim(),
         invite_code: code,
-        owner_email: currentUser.email,
+        owner_email: me.email,
       });
       await base44.auth.updateMe({ account_type: "family", family_group_id: group.id });
       setCreatedCode(code);
@@ -51,7 +52,7 @@ export default function AccountSetup({ currentUser, onDone, initialStep = "choos
     if (!joinCode.trim()) return;
     setLoading(true);
     setError("");
-    const groups = await base44.entities.FamilyGroup.filter({ invite_code: joinCode.trim().toUpperCase() });
+    const groups = await base44.entities.FamilyGroup.filter({ invite_code: joinCode.trim().toUpperCase() }).catch(() => []);
     if (groups.length === 0) {
       setError("Invalid invite code. Please check and try again.");
       setLoading(false);
