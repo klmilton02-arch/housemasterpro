@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
 
   const deleteAccount = async () => {
     try {
-      await base44.auth.deleteMe();
+      await base44.functions.invoke('deleteUserAccount', {});
       logout(true);
     } catch (error) {
       console.error('Failed to delete account:', error);
