@@ -42,7 +42,8 @@ export default function AccountSetup({ currentUser, onDone, initialStep = "choos
       setCreatedCode(code);
       setStep("created");
     } catch (err) {
-      setError("Failed to create family. Please try again.");
+      console.error("Create family error:", err);
+      setError(err.message || "Failed to create family. Please try again.");
     } finally {
       setLoading(false);
     }
