@@ -49,6 +49,7 @@ export default function Landing() {
   const [name, setName] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [signingIn, setSigningIn] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,6 +59,7 @@ export default function Landing() {
   }, []);
 
   const handleSignIn = () => {
+    setSigningIn(true);
     base44.auth.redirectToLogin(window.location.origin + "/dashboard");
   };
 
@@ -83,7 +85,9 @@ export default function Landing() {
           <Home className="w-6 h-6 text-primary" />
           <span className="font-heading font-bold text-lg">HomeLifeFocus</span>
         </div>
-        <Button size="sm" onClick={handleSignIn}>Sign In</Button>
+        <Button size="sm" onClick={handleSignIn} disabled={signingIn}>
+          {signingIn ? "Redirecting..." : "Sign In"}
+        </Button>
       </nav>
 
       {/* Hero */}
@@ -118,7 +122,9 @@ export default function Landing() {
                 <span className="font-heading font-bold text-lg">HomeLifeFocus</span>
               </div>
               <p className="text-sm text-muted-foreground mb-6">Sign in to manage your home</p>
-              <Button size="lg" className="w-full mb-3" onClick={handleSignIn}>Sign In / Get Started</Button>
+              <Button size="lg" className="w-full mb-3" onClick={handleSignIn} disabled={signingIn}>
+                {signingIn ? "Redirecting..." : "Sign In / Get Started"}
+              </Button>
               <p className="text-xs text-muted-foreground">Free to use · No credit card needed</p>
               <div className="mt-5 pt-5 border-t border-border space-y-2 text-left">
                 {["Track tasks for every room", "Assign chores to family members", "Earn XP and level up", "Sync with Google Calendar"].map(item => (
@@ -248,7 +254,7 @@ export default function Landing() {
         <div className="flex justify-center gap-6 mb-3">
           <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
           <Link to="/support" className="hover:text-foreground transition-colors">Support</Link>
-          <button onClick={handleSignIn} className="hover:text-foreground transition-colors">Sign In</button>
+          <button onClick={handleSignIn} className="hover:text-foreground transition-colors" disabled={signingIn}>{signingIn ? "Redirecting..." : "Sign In"}</button>
         </div>
         <p>© {new Date().getFullYear()} HomeLifeFocus. All rights reserved.</p>
       </footer>
