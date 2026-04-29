@@ -323,16 +323,16 @@ export default function Tasks() {
       <h1 className="font-heading text-3xl font-bold md:hidden">Tasks</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
-         <button onClick={() => setDialogOpen(true)} className="h-22">
+         <button onClick={() => setDialogOpen(true)} className="w-full">
            <StatCard icon={Plus} label="Add" value="New Task" color="bg-blue-100 text-blue-600" labelOnTop />
          </button>
-         <button onClick={() => navigate("/presets")} className="h-22">
+         <button onClick={() => navigate("/presets")} className="w-full">
            <StatCard icon={CheckCircle} label="Browse" value="Presets" color="bg-purple-100 text-purple-600" labelOnTop />
          </button>
-         <button onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }} className="h-22">
+         <button onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }} className="w-full">
            <StatCard icon={Receipt} label="View" value="Bills" color="bg-green-100 text-green-600" labelOnTop />
          </button>
-         <button onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")} className="h-22">
+         <button onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")} className="w-full">
            <StatCard icon={Home} label="View by" value="Room" color="bg-orange-100 text-orange-600" labelOnTop />
          </button>
        </div>
@@ -340,7 +340,7 @@ export default function Tasks() {
       <div className="grid grid-cols-2 gap-3">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button style={{height:"6rem"}} className="w-full border border-border rounded-lg px-4 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start justify-center gap-1">
+            <button className="w-full h-24 border border-border rounded-lg px-4 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start justify-center gap-1">
               <span className="text-xs text-muted-foreground font-medium">Filter</span>
               <span className="font-heading font-semibold text-base text-foreground">
                 {statusFilter === "all" ? "Due Date" : statusFilter.replace("_", " ")}
@@ -364,7 +364,7 @@ export default function Tasks() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button style={{height:"6rem"}} className="w-full border border-border rounded-lg px-4 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start justify-center gap-1">
+            <button className="w-full h-24 border border-border rounded-lg px-4 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start justify-center gap-1">
               <span className="text-xs text-muted-foreground font-medium">Category</span>
              <span className="font-heading font-semibold text-base text-foreground">
                {typeFilter === "all" ? "All" : typeFilter.charAt(0).toUpperCase() + typeFilter.slice(1)}
@@ -401,7 +401,7 @@ export default function Tasks() {
                       setStatusFilter("all");
                       setGroupBy("none");
                     }}
-                    className="bg-card border border-border rounded-lg p-3 h-22 flex items-center gap-2 hover:bg-muted/40 transition-colors"
+                    className="bg-card border border-border rounded-lg p-3 h-24 flex items-center gap-2 hover:bg-muted/40 transition-colors"
                   >
                     <div className={`w-6 h-6 rounded-full bg-${member.avatar_color}-500 shrink-0 flex items-center justify-center text-white text-xs font-bold`}>
                       {member.name[0]}
