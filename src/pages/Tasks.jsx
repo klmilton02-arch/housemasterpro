@@ -20,7 +20,8 @@ import TaskDetailModal from "../components/TaskDetailModal";
 import EditTaskDialog from "../components/EditTaskDialog";
 import RoomView from "../components/RoomView";
 import TaskCalendar from "../components/TaskCalendar";
-import { differenceInDays, parseISO } from "date-fns";
+import YesterdayTasksDialog from "../components/YesterdayTasksDialog";
+import { differenceInDays, parseISO, subDays, format } from "date-fns";
 
 export default function Tasks() {
   const navigate = useNavigate();
@@ -42,6 +43,8 @@ export default function Tasks() {
   const [selectedMemberId, setSelectedMemberId] = useState(null);
   const [justCompleted, setJustCompleted] = useState(new Set());
   const [typeFilter, setTypeFilter] = useState("all"); // "all" | "cleaning" | "maintenance"
+  const [yesterdayTasks, setYesterdayTasks] = useState([]);
+  const [showYesterdayDialog, setShowYesterdayDialog] = useState(false);
   const { isActive: blastActive } = useBlastMode();
   // Swipe navigation disabled on Tasks — conflicts with vertical scrolling
   const handleTouchStart = () => {};
@@ -54,6 +57,26 @@ export default function Tasks() {
   }, []);
 
   useEffect(() => { loadTasks(); }, [loadTasks]);
+
+  // Show yesterday's missed tasks once per day on first load
+  useEffect(() => {
+    const todayKey = format(new Date(), "yyyy-MM-dd");
+    const seenKey = `yesterday_prompt_${todayKey}`;
+    if (localStorage.getItem(seenKey)) return;
+
+    const yesterday = format(subDays(new Date(), 1), "yyyy-MM-dd");
+    const missed = tasks.filter(t =>
+      t.next_due_date === yesterday && t.status !== "Completed"
+    );
+    if (missed.length > 0) {
+      setYesterdayTasks(missed);
+      setShowYesterdayDialog(true);
+      localStorage.setItem(seenKey, "1");
+    } else if (tasks.length > 0) {
+      // Mark as seen even if no missed tasks so we don't re-check every render
+      localStorage.setItem(seenKey, "1");
+    }
+  }, [tasks]);
 
   useEffect(() => {
     base44.entities.FamilyMember.list().then(setFamilyMembers);
@@ -456,6 +479,13 @@ export default function Tasks() {
 
 
 
+      {showYesterdayDialog && (
+        <YesterdayTasksDialog
+          tasks={yesterdayTasks}
+          onComplete={handleComplete}
+          onClose={() => setShowYesterdayDialog(false)}
+        />
+      )}
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
       <TaskDetailModal 
