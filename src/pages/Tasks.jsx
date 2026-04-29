@@ -308,7 +308,7 @@ export default function Tasks() {
          </button>
        </div>
 
-      <div className="grid grid-cols-2 gap-2 -mt-2">
+      <div className="grid grid-cols-2 gap-3">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="w-full border border-border rounded-lg p-4 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-22">
@@ -336,7 +336,7 @@ export default function Tasks() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="w-full border border-border rounded-lg p-4 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start gap-2 h-22">
-             <span className="text-xs text-muted-foreground font-medium">Category</span>
+              <span className="text-xs text-muted-foreground font-medium">Category</span>
              <span className="font-heading font-semibold text-base text-foreground">
                {typeFilter === "all" ? "All" : typeFilter.charAt(0).toUpperCase() + typeFilter.slice(1)}
               </span>
