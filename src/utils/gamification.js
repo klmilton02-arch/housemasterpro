@@ -113,8 +113,8 @@ export async function awardPoints(task, isBlastRunning = false) {
   let memberId = task.assigned_to;
   let memberName = task.assigned_to_name;
 
+  const me = await base44.auth.me();
   if (!memberId || !memberName) {
-    const me = await base44.auth.me();
     if (!me) return null;
     memberId = me.id;
     memberName = me.full_name;
@@ -141,6 +141,7 @@ export async function awardPoints(task, isBlastRunning = false) {
     profile = await base44.entities.GamificationProfile.create({
       family_member_id: memberId,
       family_member_name: memberName,
+      family_group_id: me?.family_group_id || null,
       total_xp: 0,
       level: 1,
       badges: [],

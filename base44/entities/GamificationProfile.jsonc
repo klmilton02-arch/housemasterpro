@@ -2,6 +2,10 @@
   "name": "GamificationProfile",
   "type": "object",
   "properties": {
+    "family_group_id": {
+      "type": "string",
+      "title": "Family Group ID"
+    },
     "family_member_id": {
       "type": "string",
       "title": "Family Member ID"
@@ -76,5 +80,19 @@
   "required": [
     "family_member_id",
     "family_member_name"
-  ]
+  ],
+  "rls": {
+    "create": {
+      "data.family_group_id": "{{user.family_group_id}}"
+    },
+    "read": {
+      "data.family_group_id": "{{user.family_group_id}}"
+    },
+    "update": {
+      "data.family_group_id": "{{user.family_group_id}}"
+    },
+    "delete": {
+      "data.family_group_id": "{{user.family_group_id}}"
+    }
+  }
 }
