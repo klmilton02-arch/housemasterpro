@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MobileSelect from "./MobileSelect";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatFrequency } from "./TaskCard";
@@ -337,13 +338,17 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
             </div>
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Category</Label>
-              <MobileSelect
-                value={customCategory}
-                onValueChange={setCustomCategory}
-                title="Select Category"
-                triggerClassName="mt-1"
-                options={["Cleaning","Maintenance","Bills","Personal"].map(c => ({ value: c, label: c }))}
-              />
+              <Select value={customCategory} onValueChange={setCustomCategory}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Cleaning">Cleaning</SelectItem>
+                  <SelectItem value="Maintenance">Maintenance</SelectItem>
+                  <SelectItem value="Bills">Bills</SelectItem>
+                  <SelectItem value="Personal">Personal</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
                <Label className="text-xs font-medium text-muted-foreground">Room (Optional)</Label>
