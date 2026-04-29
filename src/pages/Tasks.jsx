@@ -222,7 +222,7 @@ export default function Tasks() {
     if (statusFilter === "completed" && status.label !== "Completed") return false;
     if (statusFilter === "pending" && status.label === "Completed") return false;
     if (categoryFilter !== "all" && t.category !== categoryFilter) return false;
-    if (typeFilter !== "all" && t.category?.toLowerCase() !== typeFilter) return false;
+
     if (assignedFilter === "assigned" && !t.assigned_to) return false;
     if (assignedFilter === "unassigned" && t.assigned_to) return false;
     if (selectedMemberId && t.assigned_to !== selectedMemberId) return false;
@@ -367,18 +367,17 @@ export default function Tasks() {
             <button className="w-full h-24 border border-border rounded-lg px-4 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start justify-center gap-1">
               <span className="text-xs text-muted-foreground font-medium">Category</span>
              <span className="font-heading font-semibold text-base text-foreground">
-               {typeFilter === "all" ? "All" : typeFilter.charAt(0).toUpperCase() + typeFilter.slice(1)}
+               {categoryFilter === "all" ? "All" : categoryFilter}
               </span>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
-            {[
-              { value: "all", label: "All Types" },
-              { value: "cleaning", label: "Cleaning" },
-              { value: "maintenance", label: "Maintenance" },
-            ].map(opt => (
-              <DropdownMenuItem key={opt.value} onClick={() => { setTypeFilter(opt.value); }}>
-                <span className={typeFilter === opt.value ? "font-semibold text-primary" : ""}>{opt.label}</span>
+            <DropdownMenuItem onClick={() => setCategoryFilter("all")}>
+              <span className={categoryFilter === "all" ? "font-semibold text-primary" : ""}>All Types</span>
+            </DropdownMenuItem>
+            {categories.map(cat => (
+              <DropdownMenuItem key={cat} onClick={() => { setViewMode("list"); setCategoryFilter(cat); }}>
+                <span className={categoryFilter === cat ? "font-semibold text-primary" : ""}>{cat}</span>
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
