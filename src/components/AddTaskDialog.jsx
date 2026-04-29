@@ -86,7 +86,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   async function handleSubmit() {
     setLoading(true);
     const me = await base44.auth.me();
-    const family_group_id = me?.family_group_id || null;
+    const family_group_id = me?.family_group_id ?? null;
     const member = familyMembers.find(m => m.id === assignedTo);
 
     const getRoomFromCategory = (cat) => {

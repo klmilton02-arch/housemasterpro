@@ -94,7 +94,7 @@ export default function HomeSetup() {
     setGenerating(true);
     try {
       const me = await base44.auth.me();
-      const family_group_id = me?.family_group_id || null;
+      const family_group_id = me?.family_group_id ?? null;
 
       // Save config first
       if (setupId) {
