@@ -109,6 +109,11 @@ export async function revokePoints(task, wasBlastRunning = false) {
   });
 }
 
+// Award points to a specific family member (used when completing on behalf of someone)
+export async function awardPointsForMember(task, member) {
+  return awardPoints({ ...task, assigned_to: member.id, assigned_to_name: member.name }, false);
+}
+
 export async function awardPoints(task, isBlastRunning = false) {
   let memberId = task.assigned_to;
   let memberName = task.assigned_to_name;

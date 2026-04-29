@@ -2,15 +2,25 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { format, parseISO, addDays } from "date-fns";
-import { Pencil, Trash2, Calendar, Clock, X } from "lucide-react";
+import { Pencil, Trash2, Calendar, Clock, X, Users } from "lucide-react";
 import { base44 } from "@/api/base44Client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { awardPointsForMember } from "@/utils/gamification";
 
-export default function TaskDetailModal({ task, open, onOpenChange, onModify, onDelete, onChangeDueDate }) {
+export default function TaskDetailModal({ task, open, onOpenChange, onModify, onDelete, onChangeDueDate, onComplete }) {
   const [dueDateInput, setDueDateInput] = useState(task?.next_due_date || "");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [changeDueDateOpen, setChangeDueDateOpen] = useState(false);
   const [deletingCalendar, setDeletingCalendar] = useState(false);
+  const [completeAsOpen, setCompleteAsOpen] = useState(false);
+  const [familyMembers, setFamilyMembers] = useState([]);
+  const [completingAs, setCompletingAs] = useState(null);
+
+  useEffect(() => {
+    if (open) {
+      base44.entities.FamilyMember.list().then(setFamilyMembers);
+    }
+  }, [open]);
   
   async function handleDelete() {
     if (!task || !task.id) return;
@@ -32,6 +42,30 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
     const newDate = addDays(parseISO(task.next_due_date), daysToAdd);
     const newDateStr = newDate.toISOString().split("T")[0];
     await onChangeDueDate?.(task, newDateStr);
+    onOpenChange(false);
+  }
+
+  async function handleCompleteAs(member) {
+    if (!task?.id) return;
+    setCompletingAs(member.id);
+    const today = new Date();
+    const todayStr = today.toISOString().split("T")[0];
+    const nextDue = new Date(today);
+    nextDue.setDate(nextDue.getDate() + task.frequency_days);
+    const nextDueStr = nextDue.toISOString().split("T")[0];
+    await base44.entities.Task.update(task.id, {
+      status: "Completed",
+      last_completed_date: todayStr,
+      next_due_date: nextDueStr,
+      assigned_to: member.id,
+      assigned_to_name: member.name,
+      completed_by_name: member.name,
+    });
+    // Award XP to the selected member
+    try { await awardPointsForMember(task, member); } catch (e) { /* non-fatal */ }
+    setCompletingAs(null);
+    setCompleteAsOpen(false);
+    onComplete?.(task);
     onOpenChange(false);
   }
 
@@ -85,6 +119,36 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
 
           {/* Action buttons */}
           <div className="space-y-2 border-t border-border pt-4">
+            {/* Complete as family member */}
+            {familyMembers.length > 0 && (
+              <div>
+                <Button
+                  className="w-full gap-2 bg-green-500 hover:bg-green-600 text-white"
+                  onClick={() => setCompleteAsOpen(v => !v)}
+                >
+                  <Users className="w-4 h-4" />
+                  Complete as Family Member
+                </Button>
+                {completeAsOpen && (
+                  <div className="mt-2 grid grid-cols-2 gap-2">
+                    {familyMembers.map(m => (
+                      <Button
+                        key={m.id}
+                        variant="outline"
+                        className="gap-2 justify-start"
+                        disabled={completingAs === m.id}
+                        onClick={() => handleCompleteAs(m)}
+                      >
+                        <div className={`w-5 h-5 rounded-full bg-${m.avatar_color}-500 flex items-center justify-center text-white text-xs font-bold shrink-0`}>
+                          {m.name[0]}
+                        </div>
+                        <span className="truncate">{m.name}</span>
+                      </Button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
             <div className="flex gap-2">
               <Button
                 className="flex-1 gap-2 bg-blue-400 hover:bg-blue-500 text-white"

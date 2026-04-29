@@ -504,6 +504,7 @@ export default function Tasks() {
         }}
         onDelete={handleDelete}
         onChangeDueDate={handleChangeDueDate}
+        onComplete={() => { setSelectedTask(null); loadTasks(); }}
       />
       <EditTaskDialog task={editingTask} open={!!editingTask} onOpenChange={(open) => { if (!open) setEditingTask(null); }} onTaskUpdated={loadTasks} />
       <BatchToolbar
