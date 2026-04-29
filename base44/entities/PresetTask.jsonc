@@ -34,7 +34,8 @@
       "enum": [
         "Cleaning",
         "Maintenance",
-        "Bills"
+        "Bills",
+        "General Household"
       ]
     },
     "frequency_days": {
