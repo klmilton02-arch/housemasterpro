@@ -189,20 +189,20 @@ export default function Dashboard() {
       <h1 className="font-heading text-3xl font-bold md:hidden">Dashboard</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
-         <StatCard icon={ListChecks} label="Due Today" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => { setDrawerTaskIds(dueTasks.map(t => t.id)); setTaskListModal({ title: 'Due Today' }); }} className="h-22" />
-         <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => { setDrawerTaskIds(overdueTasks.map(t => t.id)); setTaskListModal({ title: 'Overdue Tasks' }); }} className="h-22" />
-         <StatCard icon={Clock} label="Pending Tasks" value={pendingTasks.length} color="bg-amber-100 text-amber-600" onClick={() => { setDrawerTaskIds(pendingTasks.map(t => t.id)); setTaskListModal({ title: 'Pending Tasks' }); }} className="h-22" />
-         <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setDrawerTaskIds(completedTasks.map(t => t.id)); setTaskListModal({ title: 'Completed Tasks' }); }} className="h-22" />
-         <div className="col-span-2 h-22">
-           <Link to="/tasks" className="block h-full">
+         <StatCard icon={ListChecks} label="Due Today" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => { setDrawerTaskIds(dueTasks.map(t => t.id)); setTaskListModal({ title: 'Due Today' }); }} />
+         <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => { setDrawerTaskIds(overdueTasks.map(t => t.id)); setTaskListModal({ title: 'Overdue Tasks' }); }} />
+         <StatCard icon={Clock} label="Pending Tasks" value={pendingTasks.length} color="bg-amber-100 text-amber-600" onClick={() => { setDrawerTaskIds(pendingTasks.map(t => t.id)); setTaskListModal({ title: 'Pending Tasks' }); }} />
+         <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setDrawerTaskIds(completedTasks.map(t => t.id)); setTaskListModal({ title: 'Completed Tasks' }); }} />
+         <div className="col-span-2">
+           <Link to="/tasks" className="block">
              <StatCard icon={ListChecks} label="Create, organize, and schedule tasks" value="Tasks" color="bg-slate-100 text-slate-600" />
            </Link>
          </div>
-         <div className="col-span-2 h-22">
+         <div className="col-span-2">
            <StatCard icon={Flame} label="Blast Mode" value={blastDisplay} color={isBlastActive ? "bg-orange-500 text-white" : "bg-orange-100 text-orange-600"} onClick={() => isBlastActive ? setBlastOptionsOpen(true) : startBlast(30)} />
          </div>
-         <div className="col-span-2 h-22">
-           <Link to="/calendar" className="block h-full">
+         <div className="col-span-2">
+           <Link to="/calendar" className="block">
              <StatCard icon={CalendarDays} label="Calendar" value="View" color="bg-purple-100 text-purple-600" />
            </Link>
          </div>
