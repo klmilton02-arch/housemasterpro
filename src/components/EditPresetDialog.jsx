@@ -11,7 +11,7 @@ const ROOMS = [
   "Kitchen", "Full Bathroom", "Half Bathroom", "Bedroom", "Living Room", "Dining Room",
   "Garage", "Laundry Room", "Office", "Basement", "Attic", "Outdoor", "Whole House", "Any"
 ];
-const TASK_TYPES = ["Cleaning", "Maintenance", "Bills"];
+const TASK_TYPES = ["Cleaning", "Maintenance", "Bills", "Personal"];
 const DIFFICULTIES = ["Trivial", "Easy", "Medium", "Hard", "Very Hard"];
 
 const EMPTY = {
@@ -72,19 +72,7 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved, 
           <Input value={form.name} onChange={e => set("name", e.target.value)} placeholder="e.g. Clean oven" className="mt-1 border-violet-200 focus:border-violet-400 bg-white" />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-blue-50 rounded-lg p-3 border border-blue-100">
-            <Label className="text-blue-700 text-xs font-semibold uppercase tracking-wide">Room</Label>
-            <Select value={form.category || ""} onValueChange={v => set("category", v)}>
-              <SelectTrigger className="mt-1 border-blue-200 bg-white">
-                <SelectValue placeholder="Select room" />
-              </SelectTrigger>
-              <SelectContent>
-                {ROOMS.map(r => <SelectItem key={r} value={r}>{r}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-
+        <div className="space-y-3">
           <div className="bg-teal-50 rounded-lg p-3 border border-teal-100">
             <Label className="text-teal-700 text-xs font-semibold uppercase tracking-wide">Type</Label>
             <Select value={form.task_type || ""} onValueChange={v => set("task_type", v)}>
@@ -96,6 +84,21 @@ export default function EditPresetDialog({ open, onOpenChange, preset, onSaved, 
               </SelectContent>
             </Select>
           </div>
+
+          {form.task_type !== "Personal" && (
+            <div className="bg-blue-50 rounded-lg p-3 border border-blue-100">
+              <Label className="text-blue-700 text-xs font-semibold uppercase tracking-wide">Room (Optional)</Label>
+              <Select value={form.category || ""} onValueChange={v => set("category", v)}>
+                <SelectTrigger className="mt-1 border-blue-200 bg-white">
+                  <SelectValue placeholder="Select room" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={null}>None</SelectItem>
+                  {ROOMS.map(r => <SelectItem key={r} value={r}>{r}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-2 gap-3">

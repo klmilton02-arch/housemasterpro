@@ -77,7 +77,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
   const allPresets = presets.filter(p => p.category !== "Car Maintenance");
   const categories = [...new Set(allPresets.map(p => p.task_type).filter(Boolean))];
-  const rooms = [...new Set(allPresets.map(p => p.category).filter(Boolean))].sort();
+  const rooms = [...new Set(allPresets.filter(p => p.task_type !== "Personal").map(p => p.category).filter(Boolean))].sort();
   const filteredPresets = allPresets.filter(p => 
     (categoryFilter === "all" || p.task_type === categoryFilter) &&
     (roomFilter === "all" || p.category === roomFilter)
@@ -204,7 +204,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid gap-3" style={{ gridTemplateColumns: categoryFilter === "Personal" ? "1fr" : "1fr 1fr" }}>
                    <div>
                      <Label className="text-xs font-medium text-muted-foreground">Type</Label>
                      <MobileSelect
@@ -218,19 +218,21 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                        ]}
                      />
                    </div>
-                   <div>
-                     <Label className="text-xs font-medium text-muted-foreground">Room</Label>
-                     <MobileSelect
-                       value={roomFilter}
-                       onValueChange={setRoomFilter}
-                       title="Filter by Room"
-                       triggerClassName="mt-1"
-                       options={[
-                         { value: "all", label: "All Rooms" },
-                         ...rooms.map(r => ({ value: r, label: r }))
-                       ]}
-                     />
-                   </div>
+                   {categoryFilter !== "Personal" && (
+                     <div>
+                       <Label className="text-xs font-medium text-muted-foreground">Room</Label>
+                       <MobileSelect
+                         value={roomFilter}
+                         onValueChange={setRoomFilter}
+                         title="Filter by Room"
+                         triggerClassName="mt-1"
+                         options={[
+                           { value: "all", label: "All Rooms" },
+                           ...rooms.map(r => ({ value: r, label: r }))
+                         ]}
+                       />
+                     </div>
+                   )}
                  </div>
                  <div className="max-h-48 overflow-y-auto space-y-1 border border-border rounded-lg p-2">
                   {filteredPresets.map(p => (
