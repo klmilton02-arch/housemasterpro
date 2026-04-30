@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Trophy, Zap, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
+import StreakCircle from "../components/StreakCircle";
 
 const colorMap = {
   blue: "bg-blue-200 text-blue-700",
@@ -52,8 +53,8 @@ export default function Leaderboard() {
 
       {userProfile && (
         <div className="bg-amber-50 border border-amber-100 rounded-lg p-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex-1">
               <p className="text-sm text-amber-600 mb-2">Your Progress</p>
               <div className="flex items-baseline gap-2">
                 <p className="font-heading font-bold text-3xl text-amber-600">{userProfile.total_xp}</p>
@@ -61,7 +62,10 @@ export default function Leaderboard() {
               </div>
               <p className="text-xs text-amber-500 mt-1">Level {userProfile.level}</p>
             </div>
-            <Zap className="w-12 h-12 text-amber-400" />
+            <div className="flex items-center gap-3">
+              <StreakCircle streak={userProfile.cleaning_streak || 0} size="md" />
+              <Zap className="w-12 h-12 text-amber-400" />
+            </div>
           </div>
           <Link to="/stable" className="block bg-violet-200 text-violet-900 rounded-lg p-3 text-center font-semibold hover:bg-violet-300 transition-colors">
             <div className="flex items-center justify-center gap-2">
