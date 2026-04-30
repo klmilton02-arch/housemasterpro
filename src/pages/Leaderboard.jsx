@@ -4,12 +4,12 @@ import { Trophy, Zap, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const colorMap = {
-  blue: "bg-blue-500",
-  green: "bg-green-500",
-  purple: "bg-purple-500",
-  orange: "bg-orange-500",
-  pink: "bg-pink-500",
-  teal: "bg-teal-500",
+  blue: "bg-blue-200 text-blue-700",
+  green: "bg-green-200 text-green-700",
+  purple: "bg-purple-200 text-purple-700",
+  orange: "bg-orange-200 text-orange-700",
+  pink: "bg-pink-200 text-pink-700",
+  teal: "bg-teal-200 text-teal-700",
 };
 
 const medals = ["🥇", "🥈", "🥉"];
@@ -51,19 +51,19 @@ export default function Leaderboard() {
       <h1 className="font-heading text-3xl font-bold">Rewards</h1>
 
       {userProfile && (
-        <div className="bg-card border border-border rounded-lg p-5 space-y-4">
+        <div className="bg-amber-50 border border-amber-100 rounded-lg p-5 space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground mb-2">Your Progress</p>
+              <p className="text-sm text-amber-600 mb-2">Your Progress</p>
               <div className="flex items-baseline gap-2">
-                <p className="font-heading font-bold text-3xl text-primary">{userProfile.total_xp}</p>
-                <p className="text-muted-foreground">XP</p>
+                <p className="font-heading font-bold text-3xl text-amber-600">{userProfile.total_xp}</p>
+                <p className="text-amber-500">XP</p>
               </div>
-              <p className="text-xs text-muted-foreground mt-1">Level {userProfile.level}</p>
+              <p className="text-xs text-amber-500 mt-1">Level {userProfile.level}</p>
             </div>
-            <Zap className="w-12 h-12 text-amber-500" />
+            <Zap className="w-12 h-12 text-amber-400" />
           </div>
-          <Link to="/stable" className="block bg-primary text-primary-foreground rounded-lg p-3 text-center font-semibold hover:bg-primary/90 transition-colors">
+          <Link to="/stable" className="block bg-violet-200 text-violet-900 rounded-lg p-3 text-center font-semibold hover:bg-violet-300 transition-colors">
             <div className="flex items-center justify-center gap-2">
               <Sparkles className="w-4 h-4" />
               Visit Stable
@@ -117,7 +117,7 @@ export default function Leaderboard() {
                 <div
                   key={p.id}
                   className={`flex items-center gap-4 px-5 py-4 border-b border-border last:border-b-0 ${
-                    isMedal ? "bg-gradient-to-r from-amber-50 to-transparent dark:from-amber-900/20" : ""
+                  i === 0 ? "bg-amber-50" : i === 1 ? "bg-slate-50" : i === 2 ? "bg-orange-50" : ""
                   }`}
                 >
                   <div className="w-10 text-center">
@@ -125,8 +125,8 @@ export default function Leaderboard() {
                     <span className={`text-sm font-semibold text-muted-foreground ${isMedal ? "hidden" : "block"}`}>#{i + 1}</span>
                   </div>
                   
-                  <div className={`w-10 h-10 rounded-full ${colorMap[color]} flex items-center justify-center text-white font-bold shrink-0`}>
-                    {p.family_member_name?.[0]?.toUpperCase() || "?"}
+                  <div className={`w-10 h-10 rounded-full ${colorMap[color] || "bg-blue-200 text-blue-700"} flex items-center justify-center font-bold shrink-0`}>
+                    {p.name?.[0]?.toUpperCase() || "?"}
                   </div>
                   
                   <div className="flex-1 min-w-0">
@@ -135,7 +135,7 @@ export default function Leaderboard() {
                   </div>
                   
                   <div className="text-right shrink-0">
-                    <p className="font-heading font-bold text-lg text-primary">{p.total_xp}</p>
+                    <p className="font-heading font-bold text-lg text-amber-600">{p.total_xp}</p>
                     <p className="text-xs text-muted-foreground">XP</p>
                   </div>
                 </div>
