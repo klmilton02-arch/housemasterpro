@@ -120,14 +120,13 @@ export default function Tasks() {
       confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
       setReward({ totalPoints: immediatePoints, blastBonus: blastActive });
 
-      // Award points in background - store blast status with task
+      // Award points + DB write in background
       awardPoints(task, blastActive).then(result => {
         if (result && (result.leveledUp || result.newBadges?.length > 0)) {
           setReward(result);
         }
       });
 
-      // Update DB immediately in background - store whether blast was active
       base44.entities.Task.update(task.id, {
         status: "Completed",
         last_completed_date: todayStr,
@@ -137,14 +136,17 @@ export default function Tasks() {
         completed_by_name: completedByName,
       });
 
-      // After 2s: update task status in local state (triggers sort to bottom)
+      // After 2.5s pause: move task to bottom of list
       setTimeout(() => {
-        setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak, completed_with_blast: blastActive } : t));
-      }, 2000);
-      // Remove from justCompleted slightly after so the green stays visible during the move
+        setTasks(prev => {
+          const updated = prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak, completed_with_blast: blastActive } : t);
+          return updated;
+        });
+      }, 2500);
+      // Remove from justCompleted after the move so green stays during animation
       setTimeout(() => {
         setJustCompleted(prev => { const next = new Set(prev); next.delete(task.id); return next; });
-      }, 2400);
+      }, 2900);
     } else {
       setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Pending" } : t));
       const wasBlastRunning = task.completed_with_blast || false;
