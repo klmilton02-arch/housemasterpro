@@ -396,7 +396,7 @@ export default function Profile() {
                 onClick={async () => {
                   setResettingData(true);
                   try {
-                    await base44.functions.invoke('resetUserData', {});
+                    await base44.functions.invoke('fullReset', {});
                     loadData();
                     setResettingData(false);
                   } catch (error) {
