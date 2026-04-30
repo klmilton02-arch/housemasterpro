@@ -130,7 +130,11 @@ export default function Tasks() {
       setReward({ totalPoints: immediatePoints, blastBonus: blastActive });
 
       // Award points + DB write in background
-      awardPoints(task, blastActive).then(result => {
+      // If completing as a specific member, override the task's assigned fields
+      const taskForPoints = completedByMember
+        ? { ...task, assigned_to: completedByMember.id, assigned_to_name: completedByMember.name }
+        : task;
+      awardPoints(taskForPoints, blastActive).then(result => {
         if (result && (result.leveledUp || result.newBadges?.length > 0)) {
           setReward(result);
         }
