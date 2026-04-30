@@ -375,7 +375,7 @@ export default function Tasks() {
             <DropdownMenuItem onClick={() => setCategoryFilter("all")}>
               <span className={categoryFilter === "all" ? "font-semibold text-primary" : ""}>All Types</span>
             </DropdownMenuItem>
-            {categories.map(cat => (
+            {(viewMode === "rooms" ? ["Cleaning", "Maintenance"] : categories).map(cat => (
               <DropdownMenuItem key={cat} onClick={() => setCategoryFilter(cat)}>
                 <span className={categoryFilter === cat ? "font-semibold text-primary" : ""}>{cat}</span>
               </DropdownMenuItem>
