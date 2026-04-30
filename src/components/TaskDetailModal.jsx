@@ -24,6 +24,14 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
   
   async function handleDelete() {
     if (!task || !task.id) return;
+    // Delete from Google Calendar if synced
+    if (task.calendar_event_id) {
+      try {
+        await base44.functions.invoke('deleteCalendarEvent', { taskId: task.id });
+      } catch (error) {
+        console.error('Failed to delete calendar event:', error);
+      }
+    }
     await base44.entities.Task.delete(task.id);
     onDelete?.(task);
     setDeleteDialogOpen(false);
