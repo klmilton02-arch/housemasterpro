@@ -109,10 +109,8 @@ export default function Tasks() {
         newStreak = daysSinceLast <= 2 ? (task.streak || 0) + 1 : 1;
       }
 
-      // Update local state immediately to prevent double-clicks
-      setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak, completed_with_blast: blastActive, completed_by_name: completedByName } : t));
-
       // Mark as visually complete immediately (shows green + checkmark)
+      // Don't update task.status yet — TaskCard uses justCompleted for the visual state
       setJustCompleted(prev => new Set([...prev, task.id]));
 
       // Fire confetti + XP toast instantly
