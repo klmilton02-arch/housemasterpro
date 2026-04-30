@@ -47,6 +47,7 @@ export default function Tasks() {
   const [yesterdayTasks, setYesterdayTasks] = useState([]);
   const [showYesterdayDialog, setShowYesterdayDialog] = useState(false);
   const [completeAsSheet, setCompleteAsSheet] = useState(null); // task pending completion
+  const [activeCompletingAs, setActiveCompletingAs] = useState(null); // globally selected member
   const { isActive: blastActive } = useBlastMode();
   // Swipe navigation disabled on Tasks — conflicts with vertical scrolling
   const handleTouchStart = () => {};
@@ -94,8 +95,12 @@ export default function Tasks() {
 
   async function handleComplete(task, completedByMember) {
     if (task.status !== "Completed") {
-      // If family members exist and no member was pre-selected, show picker first
-      if (familyMembers.length > 0 && completedByMember === undefined) {
+      // If a global member is selected, use them directly
+      if (completedByMember === undefined && activeCompletingAs) {
+        completedByMember = activeCompletingAs;
+      }
+      // If family members exist and still no member selected, show picker
+      else if (familyMembers.length > 0 && completedByMember === undefined) {
         setCompleteAsSheet(task);
         return;
       }
@@ -393,6 +398,39 @@ export default function Tasks() {
       </div>
 
 
+
+      {/* Completing as selector */}
+      {familyMembers.length > 0 && (
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-xs text-muted-foreground font-medium whitespace-nowrap">Completing as:</span>
+          <button
+            onClick={() => setActiveCompletingAs(null)}
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+              !activeCompletingAs
+                ? "bg-primary text-primary-foreground border-primary"
+                : "bg-card border-border text-muted-foreground hover:bg-muted"
+            }`}
+          >
+            Me
+          </button>
+          {familyMembers.map(m => (
+            <button
+              key={m.id}
+              onClick={() => setActiveCompletingAs(activeCompletingAs?.id === m.id ? null : m)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                activeCompletingAs?.id === m.id
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-card border-border text-foreground hover:bg-muted"
+              }`}
+            >
+              <div className={`w-4 h-4 rounded-full bg-${m.avatar_color}-500 flex items-center justify-center text-white text-[10px] font-bold`}>
+                {m.name[0]}
+              </div>
+              {m.name}
+            </button>
+          ))}
+        </div>
+      )}
 
       {viewMode === "list" && (
         <>
