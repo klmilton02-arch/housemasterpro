@@ -100,11 +100,8 @@ export default function Tasks() {
       if (completedByMember === undefined && activeCompletingAs) {
         completedByMember = activeCompletingAs;
       }
-      // If family members exist and still no member selected, show picker
-      else if (familyMembers.length > 0 && completedByMember === undefined) {
-        setCompleteAsSheet(task);
-        return;
-      }
+      // Only show picker if no global selection AND explicitly no member passed
+      // (null activeCompletingAs = "Me", skip the picker)
 
       const today = new Date();
       const todayStr = today.toISOString().split("T")[0];

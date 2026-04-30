@@ -33,7 +33,7 @@ export default function CompletingAsCard({ familyMembers, activeCompletingAs, on
           <div className="text-left">
             <p className="text-xs text-muted-foreground font-medium">Completing as</p>
             <p className="text-sm font-semibold text-foreground">
-              {activeCompletingAs ? activeCompletingAs.name : "Me (ask each time)"}
+              {activeCompletingAs ? activeCompletingAs.name : "Me"}
             </p>
           </div>
         </div>
@@ -59,8 +59,8 @@ export default function CompletingAsCard({ familyMembers, activeCompletingAs, on
                 <User className="w-4 h-4 text-muted-foreground" />
               </div>
               <div className="text-left">
-                <p className="text-sm font-semibold">Me (ask each time)</p>
-                <p className="text-xs text-muted-foreground">Pick a member per task</p>
+                <p className="text-sm font-semibold">Me</p>
+                <p className="text-xs text-muted-foreground">Complete as yourself</p>
               </div>
               {!activeCompletingAs && <div className="ml-auto w-2 h-2 rounded-full bg-primary" />}
             </button>
