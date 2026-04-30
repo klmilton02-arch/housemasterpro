@@ -74,16 +74,43 @@ export default function Leaderboard() {
 
       <h2 className="font-heading text-2xl font-bold">Leaderboard</h2>
 
-      {profiles.length === 0 ? (
-        <div className="bg-card border border-border rounded-lg p-6 text-center">
-          <p className="text-muted-foreground">No players yet.</p>
-        </div>
-      ) : (
+      {(() => {
+        // Merge: all family members, joined with their profile (if any), sorted by XP desc
+        const allEntries = members.map(m => {
+          const profile = profiles.find(p => p.family_member_id === m.id);
+          return {
+            id: m.id,
+            name: m.name,
+            avatar_color: m.avatar_color,
+            total_xp: profile?.total_xp || 0,
+            level: profile?.level || 1,
+          };
+        }).sort((a, b) => b.total_xp - a.total_xp);
+
+        // Also include profiles not linked to a known family member
+        profiles.forEach(p => {
+          if (!members.find(m => m.id === p.family_member_id)) {
+            allEntries.push({
+              id: p.family_member_id,
+              name: p.family_member_name,
+              avatar_color: "blue",
+              total_xp: p.total_xp || 0,
+              level: p.level || 1,
+            });
+          }
+        });
+
+        if (allEntries.length === 0) return (
+          <div className="bg-card border border-border rounded-lg p-6 text-center">
+            <p className="text-muted-foreground">No players yet.</p>
+          </div>
+        );
+
+        return (
         <div className="bg-card border border-border rounded-lg overflow-hidden">
           <div className="space-y-0">
-            {profiles.map((p, i) => {
-              const member = getMember(p.family_member_id);
-              const color = member?.avatar_color || "blue";
+            {allEntries.map((p, i) => {
+              const color = p.avatar_color || "blue";
               const isMedal = i < 3;
               
               return (
@@ -103,7 +130,7 @@ export default function Leaderboard() {
                   </div>
                   
                   <div className="flex-1 min-w-0">
-                    <p className="font-heading font-semibold text-foreground truncate">{p.family_member_name}</p>
+                    <p className="font-heading font-semibold text-foreground truncate">{p.name}</p>
                     <p className="text-xs text-muted-foreground">Level {p.level}</p>
                   </div>
                   
@@ -116,7 +143,8 @@ export default function Leaderboard() {
             })}
           </div>
         </div>
-      )}
+        );
+      })()}
     </div>
   );
 }
