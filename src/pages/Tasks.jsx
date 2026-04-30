@@ -22,6 +22,7 @@ import RoomView from "../components/RoomView";
 import TaskCalendar from "../components/TaskCalendar";
 import YesterdayTasksDialog from "../components/YesterdayTasksDialog";
 import CompleteAsSheet from "../components/CompleteAsSheet";
+import CompletingAsCard from "../components/CompletingAsCard";
 import { differenceInDays, parseISO, subDays, format } from "date-fns";
 
 export default function Tasks() {
@@ -399,37 +400,13 @@ export default function Tasks() {
 
 
 
-      {/* Completing as selector */}
+      {/* Completing as card */}
       {familyMembers.length > 0 && (
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-xs text-muted-foreground font-medium whitespace-nowrap">Completing as:</span>
-          <button
-            onClick={() => setActiveCompletingAs(null)}
-            className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
-              !activeCompletingAs
-                ? "bg-primary text-primary-foreground border-primary"
-                : "bg-card border-border text-muted-foreground hover:bg-muted"
-            }`}
-          >
-            Me
-          </button>
-          {familyMembers.map(m => (
-            <button
-              key={m.id}
-              onClick={() => setActiveCompletingAs(activeCompletingAs?.id === m.id ? null : m)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
-                activeCompletingAs?.id === m.id
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-card border-border text-foreground hover:bg-muted"
-              }`}
-            >
-              <div className={`w-4 h-4 rounded-full bg-${m.avatar_color}-500 flex items-center justify-center text-white text-[10px] font-bold`}>
-                {m.name[0]}
-              </div>
-              {m.name}
-            </button>
-          ))}
-        </div>
+        <CompletingAsCard
+          familyMembers={familyMembers}
+          activeCompletingAs={activeCompletingAs}
+          onSelect={setActiveCompletingAs}
+        />
       )}
 
       {viewMode === "list" && (
