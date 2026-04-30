@@ -23,8 +23,9 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'User has no family group' }, { status: 400 });
     }
 
-    // Delete all tasks in the family
-    const tasks = await base44.asServiceRole.entities.Task.filter({ family_group_id: familyGroupId });
+    // Get all tasks and filter by family_group_id or created_by
+    const allTasks = await base44.asServiceRole.entities.Task.list();
+    const tasks = allTasks.filter(t => t.family_group_id === familyGroupId || t.created_by === targetEmail);
     
     // Delete calendar events first
     for (const task of tasks) {
