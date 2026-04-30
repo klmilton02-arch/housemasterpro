@@ -21,6 +21,7 @@ import EditTaskDialog from "../components/EditTaskDialog";
 import RoomView from "../components/RoomView";
 import TaskCalendar from "../components/TaskCalendar";
 import YesterdayTasksDialog from "../components/YesterdayTasksDialog";
+import CompleteAsSheet from "../components/CompleteAsSheet";
 import { differenceInDays, parseISO, subDays, format } from "date-fns";
 
 export default function Tasks() {
@@ -45,6 +46,7 @@ export default function Tasks() {
   const [typeFilter, setTypeFilter] = useState("all"); // "all" | "cleaning" | "maintenance"
   const [yesterdayTasks, setYesterdayTasks] = useState([]);
   const [showYesterdayDialog, setShowYesterdayDialog] = useState(false);
+  const [completeAsSheet, setCompleteAsSheet] = useState(null); // task pending completion
   const { isActive: blastActive } = useBlastMode();
   // Swipe navigation disabled on Tasks — conflicts with vertical scrolling
   const handleTouchStart = () => {};
@@ -90,17 +92,23 @@ export default function Tasks() {
 
   usePullToRefresh(loadTasks);
 
-  async function handleComplete(task) {
+  async function handleComplete(task, completedByMember) {
     if (task.status !== "Completed") {
+      // If family members exist and no member was pre-selected, show picker first
+      if (familyMembers.length > 0 && completedByMember === undefined) {
+        setCompleteAsSheet(task);
+        return;
+      }
+
       const today = new Date();
       const todayStr = today.toISOString().split("T")[0];
       const nextDue = new Date(today);
       nextDue.setDate(nextDue.getDate() + task.frequency_days);
       const nextDueStr = nextDue.toISOString().split("T")[0];
 
-      // Get current user's name for completed_by_name
+      // Use selected member name or fall back to current user
       const currentUser = await base44.auth.me();
-      const completedByName = currentUser?.full_name || currentUser?.email || "Someone";
+      const completedByName = completedByMember?.name || currentUser?.full_name || currentUser?.email || "Someone";
 
       // Streak: increment if last completed within 2x frequency window (daily tasks only), else reset to 1
       let newStreak = 1;
@@ -483,6 +491,17 @@ export default function Tasks() {
       )}
 
 
+
+      <CompleteAsSheet
+        open={!!completeAsSheet}
+        onOpenChange={(open) => { if (!open) setCompleteAsSheet(null); }}
+        familyMembers={familyMembers}
+        onSelect={(member) => {
+          const task = completeAsSheet;
+          setCompleteAsSheet(null);
+          handleComplete(task, member);
+        }}
+      />
 
       {showYesterdayDialog && (
         <YesterdayTasksDialog
