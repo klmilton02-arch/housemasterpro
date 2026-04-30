@@ -184,10 +184,10 @@ export default function Profile() {
       {/* My Information */}
       <div className="space-y-3">
         <h3 className="font-heading font-semibold text-lg">My Information</h3>
-        <div className="bg-card border border-border rounded-lg p-4">
+        <div className="bg-violet-50 border border-violet-100 rounded-lg p-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <User className="w-6 h-6 text-primary" />
+            <div className="w-12 h-12 rounded-full bg-violet-200 flex items-center justify-center">
+              <User className="w-6 h-6 text-violet-600" />
             </div>
             <div className="flex-1">
               <h2 className="font-semibold text-foreground">{user.full_name}</h2>
@@ -230,7 +230,7 @@ export default function Profile() {
 
         {/* Switch to family if solo */}
         {user.account_type === "solo" && (
-          <div className="bg-muted/50 border border-border rounded-lg p-3 flex flex-col gap-2">
+          <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 flex flex-col gap-2">
             <p className="font-medium text-xs">Running solo?</p>
             <p className="text-xs text-muted-foreground">Switch to a family account to share with others.</p>
             <Button variant="outline" size="sm" onClick={handleJoinFamily} className="w-full text-xs">
@@ -245,8 +245,8 @@ export default function Profile() {
             <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Family Members</p>
             <div className="grid gap-2">
               {familyUsers.map(u => (
-                <div key={u.id} className="bg-card border border-border rounded-lg p-3 flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold font-heading text-primary">
+                <div key={u.id} className="bg-indigo-50 border border-indigo-100 rounded-lg p-3 flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-indigo-200 flex items-center justify-center text-sm font-bold font-heading text-indigo-700">
                     {(u.full_name || u.email || "?").charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -254,7 +254,7 @@ export default function Profile() {
                     <p className="text-xs text-muted-foreground truncate">{u.email}</p>
                   </div>
                   {u.role === "admin" && (
-                    <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">Admin</span>
+                    <span className="text-xs bg-indigo-200 text-indigo-700 px-2 py-0.5 rounded-full font-medium">Admin</span>
                   )}
                 </div>
               ))}
@@ -264,7 +264,7 @@ export default function Profile() {
 
         {/* Family invite code */}
         {user.account_type === "family" && familyGroup && (
-          <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 flex flex-col gap-2">
+          <div className="bg-teal-50 border border-teal-100 rounded-lg p-3 flex flex-col gap-2">
             <div>
               <p className="text-xs text-muted-foreground uppercase tracking-wider mb-0.5">Family Code</p>
               <p className="font-heading font-bold text-lg tracking-widest">{familyGroup.invite_code}</p>
@@ -302,7 +302,7 @@ export default function Profile() {
               const c = colorMap[m.avatar_color] || colorMap.blue;
               const stats = getMemberStats(m.id);
               return (
-                <div key={m.id} className="bg-card border border-border rounded-lg p-2 group relative">
+                <div key={m.id} className="bg-white border border-border rounded-lg p-2 group relative">
                   <button
                     onClick={() => handleDeleteMember(m.id)}
                     className="absolute top-1 right-1 p-0.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500"
@@ -316,15 +316,15 @@ export default function Profile() {
                     <h3 className="font-heading font-semibold text-sm">{m.name}</h3>
                   </div>
                   <div className="grid grid-cols-3 gap-1 text-center">
-                    <div className="bg-muted rounded-md py-1">
-                      <p className="text-sm font-bold font-heading">{stats.total}</p>
+                    <div className="bg-blue-50 rounded-md py-1">
+                      <p className="text-sm font-bold font-heading text-blue-700">{stats.total}</p>
                       <p className="text-xs text-muted-foreground">Tasks</p>
                     </div>
-                    <div className="bg-muted rounded-md py-1">
-                      <p className="text-sm font-bold font-heading text-red-600">{stats.overdue}</p>
+                    <div className="bg-red-50 rounded-md py-1">
+                      <p className="text-sm font-bold font-heading text-red-500">{stats.overdue}</p>
                       <p className="text-xs text-muted-foreground">Overdue</p>
                     </div>
-                    <div className="bg-muted rounded-md py-1">
+                    <div className="bg-green-50 rounded-md py-1">
                       <p className="text-sm font-bold font-heading text-green-600">{stats.completed}</p>
                       <p className="text-xs text-muted-foreground">Done</p>
                     </div>
@@ -339,9 +339,9 @@ export default function Profile() {
       {/* Task Reset Time */}
       <div className="space-y-3">
         <h3 className="font-heading font-semibold text-lg">Task Reset Time</h3>
-        <div className="bg-card border border-border rounded-lg p-4 space-y-3">
+        <div className="bg-amber-50 border border-amber-100 rounded-lg p-4 space-y-3">
           <div className="flex items-start gap-3">
-            <Clock className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+            <Clock className="w-5 h-5 text-amber-500 mt-0.5 shrink-0" />
             <div className="flex-1">
               <p className="text-sm font-medium">New day starts at</p>
               <p className="text-xs text-muted-foreground mt-0.5">Completed tasks reset to Pending at this hour each day</p>
