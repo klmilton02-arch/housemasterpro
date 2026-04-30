@@ -16,12 +16,12 @@ export default function PointsToast({ reward, onDismiss }) {
     <AnimatePresence>
       {reward && (
         <motion.div
-          initial={{ opacity: 0, y: 60, scale: 0.85 }}
+          initial={{ opacity: 0, y: -40, scale: 0.85 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -20, scale: 0.9 }}
           transition={{ type: "spring", damping: 18, stiffness: 200 }}
           onClick={onDismiss}
-          className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[300] cursor-pointer select-none"
+          className="fixed top-20 left-1/2 -translate-x-1/2 z-[300] cursor-pointer select-none"
         >
           <div className="bg-card border border-border rounded-2xl shadow-2xl px-6 py-4 text-center min-w-[200px]">
             <div className="text-4xl font-heading font-bold text-primary">+{reward.totalPoints}</div>
