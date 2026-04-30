@@ -129,12 +129,12 @@ export default function Presets() {
   return (
     <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
 
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={() => navigate("/tasks")} className="shrink-0">
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <h1 className="font-heading text-3xl font-bold">Preset Library</h1>
-      </div>
+      <h1 className="font-heading text-3xl font-bold">Presets</h1>
+
+      <button onClick={() => navigate("/tasks")} className="w-full bg-card border border-border rounded-xl px-4 py-3 flex items-center gap-3 hover:shadow-md hover:border-primary/30 transition-all text-left active:scale-95">
+        <ArrowLeft className="w-5 h-5 text-muted-foreground shrink-0" />
+        <span className="font-medium text-foreground">Back to Tasks</span>
+      </button>
 
       <div className="grid grid-cols-2 gap-3">
         <div className="col-span-2">
