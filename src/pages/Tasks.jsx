@@ -376,7 +376,7 @@ export default function Tasks() {
               <span className={categoryFilter === "all" ? "font-semibold text-primary" : ""}>All Types</span>
             </DropdownMenuItem>
             {categories.map(cat => (
-              <DropdownMenuItem key={cat} onClick={() => { setViewMode("list"); setCategoryFilter(cat); }}>
+              <DropdownMenuItem key={cat} onClick={() => setCategoryFilter(cat)}>
                 <span className={categoryFilter === cat ? "font-semibold text-primary" : ""}>{cat}</span>
               </DropdownMenuItem>
             ))}
@@ -479,7 +479,7 @@ export default function Tasks() {
       ) : viewMode === "calendar" ? (
         <TaskCalendar tasks={tasks} onViewDetails={setSelectedTask} />
       ) : (
-        <RoomView tasks={tasks} onComplete={handleComplete} onViewDetails={setSelectedTask} onDelete={handleDelete} onAddTask={(room) => { setDialogOpen(true); }} onRoomRenamed={loadTasks} justCompletedIds={justCompleted} />
+        <RoomView tasks={tasks} categoryFilter={categoryFilter} onComplete={handleComplete} onViewDetails={setSelectedTask} onDelete={handleDelete} onAddTask={(room) => { setDialogOpen(true); }} onRoomRenamed={loadTasks} justCompletedIds={justCompleted} />
       )}
 
 

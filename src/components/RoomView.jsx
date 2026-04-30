@@ -39,7 +39,7 @@ function getRoomStatus(tasks) {
   return { pending: pending.length, hasOverdue, hasDueSoon, allDone };
 }
 
-export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, onAddTask, onRoomRenamed, justCompletedIds = new Set() }) {
+export default function RoomView({ tasks, categoryFilter = "all", onComplete, onViewDetails, onDelete, onAddTask, onRoomRenamed, justCompletedIds = new Set() }) {
   const [expandedRooms, setExpandedRooms] = useState(new Set());
   const [editingRoom, setEditingRoom] = useState(null);
   const [editingName, setEditingName] = useState("");
@@ -53,12 +53,14 @@ export default function RoomView({ tasks, onComplete, onViewDetails, onDelete, o
     ...taskRooms.filter(r => !ROOM_ORDER.includes(r)).sort(),
   ];
 
+  const filteredTasks = categoryFilter === "all" ? tasks : tasks.filter(t => t.category === categoryFilter);
+
   const roomTasks = orderedRooms.reduce((acc, room) => {
-    acc[room] = tasks.filter(t => t.room === room);
+    acc[room] = filteredTasks.filter(t => t.room === room);
     return acc;
   }, {});
 
-  const unassigned = tasks.filter(t => !t.room);
+  const unassigned = filteredTasks.filter(t => !t.room);
   const roomsWithTasks = orderedRooms.filter(room => roomTasks[room].length > 0);
 
   async function saveRoomName(oldRoom) {
