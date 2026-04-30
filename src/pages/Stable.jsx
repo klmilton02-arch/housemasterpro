@@ -317,7 +317,8 @@ export default function Stable() {
                   <input
                     type="text"
                     value={selectedHorse.horse_name}
-                    onChange={(e) => update("horse_name", e.target.value)}
+                    onChange={(e) => setSelectedHorse({ ...selectedHorse, horse_name: e.target.value })}
+                    onBlur={(e) => { if (e.target.value.trim()) update("horse_name", e.target.value.trim()); else setSelectedHorse({ ...selectedHorse, horse_name: selectedHorse.horse_name || "My Horse" }); }}
                     className="font-heading font-bold text-xl bg-transparent border-b border-primary focus:outline-none"
                   />
                   <div className="flex items-center gap-2">
