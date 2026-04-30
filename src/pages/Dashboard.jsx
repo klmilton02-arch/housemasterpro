@@ -53,8 +53,13 @@ export default function Dashboard() {
   const [drawerTaskIds, setDrawerTaskIds] = useState(null); // ordered list of task ids for the drawer
 
   const loadTasks = useCallback(async () => {
-    const all = await base44.entities.Task.list("-created_date", 500);
-    setTasks(all);
+    const me = await base44.auth.me();
+    if (me?.family_group_id) {
+      const all = await base44.entities.Task.filter({ family_group_id: me.family_group_id });
+      setTasks(all);
+    } else {
+      setTasks([]);
+    }
     setLoading(false);
   }, []);
 
