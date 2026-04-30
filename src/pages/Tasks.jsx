@@ -406,34 +406,7 @@ export default function Tasks() {
         />
       )}
 
-      {viewMode === "list" && (
-        <>
-          {familyMembers.length > 0 && (
-            <div className="grid grid-cols-2 gap-4">
-              {familyMembers.map(member => {
-                const count = tasks.filter(t => t.assigned_to === member.id && t.status !== "Completed").length;
-                return (
-                  <button
-                    key={member.id}
-                    onClick={() => {
-                      setCategoryFilter("all");
-                      setStatusFilter("all");
-                      setGroupBy("none");
-                    }}
-                    className="bg-card border border-border rounded-lg p-3 h-24 flex items-center gap-2 hover:bg-muted/40 transition-colors"
-                  >
-                    <div className={`w-6 h-6 rounded-full bg-${member.avatar_color}-500 shrink-0 flex items-center justify-center text-white text-xs font-bold`}>
-                      {member.name[0]}
-                    </div>
-                    <p className="text-xs font-semibold text-foreground truncate flex-1 text-left">{member.name}</p>
-                    <p className="text-lg font-bold text-foreground">{count}</p>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </>
-      )}
+
 
 
 
