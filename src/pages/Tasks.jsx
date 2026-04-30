@@ -319,7 +319,7 @@ export default function Tasks() {
   });
 
   return (
-    <div className="space-y-2 md:space-y-6 max-w-md md:max-w-2xl mx-auto px-4 sm:px-4 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div className="space-y-2 md:space-y-6 w-full md:max-w-2xl md:mx-auto px-4 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <h1 className="font-heading text-3xl font-bold md:hidden">Tasks</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
