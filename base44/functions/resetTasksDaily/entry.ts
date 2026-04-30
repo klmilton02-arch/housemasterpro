@@ -3,9 +3,16 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
 
-    // Get the configured day_start_hour from HomeSetup
-    const setups = await base44.asServiceRole.entities.HomeSetup.list();
+    if (!user?.family_group_id) {
+      return Response.json({ error: 'User must belong to a family group' }, { status: 400 });
+    }
+
+    // Get the configured day_start_hour from HomeSetup for this family group
+    const setups = await base44.asServiceRole.entities.HomeSetup.filter({
+      family_group_id: user.family_group_id
+    });
     const dayStartHour = setups.length > 0 && setups[0].day_start_hour != null
       ? setups[0].day_start_hour
       : 0;
@@ -17,8 +24,11 @@ Deno.serve(async (req) => {
       todayStart.setDate(todayStart.getDate() - 1);
     }
 
-    const allTasks = await base44.asServiceRole.entities.Task.list('-created_date', 1000);
-    const completedTasks = allTasks.filter(t => t.status === "Completed");
+    const allTasks = await base44.asServiceRole.entities.Task.filter({
+      family_group_id: user.family_group_id,
+      status: "Completed"
+    });
+    const completedTasks = allTasks;
 
     if (completedTasks.length === 0) {
       return Response.json({ message: "No completed tasks to reset", resetCount: 0 });
