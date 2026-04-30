@@ -12,9 +12,10 @@ import { Button } from "@/components/ui/button";
 
 
 const TASK_TYPE_STYLE = {
-  Maintenance: { emoji: "🔧", color: "text-blue-600" },
-  Bills:       { emoji: "💰", color: "text-green-600" },
-  Cleaning:    { emoji: "🫧", color: "text-orange-500" },
+  Maintenance: { emoji: "🔧", color: "text-blue-400", bg: "bg-blue-50" },
+  Bills:       { emoji: "💰", color: "text-green-500", bg: "bg-green-50" },
+  Cleaning:    { emoji: "🫧", color: "text-orange-400", bg: "bg-orange-50" },
+  Personal:    { emoji: "⭐", color: "text-purple-400", bg: "bg-purple-50" },
 };
 
 function PresetCard({ p, onClick }) {
@@ -22,16 +23,16 @@ function PresetCard({ p, onClick }) {
   return (
     <button
       onClick={() => onClick(p)}
-      className="w-full bg-card border border-border hover:shadow-md hover:border-primary/30 rounded-xl px-3 py-2 transition-all flex items-center gap-3 text-left active:scale-95"
+      className={`w-full border hover:shadow-md rounded-xl px-3 py-2.5 transition-all flex items-center gap-3 text-left active:scale-95 ${style.bg || "bg-card"} border-border/60 hover:border-primary/20`}
     >
       {style.emoji && (
-        <span className="text-lg shrink-0">{style.emoji}</span>
+        <span className={`text-lg shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-white/70`}>{style.emoji}</span>
       )}
       <div className="flex-1 min-w-0">
         <h3 className="font-heading font-semibold text-sm truncate text-foreground">{p.name}</h3>
         <p className="text-xs text-muted-foreground mt-0.5">{p.category}{p.task_type ? ` · ${p.task_type}` : ""} · {formatFrequency(p.frequency_days)}</p>
       </div>
-      <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
+      <ChevronRight className={`w-4 h-4 shrink-0 ${style.color || "text-muted-foreground"}`} />
     </button>
   );
 }
@@ -131,14 +132,14 @@ export default function Presets() {
 
       <h1 className="font-heading text-3xl font-bold">Presets</h1>
 
-      <button onClick={() => navigate("/tasks")} className="w-full bg-card border border-border rounded-xl px-4 py-3 flex items-center gap-3 hover:shadow-md hover:border-primary/30 transition-all text-left active:scale-95">
+      <button onClick={() => navigate("/tasks")} className="w-full bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 flex items-center gap-3 hover:shadow-md hover:border-blue-200 transition-all text-left active:scale-95">
         <ArrowLeft className="w-5 h-5 text-muted-foreground shrink-0" />
         <span className="font-medium text-foreground">Back to Tasks</span>
       </button>
 
       <div className="grid grid-cols-2 gap-3">
         <div className="col-span-2">
-          <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} className="gap-2 w-full font-medium bg-primary hover:bg-primary/90">
+          <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} className="gap-2 w-full font-medium bg-violet-200 hover:bg-violet-300 text-violet-900">
             <Plus className="w-5 h-5" /> New Preset
           </Button>
         </div>
