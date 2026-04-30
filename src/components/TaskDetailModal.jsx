@@ -123,11 +123,11 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
             {familyMembers.length > 0 && (
               <div>
                 <Button
-                  className="w-full gap-2 bg-green-500 hover:bg-green-600 text-white"
-                  onClick={() => setCompleteAsOpen(v => !v)}
+                className="w-full gap-2 bg-green-200 hover:bg-green-300 text-green-900"
+                onClick={() => setCompleteAsOpen(v => !v)}
                 >
-                  <Users className="w-4 h-4" />
-                  Complete as Family Member
+                <Users className="w-4 h-4" />
+                Complete as Family Member
                 </Button>
                 {completeAsOpen && (
                   <div className="mt-2 grid grid-cols-2 gap-2">
@@ -151,7 +151,7 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
             )}
             <div className="flex gap-2">
               <Button
-                className="flex-1 gap-2 bg-blue-400 hover:bg-blue-500 text-white"
+                className="flex-1 gap-2 bg-blue-200 hover:bg-blue-300 text-blue-900"
                 onClick={() => {
                   onModify?.(task);
                   onOpenChange(false);
@@ -163,7 +163,7 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
               <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                 <AlertDialogTrigger asChild>
                   <Button
-                    className="flex-1 gap-2 bg-red-400 hover:bg-red-500 text-white"
+                    className="flex-1 gap-2 bg-red-200 hover:bg-red-300 text-red-900"
                   >
                     <Trash2 className="w-4 h-4" />
                     Delete
@@ -185,7 +185,7 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
             </div>
             {task?.calendar_event_id && (
               <Button
-                className="w-full gap-2 bg-red-300 hover:bg-red-400 text-white"
+                className="w-full gap-2 bg-red-100 hover:bg-red-200 text-red-800"
                 onClick={handleDeleteCalendarEvent}
                 disabled={deletingCalendar}
               >
@@ -196,7 +196,7 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
             <AlertDialog open={changeDueDateOpen} onOpenChange={setChangeDueDateOpen}>
               <AlertDialogTrigger asChild>
                 <Button
-                  className="w-full gap-2 bg-blue-400 hover:bg-blue-500 text-white"
+                  className="w-full gap-2 bg-blue-200 hover:bg-blue-300 text-blue-900"
                 >
                   <Calendar className="w-4 h-4" />
                   Change Due Date
@@ -212,14 +212,14 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
                     <div className="flex gap-2">
                       <Button
                         onClick={() => handleDefer(1)}
-                        className="flex-1 gap-2 bg-amber-400 hover:bg-amber-500 text-white"
+                        className="flex-1 gap-2 bg-amber-100 hover:bg-amber-200 text-amber-900"
                       >
                         <Clock className="w-4 h-4" />
                         Tomorrow
                       </Button>
                       <Button
                         onClick={() => handleDefer(task?.frequency_days || 1)}
-                        className="flex-1 gap-2 bg-amber-400 hover:bg-amber-500 text-white"
+                        className="flex-1 gap-2 bg-amber-100 hover:bg-amber-200 text-amber-900"
                       >
                         <Clock className="w-4 h-4" />
                         Next Schedule
