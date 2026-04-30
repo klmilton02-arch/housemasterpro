@@ -28,34 +28,34 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Delete all tasks
-    for (const task of tasks) {
-      await base44.asServiceRole.entities.Task.delete(task.id);
-    }
+    // Delete all tasks in parallel
+    await Promise.all(tasks.map(task => base44.asServiceRole.entities.Task.delete(task.id)));
 
     // Reset all gamification profiles
     const profiles = await base44.asServiceRole.entities.GamificationProfile.filter({ family_group_id: familyGroupId });
-    for (const profile of profiles) {
-      await base44.asServiceRole.entities.GamificationProfile.update(profile.id, {
-        total_xp: 0,
-        level: 1,
-        badges: [],
-        total_completions: 0,
-        deep_cleaning_completions: 0,
-        overdue_completions: 0,
-        maintenance_completions: 0,
-        bill_completions: 0,
-        cleaning_streak: 0,
-        bill_months_ontime: 0,
-        all_rounder_weeks: 0,
-      });
-    }
+    await Promise.all(
+      profiles.map(profile =>
+        base44.asServiceRole.entities.GamificationProfile.update(profile.id, {
+          total_xp: 0,
+          level: 1,
+          badges: [],
+          total_completions: 0,
+          deep_cleaning_completions: 0,
+          overdue_completions: 0,
+          maintenance_completions: 0,
+          bill_completions: 0,
+          cleaning_streak: 0,
+          bill_months_ontime: 0,
+          all_rounder_weeks: 0,
+        })
+      )
+    );
 
-    // Delete completion history
-    const history = await base44.asServiceRole.entities.CompletionHistory.filter({ family_group_id: familyGroupId });
-    for (const entry of history) {
-      await base44.asServiceRole.entities.CompletionHistory.delete(entry.id);
-    }
+    // Delete all completion history (no family_group_id filter available)
+    const allHistory = await base44.asServiceRole.entities.CompletionHistory.list();
+    const familyMemberIds = new Set((await base44.asServiceRole.entities.FamilyMember.filter({ family_group_id: familyGroupId })).map(m => m.id));
+    const historyToDelete = allHistory.filter(entry => familyMemberIds.has(entry.family_member_id));
+    await Promise.all(historyToDelete.map(entry => base44.asServiceRole.entities.CompletionHistory.delete(entry.id)));
 
     return Response.json({ success: true, message: 'Full reset completed' });
   } catch (error) {
