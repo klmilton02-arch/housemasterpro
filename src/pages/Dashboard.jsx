@@ -26,6 +26,7 @@ import { useBlastMode } from "@/lib/BlastModeContext";
 import DashboardPresetBrowser from "../components/DashboardPresetBrowser";
 import RevokePointsToast from "../components/RevokePointsToast";
 import BlastModeOptionsDialog from "../components/BlastModeOptionsDialog";
+import YesterdayTasksDialog from "../components/YesterdayTasksDialog";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -51,6 +52,7 @@ export default function Dashboard() {
   const [blastOptionsOpen, setBlastOptionsOpen] = useState(false);
   const [justCompletedIds, setJustCompletedIds] = useState(new Set());
   const [drawerTaskIds, setDrawerTaskIds] = useState(null); // ordered list of task ids for the drawer
+  const [yesterdayTasks, setYesterdayTasks] = useState(null); // null = not checked yet
 
   const loadTasks = useCallback(async () => {
     const me = await base44.auth.me();
@@ -80,6 +82,32 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => { loadTasks(); loadProfile(); }, [loadTasks, loadProfile]);
+
+  // Show yesterday's tasks dialog once per day on first visit
+  useEffect(() => {
+    const todayStr = new Date().toISOString().split("T")[0];
+    const lastVisitKey = "homelife_last_visit";
+    const lastVisit = localStorage.getItem(lastVisitKey);
+    if (lastVisit !== todayStr) {
+      localStorage.setItem(lastVisitKey, todayStr);
+      // Will check for yesterday's tasks once tasks are loaded
+      setYesterdayTasks("pending_check");
+    }
+  }, []);
+
+  // Once tasks load and we have a pending check, find yesterday's uncompleted tasks
+  useEffect(() => {
+    if (yesterdayTasks !== "pending_check" || tasks.length === 0) return;
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split("T")[0];
+    const missed = tasks.filter(t =>
+      t.status !== "Completed" &&
+      t.next_due_date &&
+      t.next_due_date <= yesterdayStr
+    );
+    setYesterdayTasks(missed.length > 0 ? missed : []);
+  }, [tasks, yesterdayTasks]);
 
   usePullToRefresh(loadTasks);
 
@@ -258,6 +286,13 @@ export default function Dashboard() {
         onStop={stopBlast}
       />
       <BlastModeToast show={blastToastShow} onDismiss={() => setBlastToastShow(false)} />
+      {Array.isArray(yesterdayTasks) && yesterdayTasks.length > 0 && (
+        <YesterdayTasksDialog
+          tasks={yesterdayTasks}
+          onComplete={handleComplete}
+          onClose={() => { setYesterdayTasks([]); loadTasks(); }}
+        />
+      )}
       <TaskDetailModal 
         task={selectedTask} 
         open={!!selectedTask} 
