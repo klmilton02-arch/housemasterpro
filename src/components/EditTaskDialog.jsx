@@ -21,6 +21,8 @@ export default function EditTaskDialog({ task, open, onOpenChange, onTaskUpdated
   const [freqValue, setFreqValue] = useState("");
   const [freqUnit, setFreqUnit] = useState("days");
   const [startDate, setStartDate] = useState("");
+  const [useBillDay, setUseBillDay] = useState(false);
+  const [billDayOfMonth, setBillDayOfMonth] = useState("1");
 
   useEffect(() => {
     if (open && task) {
@@ -33,6 +35,13 @@ export default function EditTaskDialog({ task, open, onOpenChange, onTaskUpdated
       setAssignedTo(task.assigned_to || "");
       setDescription(task.description || "");
       setStartDate(task.start_date || format(new Date(), "yyyy-MM-dd"));
+      if (task.bill_day_of_month) {
+        setUseBillDay(true);
+        setBillDayOfMonth(String(task.bill_day_of_month));
+      } else {
+        setUseBillDay(false);
+        setBillDayOfMonth("1");
+      }
       
       const days = task.frequency_days;
       if (days % 365 === 0) { setFreqValue(String(days / 365)); setFreqUnit("yearly"); }
@@ -57,7 +66,18 @@ export default function EditTaskDialog({ task, open, onOpenChange, onTaskUpdated
     setLoading(true);
     const member = familyMembers.find(m => m.id === assignedTo);
     const freqDays = freqValue ? toDays(freqValue, freqUnit) : 30;
-    
+    const isBill = category === "Bills" || category === "Bill Schedules";
+
+    let nextDueDate = task.next_due_date;
+    let billDay = undefined;
+    if (isBill && useBillDay) {
+      billDay = parseInt(billDayOfMonth) || 1;
+      const today = new Date();
+      let candidate = new Date(today.getFullYear(), today.getMonth(), billDay);
+      if (candidate < today) candidate = new Date(today.getFullYear(), today.getMonth() + 1, billDay);
+      nextDueDate = format(candidate, "yyyy-MM-dd");
+    }
+
     await base44.entities.Task.update(task.id, {
       name: name.trim(),
       category,
@@ -68,6 +88,8 @@ export default function EditTaskDialog({ task, open, onOpenChange, onTaskUpdated
       assigned_to: assignedTo || undefined,
       assigned_to_name: member?.name || undefined,
       start_date: startDate,
+      bill_day_of_month: billDay,
+      next_due_date: nextDueDate,
     });
     
     setLoading(false);
@@ -159,6 +181,34 @@ export default function EditTaskDialog({ task, open, onOpenChange, onTaskUpdated
             <Label className="text-xs font-medium text-muted-foreground">Description</Label>
             <Input value={description} onChange={e => setDescription(e.target.value)} placeholder="Optional description" className="mt-1" />
           </div>
+
+          {(category === "Bills" || category === "Bill Schedules") && (
+            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 space-y-2">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setUseBillDay(b => !b)}
+                  className={`w-9 h-5 rounded-full transition-colors flex items-center ${useBillDay ? "bg-primary justify-end" : "bg-muted justify-start"}`}
+                >
+                  <span className="w-4 h-4 rounded-full bg-white shadow mx-0.5 block" />
+                </button>
+                <span className="text-sm font-medium text-foreground">Due on a specific day of the month</span>
+              </div>
+              {useBillDay && (
+                <div className="flex items-center gap-2">
+                  <Label className="text-xs text-muted-foreground whitespace-nowrap">Day of month:</Label>
+                  <MobileSelect
+                    value={billDayOfMonth}
+                    onValueChange={setBillDayOfMonth}
+                    title="Day of Month"
+                    triggerClassName="w-24"
+                    options={Array.from({ length: 28 }, (_, i) => ({ value: String(i + 1), label: String(i + 1) }))}
+                  />
+                  <span className="text-xs text-muted-foreground">of each month</span>
+                </div>
+              )}
+            </div>
+          )}
 
           <div>
             <Label className="text-xs font-medium text-muted-foreground">Frequency</Label>

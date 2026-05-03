@@ -72,6 +72,11 @@
       "type": "number",
       "title": "Frequency (Miles)"
     },
+    "bill_day_of_month": {
+      "type": "number",
+      "title": "Bill Day of Month",
+      "description": "For bill tasks: the day of the month this bill is due (1-28)"
+    },
     "start_date": {
       "type": "string",
       "format": "date",

@@ -113,6 +113,18 @@ export default function Dashboard() {
 
   usePullToRefresh(loadTasks);
 
+  function calcNextDueDate(task, fromDate = new Date()) {
+    if (task.bill_day_of_month) {
+      const day = task.bill_day_of_month;
+      let candidate = new Date(fromDate.getFullYear(), fromDate.getMonth(), day);
+      if (candidate <= fromDate) candidate = new Date(fromDate.getFullYear(), fromDate.getMonth() + 1, day);
+      return candidate.toISOString().split("T")[0];
+    }
+    const next = new Date(fromDate);
+    next.setDate(next.getDate() + task.frequency_days);
+    return next.toISOString().split("T")[0];
+  }
+
   async function handleComplete(task) {
     const today = new Date();
     const todayStr = today.toISOString().split("T")[0];
@@ -146,7 +158,7 @@ export default function Dashboard() {
     base44.entities.Task.update(task.id, {
       status: "Completed",
       last_completed_date: todayStr,
-      next_due_date: nextDue.toISOString().split("T")[0],
+      next_due_date: calcNextDueDate(task),
       streak: newStreak,
       completed_with_blast: isBlastActive,
     });

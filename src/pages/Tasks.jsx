@@ -105,9 +105,17 @@ export default function Tasks() {
 
       const today = new Date();
       const todayStr = today.toISOString().split("T")[0];
-      const nextDue = new Date(today);
-      nextDue.setDate(nextDue.getDate() + task.frequency_days);
-      const nextDueStr = nextDue.toISOString().split("T")[0];
+      let nextDueStr;
+      if (task.bill_day_of_month) {
+        const day = task.bill_day_of_month;
+        let candidate = new Date(today.getFullYear(), today.getMonth(), day);
+        if (candidate <= today) candidate = new Date(today.getFullYear(), today.getMonth() + 1, day);
+        nextDueStr = candidate.toISOString().split("T")[0];
+      } else {
+        const nextDue = new Date(today);
+        nextDue.setDate(nextDue.getDate() + task.frequency_days);
+        nextDueStr = nextDue.toISOString().split("T")[0];
+      }
 
       // Use selected member name or fall back to current user
       const currentUser = await base44.auth.me();
@@ -192,12 +200,21 @@ export default function Tasks() {
     const today = new Date();
     const selected = tasks.filter(t => selectedIds.has(t.id));
     await Promise.all(selected.map(task => {
-      const nextDue = new Date(today);
-      nextDue.setDate(nextDue.getDate() + task.frequency_days);
+      let nextDueStr;
+      if (task.bill_day_of_month) {
+        const day = task.bill_day_of_month;
+        let candidate = new Date(today.getFullYear(), today.getMonth(), day);
+        if (candidate <= today) candidate = new Date(today.getFullYear(), today.getMonth() + 1, day);
+        nextDueStr = candidate.toISOString().split("T")[0];
+      } else {
+        const nextDue = new Date(today);
+        nextDue.setDate(nextDue.getDate() + task.frequency_days);
+        nextDueStr = nextDue.toISOString().split("T")[0];
+      }
       return base44.entities.Task.update(task.id, {
         status: "Completed",
         last_completed_date: today.toISOString().split("T")[0],
-        next_due_date: nextDue.toISOString().split("T")[0],
+        next_due_date: nextDueStr,
       });
     }));
     setBatchMode(false);

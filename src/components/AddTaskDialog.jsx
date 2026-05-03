@@ -139,6 +139,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
           assigned_to_name: member?.name || undefined,
           start_date: startDate,
           next_due_date: nextDueDate,
+          bill_day_of_month: (isBill && useBillDay) ? parseInt(billDayOfMonth) : undefined,
           status: "Pending",
           overdue_grace_days: 3,
           family_group_id,
@@ -147,6 +148,15 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     } else {
       // Create custom task
       const freqDays = freqValue ? toDays(freqValue, freqUnit) : 30;
+      let customNextDue = startDate;
+      if (customCategory === "Bills" && useBillDay) {
+        const day = parseInt(billDayOfMonth) || 1;
+        const today = new Date();
+        let candidate = new Date(today.getFullYear(), today.getMonth(), day);
+        if (candidate < today) candidate = new Date(today.getFullYear(), today.getMonth() + 1, day);
+        customNextDue = format(candidate, "yyyy-MM-dd");
+      }
+
       await base44.entities.Task.create({
         name: customName,
         category: customCategory,
@@ -159,7 +169,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
         assigned_to: assignedTo || undefined,
         assigned_to_name: member?.name || undefined,
         start_date: startDate,
-        next_due_date: startDate,
+        next_due_date: customNextDue,
+        bill_day_of_month: (customCategory === "Bills" && useBillDay) ? parseInt(billDayOfMonth) : undefined,
         status: "Pending",
         overdue_grace_days: 3,
         family_group_id,

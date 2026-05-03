@@ -58,9 +58,17 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
     setCompletingAs(member.id);
     const today = new Date();
     const todayStr = today.toISOString().split("T")[0];
-    const nextDue = new Date(today);
-    nextDue.setDate(nextDue.getDate() + task.frequency_days);
-    const nextDueStr = nextDue.toISOString().split("T")[0];
+    let nextDueStr;
+    if (task.bill_day_of_month) {
+      const day = task.bill_day_of_month;
+      let candidate = new Date(today.getFullYear(), today.getMonth(), day);
+      if (candidate <= today) candidate = new Date(today.getFullYear(), today.getMonth() + 1, day);
+      nextDueStr = candidate.toISOString().split("T")[0];
+    } else {
+      const nextDue = new Date(today);
+      nextDue.setDate(nextDue.getDate() + task.frequency_days);
+      nextDueStr = nextDue.toISOString().split("T")[0];
+    }
     await base44.entities.Task.update(task.id, {
       status: "Completed",
       last_completed_date: todayStr,
