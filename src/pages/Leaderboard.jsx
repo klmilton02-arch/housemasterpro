@@ -82,33 +82,24 @@ export default function Leaderboard() {
       <h2 className="font-heading text-2xl font-bold">Leaderboard</h2>
 
       {(() => {
-        // Combine family members and users from the family group
-        const familyGroupId = userProfile?.family_group_id || users.find(u => u.family_group_id)?.family_group_id;
+        // Get current user's family group
+        const currentUser = users.find(u => u.email === userProfile?.created_by);
+        const familyGroupId = currentUser?.family_group_id;
         
-        const allEntries = [
-          ...members.map(m => {
-            const profile = profiles.find(p => p.family_member_id === m.id);
+        // Show only users from the family group
+        const allEntries = users
+          .filter(u => u.family_group_id === familyGroupId)
+          .map(u => {
+            const profile = profiles.find(p => p.family_member_name === u.full_name);
             return {
-              id: m.id,
-              name: m.name,
-              avatar_color: m.avatar_color,
+              id: u.id,
+              name: u.full_name,
+              avatar_color: "blue",
               total_xp: profile?.total_xp || 0,
               level: profile?.level || 1,
             };
-          }),
-          ...users
-            .filter(u => u.family_group_id === familyGroupId && !members.some(m => m.name === u.full_name))
-            .map(u => {
-              const profile = profiles.find(p => p.family_member_name === u.full_name);
-              return {
-                id: u.id,
-                name: u.full_name,
-                avatar_color: "blue",
-                total_xp: profile?.total_xp || 0,
-                level: profile?.level || 1,
-              };
-            }),
-        ].sort((a, b) => b.total_xp - a.total_xp);
+          })
+          .sort((a, b) => b.total_xp - a.total_xp);
 
         if (allEntries.length === 0) return (
           <div className="bg-card border border-border rounded-lg p-6 text-center">
