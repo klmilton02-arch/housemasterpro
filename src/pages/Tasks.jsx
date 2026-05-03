@@ -375,7 +375,7 @@ export default function Tasks() {
       <div className="grid grid-cols-2 gap-3">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="w-full h-24 border border-border rounded-lg px-4 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start justify-center gap-1">
+            <button className="w-full border border-border rounded-lg px-4 py-3 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start justify-center gap-1">
               <span className="text-xs text-muted-foreground font-medium">Filter</span>
               <span className="font-heading font-semibold text-base text-foreground">
                 {statusFilter === "all" ? "Due Date" : statusFilter.replace("_", " ")}
@@ -399,7 +399,7 @@ export default function Tasks() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="w-full h-24 border border-border rounded-lg px-4 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start justify-center gap-1">
+            <button className="w-full border border-border rounded-lg px-4 py-3 hover:shadow-md transition-all bg-card hover:bg-muted/40 flex flex-col items-start justify-center gap-1">
               <span className="text-xs text-muted-foreground font-medium">Category</span>
              <span className="font-heading font-semibold text-base text-foreground">
                {categoryFilter === "all" ? "All" : categoryFilter}
