@@ -44,6 +44,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   // Custom form
    const [customName, setCustomName] = useState("");
    const [customCategory, setCustomCategory] = useState("Cleaning");
+   const [customPriority, setCustomPriority] = useState("Medium");
 
    const [customRoom, setCustomRoom] = useState("");
 
@@ -150,6 +151,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
         name: customName,
         category: customCategory,
         room: customRoom || undefined,
+        priority: customPriority,
         difficulty: "Easy",
         frequency_days: freqDays,
         frequency_miles: freqUnit === "miles" ? (parseInt(freqValue) || undefined) : undefined,
@@ -352,6 +354,21 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                 </SelectContent>
               </Select>
             </div>
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Priority</Label>
+              <MobileSelect
+                value={customPriority}
+                onValueChange={setCustomPriority}
+                title="Select Priority"
+                triggerClassName="mt-1"
+                options={[
+                  { value: "High", label: "🔴 High" },
+                  { value: "Medium", label: "🟡 Medium" },
+                  { value: "Low", label: "⚪ Low" },
+                ]}
+              />
+            </div>
+
             <div>
                <Label className="text-xs font-medium text-muted-foreground">Room (Optional)</Label>
                <MobileSelect

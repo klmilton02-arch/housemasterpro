@@ -34,6 +34,16 @@
         "Mixed Use Room"
       ]
     },
+    "priority": {
+      "type": "string",
+      "title": "Priority",
+      "enum": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "default": "Medium"
+    },
     "difficulty": {
       "type": "string",
       "title": "Difficulty",

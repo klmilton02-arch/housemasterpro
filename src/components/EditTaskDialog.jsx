@@ -15,6 +15,7 @@ export default function EditTaskDialog({ task, open, onOpenChange, onTaskUpdated
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [room, setRoom] = useState("");
+  const [priority, setPriority] = useState("Medium");
   const [assignedTo, setAssignedTo] = useState("");
   const [description, setDescription] = useState("");
   const [freqValue, setFreqValue] = useState("");
@@ -28,6 +29,7 @@ export default function EditTaskDialog({ task, open, onOpenChange, onTaskUpdated
       setName(task.name || "");
       setCategory(task.category || "Cleaning");
       setRoom(task.room || "");
+      setPriority(task.priority || "Medium");
       setAssignedTo(task.assigned_to || "");
       setDescription(task.description || "");
       setStartDate(task.start_date || format(new Date(), "yyyy-MM-dd"));
@@ -60,6 +62,7 @@ export default function EditTaskDialog({ task, open, onOpenChange, onTaskUpdated
       name: name.trim(),
       category,
       room: room || undefined,
+      priority,
       frequency_days: freqDays,
       description,
       assigned_to: assignedTo || undefined,
@@ -119,6 +122,21 @@ export default function EditTaskDialog({ task, open, onOpenChange, onTaskUpdated
                 { value: "Garage", label: "Garage" },
                 { value: "Laundry Room", label: "Laundry Room" },
                 { value: "Mixed Use Room", label: "Mixed Use Room" },
+              ]}
+            />
+          </div>
+
+          <div>
+            <Label className="text-xs font-medium text-muted-foreground">Priority</Label>
+            <MobileSelect
+              value={priority}
+              onValueChange={setPriority}
+              title="Select Priority"
+              triggerClassName="mt-1"
+              options={[
+                { value: "High", label: "🔴 High" },
+                { value: "Medium", label: "🟡 Medium" },
+                { value: "Low", label: "⚪ Low" },
               ]}
             />
           </div>

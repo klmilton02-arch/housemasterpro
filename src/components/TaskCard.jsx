@@ -1,5 +1,11 @@
 import { useState, useRef } from "react";
-import { Check, Clock, AlertTriangle, Calendar, Pencil, Flame, ChevronRight, Zap } from "lucide-react";
+import { Check, Clock, AlertTriangle, Calendar, Pencil, Flame, ChevronRight, Zap, ArrowUp, ArrowRight, ArrowDown } from "lucide-react";
+
+const PRIORITY_CONFIG = {
+  High:   { label: "High",   color: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",    icon: ArrowUp },
+  Medium: { label: "Medium", color: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400", icon: ArrowRight },
+  Low:    { label: "Low",    color: "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400", icon: ArrowDown },
+};
 import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays, parseISO } from "date-fns";
@@ -147,12 +153,21 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
                <Flame className="w-3 h-3" />{task.streak}
              </span>
            )}
+           {task.priority && task.priority !== "Medium" && !visuallyCompleted && (() => {
+             const pc = PRIORITY_CONFIG[task.priority];
+             const PIcon = pc?.icon;
+             return pc ? (
+               <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-semibold flex-shrink-0 ${pc.color}`}>
+                 <PIcon className="w-3 h-3" />{pc.label}
+               </span>
+             ) : null;
+           })()}
            {task.assigned_to_name && !visuallyCompleted && (
-              <span className="text-xs text-muted-foreground flex-shrink-0 truncate">· {task.assigned_to_name}</span>
-            )}
+               <span className="text-xs text-muted-foreground flex-shrink-0 truncate">· {task.assigned_to_name}</span>
+             )}
            {visuallyCompleted && (task.completed_by_name || task.assigned_to_name) && (
-              <span className="text-xs font-medium text-green-700 dark:text-green-400 flex-shrink-0 truncate">· ✓ {task.completed_by_name || task.assigned_to_name}</span>
-            )}
+               <span className="text-xs font-medium text-green-700 dark:text-green-400 flex-shrink-0 truncate">· ✓ {task.completed_by_name || task.assigned_to_name}</span>
+             )}
           </div>
         </div>
         <div className="flex items-center gap-1 shrink-0">
