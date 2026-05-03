@@ -114,11 +114,11 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
 
   return (
     <div className={cn(
-      "border rounded-lg px-4 py-3 hover:shadow-md transition-all group w-full cursor-pointer flex items-start overflow-hidden",
+      "border rounded-lg px-3 py-2 hover:shadow-md transition-all group w-full cursor-pointer flex items-center overflow-hidden",
       cardBg
     )} onClick={() => onViewDetails?.(task)}>
-      <div className="flex items-start justify-between gap-2 w-full h-full">
-         <div className="flex-1 min-w-0 overflow-hidden">
+      <div className="flex items-center justify-between gap-2 w-full">
+         <div className="flex-1 min-w-0 overflow-hidden flex items-center gap-2">
           {editing ? (
             <input
               ref={inputRef}
@@ -130,19 +130,19 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
               className="font-heading font-semibold text-sm text-foreground w-full border border-primary rounded px-1 py-0.5 outline-none bg-background"
             />
           ) : (
-            <div className="flex items-center gap-1 group/name">
-              <h3 className={cn("font-heading font-semibold text-sm line-clamp-2", visuallyCompleted ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
+            <div className="flex items-center gap-1 group/name min-w-0 flex-shrink-0 max-w-[40%]">
+              <h3 className={cn("font-heading font-semibold text-sm truncate", visuallyCompleted ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
               <button
                 onClick={e => { e.stopPropagation(); setEditing(true); }}
-                className="opacity-0 group-hover/name:opacity-100 transition-opacity p-0.5 rounded hover:bg-muted"
+                className="opacity-0 group-hover/name:opacity-100 transition-opacity p-0.5 rounded hover:bg-muted flex-shrink-0"
               >
                 <Pencil className="w-3 h-3 text-muted-foreground" />
               </button>
             </div>
           )}
-          <div className="flex items-center gap-1 mt-0.5 overflow-hidden whitespace-nowrap">
-           <span className={cn("inline-flex items-center gap-0.5 px-2 py-1 rounded-full text-xs font-semibold shadow-sm flex-shrink-0", status.color)}>
-             <StatusIcon className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-1 overflow-hidden whitespace-nowrap flex-1 min-w-0">
+           <span className={cn("inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-xs font-semibold shadow-sm flex-shrink-0", status.color)}>
+             <StatusIcon className="w-3 h-3" />
              {status.label}
            </span>
            {showDate && (
@@ -158,7 +158,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
              const PIcon = pc?.icon;
              return pc ? (
                <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-semibold flex-shrink-0 ${pc.color}`}>
-                 <PIcon className="w-3 h-3" />{pc.label}
+                 <PIcon className="w-3 h-3" />
                </span>
              ) : null;
            })()}
