@@ -43,6 +43,7 @@ export default function Profile() {
   const [savingName, setSavingName] = useState(false);
 
   const [setupStep, setSetupStep] = useState("choose");
+  const [familyUsers, setFamilyUsers] = useState([]);
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [deleteError, setDeleteError] = useState("");
   const [resettingData, setResettingData] = useState(false);
@@ -52,12 +53,16 @@ export default function Profile() {
       const me = await base44.auth.me();
       setUser(me);
 
-      const [profiles, setups] = await Promise.all([
+      const [profiles, setups, allUsers] = await Promise.all([
         me ? base44.entities.GamificationProfile.filter({ family_member_name: me.full_name }) : Promise.resolve([]),
         base44.entities.HomeSetup.list(),
+        base44.entities.User.list(),
       ]);
 
       if (profiles.length > 0) setProfile(profiles[0]);
+      if (me?.family_group_id) {
+        setFamilyUsers(allUsers.filter(u => u.family_group_id === me.family_group_id));
+      }
 
       if (setups.length > 0) {
         const s = setups[0];
@@ -220,6 +225,24 @@ export default function Profile() {
           </div>
         </div>
       </div>
+
+      {/* Family Members */}
+      {familyUsers.length > 0 && (
+        <div className="space-y-3">
+          <h3 className="font-heading font-semibold text-lg">Family Members</h3>
+          <div className="bg-card border border-border rounded-lg divide-y divide-border">
+            {familyUsers.map(member => (
+              <div key={member.id} className="px-4 py-3 flex items-center justify-between">
+                <div>
+                  <p className="font-medium text-sm">{member.full_name}</p>
+                  <p className="text-xs text-muted-foreground truncate">{member.email}</p>
+                </div>
+                <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">{member.role}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Info Links */}
       <div className="space-y-2">
