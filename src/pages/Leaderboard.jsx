@@ -79,7 +79,7 @@ export default function Leaderboard() {
       <h2 className="font-heading text-2xl font-bold">Leaderboard</h2>
 
       {(() => {
-        // Merge: all family members, joined with their profile (if any), sorted by XP desc
+        // Only show family members (linked to this family group)
         const allEntries = members.map(m => {
           const profile = profiles.find(p => p.family_member_id === m.id);
           return {
@@ -90,19 +90,6 @@ export default function Leaderboard() {
             level: profile?.level || 1,
           };
         }).sort((a, b) => b.total_xp - a.total_xp);
-
-        // Also include profiles not linked to a known family member
-        profiles.forEach(p => {
-          if (!members.find(m => m.id === p.family_member_id)) {
-            allEntries.push({
-              id: p.family_member_id,
-              name: p.family_member_name,
-              avatar_color: "blue",
-              total_xp: p.total_xp || 0,
-              level: p.level || 1,
-            });
-          }
-        });
 
         if (allEntries.length === 0) return (
           <div className="bg-card border border-border rounded-lg p-6 text-center">
