@@ -276,7 +276,7 @@ export default function Profile() {
                     {(u.full_name || u.email || "?").charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-heading font-semibold text-sm truncate">{u.full_name || u.email}</p>
+                    <p className="font-heading font-semibold text-sm truncate">{u.full_name || members.find(m => !familyUsers.some(fu => fu.id !== u.id && fu.full_name === m.name))?.name || u.email.split('@')[0]}</p>
                     <p className="text-xs text-muted-foreground truncate">{u.email}</p>
                   </div>
                   {u.role === "admin" && (
