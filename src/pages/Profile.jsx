@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { User, LogOut, Shield, Clock, Pencil, Plus, Trash2, Copy, Check, CalendarDays } from "lucide-react";
+import { User, LogOut, Shield, Clock, Pencil, CalendarDays } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import BadgeDisplay from "../components/BadgeDisplay";
@@ -42,15 +42,6 @@ export default function Profile() {
   const [editName, setEditName] = useState("");
   const [savingName, setSavingName] = useState(false);
 
-  // Family state
-  const [members, setMembers] = useState([]);
-  const [familyUsers, setFamilyUsers] = useState([]);
-  const [tasks, setTasks] = useState([]);
-  const [familyGroup, setFamilyGroup] = useState(null);
-  const [memberDialogOpen, setMemberDialogOpen] = useState(false);
-  const [newMemberName, setNewMemberName] = useState("");
-  const [newMemberColor, setNewMemberColor] = useState("blue");
-  const [copied, setCopied] = useState(false);
   const [setupStep, setSetupStep] = useState("choose");
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [deleteError, setDeleteError] = useState("");
@@ -61,24 +52,12 @@ export default function Profile() {
       const me = await base44.auth.me();
       setUser(me);
 
-      const [profiles, m, t, allUsers, setups] = await Promise.all([
+      const [profiles, setups] = await Promise.all([
         me ? base44.entities.GamificationProfile.filter({ family_member_name: me.full_name }) : Promise.resolve([]),
-        base44.entities.FamilyMember.list(),
-        me?.family_group_id ? base44.entities.Task.filter({ family_group_id: me.family_group_id }, "-created_date", 500) : Promise.resolve([]),
-        base44.entities.User.list(),
         base44.entities.HomeSetup.list(),
       ]);
 
       if (profiles.length > 0) setProfile(profiles[0]);
-      setMembers(m);
-      setTasks(t);
-
-      if (me?.family_group_id) {
-        const groups = await base44.entities.FamilyGroup.list().catch(() => []);
-        const myGroup = groups.find(g => g.id === me.family_group_id);
-        if (myGroup) setFamilyGroup(myGroup);
-        setFamilyUsers(allUsers.filter(u => u.family_group_id === me.family_group_id));
-      }
 
       if (setups.length > 0) {
         const s = setups[0];
@@ -138,46 +117,7 @@ export default function Profile() {
     setSavingHour(false);
   }
 
-  async function handleAddMember() {
-    if (!newMemberName.trim()) return;
-    await base44.entities.FamilyMember.create({ name: newMemberName.trim(), avatar_color: newMemberColor });
-    setNewMemberName("");
-    setMemberDialogOpen(false);
-    loadData();
-  }
 
-  async function handleDeleteMember(id) {
-    await base44.entities.FamilyMember.delete(id);
-    setMembers(prev => prev.filter(m => m.id !== id));
-  }
-
-  async function handleLeaveFamily() {
-    await base44.auth.updateMe({ account_type: "solo", family_group_id: "" });
-    setFamilyGroup(null);
-    loadData();
-  }
-
-  async function handleJoinFamily() {
-    setSetupStep("family-choice");
-    await base44.auth.updateMe({ account_type: "" });
-    loadData();
-  }
-
-  function copyCode() {
-    navigator.clipboard.writeText(familyGroup.invite_code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
-
-  function getMemberStats(memberId) {
-    const memberTasks = tasks.filter(t => t.assigned_to === memberId);
-    const overdue = memberTasks.filter(t => {
-      const s = getStatusInfo(t);
-      return s.label === "Overdue" || s.label === "Past Due";
-    }).length;
-    const completed = memberTasks.filter(t => getStatusInfo(t).label === "Completed").length;
-    return { total: memberTasks.length, overdue, completed };
-  }
 
   if (loading) {
     return (
@@ -362,36 +302,6 @@ export default function Profile() {
           </AlertDialogContent>
         </AlertDialog>
       </div>
-
-      {/* Add Member Dialog */}
-      <Dialog open={memberDialogOpen} onOpenChange={setMemberDialogOpen}>
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="font-heading">Add Family Member</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label className="text-xs font-medium text-muted-foreground">Name</Label>
-              <Input value={newMemberName} onChange={e => setNewMemberName(e.target.value)} placeholder="Enter name" className="mt-1" onKeyDown={e => e.key === "Enter" && handleAddMember()} />
-            </div>
-            <div>
-              <Label className="text-xs font-medium text-muted-foreground">Color</Label>
-              <div className="flex gap-2 mt-2">
-                {Object.entries(colorMap).map(([c, cls]) => (
-                  <button
-                    key={c}
-                    className={cn("w-8 h-8 rounded-full transition-all", cls.dot, newMemberColor === c ? "ring-2 ring-offset-2 ring-foreground scale-110" : "opacity-60 hover:opacity-100")}
-                    onClick={() => setNewMemberColor(c)}
-                  />
-                ))}
-              </div>
-            </div>
-            <Button className="w-full" onClick={handleAddMember} disabled={!newMemberName.trim()}>
-              Add Member
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       {/* Edit Profile Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
