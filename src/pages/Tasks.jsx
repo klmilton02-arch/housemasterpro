@@ -359,16 +359,16 @@ export default function Tasks() {
            <StatCard icon={Plus} value="Add New Task" color="bg-blue-100 text-blue-600" />
          </button>
          <button onClick={() => navigate("/presets")} className="w-full">
-           <StatCard icon={CheckCircle} label="Browse" value="Presets" color="bg-purple-100 text-purple-600" labelOnTop />
+           <StatCard icon={CheckCircle} value="Browse Presets" color="bg-purple-100 text-purple-600" />
          </button>
          <button onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }} className="w-full">
-           <StatCard icon={Receipt} label="View" value="Bills" color="bg-green-100 text-green-600" labelOnTop />
+           <StatCard icon={Receipt} value="View Bills" color="bg-green-100 text-green-600" />
          </button>
          <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Personal" ? "all" : "Personal"); }} className="w-full">
-           <StatCard icon={Tag} label="View" value="Personal" color="bg-pink-100 text-pink-600" labelOnTop />
+           <StatCard icon={Tag} value="View Personal" color="bg-pink-100 text-pink-600" />
          </button>
          <button onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")} className="w-full">
-           <StatCard icon={Home} label="View by" value="Room" color="bg-orange-100 text-orange-600" labelOnTop />
+           <StatCard icon={Home} value="View by Room" color="bg-orange-100 text-orange-600" />
          </button>
        </div>
 
