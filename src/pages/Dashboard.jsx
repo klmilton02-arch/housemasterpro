@@ -253,7 +253,12 @@ export default function Dashboard() {
              <StatCard icon={CalendarDays} label="Calendar" value="View" color="bg-purple-100 text-purple-600" />
            </Link>
          </div>
-       </div>
+         <div className="col-span-2">
+           <Link to="/family" className="block">
+             <StatCard icon={ListChecks} label="Family" value="View" color="bg-pink-100 text-pink-600" />
+           </Link>
+         </div>
+         </div>
 
 
 
