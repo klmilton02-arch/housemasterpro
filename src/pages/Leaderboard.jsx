@@ -26,7 +26,8 @@ export default function Leaderboard() {
       base44.entities.GamificationProfile.list("-total_xp", 100),
       base44.entities.FamilyMember.list(),
       base44.auth.me(),
-    ]).then(([p, m, user]) => {
+      base44.entities.User.list(),
+    ]).then(([p, m, user, allUsers]) => {
       setProfiles(p);
       setMembers(m);
       if (user) {
@@ -79,17 +80,19 @@ export default function Leaderboard() {
       <h2 className="font-heading text-2xl font-bold">Leaderboard</h2>
 
       {(() => {
-        // Only show family members (linked to this family group)
-        const allEntries = members.map(m => {
-          const profile = profiles.find(p => p.family_member_id === m.id);
-          return {
-            id: m.id,
-            name: m.name,
-            avatar_color: m.avatar_color,
-            total_xp: profile?.total_xp || 0,
-            level: profile?.level || 1,
-          };
-        }).sort((a, b) => b.total_xp - a.total_xp);
+        // Combine family members and users from the family group
+        const allEntries = [
+          ...members.map(m => {
+            const profile = profiles.find(p => p.family_member_id === m.id);
+            return {
+              id: m.id,
+              name: m.name,
+              avatar_color: m.avatar_color,
+              total_xp: profile?.total_xp || 0,
+              level: profile?.level || 1,
+            };
+          }),
+        ].sort((a, b) => b.total_xp - a.total_xp);
 
         if (allEntries.length === 0) return (
           <div className="bg-card border border-border rounded-lg p-6 text-center">
