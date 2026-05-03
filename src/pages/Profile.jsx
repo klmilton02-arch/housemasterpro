@@ -176,7 +176,7 @@ export default function Profile() {
             { key: "bills", label: "Bills" },
             { key: "personal", label: "Personal" },
           ].map(({ key, label }) => (
-            <div key={key} className="flex items-center gap-3">
+            <div key={key} className="flex items-center gap-2">
               <label className="text-sm font-medium w-28 shrink-0">{label}</label>
               <input
                 type="date"
@@ -184,6 +184,17 @@ export default function Profile() {
                 onChange={e => setStartDates(prev => ({ ...prev, [key]: e.target.value }))}
                 className="flex-1 border border-input rounded-md px-3 py-1.5 text-sm bg-background text-foreground"
               />
+              {startDates[key] && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setStartDates(prev => ({ ...prev, [key]: "" }))}
+                  className="text-xs text-muted-foreground hover:text-destructive"
+                >
+                  Clear
+                </Button>
+              )}
             </div>
           ))}
           <Button onClick={handleSaveStartDates} disabled={savingStartDates} size="sm" className="w-full">
