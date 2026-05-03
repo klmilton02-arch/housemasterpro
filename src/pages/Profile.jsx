@@ -236,7 +236,7 @@ export default function Profile() {
         </div>
 
         {/* Avatars row */}
-        {members.length > 0 && (
+        {(members.length > 0 || familyUsers.some(u => u.full_name && !members.map(m => m.name?.toLowerCase()).includes(u.full_name?.toLowerCase()))) && (
           <div className="flex gap-2 overflow-x-auto pb-1">
             {members.map(m => {
               const c = colorMap[m.avatar_color] || colorMap.blue;
@@ -246,6 +246,17 @@ export default function Profile() {
                     {m.name.charAt(0).toUpperCase()}
                   </div>
                   <span className="text-xs text-muted-foreground font-medium">{m.name.split(' ')[0]}</span>
+                </div>
+              );
+            })}
+            {familyUsers.filter(u => u.full_name && !members.map(m => m.name?.toLowerCase()).includes(u.full_name?.toLowerCase())).map(u => {
+              const c = colorMap.blue;
+              return (
+                <div key={u.id} className="flex flex-col items-center gap-0.5 shrink-0">
+                  <div className={cn("w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold font-heading", c.bg, c.text)}>
+                    {u.full_name.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="text-xs text-muted-foreground font-medium">{u.full_name.split(' ')[0]}</span>
                 </div>
               );
             })}
@@ -301,19 +312,43 @@ export default function Profile() {
         )}
 
         {/* Member cards with stats */}
-        {members.length > 0 && (
+        {/* Build combined list: FamilyMember records + family Users not already represented */}
+        {(() => {
+          const memberNames = members.map(m => m.name?.toLowerCase());
+          const extraUsers = familyUsers.filter(u => {
+            const name = u.full_name?.toLowerCase();
+            return name && !memberNames.includes(name);
+          });
+          const allEntries = [
+            ...members.map(m => ({ type: 'member', data: m })),
+            ...extraUsers.map(u => ({ type: 'user', data: u })),
+          ];
+          return allEntries.length > 0;
+        })() && (
           <div className="grid gap-2">
-            {members.map(m => {
+            {[
+              ...members.map(m => ({ type: 'member', data: m })),
+              ...familyUsers.filter(u => {
+                const name = u.full_name?.toLowerCase();
+                return name && !members.map(m => m.name?.toLowerCase()).includes(name);
+              }).map(u => ({ type: 'user', data: u })),
+            ].map(entry => {
+              const isUser = entry.type === 'user';
+              const m = isUser
+                ? { id: entry.data.id, name: entry.data.full_name, avatar_color: 'blue' }
+                : entry.data;
               const c = colorMap[m.avatar_color] || colorMap.blue;
-              const stats = getMemberStats(m.id);
+              const stats = isUser ? { total: 0, overdue: 0, completed: 0 } : getMemberStats(m.id);
               return (
                 <div key={m.id} className="bg-white border border-border rounded-lg p-2 group relative">
-                  <button
-                    onClick={() => handleDeleteMember(m.id)}
-                    className="absolute top-1 right-1 p-0.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500"
-                  >
-                    <Trash2 className="w-3 h-3" />
-                  </button>
+                  {!isUser && (
+                    <button
+                      onClick={() => handleDeleteMember(m.id)}
+                      className="absolute top-1 right-1 p-0.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  )}
                   <div className="flex items-center gap-2 mb-2">
                     <div className={cn("w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold font-heading", c.bg, c.text)}>
                       {m.name.charAt(0).toUpperCase()}
@@ -340,6 +375,7 @@ export default function Profile() {
           </div>
         )}
       </div>
+
 
       {/* Start Dates */}
       <div className="space-y-3">
