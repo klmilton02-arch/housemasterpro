@@ -354,7 +354,7 @@ export default function Tasks() {
     <div className="space-y-2 md:space-y-6 w-full md:max-w-2xl md:mx-auto px-4 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <h1 className="font-heading text-3xl font-bold md:hidden">Tasks</h1>
 
-      <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3">
          <button onClick={() => setDialogOpen(true)} className="w-full">
            <StatCard icon={Plus} label="Add" value="New Task" color="bg-blue-100 text-blue-600" labelOnTop />
          </button>
