@@ -25,7 +25,8 @@
         "Outdoor",
         "Whole House",
         "Mixed Use Room",
-        "Any"
+        "Any",
+        "Garden"
       ]
     },
     "task_type": {
@@ -35,7 +36,8 @@
         "Cleaning",
         "Maintenance",
         "Bills",
-        "Personal"
+        "Personal",
+        "Garden"
       ]
     },
     "frequency_days": {

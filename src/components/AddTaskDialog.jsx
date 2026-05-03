@@ -362,6 +362,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                   <SelectItem value="Maintenance">Maintenance</SelectItem>
                   <SelectItem value="Bills">Bills</SelectItem>
                   <SelectItem value="Personal">Personal</SelectItem>
+                  <SelectItem value="Garden">Garden</SelectItem>
                 </SelectContent>
               </Select>
             </div>
