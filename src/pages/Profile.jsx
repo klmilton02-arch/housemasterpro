@@ -143,32 +143,33 @@ export default function Profile() {
   const earnedBadges = profile ? getEarnedBadges(profile) : [];
 
   return (
-    <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7 pb-8" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div className="space-y-7 max-w-md md:max-w-2xl mx-auto px-3 sm:px-2 pt-7 pb-8" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
 
-      <h1 className="font-heading text-3xl font-bold">Profile</h1>
+      <h1 className="font-heading text-3xl font-bold md:hidden">Profile</h1>
 
       {/* My Information */}
-      <div className="bg-violet-50 border border-violet-100 rounded-lg p-2.5">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-full bg-violet-200 flex items-center justify-center flex-shrink-0">
-              <User className="w-5 h-5 text-violet-600" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h2 className="font-semibold text-sm text-foreground">{user.full_name}</h2>
-              <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-            </div>
-            <Button variant="outline" size="sm" onClick={() => { setEditName(user.full_name || ""); setEditOpen(true); }} className="gap-1 flex-shrink-0">
-              <Pencil className="w-3 h-3" /> Edit
-            </Button>
+      <div className="bg-violet-100 border border-violet-200 rounded-lg p-4 space-y-3">
+        <div className="flex items-start gap-3">
+          <div className="w-12 h-12 rounded-full bg-violet-200 flex items-center justify-center flex-shrink-0">
+            <User className="w-6 h-6 text-violet-600" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h2 className="font-heading font-semibold text-lg text-foreground">{user.full_name}</h2>
+            <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+            {user.role && <p className="text-xs font-medium text-violet-600 mt-1 capitalize">{user.role}</p>}
           </div>
         </div>
+        <Button variant="outline" size="sm" onClick={() => { setEditName(user.full_name || ""); setEditOpen(true); }} className="w-full gap-1">
+          <Pencil className="w-3 h-3" /> Edit Name
+        </Button>
+      </div>
       {/* Start Dates */}
       <div className="space-y-3">
         <h3 className="font-heading font-semibold text-lg">Task Start Dates</h3>
-        <div className="bg-card border border-border rounded-lg p-4 space-y-4">
-          <div className="flex items-start gap-3 mb-1">
-            <CalendarDays className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-            <p className="text-xs text-muted-foreground">Set the start date for each task type. New tasks of that type will start from this date.</p>
+        <div className="bg-cyan-100 border border-cyan-200 rounded-lg p-4 space-y-4">
+          <div className="flex items-start gap-3">
+            <CalendarDays className="w-5 h-5 text-cyan-600 mt-0.5 shrink-0" />
+            <p className="text-xs text-cyan-700">Set the start date for each task type. New tasks will begin from this date.</p>
           </div>
           {[
             { key: "cleaning", label: "Cleaning" },
@@ -177,12 +178,12 @@ export default function Profile() {
             { key: "personal", label: "Personal" },
           ].map(({ key, label }) => (
             <div key={key} className="flex items-center gap-2">
-              <label className="text-sm font-medium w-28 shrink-0">{label}</label>
+              <label className="text-sm font-medium w-24 shrink-0">{label}</label>
               <input
                 type="date"
                 value={startDates[key]}
                 onChange={e => setStartDates(prev => ({ ...prev, [key]: e.target.value }))}
-                className="flex-1 border border-input rounded-md px-3 py-1.5 text-sm bg-background text-foreground"
+                className="flex-1 border border-cyan-200 rounded-md px-3 py-1.5 text-sm bg-white text-foreground"
               />
               {startDates[key] && (
                 <Button
@@ -190,14 +191,14 @@ export default function Profile() {
                   variant="ghost"
                   size="sm"
                   onClick={() => setStartDates(prev => ({ ...prev, [key]: "" }))}
-                  className="text-xs text-muted-foreground hover:text-destructive"
+                  className="text-xs px-2"
                 >
                   Clear
                 </Button>
               )}
             </div>
           ))}
-          <Button onClick={handleSaveStartDates} disabled={savingStartDates} size="sm" className="w-full">
+          <Button onClick={handleSaveStartDates} disabled={savingStartDates} size="sm" className="w-full bg-cyan-500 text-white hover:bg-cyan-600">
             {savingStartDates ? "Saving..." : "Save Start Dates"}
           </Button>
         </div>
@@ -206,12 +207,12 @@ export default function Profile() {
       {/* Task Reset Time */}
       <div className="space-y-3">
         <h3 className="font-heading font-semibold text-lg">Task Reset Time</h3>
-        <div className="bg-amber-50 border border-amber-100 rounded-lg p-4 space-y-3">
+        <div className="bg-orange-100 border border-orange-200 rounded-lg p-4 space-y-3">
           <div className="flex items-start gap-3">
-            <Clock className="w-5 h-5 text-amber-500 mt-0.5 shrink-0" />
+            <Clock className="w-5 h-5 text-orange-600 mt-0.5 shrink-0" />
             <div className="flex-1">
-              <p className="text-sm font-medium">New day starts at</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Completed tasks reset to Pending at this hour each day</p>
+              <p className="text-sm font-medium text-orange-900">New day starts at</p>
+              <p className="text-xs text-orange-700 mt-0.5">Completed tasks reset to Pending at this hour each day</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -225,30 +226,34 @@ export default function Profile() {
                 label: i === 0 ? "12:00 AM (Midnight)" : i < 12 ? `${i}:00 AM` : i === 12 ? "12:00 PM (Noon)" : `${i - 12}:00 PM`
               }))}
             />
-            <Button onClick={handleSaveDayStart} disabled={savingHour} size="sm">
+            <Button onClick={handleSaveDayStart} disabled={savingHour} size="sm" className="bg-orange-500 text-white hover:bg-orange-600">
               {savingHour ? "Saving..." : "Save"}
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Info Links */}
-      <div className="space-y-2">
-        <Link to="/encryption">
-          <Button variant="outline" className="w-full gap-2 justify-start">
-            <Shield className="w-4 h-4" /> Encryption & Security
+      {/* Settings Links */}
+      <div className="grid grid-cols-2 gap-3">
+        <Link to="/encryption" className="block">
+          <Button variant="outline" className="w-full gap-2 justify-center text-sm h-auto py-3 bg-slate-100 border-slate-200 hover:bg-slate-50">
+            <Shield className="w-4 h-4" />
+            <span className="hidden sm:inline">Security</span>
+            <span className="sm:hidden">Security</span>
           </Button>
         </Link>
+        <Button onClick={() => base44.auth.logout("/")} variant="outline" className="w-full gap-2 justify-center text-sm h-auto py-3 bg-red-100 border-red-200 hover:bg-red-50 text-red-600">
+          <LogOut className="w-4 h-4" />
+          <span>Sign Out</span>
+        </Button>
       </div>
 
-      {/* Danger Zone */}
-      <div className="pt-2 border-t border-border space-y-2">
-        <Button onClick={() => base44.auth.logout("/")} variant="destructive" className="w-full gap-2">
-          <LogOut className="w-4 h-4" /> Sign Out
-        </Button>
+      {/* Data Management */}
+      <div className="space-y-2 pt-4 border-t border-border">
+        <p className="text-xs font-medium text-muted-foreground uppercase">Data Management</p>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="outline" className="w-full text-sm text-destructive border-destructive/30 hover:bg-destructive/10">
+            <Button variant="outline" className="w-full text-sm bg-orange-100 border-orange-200 hover:bg-orange-50 text-orange-600">
               Reset All Data
             </Button>
           </AlertDialogTrigger>
@@ -281,7 +286,7 @@ export default function Profile() {
         </AlertDialog>
         <AlertDialog open={deleteError ? true : undefined}>
           <AlertDialogTrigger asChild>
-            <Button variant="outline" className="w-full text-sm text-destructive border-destructive/30 hover:bg-destructive/10">
+            <Button variant="outline" className="w-full text-sm bg-red-100 border-red-200 hover:bg-red-50 text-red-600">
               Delete My Account
             </Button>
           </AlertDialogTrigger>
