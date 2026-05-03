@@ -60,7 +60,8 @@ export default function Dashboard() {
     if (me?.family_group_id) {
       all = await base44.entities.Task.filter({ family_group_id: me.family_group_id });
     } else {
-      all = await base44.entities.Task.filter({ created_by: me?.email });
+      // No family group — list all tasks the RLS allows (which is all tasks owned by this user)
+      all = await base44.entities.Task.list();
     }
     setTasks(all);
     setLoading(false);
