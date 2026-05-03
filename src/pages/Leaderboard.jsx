@@ -18,6 +18,7 @@ const medals = ["🥇", "🥈", "🥉"];
 export default function Leaderboard() {
   const [profiles, setProfiles] = useState([]);
   const [members, setMembers] = useState([]);
+  const [users, setUsers] = useState([]);
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -30,6 +31,7 @@ export default function Leaderboard() {
     ]).then(([p, m, user, allUsers]) => {
       setProfiles(p);
       setMembers(m);
+      setUsers(allUsers || []);
       if (user) {
         const myProfile = p.find(prof => prof.family_member_name === user.full_name);
         setUserProfile(myProfile);
@@ -81,6 +83,8 @@ export default function Leaderboard() {
 
       {(() => {
         // Combine family members and users from the family group
+        const familyGroupId = userProfile?.family_group_id || users.find(u => u.family_group_id)?.family_group_id;
+        
         const allEntries = [
           ...members.map(m => {
             const profile = profiles.find(p => p.family_member_id === m.id);
@@ -92,6 +96,18 @@ export default function Leaderboard() {
               level: profile?.level || 1,
             };
           }),
+          ...users
+            .filter(u => u.family_group_id === familyGroupId && !members.some(m => m.name === u.full_name))
+            .map(u => {
+              const profile = profiles.find(p => p.family_member_name === u.full_name);
+              return {
+                id: u.id,
+                name: u.full_name,
+                avatar_color: "blue",
+                total_xp: profile?.total_xp || 0,
+                level: profile?.level || 1,
+              };
+            }),
         ].sort((a, b) => b.total_xp - a.total_xp);
 
         if (allEntries.length === 0) return (
