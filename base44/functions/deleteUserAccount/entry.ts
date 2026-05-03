@@ -13,16 +13,30 @@ Deno.serve(async (req) => {
     const userEmail = user.email;
     const familyGroupId = user.family_group_id;
 
-    // Helper: delete records one at a time with a small delay to avoid rate limits
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    // Helper: delete records one at a time with retry on rate limit
     const deleteAll = async (entity, filter) => {
       try {
         const records = await base44.asServiceRole.entities[entity].filter(filter, '-created_date', 1000);
         for (const r of records) {
-          try {
-            await base44.asServiceRole.entities[entity].delete(r.id);
-            await new Promise(resolve => setTimeout(resolve, 150));
-          } catch (err) {
-            console.error(`Error deleting ${entity} ${r.id}:`, err.message);
+          let attempts = 0;
+          while (attempts < 5) {
+            try {
+              await base44.asServiceRole.entities[entity].delete(r.id);
+              await sleep(500);
+              break;
+            } catch (err) {
+              if (err.message && err.message.includes('Rate limit')) {
+                attempts++;
+                await sleep(1000 * attempts); // back off: 1s, 2s, 3s...
+              } else if (err.message && err.message.includes('not found')) {
+                break; // already deleted, skip
+              } else {
+                console.error(`Error deleting ${entity} ${r.id}:`, err.message);
+                break;
+              }
+            }
           }
         }
       } catch (err) {
