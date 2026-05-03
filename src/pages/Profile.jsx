@@ -265,28 +265,7 @@ export default function Profile() {
           </div>
         )}
 
-        {/* Family Members */}
-        {familyUsers.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Family Members</p>
-            <div className="grid gap-2">
-              {familyUsers.map(u => (
-                <div key={u.id} className="bg-indigo-50 border border-indigo-100 rounded-lg p-3 flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-indigo-200 flex items-center justify-center text-sm font-bold font-heading text-indigo-700">
-                    {(u.full_name || u.email || "?").charAt(0).toUpperCase()}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-heading font-semibold text-sm truncate">{u.full_name || members.find(m => !familyUsers.some(fu => fu.id !== u.id && fu.full_name === m.name))?.name || u.email.split('@')[0]}</p>
-                    <p className="text-xs text-muted-foreground truncate">{u.email}</p>
-                  </div>
-                  {u.role === "admin" && (
-                    <span className="text-xs bg-indigo-200 text-indigo-700 px-2 py-0.5 rounded-full font-medium">Admin</span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+
 
         {/* Family invite code */}
         {user.account_type === "family" && familyGroup && (
