@@ -208,9 +208,7 @@ export default function Profile() {
       <h1 className="font-heading text-3xl font-bold">Profile</h1>
 
       {/* My Information */}
-      <div className="space-y-2">
-        <h3 className="font-heading font-semibold">My Information</h3>
-        <div className="bg-violet-50 border border-violet-100 rounded-lg p-2.5">
+      <div className="bg-violet-50 border border-violet-100 rounded-lg p-2.5">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-full bg-violet-200 flex items-center justify-center flex-shrink-0">
               <User className="w-5 h-5 text-violet-600" />
@@ -224,7 +222,6 @@ export default function Profile() {
             </Button>
           </div>
         </div>
-      </div>
 
       {/* Household */}
       <div className="space-y-3">
