@@ -38,11 +38,7 @@ export default function HomeSetup() {
     has_mixed_use: false,
     has_office: false,
     has_whole_house: false,
-    start_date_cleaning: format(new Date(), "yyyy-MM-dd"),
-    start_date_maintenance: format(new Date(), "yyyy-MM-dd"),
   });
-  const [useStartDateCleaning, setUseStartDateCleaning] = useState(true);
-  const [useStartDateMaintenance, setUseStartDateMaintenance] = useState(true);
   const [bedroomNames, setBedroomNames] = useState([]);
   const [bathroomNames, setBathroomNames] = useState([]);
   const [halfBathroomNames, setHalfBathroomNames] = useState([]);
@@ -58,24 +54,22 @@ export default function HomeSetup() {
   useEffect(() => {
     base44.entities.HomeSetup.list().then(records => {
       if (records.length > 0) {
-        const r = records[0];
-        setSetupId(r.id);
-        setConfig({
-          bedrooms: r.bedrooms ?? 2,
-          full_bathrooms: r.full_bathrooms ?? 1,
-          half_bathrooms: r.half_bathrooms ?? 0,
-          has_kitchen: r.has_kitchen ?? true,
-          has_living_room: r.has_living_room ?? true,
-          has_dining_room: r.has_dining_room ?? false,
-          has_garage: r.has_garage ?? false,
-          has_laundry_room: r.has_laundry_room ?? false,
-          has_mixed_use: r.has_mixed_use ?? false,
-          has_office: r.has_office ?? false,
-          has_whole_house: r.has_whole_house ?? false,
-          start_date_cleaning: r.start_date_cleaning ?? format(new Date(), "yyyy-MM-dd"),
-          start_date_maintenance: r.start_date_maintenance ?? format(new Date(), "yyyy-MM-dd"),
-        });
-      }
+         const r = records[0];
+         setSetupId(r.id);
+         setConfig({
+           bedrooms: r.bedrooms ?? 2,
+           full_bathrooms: r.full_bathrooms ?? 1,
+           half_bathrooms: r.half_bathrooms ?? 0,
+           has_kitchen: r.has_kitchen ?? true,
+           has_living_room: r.has_living_room ?? true,
+           has_dining_room: r.has_dining_room ?? false,
+           has_garage: r.has_garage ?? false,
+           has_laundry_room: r.has_laundry_room ?? false,
+           has_mixed_use: r.has_mixed_use ?? false,
+           has_office: r.has_office ?? false,
+           has_whole_house: r.has_whole_house ?? false,
+         });
+       }
     });
   }, []);
 
@@ -170,31 +164,22 @@ export default function HomeSetup() {
 
       // Create all tasks using bulkCreate to avoid rate limit
       const taskData = tasksToCreate.map(t => {
-        const isCleaning = t.task_type === "Cleaning";
-        const hasStartDate = isCleaning ? useStartDateCleaning : useStartDateMaintenance;
-        const startDate = hasStartDate ? (isCleaning ? config.start_date_cleaning : config.start_date_maintenance) : null;
-        let nextDueDate;
-        if (startDate) {
-          nextDueDate = startDate;
-        } else {
-          // Spread out by frequency_days to avoid inundating on day 1
-          const dueDate = new Date();
-          dueDate.setDate(dueDate.getDate() + t.frequency_days);
-          nextDueDate = format(dueDate, "yyyy-MM-dd");
-        }
-        return {
-          name: t.name,
-          category: t.task_type,
-          room: t.room || null,
-          frequency_days: t.frequency_days,
-          description: t.description || "",
-          start_date: startDate,
-          next_due_date: nextDueDate,
-          status: "Pending",
-          overdue_grace_days: 3,
-          family_group_id,
-        };
-      });
+         // Spread out by frequency_days to avoid inundating on day 1
+         const dueDate = new Date();
+         dueDate.setDate(dueDate.getDate() + t.frequency_days);
+         const nextDueDate = format(dueDate, "yyyy-MM-dd");
+         return {
+           name: t.name,
+           category: t.task_type,
+           room: t.room || null,
+           frequency_days: t.frequency_days,
+           description: t.description || "",
+           next_due_date: nextDueDate,
+           status: "Pending",
+           overdue_grace_days: 3,
+           family_group_id,
+         };
+       });
 
       if (taskData.length === 0) {
         alert("No tasks to generate. Make sure you have presets and rooms configured.");
@@ -264,52 +249,6 @@ export default function HomeSetup() {
         </div>
       </div>
       
-      {/* Date pickers */}
-      <div className="bg-card border border-border rounded-lg p-4 space-y-3">
-        <div>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={useStartDateCleaning}
-              onChange={(e) => setUseStartDateCleaning(e.target.checked)}
-              className="w-4 h-4"
-            />
-            <span className="text-sm font-medium">Set Start Date - Cleaning Tasks</span>
-          </label>
-          {useStartDateCleaning && (
-            <Input
-              type="date"
-              value={config.start_date_cleaning}
-              onChange={(e) => setConfig(c => ({ ...c, start_date_cleaning: e.target.value }))}
-              className="w-full mt-2"
-            />
-          )}
-        </div>
-        <div>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={useStartDateMaintenance}
-              onChange={(e) => setUseStartDateMaintenance(e.target.checked)}
-              className="w-4 h-4"
-            />
-            <span className="text-sm font-medium">Set Start Date - Maintenance Tasks</span>
-          </label>
-          {useStartDateMaintenance && (
-            <Input
-              type="date"
-              value={config.start_date_maintenance}
-              onChange={(e) => setConfig(c => ({ ...c, start_date_maintenance: e.target.value }))}
-              className="w-full mt-2"
-            />
-          )}
-        </div>
-      </div>
-
-
-
-
-
 
 
       {/* Success message */}
@@ -332,7 +271,7 @@ export default function HomeSetup() {
           {generating ? "Generating..." : "Generate Tasks"}
         </Button>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false, has_office: false, has_whole_house: false, start_date_cleaning: format(new Date(), "yyyy-MM-dd"), start_date_maintenance: format(new Date(), "yyyy-MM-dd") })} className="flex-1 h-12 text-sm">
+          <Button variant="outline" onClick={() => setConfig({ bedrooms: 2, full_bathrooms: 1, half_bathrooms: 0, has_kitchen: true, has_living_room: true, has_dining_room: false, has_garage: false, has_laundry_room: false, has_mixed_use: false, has_office: false, has_whole_house: false })} className="flex-1 h-12 text-sm">
             Reset
           </Button>
           <Button variant="outline" onClick={saveConfig} disabled={saving} className="flex-1 h-12 text-sm">
