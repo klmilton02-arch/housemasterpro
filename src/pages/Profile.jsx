@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { User, LogOut, Shield, Clock, Pencil, Plus, Trash2, Copy, Check } from "lucide-react";
+import { User, LogOut, Shield, Clock, Pencil, Plus, Trash2, Copy, Check, CalendarDays } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import BadgeDisplay from "../components/BadgeDisplay";
@@ -36,6 +36,8 @@ export default function Profile() {
   const [homeSetup, setHomeSetup] = useState(null);
   const [dayStartHour, setDayStartHour] = useState("0");
   const [savingHour, setSavingHour] = useState(false);
+  const [startDates, setStartDates] = useState({ cleaning: "", maintenance: "", bills: "", personal: "" });
+  const [savingStartDates, setSavingStartDates] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editName, setEditName] = useState("");
   const [savingName, setSavingName] = useState(false);
@@ -79,8 +81,15 @@ export default function Profile() {
       }
 
       if (setups.length > 0) {
-        setHomeSetup(setups[0]);
-        setDayStartHour(String(setups[0].day_start_hour ?? 0));
+        const s = setups[0];
+        setHomeSetup(s);
+        setDayStartHour(String(s.day_start_hour ?? 0));
+        setStartDates({
+          cleaning: s.start_date_cleaning || "",
+          maintenance: s.start_date_maintenance || "",
+          bills: s.start_date_bills || "",
+          personal: s.start_date_personal || "",
+        });
       }
     } catch (err) {
       console.error("Failed to load profile:", err);
@@ -98,6 +107,23 @@ export default function Profile() {
     setUser(prev => ({ ...prev, full_name: editName.trim() }));
     setSavingName(false);
     setEditOpen(false);
+  }
+
+  async function handleSaveStartDates() {
+    setSavingStartDates(true);
+    const data = {
+      start_date_cleaning: startDates.cleaning || null,
+      start_date_maintenance: startDates.maintenance || null,
+      start_date_bills: startDates.bills || null,
+      start_date_personal: startDates.personal || null,
+    };
+    if (homeSetup) {
+      await base44.entities.HomeSetup.update(homeSetup.id, data);
+    } else {
+      const created = await base44.entities.HomeSetup.create(data);
+      setHomeSetup(created);
+    }
+    setSavingStartDates(false);
   }
 
   async function handleSaveDayStart() {
@@ -334,6 +360,36 @@ export default function Profile() {
             })}
           </div>
         )}
+      </div>
+
+      {/* Start Dates */}
+      <div className="space-y-3">
+        <h3 className="font-heading font-semibold text-lg">Task Start Dates</h3>
+        <div className="bg-card border border-border rounded-lg p-4 space-y-4">
+          <div className="flex items-start gap-3 mb-1">
+            <CalendarDays className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+            <p className="text-xs text-muted-foreground">Set the start date for each task type. New tasks of that type will start from this date.</p>
+          </div>
+          {[
+            { key: "cleaning", label: "Cleaning" },
+            { key: "maintenance", label: "Maintenance" },
+            { key: "bills", label: "Bills" },
+            { key: "personal", label: "Personal" },
+          ].map(({ key, label }) => (
+            <div key={key} className="flex items-center gap-3">
+              <label className="text-sm font-medium w-28 shrink-0">{label}</label>
+              <input
+                type="date"
+                value={startDates[key]}
+                onChange={e => setStartDates(prev => ({ ...prev, [key]: e.target.value }))}
+                className="flex-1 border border-input rounded-md px-3 py-1.5 text-sm bg-background text-foreground"
+              />
+            </div>
+          ))}
+          <Button onClick={handleSaveStartDates} disabled={savingStartDates} size="sm" className="w-full">
+            {savingStartDates ? "Saving..." : "Save Start Dates"}
+          </Button>
+        </div>
       </div>
 
       {/* Task Reset Time */}

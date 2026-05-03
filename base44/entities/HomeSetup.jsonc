@@ -72,6 +72,16 @@
       "type": "string",
       "format": "date",
       "title": "Start Date for Maintenance Tasks"
+    },
+    "start_date_bills": {
+      "type": "string",
+      "format": "date",
+      "title": "Start Date for Bills Tasks"
+    },
+    "start_date_personal": {
+      "type": "string",
+      "format": "date",
+      "title": "Start Date for Personal Tasks"
     }
   },
   "required": []
