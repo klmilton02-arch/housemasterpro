@@ -368,9 +368,12 @@ export default function Tasks() {
            <StatCard icon={Tag} value="View Personal" color="bg-pink-100 text-pink-600" />
          </button>
        </div>
-       <div className="grid grid-cols-1 gap-3">
+       <div className="grid grid-cols-2 gap-3">
          <button onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")} className="w-full">
            <StatCard icon={Home} value="View by Room" color="bg-orange-100 text-orange-600" />
+         </button>
+         <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Garden" ? "all" : "Garden"); }} className="w-full">
+           <StatCard icon={Tag} value="Garden" color="bg-lime-100 text-lime-600" />
          </button>
        </div>
 
