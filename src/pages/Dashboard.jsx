@@ -56,12 +56,13 @@ export default function Dashboard() {
 
   const loadTasks = useCallback(async () => {
     const me = await base44.auth.me();
+    let all;
     if (me?.family_group_id) {
-      const all = await base44.entities.Task.filter({ family_group_id: me.family_group_id });
-      setTasks(all);
+      all = await base44.entities.Task.filter({ family_group_id: me.family_group_id });
     } else {
-      setTasks([]);
+      all = await base44.entities.Task.filter({ created_by: me?.email });
     }
+    setTasks(all);
     setLoading(false);
   }, []);
 
