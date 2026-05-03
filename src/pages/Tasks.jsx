@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown, ListChecks, Clock, CheckCircle, Tag, Receipt, Home, Filter } from "lucide-react";
+import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown, ListChecks, Clock, CheckCircle, Tag, Receipt, Home, Filter, Leaf } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { awardPoints, getTaskPoints, revokePoints } from "@/utils/gamification";
 import confetti from "canvas-confetti";
@@ -373,7 +373,7 @@ export default function Tasks() {
            <StatCard icon={Home} value="View by Room" color="bg-orange-100 text-orange-600" />
          </button>
          <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Garden" ? "all" : "Garden"); }} className="w-full">
-           <StatCard icon={Tag} value="Garden" color="bg-lime-100 text-lime-600" />
+           <StatCard icon={Leaf} value="Garden" color="bg-lime-100 text-lime-600" />
          </button>
        </div>
 
