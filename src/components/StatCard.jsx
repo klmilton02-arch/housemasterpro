@@ -22,7 +22,7 @@ export default function StatCard({ icon: Icon, label, value, color, onClick, lab
       ) : (
         <div className="min-w-0">
           <p className="text-sm font-heading font-bold text-foreground">{value}</p>
-          <p className="text-sm text-muted-foreground">{label}</p>
+          <p className="text-sm font-heading font-bold text-muted-foreground">{label}</p>
         </div>
       )}
     </div>
