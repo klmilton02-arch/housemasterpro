@@ -45,12 +45,12 @@ export default function Family() {
         <div className="space-y-3">
           <div className="bg-card border border-border rounded-lg divide-y divide-border">
             {familyUsers.map(member => (
-              <div key={member.id} className="px-4 py-3 flex items-center justify-between">
-                <div>
+              <div key={member.id} className="px-4 py-4 flex items-center justify-between">
+                <div className="space-y-1">
                   <p className="font-medium text-sm">{member.full_name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{member.email}</p>
+                  <p className="text-xs text-muted-foreground">{member.email}</p>
+                  <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded inline-block">{member.role}</span>
                 </div>
-                <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">{member.role}</span>
               </div>
             ))}
           </div>
