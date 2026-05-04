@@ -168,7 +168,11 @@ export default function Profile() {
         <div className="bg-cyan-100 border border-cyan-200 rounded-lg p-4 space-y-4">
           <div className="flex items-start gap-3">
             <CalendarDays className="w-5 h-5 text-cyan-600 mt-0.5 shrink-0" />
-            <p className="text-xs text-cyan-700">Set the start date for each task type. New tasks will begin from this date.</p>
+            <div>
+              <p className="text-xs text-cyan-700">Set the start date for each task type. New tasks will begin from this date.</p>
+              <p className="text-xs text-cyan-600 mt-1 italic">💡 Leave blank to auto-schedule: daily → tomorrow, weekly → next week, monthly → next month.</p>
+              <p className="text-xs text-cyan-800 font-medium mt-1 cursor-help" title="Pick today if you are a glutton for punishment and want ALL tasks to start today.">⚠️ Hover here before picking today's date.</p>
+            </div>
           </div>
           {[
             { key: "cleaning", label: "Cleaning" },
