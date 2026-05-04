@@ -1,5 +1,6 @@
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { ChevronLeft, Home, Check } from "lucide-react";
+import { ChevronLeft, Home, Check, ZoomIn, ZoomOut } from "lucide-react";
+import { useLargeIcons } from "@/lib/LargeIconsContext";
 
 const ROOT_PATHS = ["/", "/tasks", "/presets", "/family", "/leaderboard", "/home-setup", "/burst", "/profile", "/dashboard"];
 
@@ -14,10 +15,11 @@ export default function MobileHeader() {
   const navigate = useNavigate();
   const isRoot = ROOT_PATHS.includes(location.pathname);
   const title = PAGE_TITLES[location.pathname] || "HomeLifeFocus";
+  const { largeIcons, toggle } = useLargeIcons();
 
   return (
     <header
-      className="md:hidden fixed top-0 left-0 right-0 z-40 bg-card border-b border-border flex items-end px-4 pb-2"
+      className="md:hidden fixed top-0 left-0 right-0 z-40 bg-card border-b border-border flex items-end justify-between px-4 pb-2"
       style={{ paddingTop: 'calc(0.5rem + env(safe-area-inset-top))', minHeight: 'calc(3rem + env(safe-area-inset-top))' }}
     >
       {isRoot ? (
@@ -43,6 +45,13 @@ export default function MobileHeader() {
           <span className="font-heading font-semibold text-sm text-foreground">{title}</span>
         </div>
       )}
+      <button
+        onClick={toggle}
+        className="p-1.5 rounded-lg border border-border bg-card hover:bg-muted transition-colors"
+        title={largeIcons ? "Standard size" : "Large icons (accessibility)"}
+      >
+        {largeIcons ? <ZoomOut className="w-4 h-4 text-muted-foreground" /> : <ZoomIn className="w-4 h-4 text-muted-foreground" />}
+      </button>
     </header>
   );
 }

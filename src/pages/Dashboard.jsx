@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, ChevronDown, ChevronUp, Zap, Flame, CalendarDays, ZoomIn, ZoomOut } from "lucide-react";
+import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, ChevronDown, ChevronUp, Zap, Flame, CalendarDays } from "lucide-react";
+import { useLargeIcons } from "@/lib/LargeIconsContext";
 import { differenceInDays, parseISO } from "date-fns";
 import confetti from "canvas-confetti";
 import { Link } from "react-router-dom";
@@ -53,7 +54,7 @@ export default function Dashboard() {
   const [justCompletedIds, setJustCompletedIds] = useState(new Set());
   const [drawerTaskIds, setDrawerTaskIds] = useState(null); // ordered list of task ids for the drawer
   const [yesterdayTasks, setYesterdayTasks] = useState(null); // null = not checked yet
-  const [largeIcons, setLargeIcons] = useState(() => localStorage.getItem("homelife_large_icons") === "true");
+  const { largeIcons } = useLargeIcons();
 
   const loadTasks = useCallback(async () => {
     const me = await base44.auth.me();
@@ -234,16 +235,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-7 max-w-md md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
 
-      <div className="flex items-center justify-between md:hidden">
-        <h1 className="font-heading text-4xl font-bold">Dashboard</h1>
-        <button
-          onClick={() => setLargeIcons(v => { const next = !v; localStorage.setItem("homelife_large_icons", next); return next; })}
-          className="p-2 rounded-lg border border-border bg-card hover:bg-muted transition-colors"
-          title={largeIcons ? "Standard icons" : "Large icons (accessibility)"}
-        >
-          {largeIcons ? <ZoomOut className="w-5 h-5 text-muted-foreground" /> : <ZoomIn className="w-5 h-5 text-muted-foreground" />}
-        </button>
-      </div>
+      <h1 className="font-heading text-4xl font-bold md:hidden">Dashboard</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-2 gap-4 sm:gap-5">
          <StatCard large={largeIcons} icon={ListChecks} label="Due Today" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => { setDrawerTaskIds(dueTasks.map(t => t.id)); setTaskListModal({ title: 'Due Today' }); }} />

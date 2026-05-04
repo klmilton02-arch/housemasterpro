@@ -3,6 +3,7 @@ import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
 import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown, ListChecks, Clock, CheckCircle, Tag, Receipt, Home, Filter, Leaf } from "lucide-react";
+import { useLargeIcons } from "@/lib/LargeIconsContext";
 import { Link, useNavigate } from "react-router-dom";
 import { awardPoints, getTaskPoints, revokePoints } from "@/utils/gamification";
 import confetti from "canvas-confetti";
@@ -50,6 +51,7 @@ export default function Tasks() {
   const [completeAsSheet, setCompleteAsSheet] = useState(null); // task pending completion
   const [activeCompletingAs, setActiveCompletingAs] = useState(null); // globally selected member
   const { isActive: blastActive } = useBlastMode();
+  const { largeIcons } = useLargeIcons();
   // Swipe navigation disabled on Tasks — conflicts with vertical scrolling
   const handleTouchStart = () => {};
   const handleTouchEnd = () => {};
@@ -356,22 +358,22 @@ export default function Tasks() {
 
       <div className="grid grid-cols-2 gap-4 sm:gap-5">
          <button onClick={() => setDialogOpen(true)} className="w-full h-full">
-           <StatCard icon={Plus} value="Add" label="New Task" color="bg-blue-100 text-blue-600" />
+           <StatCard large={largeIcons} icon={Plus} value="Add" label="New Task" color="bg-blue-100 text-blue-600" />
          </button>
          <button onClick={() => navigate("/presets")} className="w-full h-full">
-           <StatCard icon={CheckCircle} value="Browse" label="Presets" color="bg-purple-100 text-purple-600" />
+           <StatCard large={largeIcons} icon={CheckCircle} value="Browse" label="Presets" color="bg-purple-100 text-purple-600" />
          </button>
          <button onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }} className="w-full h-full">
-           <StatCard icon={Receipt} value="View" label="Bills" color="bg-green-100 text-green-600" />
+           <StatCard large={largeIcons} icon={Receipt} value="View" label="Bills" color="bg-green-100 text-green-600" />
          </button>
          <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Personal" ? "all" : "Personal"); }} className="w-full h-full">
-           <StatCard icon={Tag} value="View" label="Personal" color="bg-pink-100 text-pink-600" />
+           <StatCard large={largeIcons} icon={Tag} value="View" label="Personal" color="bg-pink-100 text-pink-600" />
          </button>
          <button onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")} className="w-full h-full">
-           <StatCard icon={Home} value="View by" label="Room" color="bg-orange-100 text-orange-600" />
+           <StatCard large={largeIcons} icon={Home} value="View by" label="Room" color="bg-orange-100 text-orange-600" />
          </button>
          <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Garden" ? "all" : "Garden"); }} className="w-full h-full">
-           <StatCard icon={Leaf} value="View" label="Garden" color="bg-lime-100 text-lime-600" />
+           <StatCard large={largeIcons} icon={Leaf} value="View" label="Garden" color="bg-lime-100 text-lime-600" />
          </button>
        </div>
 

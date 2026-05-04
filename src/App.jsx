@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Layout from './components/Layout';
 import { BlastModeProvider } from './lib/BlastModeContext';
+import { LargeIconsProvider } from './lib/LargeIconsContext';
 import Dashboard from './pages/Dashboard';
 import Tasks from './pages/Tasks';
 import NeedsAttention from './pages/NeedsAttention';
@@ -131,6 +132,7 @@ function App() {
   return (
     <AuthProvider>
       <BlastModeProvider>
+      <LargeIconsProvider>
       <QueryClientProvider client={queryClientInstance}>
         <DarkModeSync />
         <Router>
@@ -138,6 +140,7 @@ function App() {
         </Router>
         <Toaster />
       </QueryClientProvider>
+      </LargeIconsProvider>
       </BlastModeProvider>
     </AuthProvider>
   );
