@@ -148,19 +148,18 @@ export default function Profile() {
       <h1 className="font-heading text-3xl font-bold md:hidden">Profile</h1>
 
       {/* My Information */}
-      <div className="bg-violet-100 border border-violet-200 rounded-lg p-4 space-y-3">
-        <div className="flex items-start gap-3">
-          <div className="w-12 h-12 rounded-full bg-violet-200 flex items-center justify-center flex-shrink-0">
-            <User className="w-6 h-6 text-violet-600" />
+      <div className="bg-violet-100 border border-violet-200 rounded-lg px-4 py-3 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-8 h-8 rounded-full bg-violet-200 flex items-center justify-center flex-shrink-0">
+            <User className="w-4 h-4 text-violet-600" />
           </div>
-          <div className="flex-1 min-w-0">
-            <h2 className="font-heading font-semibold text-lg text-foreground">{user.full_name}</h2>
+          <div className="min-w-0">
+            <p className="font-medium text-sm text-foreground truncate">{user.full_name}</p>
             <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-            {user.role && <p className="text-xs font-medium text-violet-600 mt-1 capitalize">{user.role}</p>}
           </div>
         </div>
-        <Button variant="outline" size="sm" onClick={() => { setEditName(user.full_name || ""); setEditOpen(true); }} className="w-full gap-1">
-          <Pencil className="w-3 h-3" /> Edit Name
+        <Button variant="ghost" size="sm" onClick={() => { setEditName(user.full_name || ""); setEditOpen(true); }} className="gap-1 shrink-0">
+          <Pencil className="w-3 h-3" /> Edit
         </Button>
       </div>
       {/* Start Dates */}
