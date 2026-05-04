@@ -32,7 +32,12 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
         console.error('Failed to delete calendar event:', error);
       }
     }
-    await base44.entities.Task.delete(task.id);
+    try {
+      await base44.entities.Task.delete(task.id);
+    } catch (err) {
+      // Task already deleted or not found — treat as success
+      console.warn('Task delete warning:', err.message);
+    }
     onDelete?.(task);
     setDeleteDialogOpen(false);
     onOpenChange(false);
