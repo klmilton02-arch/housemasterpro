@@ -359,19 +359,19 @@ export default function Tasks() {
            <StatCard icon={Plus} value="Add" label="New Task" color="bg-blue-100 text-blue-600" />
          </button>
          <button onClick={() => navigate("/presets")} className="w-full h-full">
-           <StatCard icon={CheckCircle} label="Browse" value="Presets" color="bg-purple-100 text-purple-600" />
+           <StatCard icon={CheckCircle} value="Browse" label="Presets" color="bg-purple-100 text-purple-600" />
          </button>
          <button onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }} className="w-full h-full">
-           <StatCard icon={Receipt} label="View" value="Bills" color="bg-green-100 text-green-600" />
+           <StatCard icon={Receipt} value="View" label="Bills" color="bg-green-100 text-green-600" />
          </button>
          <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Personal" ? "all" : "Personal"); }} className="w-full h-full">
-           <StatCard icon={Tag} label="View" value="Personal" color="bg-pink-100 text-pink-600" />
+           <StatCard icon={Tag} value="View" label="Personal" color="bg-pink-100 text-pink-600" />
          </button>
          <button onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")} className="w-full h-full">
-           <StatCard icon={Home} label="Room" value="View by" labelOnTop color="bg-orange-100 text-orange-600" />
+           <StatCard icon={Home} value="View by" label="Room" color="bg-orange-100 text-orange-600" />
          </button>
          <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Garden" ? "all" : "Garden"); }} className="w-full h-full">
-           <StatCard icon={Leaf} label="Garden" value="View" labelOnTop color="bg-lime-100 text-lime-600" />
+           <StatCard icon={Leaf} value="View" label="Garden" color="bg-lime-100 text-lime-600" />
          </button>
        </div>
 
