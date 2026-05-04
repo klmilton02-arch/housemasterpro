@@ -368,10 +368,10 @@ export default function Tasks() {
            <StatCard icon={Tag} label="View" value="Personal" color="bg-pink-100 text-pink-600" />
          </button>
          <button onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")} className="w-full h-full">
-           <StatCard icon={Home} label="View by" value="Room" color="bg-orange-100 text-orange-600" />
+           <StatCard icon={Home} label="Room" value="View by" labelOnTop color="bg-orange-100 text-orange-600" />
          </button>
          <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Garden" ? "all" : "Garden"); }} className="w-full h-full">
-           <StatCard icon={Leaf} label="View" value="Garden" color="bg-lime-100 text-lime-600" />
+           <StatCard icon={Leaf} label="Garden" value="View" labelOnTop color="bg-lime-100 text-lime-600" />
          </button>
        </div>
 
