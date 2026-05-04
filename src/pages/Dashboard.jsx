@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, ChevronDown, ChevronUp, Zap, Flame, CalendarDays } from "lucide-react";
+import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, ChevronDown, ChevronUp, Zap, Flame, CalendarDays, ZoomIn, ZoomOut } from "lucide-react";
 import { differenceInDays, parseISO } from "date-fns";
 import confetti from "canvas-confetti";
 import { Link } from "react-router-dom";
@@ -53,6 +53,7 @@ export default function Dashboard() {
   const [justCompletedIds, setJustCompletedIds] = useState(new Set());
   const [drawerTaskIds, setDrawerTaskIds] = useState(null); // ordered list of task ids for the drawer
   const [yesterdayTasks, setYesterdayTasks] = useState(null); // null = not checked yet
+  const [largeIcons, setLargeIcons] = useState(() => localStorage.getItem("homelife_large_icons") === "true");
 
   const loadTasks = useCallback(async () => {
     const me = await base44.auth.me();
@@ -233,29 +234,38 @@ export default function Dashboard() {
   return (
     <div className="space-y-7 max-w-md md:max-w-2xl mx-auto px-3 sm:px-2 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
 
-      <h1 className="font-heading text-4xl font-bold md:hidden">Dashboard</h1>
+      <div className="flex items-center justify-between md:hidden">
+        <h1 className="font-heading text-4xl font-bold">Dashboard</h1>
+        <button
+          onClick={() => setLargeIcons(v => { const next = !v; localStorage.setItem("homelife_large_icons", next); return next; })}
+          className="p-2 rounded-lg border border-border bg-card hover:bg-muted transition-colors"
+          title={largeIcons ? "Standard icons" : "Large icons (accessibility)"}
+        >
+          {largeIcons ? <ZoomOut className="w-5 h-5 text-muted-foreground" /> : <ZoomIn className="w-5 h-5 text-muted-foreground" />}
+        </button>
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-2 gap-4 sm:gap-5">
-         <StatCard icon={ListChecks} label="Due Today" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => { setDrawerTaskIds(dueTasks.map(t => t.id)); setTaskListModal({ title: 'Due Today' }); }} />
-         <StatCard icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => { setDrawerTaskIds(overdueTasks.map(t => t.id)); setTaskListModal({ title: 'Overdue Tasks' }); }} />
-         <StatCard icon={Clock} label="Pending Tasks" value={pendingTasks.length} color="bg-amber-100 text-amber-600" onClick={() => { setDrawerTaskIds(pendingTasks.map(t => t.id)); setTaskListModal({ title: 'Pending Tasks' }); }} />
-         <StatCard icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setDrawerTaskIds(completedTasks.map(t => t.id)); setTaskListModal({ title: 'Completed Tasks' }); }} />
+         <StatCard large={largeIcons} icon={ListChecks} label="Due Today" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => { setDrawerTaskIds(dueTasks.map(t => t.id)); setTaskListModal({ title: 'Due Today' }); }} />
+         <StatCard large={largeIcons} icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => { setDrawerTaskIds(overdueTasks.map(t => t.id)); setTaskListModal({ title: 'Overdue Tasks' }); }} />
+         <StatCard large={largeIcons} icon={Clock} label="Pending Tasks" value={pendingTasks.length} color="bg-amber-100 text-amber-600" onClick={() => { setDrawerTaskIds(pendingTasks.map(t => t.id)); setTaskListModal({ title: 'Pending Tasks' }); }} />
+         <StatCard large={largeIcons} icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setDrawerTaskIds(completedTasks.map(t => t.id)); setTaskListModal({ title: 'Completed Tasks' }); }} />
          <div className="col-span-2">
            <Link to="/tasks" className="block">
-             <StatCard icon={ListChecks} label="Create, organize, and schedule tasks" value="Tasks" color="bg-slate-100 text-slate-600" />
+             <StatCard large={largeIcons} icon={ListChecks} label="Create, organize, and schedule tasks" value="Tasks" color="bg-slate-100 text-slate-600" />
            </Link>
          </div>
          <div className="col-span-2">
-           <StatCard icon={Flame} label="Blast Mode" value={blastDisplay} color={isBlastActive ? "bg-orange-500 text-white" : "bg-orange-100 text-orange-600"} onClick={() => isBlastActive ? setBlastOptionsOpen(true) : startBlast(30)} />
+           <StatCard large={largeIcons} icon={Flame} label="Blast Mode" value={blastDisplay} color={isBlastActive ? "bg-orange-500 text-white" : "bg-orange-100 text-orange-600"} onClick={() => isBlastActive ? setBlastOptionsOpen(true) : startBlast(30)} />
          </div>
          <div className="col-span-2">
            <Link to="/calendar" className="block">
-             <StatCard icon={CalendarDays} label="Calendar" value="View" color="bg-purple-100 text-purple-600" />
+             <StatCard large={largeIcons} icon={CalendarDays} label="Calendar" value="View" color="bg-purple-100 text-purple-600" />
            </Link>
          </div>
          <div className="col-span-2">
            <Link to="/family" className="block">
-             <StatCard icon={ListChecks} label="Family" value="View" color="bg-pink-100 text-pink-600" />
+             <StatCard large={largeIcons} icon={ListChecks} label="Family" value="View" color="bg-pink-100 text-pink-600" />
            </Link>
          </div>
          </div>
