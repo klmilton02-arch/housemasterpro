@@ -22,6 +22,14 @@
         "teal"
       ],
       "default": "blue"
+    },
+    "linked_user_id": {
+      "type": "string",
+      "title": "Linked User ID"
+    },
+    "linked_user_email": {
+      "type": "string",
+      "title": "Linked User Email"
     }
   },
   "required": [
