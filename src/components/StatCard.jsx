@@ -6,8 +6,8 @@ export default function StatCard({ icon: Icon, label, value, color, onClick, lab
       className={cn("bg-card border border-border rounded-xl px-5 py-4 flex items-center gap-4 transition-all h-full", onClick && "cursor-pointer hover:shadow-md hover:border-primary/30 active:scale-95")}
       onClick={onClick}
     >
-      <div className={cn("w-14 h-14 rounded-lg flex items-center justify-center flex-shrink-0", color)}>
-        <Icon className="w-7 h-7" />
+      <div className={cn("w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0", color)}>
+        <Icon className="w-5 h-5" />
       </div>
       {labelRight ? (
         <div className="min-w-0 flex items-center gap-3">
