@@ -12,6 +12,8 @@ export default function ScanAppointmentDialog({ open, onOpenChange, onTaskCreate
   const [fileUrl, setFileUrl] = useState(null);
   const [extracted, setExtracted] = useState(null);
   const [error, setError] = useState(null);
+  const [editField, setEditField] = useState(null);
+  const [editValue, setEditValue] = useState('');
   const fileInputRef = useRef(null);
   const cameraInputRef = useRef(null);
 
@@ -65,6 +67,26 @@ export default function ScanAppointmentDialog({ open, onOpenChange, onTaskCreate
       setStep('error');
       setProcessing(false);
     }
+  };
+
+  const handleStartEdit = (field, currentValue) => {
+    setEditField(field);
+    setEditValue(currentValue || '');
+  };
+
+  const handleSaveEdit = () => {
+    setExtracted({
+      ...extracted,
+      [editField]: editValue
+    });
+    setEditField(null);
+    setEditValue('');
+  };
+
+  const handleDelete = () => {
+    setStep('upload');
+    setFileUrl(null);
+    setExtracted(null);
   };
 
   const handleClose = () => {
@@ -146,30 +168,137 @@ export default function ScanAppointmentDialog({ open, onOpenChange, onTaskCreate
           <div className="space-y-4">
             <div className="text-sm font-medium text-foreground mb-3">Confirm Appointment Details</div>
             
-            <div className="bg-blue-50 dark:bg-blue-950 rounded-lg p-4 space-y-3 text-sm">
-              {extracted.doctor_name && (
+            <div className="bg-blue-50 dark:bg-blue-950 rounded-lg p-4 space-y-4 text-sm">
+              {editField === 'doctor_name' ? (
                 <div>
                   <p className="text-muted-foreground text-xs mb-1">Doctor</p>
-                  <p className="font-semibold text-foreground">{extracted.doctor_name}</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                      className="flex-1 px-2 py-1 border border-input rounded text-foreground bg-background"
+                      autoFocus
+                    />
+                    <Button size="sm" onClick={handleSaveEdit} className="px-3">Save</Button>
+                  </div>
                 </div>
+              ) : (
+                extracted.doctor_name && (
+                  <div className="flex items-center justify-between group">
+                    <div className="flex-1">
+                      <p className="text-muted-foreground text-xs mb-1">Doctor</p>
+                      <p className="font-semibold text-foreground">{extracted.doctor_name}</p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleStartEdit('doctor_name', extracted.doctor_name)}
+                      className="opacity-0 group-hover:opacity-100"
+                    >
+                      Edit
+                    </Button>
+                  </div>
+                )
               )}
-              {extracted.date && (
+
+              {editField === 'date' ? (
                 <div>
                   <p className="text-muted-foreground text-xs mb-1">Date</p>
-                  <p className="font-semibold text-foreground">{extracted.date}</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                      className="flex-1 px-2 py-1 border border-input rounded text-foreground bg-background"
+                      autoFocus
+                    />
+                    <Button size="sm" onClick={handleSaveEdit} className="px-3">Save</Button>
+                  </div>
                 </div>
+              ) : (
+                extracted.date && (
+                  <div className="flex items-center justify-between group">
+                    <div className="flex-1">
+                      <p className="text-muted-foreground text-xs mb-1">Date</p>
+                      <p className="font-semibold text-foreground">{extracted.date}</p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleStartEdit('date', extracted.date)}
+                      className="opacity-0 group-hover:opacity-100"
+                    >
+                      Edit
+                    </Button>
+                  </div>
+                )
               )}
-              {extracted.time && (
+
+              {editField === 'time' ? (
                 <div>
                   <p className="text-muted-foreground text-xs mb-1">Time</p>
-                  <p className="font-semibold text-foreground">{extracted.time}</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                      className="flex-1 px-2 py-1 border border-input rounded text-foreground bg-background"
+                      autoFocus
+                    />
+                    <Button size="sm" onClick={handleSaveEdit} className="px-3">Save</Button>
+                  </div>
                 </div>
+              ) : (
+                extracted.time && (
+                  <div className="flex items-center justify-between group">
+                    <div className="flex-1">
+                      <p className="text-muted-foreground text-xs mb-1">Time</p>
+                      <p className="font-semibold text-foreground">{extracted.time}</p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleStartEdit('time', extracted.time)}
+                      className="opacity-0 group-hover:opacity-100"
+                    >
+                      Edit
+                    </Button>
+                  </div>
+                )
               )}
-              {extracted.location && (
+
+              {editField === 'location' ? (
                 <div>
                   <p className="text-muted-foreground text-xs mb-1">Location</p>
-                  <p className="font-semibold text-foreground">{extracted.location}</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                      className="flex-1 px-2 py-1 border border-input rounded text-foreground bg-background"
+                      autoFocus
+                    />
+                    <Button size="sm" onClick={handleSaveEdit} className="px-3">Save</Button>
+                  </div>
                 </div>
+              ) : (
+                extracted.location && (
+                  <div className="flex items-center justify-between group">
+                    <div className="flex-1">
+                      <p className="text-muted-foreground text-xs mb-1">Location</p>
+                      <p className="font-semibold text-foreground">{extracted.location}</p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleStartEdit('location', extracted.location)}
+                      className="opacity-0 group-hover:opacity-100"
+                    >
+                      Edit
+                    </Button>
+                  </div>
+                )
               )}
             </div>
 
@@ -177,20 +306,16 @@ export default function ScanAppointmentDialog({ open, onOpenChange, onTaskCreate
               <Button
                 variant="outline"
                 className="flex-1"
-                onClick={() => {
-                  setStep('upload');
-                  setFileUrl(null);
-                  setExtracted(null);
-                }}
+                onClick={handleDelete}
               >
-                Cancel
+                Delete
               </Button>
               <Button
                 className="flex-1"
                 onClick={handleConfirm}
                 disabled={processing}
               >
-                {processing ? 'Adding...' : 'Confirm & Add'}
+                {processing ? 'Adding...' : 'Confirm'}
               </Button>
             </div>
           </div>
