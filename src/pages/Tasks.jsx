@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown, ListChecks, Clock, CheckCircle, Tag, Receipt, Home, Filter, Leaf, ClipboardList } from "lucide-react";
+import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown, ListChecks, Clock, CheckCircle, Tag, Receipt, Home, Filter, Leaf, ClipboardList, Camera } from "lucide-react";
 import { useLargeIcons } from "@/lib/LargeIconsContext";
 import { Link, useNavigate } from "react-router-dom";
 import { awardPoints, getTaskPoints, revokePoints } from "@/utils/gamification";
@@ -25,6 +25,7 @@ import YesterdayTasksDialog from "../components/YesterdayTasksDialog";
 import CompleteAsSheet from "../components/CompleteAsSheet";
 import CompletingAsCard from "../components/CompletingAsCard";
 import { differenceInDays, parseISO, subDays, format } from "date-fns";
+import ScanAppointmentDialog from "../components/ScanAppointmentDialog";
 
 export default function Tasks() {
   const navigate = useNavigate();
@@ -50,6 +51,7 @@ export default function Tasks() {
   const [showYesterdayDialog, setShowYesterdayDialog] = useState(false);
   const [completeAsSheet, setCompleteAsSheet] = useState(null); // task pending completion
   const [activeCompletingAs, setActiveCompletingAs] = useState(null); // globally selected member
+  const [scanDialogOpen, setScanDialogOpen] = useState(false);
   const { isActive: blastActive } = useBlastMode();
   const { largeIcons } = useLargeIcons();
   // Swipe navigation disabled on Tasks — conflicts with vertical scrolling
@@ -356,6 +358,11 @@ export default function Tasks() {
     <div className="space-y-2 md:space-y-6 w-full md:max-w-2xl md:mx-auto px-4 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <h1 className="font-heading text-4xl font-bold md:hidden">Tasks</h1>
 
+      <Button onClick={() => setScanDialogOpen(true)} className="w-full gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600">
+        <Camera className="w-4 h-4" />
+        Scan Appointment
+      </Button>
+
       <div className="grid grid-cols-1 gap-3 sm:gap-4">
          <button onClick={() => setDialogOpen(true)} className="w-full h-full">
            <StatCard large={largeIcons} labelRight icon={Plus} value="Add New Task" label="" color="bg-blue-100 text-blue-600" />
@@ -550,6 +557,8 @@ export default function Tasks() {
         onReassign={handleBatchReassign}
         onCancel={() => { setBatchMode(false); setSelectedIds(new Set()); }}
       />
+
+      <ScanAppointmentDialog open={scanDialogOpen} onOpenChange={setScanDialogOpen} onTaskCreated={loadTasks} />
     </div>
   );
 }
