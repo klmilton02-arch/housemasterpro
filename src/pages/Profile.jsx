@@ -154,8 +154,8 @@ export default function Profile() {
             <User className="w-4 h-4 text-violet-600" />
           </div>
           <div className="min-w-0">
-            <p className="font-medium text-sm text-foreground truncate">{user.full_name}</p>
-            <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+            <p className="font-medium text-base text-foreground truncate">{user.full_name}</p>
+            <p className="text-sm text-muted-foreground truncate">{user.email}</p>
           </div>
         </div>
         <Button variant="ghost" size="sm" onClick={() => { setEditName(user.full_name || ""); setEditOpen(true); }} className="gap-1 shrink-0">
@@ -168,8 +168,8 @@ export default function Profile() {
           <div className="flex items-center gap-3">
             <CalendarDays className="w-5 h-5 text-cyan-600 shrink-0" />
             <div>
-              <p className="font-medium text-sm text-foreground">Task Start Dates</p>
-              <p className="text-xs text-muted-foreground">Set when each task type begins</p>
+              <p className="font-medium text-base text-foreground">Task Start Dates</p>
+              <p className="text-sm text-muted-foreground">Set when each task type begins</p>
             </div>
           </div>
           <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
@@ -180,7 +180,7 @@ export default function Profile() {
       <div className="bg-orange-100 border border-orange-200 rounded-lg px-4 py-3 space-y-2">
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4 text-orange-600 shrink-0" />
-          <p className="text-sm font-medium text-orange-900">New day starts at</p>
+          <p className="text-base font-medium text-orange-900">New day starts at</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex-1 min-w-0">
@@ -206,21 +206,21 @@ export default function Profile() {
         <Link to="/presets" className="block">
           <div className="bg-purple-100 border border-purple-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-purple-50 transition-colors">
             <span className="text-xl">📋</span>
-            <p className="text-sm font-medium text-purple-700">Presets</p>
+            <p className="text-base font-medium text-purple-700">Presets</p>
             <ChevronRight className="w-4 h-4 text-purple-400 ml-auto" />
           </div>
         </Link>
         <Link to="/family" className="block">
           <div className="bg-violet-100 border border-violet-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-violet-50 transition-colors">
             <span className="text-xl">👨‍👩‍👧‍👦</span>
-            <p className="text-sm font-medium text-violet-700">Family</p>
+            <p className="text-base font-medium text-violet-700">Family</p>
             <ChevronRight className="w-4 h-4 text-violet-400 ml-auto" />
           </div>
         </Link>
         <Link to="/home-setup" className="block">
           <div className="bg-orange-100 border border-orange-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-orange-50 transition-colors">
             <span className="text-xl">🏠</span>
-            <p className="text-sm font-medium text-orange-700">Home Setup</p>
+            <p className="text-base font-medium text-orange-700">Home Setup</p>
             <ChevronRight className="w-4 h-4 text-orange-400 ml-auto" />
           </div>
         </Link>
