@@ -143,173 +143,196 @@ export default function Profile() {
   const earnedBadges = profile ? getEarnedBadges(profile) : [];
 
   return (
-    <div className="space-y-3 max-w-md md:max-w-2xl mx-auto px-3 sm:px-2 pt-7 pb-8" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div className="min-h-screen bg-background p-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+      <div className="max-w-[120rem] mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-heading font-bold text-foreground">Profile</h1>
+        </div>
 
-      <h1 className="font-heading text-3xl font-bold md:hidden">Profile</h1>
-
-      {/* My Information */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-            <User className="w-4 h-4 text-blue-600" />
-          </div>
-          <div className="min-w-0">
-            <p className="font-medium text-base text-foreground truncate">{user.full_name}</p>
-            <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+        {/* My Information */}
+        <div className="bg-card rounded-lg border border-border shadow-sm p-6 mb-6">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4 min-w-0 flex-1">
+              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <User className="w-5 h-5 text-blue-600" />
+              </div>
+              <div className="min-w-0">
+                <p className="font-semibold text-lg text-foreground truncate">{user.full_name}</p>
+                <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+              </div>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => { setEditName(user.full_name || ""); setEditOpen(true); }} className="gap-1 shrink-0">
+              <Pencil className="w-4 h-4" /> Edit
+            </Button>
           </div>
         </div>
-        <Button variant="ghost" size="sm" onClick={() => { setEditName(user.full_name || ""); setEditOpen(true); }} className="gap-1 shrink-0">
-          <Pencil className="w-3 h-3" /> Edit
-        </Button>
-      </div>
-      {/* Start Dates */}
-      <Link to="/task-start-dates" className="block">
-        <div className="bg-cyan-100 border border-cyan-200 rounded-lg px-4 py-3 flex items-center justify-between gap-3 hover:bg-cyan-50 transition-colors">
-          <div className="flex items-center gap-3">
-            <CalendarDays className="w-5 h-5 text-cyan-600 shrink-0" />
-            <div>
-              <p className="font-medium text-base text-foreground">Task Start Dates</p>
-              <p className="text-sm text-muted-foreground">Set when each task type begins</p>
+
+        {/* Settings Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          {/* Task Reset Time */}
+          <div className="bg-card rounded-lg border border-border shadow-sm p-6">
+            <div className="flex items-start gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
+                <Clock className="w-5 h-5 text-amber-600" />
+              </div>
+              <div>
+                <p className="font-semibold text-foreground">New Day Starts At</p>
+                <p className="text-xs text-muted-foreground mt-0.5">When tasks reset to pending</p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <MobileSelect
+                value={dayStartHour}
+                onValueChange={setDayStartHour}
+                title="Select time"
+                triggerClassName="w-full"
+                options={Array.from({ length: 24 }, (_, i) => ({
+                  value: String(i),
+                  label: i === 0 ? "12:00 AM" : i < 12 ? `${i}:00 AM` : i === 12 ? "12:00 PM" : `${i - 12}:00 PM`
+                }))}
+              />
+              <Button onClick={handleSaveDayStart} disabled={savingHour} size="sm" className="w-full">
+                {savingHour ? "Saving..." : "Save"}
+              </Button>
             </div>
           </div>
-          <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
-        </div>
-      </Link>
 
-      {/* Task Reset Time */}
-      <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 space-y-2">
-        <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-amber-600 shrink-0" />
-          <p className="text-base font-medium text-amber-900">New day starts at</p>
+          {/* Start Dates */}
+          <Link to="/task-start-dates" className="block">
+            <div className="bg-card rounded-lg border border-border shadow-sm p-6 h-full hover:shadow-md transition-shadow">
+              <div className="flex items-start gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-cyan-100 flex items-center justify-center flex-shrink-0">
+                  <CalendarDays className="w-5 h-5 text-cyan-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-foreground">Task Start Dates</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Set when each task type begins</p>
+                </div>
+              </div>
+              <div className="flex items-center text-muted-foreground mt-4">
+                <ChevronRight className="w-4 h-4 ml-auto" />
+              </div>
+            </div>
+          </Link>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="flex-1 min-w-0">
-            <MobileSelect
-              value={dayStartHour}
-              onValueChange={setDayStartHour}
-              title="Select time"
-              triggerClassName="w-full"
-              options={Array.from({ length: 24 }, (_, i) => ({
-                value: String(i),
-                label: i === 0 ? "12:00 AM" : i < 12 ? `${i}:00 AM` : i === 12 ? "12:00 PM" : `${i - 12}:00 PM`
-              }))}
-            />
-          </div>
-          <Button onClick={handleSaveDayStart} disabled={savingHour} size="sm" className="bg-amber-500 text-white hover:bg-amber-600 shrink-0">
-            {savingHour ? "..." : "Save"}
+
+        {/* Quick Navigation Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <Link to="/presets" className="block">
+            <div className="bg-card rounded-lg border border-border shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-2xl">📋</span>
+                <p className="font-semibold text-foreground">Presets</p>
+              </div>
+              <p className="text-xs text-muted-foreground">Browse task templates</p>
+            </div>
+          </Link>
+          <Link to="/family" className="block">
+            <div className="bg-card rounded-lg border border-border shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-2xl">👨‍👩‍👧‍👦</span>
+                <p className="font-semibold text-foreground">Family</p>
+              </div>
+              <p className="text-xs text-muted-foreground">Manage members</p>
+            </div>
+          </Link>
+          <Link to="/home-setup" className="block">
+            <div className="bg-card rounded-lg border border-border shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-2xl">🏠</span>
+                <p className="font-semibold text-foreground">Home Setup</p>
+              </div>
+              <p className="text-xs text-muted-foreground">Configure your home</p>
+            </div>
+          </Link>
+        </div>
+
+        {/* Security & Sign Out */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <Link to="/encryption" className="block">
+            <Button variant="outline" className="w-full gap-2 h-auto py-3 justify-start">
+              <Shield className="w-4 h-4" />
+              <span>Security & Privacy</span>
+            </Button>
+          </Link>
+          <Button onClick={() => base44.auth.logout("/")} variant="outline" className="gap-2 h-auto py-3 justify-start text-red-600 hover:text-red-700 hover:bg-red-50">
+            <LogOut className="w-4 h-4" />
+            <span>Sign Out</span>
           </Button>
         </div>
-      </div>
 
-      {/* Quick Links */}
-      <div className="flex flex-col gap-3">
-        <Link to="/presets" className="block">
-          <div className="bg-violet-50 border border-violet-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-violet-100 transition-colors">
-            <span className="text-xl">📋</span>
-            <p className="text-base font-medium text-violet-800">Presets</p>
-            <ChevronRight className="w-4 h-4 text-violet-400 ml-auto" />
+        {/* Data Management Section */}
+        <div className="bg-card rounded-lg border border-border shadow-sm p-6">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-4">Data Management</p>
+          <div className="space-y-3">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" className="w-full justify-start text-amber-700 hover:bg-amber-50">
+                  Reset All Data
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Reset All Data?</AlertDialogTitle>
+                  <AlertDialogDescription>This will delete all your tasks and reset your XP, level, and badges to start fresh. This cannot be undone.</AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel disabled={resettingData}>Cancel</AlertDialogCancel>
+                  <Button
+                    onClick={async () => {
+                      setResettingData(true);
+                      try {
+                        await base44.functions.invoke('fullReset', {});
+                        loadData();
+                        setResettingData(false);
+                      } catch (error) {
+                        console.error("Failed to reset data:", error);
+                        setResettingData(false);
+                      }
+                    }}
+                    disabled={resettingData}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {resettingData ? "Resetting..." : "Reset Data"}
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            <AlertDialog open={deleteError ? true : undefined}>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" className="w-full justify-start text-red-600 hover:bg-red-50">
+                  Delete My Account
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete Account</AlertDialogTitle>
+                  <AlertDialogDescription>This will permanently delete your account and all associated data. This cannot be undone.</AlertDialogDescription>
+                </AlertDialogHeader>
+                {deleteError && <p className="text-xs text-destructive">{deleteError}</p>}
+                <AlertDialogFooter>
+                  <AlertDialogCancel disabled={deletingAccount} onClick={() => setDeleteError("")}>Cancel</AlertDialogCancel>
+                  <Button
+                    onClick={async () => {
+                      setDeletingAccount(true);
+                      setDeleteError("");
+                      try {
+                        await deleteAccount();
+                      } catch (error) {
+                        setDeleteError(error.message || "Failed to delete account. Please try again.");
+                        setDeletingAccount(false);
+                      }
+                    }}
+                    disabled={deletingAccount}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {deletingAccount ? "Deleting..." : "Delete Account"}
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
-        </Link>
-        <Link to="/family" className="block">
-          <div className="bg-green-50 border border-green-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-green-100 transition-colors">
-            <span className="text-xl">👨‍👩‍👧‍👦</span>
-            <p className="text-base font-medium text-green-800">Family</p>
-            <ChevronRight className="w-4 h-4 text-green-400 ml-auto" />
-          </div>
-        </Link>
-        <Link to="/home-setup" className="block">
-          <div className="bg-teal-50 border border-teal-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-teal-100 transition-colors">
-            <span className="text-xl">🏠</span>
-            <p className="text-base font-medium text-teal-800">Home Setup</p>
-            <ChevronRight className="w-4 h-4 text-teal-400 ml-auto" />
-          </div>
-        </Link>
-      </div>
-
-      {/* Settings Links */}
-      <div className="grid grid-cols-2 gap-3">
-        <Link to="/encryption" className="block">
-          <Button variant="outline" className="w-full gap-2 justify-center text-sm h-auto py-3 bg-slate-100 border-slate-200 hover:bg-slate-50">
-            <Shield className="w-4 h-4" />
-            <span className="hidden sm:inline">Security</span>
-            <span className="sm:hidden">Security</span>
-          </Button>
-        </Link>
-        <Button onClick={() => base44.auth.logout("/")} variant="outline" className="w-full gap-2 justify-center text-sm h-auto py-3 bg-red-100 border-red-200 hover:bg-red-50 text-red-600">
-          <LogOut className="w-4 h-4" />
-          <span>Sign Out</span>
-        </Button>
-      </div>
-
-      {/* Data Management */}
-      <div className="space-y-2 pt-4 border-t border-border">
-        <p className="text-xs font-medium text-muted-foreground uppercase">Data Management</p>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="outline" className="w-full text-sm bg-amber-50 border-amber-200 hover:bg-amber-100 text-amber-700">
-              Reset All Data
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Reset All Data?</AlertDialogTitle>
-              <AlertDialogDescription>This will delete all your tasks and reset your XP, level, and badges to start fresh. This cannot be undone.</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel disabled={resettingData}>Cancel</AlertDialogCancel>
-              <Button
-                onClick={async () => {
-                  setResettingData(true);
-                  try {
-                    await base44.functions.invoke('fullReset', {});
-                    loadData();
-                    setResettingData(false);
-                  } catch (error) {
-                    console.error("Failed to reset data:", error);
-                    setResettingData(false);
-                  }
-                }}
-                disabled={resettingData}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              >
-                {resettingData ? "Resetting..." : "Reset Data"}
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-        <AlertDialog open={deleteError ? true : undefined}>
-          <AlertDialogTrigger asChild>
-            <Button variant="outline" className="w-full text-sm bg-red-100 border-red-200 hover:bg-red-50 text-red-600">
-              Delete My Account
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Delete Account</AlertDialogTitle>
-              <AlertDialogDescription>This will permanently delete your account and all associated data. This cannot be undone.</AlertDialogDescription>
-            </AlertDialogHeader>
-            {deleteError && <p className="text-xs text-destructive">{deleteError}</p>}
-            <AlertDialogFooter>
-              <AlertDialogCancel disabled={deletingAccount} onClick={() => setDeleteError("")}>Cancel</AlertDialogCancel>
-              <Button
-                onClick={async () => {
-                  setDeletingAccount(true);
-                  setDeleteError("");
-                  try {
-                    await deleteAccount();
-                  } catch (error) {
-                    setDeleteError(error.message || "Failed to delete account. Please try again.");
-                    setDeletingAccount(false);
-                  }
-                }}
-                disabled={deletingAccount}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              >
-                {deletingAccount ? "Deleting..." : "Delete Account"}
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        </div>
       </div>
 
       {/* Edit Profile Dialog */}
