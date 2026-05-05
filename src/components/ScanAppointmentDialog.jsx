@@ -6,7 +6,6 @@ import { Camera, Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 import { Input } from '@/components/ui/input';
 
 export default function ScanAppointmentDialog({ open, onOpenChange, onTaskCreated }) {
-  console.log('ScanAppointmentDialog render, open:', open);
   const [step, setStep] = useState('upload'); // upload, preview, success, error
   const [uploading, setUploading] = useState(false);
   const [processing, setProcessing] = useState(false);
