@@ -382,9 +382,6 @@ export default function Tasks() {
          <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Garden" ? "all" : "Garden"); }} className="w-full h-full">
            <StatCard large={largeIcons} labelRight icon={Leaf} value="View Garden" label="" color="bg-lime-100 text-lime-600" />
          </button>
-         <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "To-Do" ? "all" : "To-Do"); }} className="w-full h-full">
-           <StatCard large={largeIcons} labelRight icon={ClipboardList} value="View To-Do List" label="" color="bg-indigo-100 text-indigo-600" />
-         </button>
        </div>
 
       <div className="grid grid-cols-2 gap-3">
