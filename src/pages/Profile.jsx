@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { User, LogOut, Shield, Clock, Pencil, CalendarDays } from "lucide-react";
+import { User, LogOut, Shield, Clock, Pencil, CalendarDays, ChevronRight } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import BadgeDisplay from "../components/BadgeDisplay";
@@ -163,49 +163,18 @@ export default function Profile() {
         </Button>
       </div>
       {/* Start Dates */}
-      <div className="space-y-3">
-        <h3 className="font-heading font-semibold text-lg">Task Start Dates</h3>
-        <div className="bg-cyan-100 border border-cyan-200 rounded-lg p-4 space-y-4">
-          <div className="flex items-start gap-3">
-            <CalendarDays className="w-5 h-5 text-cyan-600 mt-0.5 shrink-0" />
+      <Link to="/task-start-dates" className="block">
+        <div className="bg-cyan-100 border border-cyan-200 rounded-lg px-4 py-3 flex items-center justify-between gap-3 hover:bg-cyan-50 transition-colors">
+          <div className="flex items-center gap-3">
+            <CalendarDays className="w-5 h-5 text-cyan-600 shrink-0" />
             <div>
-              <p className="text-xs text-cyan-700">Set the start date for each task type. New tasks will begin from this date.</p>
-              <p className="text-xs text-cyan-600 mt-1 italic">💡 Leave blank to auto-schedule: daily → tomorrow, weekly → next week, monthly → next month.</p>
-              <p className="text-xs text-cyan-800 font-medium mt-1 cursor-help" title="Pick today if you are a glutton for punishment and want ALL tasks to start today.">⚠️ Hover here before picking today's date.</p>
+              <p className="font-medium text-sm text-foreground">Task Start Dates</p>
+              <p className="text-xs text-muted-foreground">Set when each task type begins</p>
             </div>
           </div>
-          {[
-            { key: "cleaning", label: "Cleaning" },
-            { key: "maintenance", label: "Maintenance" },
-            { key: "bills", label: "Bills" },
-            { key: "personal", label: "Personal" },
-          ].map(({ key, label }) => (
-            <div key={key} className="flex items-center gap-2">
-              <label className="text-sm font-medium w-24 shrink-0">{label}</label>
-              <input
-                type="date"
-                value={startDates[key]}
-                onChange={e => setStartDates(prev => ({ ...prev, [key]: e.target.value }))}
-                className="flex-1 border border-cyan-200 rounded-md px-3 py-1.5 text-sm bg-white text-foreground"
-              />
-              {startDates[key] && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setStartDates(prev => ({ ...prev, [key]: "" }))}
-                  className="text-xs px-2"
-                >
-                  Clear
-                </Button>
-              )}
-            </div>
-          ))}
-          <Button onClick={handleSaveStartDates} disabled={savingStartDates} size="sm" className="w-full bg-cyan-500 text-white hover:bg-cyan-600">
-            {savingStartDates ? "Saving..." : "Save Start Dates"}
-          </Button>
+          <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
         </div>
-      </div>
+      </Link>
 
       {/* Task Reset Time */}
       <div className="space-y-3">
