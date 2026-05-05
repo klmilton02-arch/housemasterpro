@@ -361,22 +361,22 @@ export default function Tasks() {
            <StatCard large={largeIcons} labelRight icon={Plus} value="Add New Task" label="" color="bg-blue-100 text-blue-600" />
          </button>
          <button onClick={() => navigate("/presets")} className="w-full h-full">
-           <StatCard large={largeIcons} icon={CheckCircle} value="Browse" label="Presets" color="bg-purple-100 text-purple-600" />
+           <StatCard large={largeIcons} labelRight icon={CheckCircle} value="Browse Presets" label="" color="bg-purple-100 text-purple-600" />
          </button>
          <button onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }} className="w-full h-full">
-           <StatCard large={largeIcons} icon={Receipt} value="View" label="Bills" color="bg-green-100 text-green-600" />
+           <StatCard large={largeIcons} labelRight icon={Receipt} value="View Bills" label="" color="bg-green-100 text-green-600" />
          </button>
          <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Personal" ? "all" : "Personal"); }} className="w-full h-full">
-           <StatCard large={largeIcons} icon={Tag} value="View" label="Personal" color="bg-pink-100 text-pink-600" />
+           <StatCard large={largeIcons} labelRight icon={Tag} value="View Personal" label="" color="bg-pink-100 text-pink-600" />
          </button>
          <button onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")} className="w-full h-full">
-           <StatCard large={largeIcons} icon={Home} value="View by" label="Room" color="bg-orange-100 text-orange-600" />
+           <StatCard large={largeIcons} labelRight icon={Home} value="View by Room" label="" color="bg-orange-100 text-orange-600" />
          </button>
          <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Garden" ? "all" : "Garden"); }} className="w-full h-full">
-           <StatCard large={largeIcons} icon={Leaf} value="View" label="Garden" color="bg-lime-100 text-lime-600" />
+           <StatCard large={largeIcons} labelRight icon={Leaf} value="View Garden" label="" color="bg-lime-100 text-lime-600" />
          </button>
          <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "To-Do" ? "all" : "To-Do"); }} className="w-full h-full">
-           <StatCard large={largeIcons} icon={ClipboardList} value="View" label="To-Do List" color="bg-indigo-100 text-indigo-600" />
+           <StatCard large={largeIcons} labelRight icon={ClipboardList} value="View To-Do List" label="" color="bg-indigo-100 text-indigo-600" />
          </button>
        </div>
 
