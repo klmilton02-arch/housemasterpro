@@ -55,19 +55,19 @@ export default function Leaderboard() {
       <h1 className="font-heading text-3xl font-bold">Rewards</h1>
 
       {userProfile && (
-        <div className="bg-amber-50 border border-amber-100 rounded-lg px-4 py-3 flex items-center justify-between gap-3">
+        <div className="bg-blue-50 border border-blue-100 rounded-lg px-4 py-3 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <Zap className="w-7 h-7 text-amber-400 shrink-0" />
+            <Zap className="w-8 h-8 text-blue-400 shrink-0" />
             <div>
-              <p className="text-xs text-amber-600">Your Progress · Level {userProfile.level}</p>
+              <p className="text-sm text-blue-500 font-medium">Your Progress · Level {userProfile.level}</p>
               <div className="flex items-baseline gap-1">
-                <p className="font-heading font-bold text-xl text-amber-600">{userProfile.total_xp}</p>
-                <p className="text-sm text-amber-500">XP</p>
+                <p className="font-heading font-bold text-2xl text-blue-600">{userProfile.total_xp}</p>
+                <p className="text-base text-blue-400">XP</p>
               </div>
             </div>
             <StreakCircle streak={userProfile.cleaning_streak || 0} size="sm" />
           </div>
-          <Link to="/stable" className="bg-violet-200 text-violet-900 rounded-lg px-3 py-1.5 text-sm font-semibold hover:bg-violet-300 transition-colors flex items-center gap-1.5 shrink-0">
+          <Link to="/stable" className="bg-blue-200 text-blue-900 rounded-lg px-3 py-1.5 text-sm font-semibold hover:bg-blue-300 transition-colors flex items-center gap-1.5 shrink-0">
             <Sparkles className="w-3.5 h-3.5" />
             Stable
           </Link>
