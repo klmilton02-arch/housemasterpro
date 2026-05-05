@@ -68,8 +68,7 @@ export default function Leaderboard() {
             <StreakCircle streak={userProfile.cleaning_streak || 0} size="sm" />
           </div>
           <Link to="/stable" className="bg-blue-200 text-blue-900 rounded-lg px-3 py-1.5 text-sm font-semibold hover:bg-blue-300 transition-colors flex items-center gap-1.5 shrink-0">
-            <Sparkles className="w-3.5 h-3.5" />
-            Stable
+            🐴 Stable
           </Link>
         </div>
       )}
