@@ -363,13 +363,16 @@ export default function Tasks() {
         Scan Appointment
       </Button>
 
-      <div className="grid grid-cols-1 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
          <button onClick={() => setDialogOpen(true)} className="w-full h-full">
            <StatCard large={largeIcons} labelRight icon={Plus} value="Add New Task" label="" color="bg-blue-100 text-blue-600" />
          </button>
          <button onClick={() => navigate("/presets")} className="w-full h-full">
            <StatCard large={largeIcons} labelRight icon={CheckCircle} value="Browse Presets" label="" color="bg-purple-100 text-purple-600" />
          </button>
+       </div>
+
+      <div className="grid grid-cols-1 gap-3 sm:gap-4">
          <button onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }} className="w-full h-full">
            <StatCard large={largeIcons} labelRight icon={Receipt} value="View Bills" label="" color="bg-green-100 text-green-600" />
          </button>
