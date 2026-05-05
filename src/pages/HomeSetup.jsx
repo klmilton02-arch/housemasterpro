@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
+import { useLargeIcons } from "@/lib/LargeIconsContext";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ const ROOM_CATEGORY_MAP = {
 export default function HomeSetup() {
   const PAGES = ["/dashboard", "/tasks", "/burst", "/leaderboard", "/presets", "/family", "/home-setup", "/profile"];
   const { handleTouchStart, handleTouchEnd } = useSwipeNavigation(PAGES);
+  const { largeIcons } = useLargeIcons();
 
   const [config, setConfig] = useState({
     bedrooms: 2,
@@ -210,41 +212,41 @@ export default function HomeSetup() {
         {/* Left column - bedrooms and bathrooms */}
         <div className="space-y-3">
           <button onClick={() => setBedroomModalOpen(true)} className="h-22 w-full">
-            <StatCard icon={BedDouble} label={config.bedrooms === 1 ? "Bedroom" : "Bedrooms"} value={config.bedrooms} color="bg-blue-100 text-blue-600" labelRight smallLabel />
+            <StatCard icon={BedDouble} label={config.bedrooms === 1 ? "Bedroom" : "Bedrooms"} value={config.bedrooms} color="bg-blue-100 text-blue-600" labelRight smallLabel large={largeIcons} />
           </button>
           <button onClick={() => setBathroomModalOpen(true)} className="h-22 w-full">
-            <StatCard icon={Bath} label="Full Bathrooms" value={config.full_bathrooms} color="bg-purple-100 text-purple-600" labelRight smallLabel />
+            <StatCard icon={Bath} label="Full Bathrooms" value={config.full_bathrooms} color="bg-purple-100 text-purple-600" labelRight smallLabel large={largeIcons} />
           </button>
           <button onClick={() => setHalfBathroomModalOpen(true)} className="h-22 w-full">
-            <StatCard icon={Bath} label="Half Bathrooms" value={config.half_bathrooms} color="bg-pink-100 text-pink-600" labelRight smallLabel />
+            <StatCard icon={Bath} label="Half Bathrooms" value={config.half_bathrooms} color="bg-pink-100 text-pink-600" labelRight smallLabel large={largeIcons} />
           </button>
         </div>
         
         {/* Right column - other rooms */}
         <div className="col-span-1 md:col-span-2 grid grid-cols-2 gap-3">
           <button onClick={() => setConfig(c => ({ ...c, has_kitchen: !c.has_kitchen }))} className="h-22">
-            <StatCard icon={ChefHat} label="Kitchen" value={config.has_kitchen ? "✓" : "○"} color={config.has_kitchen ? "bg-orange-100 text-orange-600" : "bg-slate-100 text-slate-600"} />
+            <StatCard icon={ChefHat} label="Kitchen" value={config.has_kitchen ? "✓" : "○"} color={config.has_kitchen ? "bg-orange-100 text-orange-600" : "bg-slate-100 text-slate-600"} large={largeIcons} />
           </button>
           <button onClick={() => setConfig(c => ({ ...c, has_living_room: !c.has_living_room }))} className="h-22">
-            <StatCard icon={Sofa} label="Living Room" value={config.has_living_room ? "✓" : "○"} color={config.has_living_room ? "bg-teal-100 text-teal-600" : "bg-slate-100 text-slate-600"} />
+            <StatCard icon={Sofa} label="Living Room" value={config.has_living_room ? "✓" : "○"} color={config.has_living_room ? "bg-teal-100 text-teal-600" : "bg-slate-100 text-slate-600"} large={largeIcons} />
           </button>
           <button onClick={() => setConfig(c => ({ ...c, has_dining_room: !c.has_dining_room }))} className="h-22">
-            <StatCard icon={UtensilsCrossed} label="Dining Room" value={config.has_dining_room ? "✓" : "○"} color={config.has_dining_room ? "bg-red-100 text-red-600" : "bg-slate-100 text-slate-600"} />
+            <StatCard icon={UtensilsCrossed} label="Dining Room" value={config.has_dining_room ? "✓" : "○"} color={config.has_dining_room ? "bg-red-100 text-red-600" : "bg-slate-100 text-slate-600"} large={largeIcons} />
           </button>
           <button onClick={() => setConfig(c => ({ ...c, has_garage: !c.has_garage }))} className="h-22">
-            <StatCard icon={Car} label="Garage" value={config.has_garage ? "✓" : "○"} color={config.has_garage ? "bg-yellow-100 text-yellow-600" : "bg-slate-100 text-slate-600"} />
+            <StatCard icon={Car} label="Garage" value={config.has_garage ? "✓" : "○"} color={config.has_garage ? "bg-yellow-100 text-yellow-600" : "bg-slate-100 text-slate-600"} large={largeIcons} />
           </button>
           <button onClick={() => setConfig(c => ({ ...c, has_laundry_room: !c.has_laundry_room }))} className="h-22">
-            <StatCard icon={Shirt} label="Laundry" value={config.has_laundry_room ? "✓" : "○"} color={config.has_laundry_room ? "bg-pink-100 text-pink-600" : "bg-slate-100 text-slate-600"} />
+            <StatCard icon={Shirt} label="Laundry" value={config.has_laundry_room ? "✓" : "○"} color={config.has_laundry_room ? "bg-pink-100 text-pink-600" : "bg-slate-100 text-slate-600"} large={largeIcons} />
           </button>
           <button onClick={() => setConfig(c => ({ ...c, has_mixed_use: !c.has_mixed_use }))} className="h-22">
-            <StatCard icon={LayoutGrid} label="Mixed Use" value={config.has_mixed_use ? "✓" : "○"} color={config.has_mixed_use ? "bg-indigo-100 text-indigo-600" : "bg-slate-100 text-slate-600"} />
+            <StatCard icon={LayoutGrid} label="Mixed Use" value={config.has_mixed_use ? "✓" : "○"} color={config.has_mixed_use ? "bg-indigo-100 text-indigo-600" : "bg-slate-100 text-slate-600"} large={largeIcons} />
           </button>
           <button onClick={() => setConfig(c => ({ ...c, has_office: !c.has_office }))} className="h-22">
-            <StatCard icon={Monitor} label="Office" value={config.has_office ? "✓" : "○"} color={config.has_office ? "bg-cyan-100 text-cyan-600" : "bg-slate-100 text-slate-600"} />
+            <StatCard icon={Monitor} label="Office" value={config.has_office ? "✓" : "○"} color={config.has_office ? "bg-cyan-100 text-cyan-600" : "bg-slate-100 text-slate-600"} large={largeIcons} />
           </button>
           <button onClick={() => setConfig(c => ({ ...c, has_whole_house: !c.has_whole_house }))} className="h-22">
-            <StatCard icon={Wind} label="Whole House" value={config.has_whole_house ? "✓" : "○"} color={config.has_whole_house ? "bg-lime-100 text-lime-600" : "bg-slate-100 text-slate-600"} />
+            <StatCard icon={Wind} label="Whole House" value={config.has_whole_house ? "✓" : "○"} color={config.has_whole_house ? "bg-lime-100 text-lime-600" : "bg-slate-100 text-slate-600"} large={largeIcons} />
           </button>
         </div>
       </div>
