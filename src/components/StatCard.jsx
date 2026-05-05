@@ -15,18 +15,18 @@ export default function StatCard({ icon: Icon, label, value, color, onClick, lab
       </div>
       {labelRight ? (
         <div className="min-w-0 flex items-center gap-2">
-          <p className="font-heading font-bold text-muted-foreground text-sm leading-tight">{value}</p>
-          {label ? <p className="font-medium text-muted-foreground text-sm leading-tight">{label}</p> : null}
+          <p className="font-heading font-bold text-muted-foreground text-base leading-tight">{value}</p>
+          {label ? <p className="font-medium text-muted-foreground text-base leading-tight">{label}</p> : null}
         </div>
       ) : labelOnTop ? (
         <div className="min-w-0 flex flex-col items-start justify-center flex-1 text-left">
-          <p className={cn("text-muted-foreground leading-tight", large ? "text-base" : "text-sm")}>{label}</p>
-          <p className={cn("font-heading font-bold text-foreground leading-tight", large ? "text-xl" : "text-base")}>{value}</p>
+          <p className={cn("text-muted-foreground leading-tight", large ? "text-lg" : "text-base")}>{label}</p>
+          <p className={cn("font-heading font-bold text-foreground leading-tight", large ? "text-2xl" : "text-lg")}>{value}</p>
         </div>
       ) : (
         <div className="min-w-0 flex flex-col items-start justify-center flex-1">
-          <p className={cn("font-heading font-bold text-foreground text-left", large ? "text-xl" : "text-sm")}>{value}</p>
-          <p className={cn("font-heading font-bold text-muted-foreground text-left", large ? "text-base" : "text-sm")}>{label}</p>
+          <p className={cn("font-heading font-bold text-foreground text-left", large ? "text-2xl" : "text-lg")}>{value}</p>
+          <p className={cn("font-heading font-bold text-muted-foreground text-left", large ? "text-lg" : "text-base")}>{label}</p>
         </div>
       )}
     </div>
