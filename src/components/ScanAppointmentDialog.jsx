@@ -13,6 +13,7 @@ export default function ScanAppointmentDialog({ open, onOpenChange, onTaskCreate
   const [extracted, setExtracted] = useState(null);
   const [error, setError] = useState(null);
   const [fileInput, setFileInput] = useState(null);
+  const [cameraInput, setCameraInput] = useState(null);
 
   const handleFileSelect = async (file) => {
     if (!file) return;
@@ -86,13 +87,22 @@ export default function ScanAppointmentDialog({ open, onOpenChange, onTaskCreate
                 Upload Photo
               </Button>
               <Button
-                variant="outline"
-                className="flex-1 gap-2"
-                disabled={uploading}
-              >
-                <Camera className="w-4 h-4" />
-                Take Photo
-              </Button>
+                 variant="outline"
+                 className="flex-1 gap-2"
+                 onClick={() => cameraInput?.click()}
+                 disabled={uploading}
+               >
+                 <Camera className="w-4 h-4" />
+                 Take Photo
+               </Button>
+                <input
+                  ref={setCameraInput}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  className="hidden"
+                  onChange={(e) => handleFileSelect(e.target.files?.[0])}
+                />
             </div>
             <input
               ref={setFileInput}
