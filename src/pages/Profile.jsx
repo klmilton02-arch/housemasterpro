@@ -177,22 +177,28 @@ export default function Profile() {
       </Link>
 
       {/* Task Reset Time */}
-      <div className="bg-orange-100 border border-orange-200 rounded-lg px-4 py-3 flex items-center gap-3">
-        <Clock className="w-5 h-5 text-orange-600 shrink-0" />
-        <p className="text-sm font-medium text-orange-900 shrink-0">New day starts at</p>
-        <MobileSelect
-          value={dayStartHour}
-          onValueChange={setDayStartHour}
-          title="Select time"
-          triggerClassName="flex-1"
-          options={Array.from({ length: 24 }, (_, i) => ({
-            value: String(i),
-            label: i === 0 ? "12:00 AM" : i < 12 ? `${i}:00 AM` : i === 12 ? "12:00 PM" : `${i - 12}:00 PM`
-          }))}
-        />
-        <Button onClick={handleSaveDayStart} disabled={savingHour} size="sm" className="bg-orange-500 text-white hover:bg-orange-600 shrink-0">
-          {savingHour ? "..." : "Save"}
-        </Button>
+      <div className="bg-orange-100 border border-orange-200 rounded-lg px-4 py-3 space-y-2">
+        <div className="flex items-center gap-2">
+          <Clock className="w-4 h-4 text-orange-600 shrink-0" />
+          <p className="text-sm font-medium text-orange-900">New day starts at</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="flex-1 min-w-0">
+            <MobileSelect
+              value={dayStartHour}
+              onValueChange={setDayStartHour}
+              title="Select time"
+              triggerClassName="w-full"
+              options={Array.from({ length: 24 }, (_, i) => ({
+                value: String(i),
+                label: i === 0 ? "12:00 AM" : i < 12 ? `${i}:00 AM` : i === 12 ? "12:00 PM" : `${i - 12}:00 PM`
+              }))}
+            />
+          </div>
+          <Button onClick={handleSaveDayStart} disabled={savingHour} size="sm" className="bg-orange-500 text-white hover:bg-orange-600 shrink-0">
+            {savingHour ? "..." : "Save"}
+          </Button>
+        </div>
       </div>
 
       {/* Quick Links */}
