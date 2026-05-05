@@ -257,7 +257,7 @@ export default function Tasks() {
     if (statusFilter === "due_soon" && status.label !== "Due Soon") return false;
     if (statusFilter === "completed" && status.label !== "Completed") return false;
     if (statusFilter === "pending" && status.label === "Completed") return false;
-    if (categoryFilter !== "all" && t.category !== categoryFilter) return false;
+    if (categoryFilter !== "all" && t.category !== categoryFilter && !(categoryFilter === "Personal" && t.category === "To-Do")) return false;
 
     if (assignedFilter === "assigned" && !t.assigned_to) return false;
     if (assignedFilter === "unassigned" && t.assigned_to) return false;
@@ -373,8 +373,8 @@ export default function Tasks() {
          <button onClick={() => { if (categoryFilter === "Bill Schedules") { setCategoryFilter("all"); } else { setViewMode("list"); setCategoryFilter("Bill Schedules"); } }} className="w-full h-full">
            <StatCard large={largeIcons} labelRight icon={Receipt} value="View Bills" label="" color="bg-green-100 text-green-600" />
          </button>
-         <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Personal" ? "all" : "Personal"); }} className="w-full h-full">
-           <StatCard large={largeIcons} labelRight icon={Tag} value="View Personal" label="" color="bg-pink-100 text-pink-600" />
+         <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Personal" || categoryFilter === "To-Do" ? "all" : "Personal"); }} className="w-full h-full">
+           <StatCard large={largeIcons} labelRight icon={Tag} value="View Personal Tasks" label="" color="bg-pink-100 text-pink-600" />
          </button>
          <button onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")} className="w-full h-full">
            <StatCard large={largeIcons} labelRight icon={Home} value="View by Room" label="" color="bg-orange-100 text-orange-600" />
@@ -425,9 +425,9 @@ export default function Tasks() {
             <DropdownMenuItem onClick={() => setCategoryFilter("all")}>
               <span className={categoryFilter === "all" ? "font-semibold text-primary" : ""}>All Types</span>
             </DropdownMenuItem>
-            {(viewMode === "rooms" ? ["Cleaning", "Maintenance"] : ["Cleaning", "Maintenance", "Bills", "Personal", "Garden", "To-Do"]).map(cat => (
+            {(viewMode === "rooms" ? ["Cleaning", "Maintenance"] : ["Cleaning", "Maintenance", "Bills", "Personal", "Garden"]).map(cat => (
               <DropdownMenuItem key={cat} onClick={() => setCategoryFilter(cat)}>
-                <span className={categoryFilter === cat ? "font-semibold text-primary" : ""}>{cat}</span>
+                <span className={categoryFilter === cat || (cat === "Personal" && categoryFilter === "To-Do") ? "font-semibold text-primary" : ""}>{cat}</span>
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>

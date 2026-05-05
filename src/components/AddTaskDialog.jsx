@@ -109,7 +109,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     if (tab === "todo") {
       await base44.entities.Task.create({
         name: todoName,
-        category: "To-Do",
+        category: "Personal",
         priority: todoPriority,
         difficulty: "Easy",
         frequency_days: 9999,
@@ -378,7 +378,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
           </TabsContent>
 
           <TabsContent value="todo" className="space-y-4 mt-4">
-            <p className="text-xs text-muted-foreground">One-time tasks that don't repeat — great for to-do lists and errands.</p>
+            <p className="text-xs text-muted-foreground">One-time personal tasks that don't repeat — great for to-do lists and errands.</p>
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Task Name</Label>
               <Input value={todoName} onChange={e => setTodoName(e.target.value)} placeholder="e.g., Call the dentist" className="mt-1" />
