@@ -239,11 +239,6 @@ export default function Dashboard() {
 
       <h1 className="font-heading text-4xl font-bold md:hidden">Dashboard</h1>
 
-      <Button onClick={() => setScanDialogOpen(true)} className="w-full gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600">
-        <Camera className="w-4 h-4" />
-        Scan Appointment
-      </Button>
-
       <div className="grid grid-cols-1 gap-3 sm:gap-4">
          <StatCard large={largeIcons} labelRight icon={ListChecks} label="Due Today" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => { setDrawerTaskIds(dueTasks.map(t => t.id)); setTaskListModal({ title: 'Due Today' }); }} />
          <StatCard large={largeIcons} labelRight icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => { setDrawerTaskIds(overdueTasks.map(t => t.id)); setTaskListModal({ title: 'Overdue Tasks' }); }} />
@@ -301,7 +296,10 @@ export default function Dashboard() {
         <DashboardPresetBrowser onTaskAdded={loadTasks} />
       </div>
 
-
+      <Button onClick={() => setScanDialogOpen(true)} className="w-full gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600">
+        <Camera className="w-4 h-4" />
+        Scan Appointment
+      </Button>
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
