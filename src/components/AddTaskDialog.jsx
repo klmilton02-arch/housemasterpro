@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import MobileSelect from "./MobileSelect";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatFrequency } from "./TaskCard";
 import { format } from "date-fns";
+import { Camera, Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
 export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initialPreset = null }) {
   const [presets, setPresets] = useState([]);
@@ -56,6 +57,13 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
    const isCarMaintenance = false;
    const [customDescription, setCustomDescription] = useState("");
+
+  // Scan state
+  const [scanType, setScanType] = useState("appointment"); // "appointment" | "task_list"
+  const [scanning, setScanning] = useState(false);
+  const [scanError, setScanError] = useState(null);
+  const fileInputRef = useRef(null);
+  const cameraInputRef = useRef(null);
 
   useEffect(() => {
     if (open) {
@@ -224,6 +232,70 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     onTaskAdded?.();
   }
 
+  async function handleScanFile(file) {
+    if (!file) return;
+    setScanning(true);
+    setScanError(null);
+
+    try {
+      const url = await base44.integrations.Core.UploadFile({ file });
+      const response = await base44.functions.invoke('scanAppointment', {
+        file_url: url.file_url,
+        scan_type: scanType
+      });
+
+      const extracted = response.data.extracted || response.extracted;
+      if (!extracted) throw new Error('No data extracted');
+
+      // If it's a task list, create multiple to-dos
+      if (scanType === "task_list" && Array.isArray(extracted)) {
+        const me = await base44.auth.me();
+        const family_group_id = me?.family_group_id || null;
+        
+        for (const item of extracted) {
+          await base44.entities.Task.create({
+            name: item.task || item.title || "Unnamed task",
+            category: "Personal",
+            difficulty: "Easy",
+            frequency_days: 9999,
+            description: item.description || undefined,
+            start_date: format(new Date(), "yyyy-MM-dd"),
+            next_due_date: item.due_date || format(new Date(), "yyyy-MM-dd"),
+            status: "Pending",
+            overdue_grace_days: 999,
+            family_group_id,
+          });
+        }
+      } else if (scanType === "appointment" && typeof extracted === 'object') {
+        // For appointments, create a single personal task
+        const me = await base44.auth.me();
+        const family_group_id = me?.family_group_id || null;
+        
+        await base44.entities.Task.create({
+          name: extracted.doctor_name || "Appointment",
+          category: "Personal",
+          difficulty: "Easy",
+          frequency_days: 9999,
+          description: `${extracted.date || ""} ${extracted.time || ""} - ${extracted.location || ""}`.trim(),
+          start_date: format(new Date(), "yyyy-MM-dd"),
+          next_due_date: extracted.date || format(new Date(), "yyyy-MM-dd"),
+          status: "Pending",
+          overdue_grace_days: 999,
+          family_group_id,
+        });
+      }
+
+      setScanning(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      if (cameraInputRef.current) cameraInputRef.current.value = '';
+      onTaskAdded?.();
+      setTab("preset");
+    } catch (error) {
+      setScanError(error.message || `Failed to scan ${scanType}. Please try again.`);
+      setScanning(false);
+    }
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
@@ -236,6 +308,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
             <TabsTrigger value="preset" className="flex-1 text-xs">From Preset</TabsTrigger>
             <TabsTrigger value="custom" className="flex-1 text-xs">Custom</TabsTrigger>
             <TabsTrigger value="todo" className="flex-1 text-xs">To-Do</TabsTrigger>
+            <TabsTrigger value="scan" className="flex-1 text-xs">Scan</TabsTrigger>
           </TabsList>
 
           <TabsContent value="preset" className="space-y-4 mt-4">
@@ -492,7 +565,88 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                <Input value={customDescription} onChange={e => setCustomDescription(e.target.value)} placeholder="Optional description" className="mt-1" />
              </div>
           </TabsContent>
-        </Tabs>
+
+          <TabsContent value="scan" className="space-y-4 mt-4">
+            <div className="space-y-3">
+              <div>
+                <Label className="text-xs font-medium text-muted-foreground">Scan Type</Label>
+                <div className="flex gap-2 mt-2">
+                  <button
+                    onClick={() => setScanType("appointment")}
+                    className={`flex-1 px-3 py-2 rounded-lg text-sm border transition-all ${
+                      scanType === "appointment"
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "border-border text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    Appointment
+                  </button>
+                  <button
+                    onClick={() => setScanType("task_list")}
+                    className={`flex-1 px-3 py-2 rounded-lg text-sm border transition-all ${
+                      scanType === "task_list"
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "border-border text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    Task List
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  className="flex-1 gap-2"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={scanning}
+                >
+                  <Upload className="w-4 h-4" />
+                  Upload
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1 gap-2"
+                  onClick={() => cameraInputRef.current?.click()}
+                  disabled={scanning}
+                >
+                  <Camera className="w-4 h-4" />
+                  Camera
+                </Button>
+              </div>
+
+              {scanning && (
+                <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Scanning...
+                </div>
+              )}
+
+              {scanError && (
+                <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 dark:bg-red-950/30 p-3 rounded-lg">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{scanError}</span>
+                </div>
+              )}
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => handleScanFile(e.target.files?.[0])}
+              />
+              <input
+                ref={cameraInputRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                className="hidden"
+                onChange={(e) => handleScanFile(e.target.files?.[0])}
+              />
+            </div>
+          </TabsContent>
+          </Tabs>
 
         <div className={`space-y-4 mt-4 pt-4 border-t border-border ${tab === "todo" ? "hidden" : ""}`}>
           {/* Bill day-of-month option */}
