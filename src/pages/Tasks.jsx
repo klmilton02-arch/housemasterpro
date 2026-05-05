@@ -380,7 +380,7 @@ export default function Tasks() {
             <StatCard large={largeIcons} labelRight icon={Tag} value="View Personal Tasks" label="" color="bg-pink-100 text-pink-600" />
           </button>
           <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Garden" ? "all" : "Garden"); }} className="w-full h-full">
-            <StatCard large={largeIcons} labelRight icon={Leaf} value="View Garden" label="" color="bg-lime-100 text-lime-600" />
+            <StatCard large={largeIcons} labelRight icon={Leaf} value="View Garden Tasks" label="" color="bg-lime-100 text-lime-600" />
           </button>
           <button onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")} className="w-full h-full">
             <StatCard large={largeIcons} labelRight icon={Home} value="View Home Tasks (by room)" label="" color="bg-orange-100 text-orange-600" />
