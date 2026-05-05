@@ -13,30 +13,28 @@ Deno.serve(async (req) => {
     const userEmail = user.email;
     const familyGroupId = user.family_group_id;
 
-    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-    // Helper: delete records one at a time with retry on rate limit
+    // Helper: batch delete records with optimized rate limiting
     const deleteAll = async (entity, filter) => {
       try {
         const records = await base44.asServiceRole.entities[entity].filter(filter, '-created_date', 1000);
-        for (const r of records) {
-          let attempts = 0;
-          while (attempts < 5) {
-            try {
-              await base44.asServiceRole.entities[entity].delete(r.id);
-              await sleep(500);
-              break;
-            } catch (err) {
-              if (err.message && err.message.includes('Rate limit')) {
-                attempts++;
-                await sleep(1000 * attempts); // back off: 1s, 2s, 3s...
-              } else if (err.message && err.message.includes('not found')) {
-                break; // already deleted, skip
-              } else {
-                console.error(`Error deleting ${entity} ${r.id}:`, err.message);
-                break;
-              }
-            }
+        if (records.length === 0) return;
+        
+        // Delete in parallel batches of 5 to be efficient but not hit rate limits
+        for (let i = 0; i < records.length; i += 5) {
+          const batch = records.slice(i, i + 5);
+          await Promise.all(
+            batch.map(r =>
+              base44.asServiceRole.entities[entity].delete(r.id)
+                .catch(err => {
+                  if (!err.message?.includes('not found')) {
+                    console.error(`Error deleting ${entity} ${r.id}:`, err.message);
+                  }
+                })
+            )
+          );
+          // Small delay between batches to avoid rate limits
+          if (i + 5 < records.length) {
+            await new Promise(resolve => setTimeout(resolve, 100));
           }
         }
       } catch (err) {
@@ -44,20 +42,16 @@ Deno.serve(async (req) => {
       }
     };
 
-    // Delete tasks (the main entity that persists across re-registrations)
-    await deleteAll('Task', { created_by: userEmail });
-
-    // Delete remaining user data sequentially to stay within rate limits
-    await deleteAll('GamificationProfile', { family_member_id: userId });
-    await deleteAll('CompletionHistory', { family_member_id: userId });
-    await deleteAll('FamilyMember', { created_by: userEmail });
-    await deleteAll('HorseStable', { family_member_id: userId });
-    await deleteAll('Subtask', { created_by: userEmail });
-
-    // Delete family groups where user is owner
-    if (familyGroupId) {
-      await deleteAll('FamilyGroup', { owner_email: userEmail });
-    }
+    // Delete all user data in parallel for speed
+    await Promise.all([
+      deleteAll('Task', { created_by: userEmail }),
+      deleteAll('GamificationProfile', { family_member_id: userId }),
+      deleteAll('CompletionHistory', { family_member_id: userId }),
+      deleteAll('FamilyMember', { created_by: userEmail }),
+      deleteAll('HorseStable', { family_member_id: userId }),
+      deleteAll('Subtask', { created_by: userEmail }),
+      familyGroupId ? deleteAll('FamilyGroup', { owner_email: userEmail }) : Promise.resolve(),
+    ]);
 
     return Response.json({ success: true, message: 'Account data deleted' });
   } catch (error) {
