@@ -245,7 +245,7 @@ export default function Dashboard() {
          <Link to="/tasks" className="block">
            <StatCard large={largeIcons} icon={ListChecks} label="Create, organize, and schedule tasks" value="Tasks" color="bg-slate-100 text-slate-600" />
          </Link>
-         <StatCard large={largeIcons} icon={Flame} label="Blast Mode" value={blastDisplay} color={isBlastActive ? "bg-orange-500 text-white" : "bg-orange-100 text-orange-600"} onClick={() => isBlastActive ? setBlastOptionsOpen(true) : startBlast(30)} />
+         <StatCard large={largeIcons} labelRight icon={Flame} label="Blast Mode" value={blastDisplay} color={isBlastActive ? "bg-orange-500 text-white" : "bg-orange-100 text-orange-600"} onClick={() => isBlastActive ? setBlastOptionsOpen(true) : startBlast(30)} />
          <Link to="/calendar" className="block">
            <StatCard large={largeIcons} icon={CalendarDays} label="Calendar" value="View" color="bg-purple-100 text-purple-600" />
          </Link>
