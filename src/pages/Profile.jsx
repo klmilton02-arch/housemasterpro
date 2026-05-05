@@ -177,7 +177,6 @@ export default function Profile() {
               </div>
               <div>
                 <p className="font-semibold text-sm text-foreground">New Day Starts At</p>
-                <p className="text-xs text-muted-foreground mt-0.5">When tasks reset to pending</p>
               </div>
             </div>
             <div className="space-y-2">
