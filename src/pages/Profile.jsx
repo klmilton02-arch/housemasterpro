@@ -179,7 +179,7 @@ export default function Profile() {
       {/* Task Reset Time */}
       <div className="bg-orange-100 border border-orange-200 rounded-lg px-4 py-3 flex items-center gap-3">
         <Clock className="w-5 h-5 text-orange-600 shrink-0" />
-        <p className="text-sm font-medium text-orange-900 shrink-0">Reset at</p>
+        <p className="text-sm font-medium text-orange-900 shrink-0">New day starts at</p>
         <MobileSelect
           value={dayStartHour}
           onValueChange={setDayStartHour}
