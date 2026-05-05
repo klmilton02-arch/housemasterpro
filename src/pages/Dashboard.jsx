@@ -237,7 +237,7 @@ export default function Dashboard() {
 
       <h1 className="font-heading text-4xl font-bold md:hidden">Dashboard</h1>
 
-      <div className="grid grid-cols-1 gap-4 sm:gap-5">
+      <div className="grid grid-cols-1 gap-3 sm:gap-4">
          <StatCard large={largeIcons} labelRight icon={ListChecks} label="Due Today" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => { setDrawerTaskIds(dueTasks.map(t => t.id)); setTaskListModal({ title: 'Due Today' }); }} />
          <StatCard large={largeIcons} labelRight icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => { setDrawerTaskIds(overdueTasks.map(t => t.id)); setTaskListModal({ title: 'Overdue Tasks' }); }} />
          <StatCard large={largeIcons} labelRight icon={Clock} label="Pending Tasks" value={pendingTasks.length} color="bg-amber-100 text-amber-600" onClick={() => { setDrawerTaskIds(pendingTasks.map(t => t.id)); setTaskListModal({ title: 'Pending Tasks' }); }} />
