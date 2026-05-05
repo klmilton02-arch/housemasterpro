@@ -131,17 +131,17 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
             />
           ) : (
             <div className="flex items-center gap-1 group/name min-w-0 flex-shrink-0 max-w-[40%]">
-              <h3 className={cn("font-heading font-semibold text-sm truncate", visuallyCompleted ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
+              <h3 className={cn("font-heading font-semibold text-xs truncate", visuallyCompleted ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
               <button
                 onClick={e => { e.stopPropagation(); setEditing(true); }}
                 className="opacity-0 group-hover/name:opacity-100 transition-opacity p-0.5 rounded hover:bg-muted flex-shrink-0"
               >
-                <Pencil className="w-3 h-3 text-muted-foreground" />
+                <Pencil className="w-2.5 h-2.5 text-muted-foreground" />
               </button>
             </div>
           )}
           <div className="flex items-center gap-1 overflow-hidden whitespace-nowrap flex-1 min-w-0">
-           <span className={cn("inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-xs font-semibold shadow-sm flex-shrink-0", status.color)}>
+           <span className={cn("inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-semibold shadow-sm flex-shrink-0", status.color)}>
              <StatusIcon className="w-3 h-3" />
              {status.label}
            </span>
