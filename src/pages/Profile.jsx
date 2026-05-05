@@ -148,10 +148,10 @@ export default function Profile() {
       <h1 className="font-heading text-3xl font-bold md:hidden">Profile</h1>
 
       {/* My Information */}
-      <div className="bg-slate-100 border border-slate-200 rounded-lg px-4 py-3 flex items-center justify-between gap-3">
+      <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center flex-shrink-0">
-            <User className="w-4 h-4 text-slate-600" />
+          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+            <User className="w-4 h-4 text-blue-600" />
           </div>
           <div className="min-w-0">
             <p className="font-medium text-base text-foreground truncate">{user.full_name}</p>
@@ -177,10 +177,10 @@ export default function Profile() {
       </Link>
 
       {/* Task Reset Time */}
-      <div className="bg-orange-100 border border-orange-200 rounded-lg px-4 py-3 space-y-2">
+      <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 space-y-2">
         <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-orange-600 shrink-0" />
-          <p className="text-base font-medium text-orange-900">New day starts at</p>
+          <Clock className="w-4 h-4 text-amber-600 shrink-0" />
+          <p className="text-base font-medium text-amber-900">New day starts at</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex-1 min-w-0">
@@ -195,7 +195,7 @@ export default function Profile() {
               }))}
             />
           </div>
-          <Button onClick={handleSaveDayStart} disabled={savingHour} size="sm" className="bg-orange-500 text-white hover:bg-orange-600 shrink-0">
+          <Button onClick={handleSaveDayStart} disabled={savingHour} size="sm" className="bg-amber-500 text-white hover:bg-amber-600 shrink-0">
             {savingHour ? "..." : "Save"}
           </Button>
         </div>
@@ -204,24 +204,24 @@ export default function Profile() {
       {/* Quick Links */}
       <div className="flex flex-col gap-3">
         <Link to="/presets" className="block">
-          <div className="bg-slate-100 border border-slate-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-slate-50 transition-colors">
+          <div className="bg-violet-50 border border-violet-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-violet-100 transition-colors">
             <span className="text-xl">📋</span>
-            <p className="text-base font-medium text-slate-700">Presets</p>
-            <ChevronRight className="w-4 h-4 text-slate-400 ml-auto" />
+            <p className="text-base font-medium text-violet-800">Presets</p>
+            <ChevronRight className="w-4 h-4 text-violet-400 ml-auto" />
           </div>
         </Link>
         <Link to="/family" className="block">
-          <div className="bg-slate-100 border border-slate-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-slate-50 transition-colors">
+          <div className="bg-green-50 border border-green-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-green-100 transition-colors">
             <span className="text-xl">👨‍👩‍👧‍👦</span>
-            <p className="text-base font-medium text-slate-700">Family</p>
-            <ChevronRight className="w-4 h-4 text-slate-400 ml-auto" />
+            <p className="text-base font-medium text-green-800">Family</p>
+            <ChevronRight className="w-4 h-4 text-green-400 ml-auto" />
           </div>
         </Link>
         <Link to="/home-setup" className="block">
-          <div className="bg-slate-100 border border-slate-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-slate-50 transition-colors">
+          <div className="bg-teal-50 border border-teal-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-teal-100 transition-colors">
             <span className="text-xl">🏠</span>
-            <p className="text-base font-medium text-slate-700">Home Setup</p>
-            <ChevronRight className="w-4 h-4 text-slate-400 ml-auto" />
+            <p className="text-base font-medium text-teal-800">Home Setup</p>
+            <ChevronRight className="w-4 h-4 text-teal-400 ml-auto" />
           </div>
         </Link>
       </div>
@@ -246,7 +246,7 @@ export default function Profile() {
         <p className="text-xs font-medium text-muted-foreground uppercase">Data Management</p>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="outline" className="w-full text-sm bg-orange-100 border-orange-200 hover:bg-orange-50 text-orange-600">
+            <Button variant="outline" className="w-full text-sm bg-amber-50 border-amber-200 hover:bg-amber-100 text-amber-700">
               Reset All Data
             </Button>
           </AlertDialogTrigger>
