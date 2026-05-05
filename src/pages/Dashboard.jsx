@@ -238,10 +238,10 @@ export default function Dashboard() {
       <h1 className="font-heading text-4xl font-bold md:hidden">Dashboard</h1>
 
       <div className="grid grid-cols-1 gap-4 sm:gap-5">
-         <StatCard large={largeIcons} icon={ListChecks} label="Due Today" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => { setDrawerTaskIds(dueTasks.map(t => t.id)); setTaskListModal({ title: 'Due Today' }); }} />
-         <StatCard large={largeIcons} icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => { setDrawerTaskIds(overdueTasks.map(t => t.id)); setTaskListModal({ title: 'Overdue Tasks' }); }} />
-         <StatCard large={largeIcons} icon={Clock} label="Pending Tasks" value={pendingTasks.length} color="bg-amber-100 text-amber-600" onClick={() => { setDrawerTaskIds(pendingTasks.map(t => t.id)); setTaskListModal({ title: 'Pending Tasks' }); }} />
-         <StatCard large={largeIcons} icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setDrawerTaskIds(completedTasks.map(t => t.id)); setTaskListModal({ title: 'Completed Tasks' }); }} />
+         <StatCard large={largeIcons} labelRight icon={ListChecks} label="Due Today" value={dueTasks.length} color="bg-blue-100 text-blue-600" onClick={() => { setDrawerTaskIds(dueTasks.map(t => t.id)); setTaskListModal({ title: 'Due Today' }); }} />
+         <StatCard large={largeIcons} labelRight icon={AlertTriangle} label="Overdue" value={overdueTasks.length} color="bg-red-100 text-red-600" onClick={() => { setDrawerTaskIds(overdueTasks.map(t => t.id)); setTaskListModal({ title: 'Overdue Tasks' }); }} />
+         <StatCard large={largeIcons} labelRight icon={Clock} label="Pending Tasks" value={pendingTasks.length} color="bg-amber-100 text-amber-600" onClick={() => { setDrawerTaskIds(pendingTasks.map(t => t.id)); setTaskListModal({ title: 'Pending Tasks' }); }} />
+         <StatCard large={largeIcons} labelRight icon={CheckCircle} label="Completed" value={completedTasks.length} color="bg-green-100 text-green-600" onClick={() => { setDrawerTaskIds(completedTasks.map(t => t.id)); setTaskListModal({ title: 'Completed Tasks' }); }} />
          <Link to="/tasks" className="block">
            <StatCard large={largeIcons} icon={ListChecks} label="Create, organize, and schedule tasks" value="Tasks" color="bg-slate-100 text-slate-600" />
          </Link>
