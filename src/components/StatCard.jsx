@@ -5,7 +5,7 @@ export default function StatCard({ icon: Icon, label, value, color, onClick, lab
     <div
       className={cn(
         "bg-card border border-border rounded-xl flex items-center transition-all h-full",
-        large ? "px-4 py-5 gap-4" : "px-3 py-4 gap-3",
+        large ? "px-4 py-4 gap-4" : "px-3 py-2.5 gap-3",
         onClick && "cursor-pointer hover:shadow-md hover:border-primary/30 active:scale-95"
       )}
       onClick={onClick}
@@ -15,8 +15,8 @@ export default function StatCard({ icon: Icon, label, value, color, onClick, lab
       </div>
       {labelRight ? (
         <div className="min-w-0 flex items-center gap-3">
-          <p className={cn("font-heading font-bold text-foreground", large ? "text-xl" : "text-base")}>{value}</p>
-          <p className={cn("font-medium text-muted-foreground", large ? "text-base" : "text-sm")}>{label}</p>
+          <p className={cn("font-heading font-bold text-foreground", large ? "text-xl" : "text-lg")}>{value}</p>
+          <p className={cn("font-medium text-muted-foreground", large ? "text-base" : "text-base")}>{label}</p>
         </div>
       ) : labelOnTop ? (
         <div className="min-w-0 flex flex-col items-start justify-center flex-1 text-left">
