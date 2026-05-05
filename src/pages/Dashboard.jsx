@@ -254,15 +254,6 @@ export default function Dashboard() {
          <Link to="/family" className="block">
            <StatCard large={largeIcons} labelRight icon={ListChecks} label="Family" value="View" color="bg-pink-100 text-pink-600" />
          </Link>
-         <Link to="/leaderboard" className="block">
-           <StatCard large={largeIcons} labelRight icon={ListChecks} label="Leaderboard" value="View" color="bg-yellow-100 text-yellow-600" />
-         </Link>
-         <Link to="/home-setup" className="block">
-           <StatCard large={largeIcons} labelRight icon={ListChecks} label="Home Setup" value="View" color="bg-teal-100 text-teal-600" />
-         </Link>
-         <Link to="/profile" className="block">
-           <StatCard large={largeIcons} labelRight icon={ListChecks} label="Profile" value="View" color="bg-indigo-100 text-indigo-600" />
-         </Link>
          </div>
 
 
