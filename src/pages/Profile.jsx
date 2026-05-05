@@ -196,23 +196,26 @@ export default function Profile() {
       </div>
 
       {/* Quick Links */}
-      <div className="grid grid-cols-3 gap-3">
-        <Link to="/family" className="block">
-          <div className="bg-violet-100 border border-violet-200 rounded-lg px-3 py-3 flex flex-col items-center gap-1 hover:bg-violet-50 transition-colors text-center">
-            <span className="text-xl">👨‍👩‍👧‍👦</span>
-            <p className="text-xs font-medium text-violet-700">Family</p>
+      <div className="flex flex-col gap-3">
+        <Link to="/presets" className="block">
+          <div className="bg-purple-100 border border-purple-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-purple-50 transition-colors">
+            <span className="text-xl">📋</span>
+            <p className="text-sm font-medium text-purple-700">Presets</p>
+            <ChevronRight className="w-4 h-4 text-purple-400 ml-auto" />
           </div>
         </Link>
-        <Link to="/presets" className="block">
-          <div className="bg-purple-100 border border-purple-200 rounded-lg px-3 py-3 flex flex-col items-center gap-1 hover:bg-purple-50 transition-colors text-center">
-            <span className="text-xl">📋</span>
-            <p className="text-xs font-medium text-purple-700">Presets</p>
+        <Link to="/family" className="block">
+          <div className="bg-violet-100 border border-violet-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-violet-50 transition-colors">
+            <span className="text-xl">👨‍👩‍👧‍👦</span>
+            <p className="text-sm font-medium text-violet-700">Family</p>
+            <ChevronRight className="w-4 h-4 text-violet-400 ml-auto" />
           </div>
         </Link>
         <Link to="/home-setup" className="block">
-          <div className="bg-orange-100 border border-orange-200 rounded-lg px-3 py-3 flex flex-col items-center gap-1 hover:bg-orange-50 transition-colors text-center">
+          <div className="bg-orange-100 border border-orange-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-orange-50 transition-colors">
             <span className="text-xl">🏠</span>
-            <p className="text-xs font-medium text-orange-700">Home Setup</p>
+            <p className="text-sm font-medium text-orange-700">Home Setup</p>
+            <ChevronRight className="w-4 h-4 text-orange-400 ml-auto" />
           </div>
         </Link>
       </div>
