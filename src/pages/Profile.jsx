@@ -177,32 +177,22 @@ export default function Profile() {
       </Link>
 
       {/* Task Reset Time */}
-      <div className="space-y-3">
-        <h3 className="font-heading font-semibold text-lg">Task Reset Time</h3>
-        <div className="bg-orange-100 border border-orange-200 rounded-lg p-4 space-y-3">
-          <div className="flex items-start gap-3">
-            <Clock className="w-5 h-5 text-orange-600 mt-0.5 shrink-0" />
-            <div className="flex-1">
-              <p className="text-sm font-medium text-orange-900">New day starts at</p>
-              <p className="text-xs text-orange-700 mt-0.5">Completed tasks reset to Pending at this hour each day</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <MobileSelect
-              value={dayStartHour}
-              onValueChange={setDayStartHour}
-              title="Select time"
-              triggerClassName="flex-1"
-              options={Array.from({ length: 24 }, (_, i) => ({
-                value: String(i),
-                label: i === 0 ? "12:00 AM (Midnight)" : i < 12 ? `${i}:00 AM` : i === 12 ? "12:00 PM (Noon)" : `${i - 12}:00 PM`
-              }))}
-            />
-            <Button onClick={handleSaveDayStart} disabled={savingHour} size="sm" className="bg-orange-500 text-white hover:bg-orange-600">
-              {savingHour ? "Saving..." : "Save"}
-            </Button>
-          </div>
-        </div>
+      <div className="bg-orange-100 border border-orange-200 rounded-lg px-4 py-3 flex items-center gap-3">
+        <Clock className="w-5 h-5 text-orange-600 shrink-0" />
+        <p className="text-sm font-medium text-orange-900 shrink-0">Reset at</p>
+        <MobileSelect
+          value={dayStartHour}
+          onValueChange={setDayStartHour}
+          title="Select time"
+          triggerClassName="flex-1"
+          options={Array.from({ length: 24 }, (_, i) => ({
+            value: String(i),
+            label: i === 0 ? "12:00 AM" : i < 12 ? `${i}:00 AM` : i === 12 ? "12:00 PM" : `${i - 12}:00 PM`
+          }))}
+        />
+        <Button onClick={handleSaveDayStart} disabled={savingHour} size="sm" className="bg-orange-500 text-white hover:bg-orange-600 shrink-0">
+          {savingHour ? "..." : "Save"}
+        </Button>
       </div>
 
       {/* Quick Links */}
