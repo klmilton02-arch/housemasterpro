@@ -42,7 +42,7 @@ export default function ScanAppointmentDialog({ open, onOpenChange, onTaskCreate
         file_url: url
       });
 
-      setExtracted(response.extracted);
+      setExtracted(response.data || response);
       setStep('confirm');
       setProcessing(false);
     } catch (err) {
