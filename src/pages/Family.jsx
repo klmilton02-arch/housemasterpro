@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { base44 } from "@/api/base44Client";
-import { Users, Link2, Link2Off, ChevronDown } from "lucide-react";
+import { Users, Link2, Link2Off, ChevronDown, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const colorMap = {
   blue: "bg-blue-500",
@@ -21,8 +22,11 @@ export default function Family() {
   const [familyUsers, setFamilyUsers] = useState([]);
   const [familyMembers, setFamilyMembers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [linkingMemberId, setLinkingMemberId] = useState(null); // FamilyMember id being linked
+  const [linkingMemberId, setLinkingMemberId] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newMemberName, setNewMemberName] = useState("");
+  const [newMemberColor, setNewMemberColor] = useState("blue");
 
   const loadData = useCallback(async () => {
     try {
@@ -45,6 +49,21 @@ export default function Family() {
   }, []);
 
   useEffect(() => { loadData(); }, [loadData]);
+
+  async function handleAddMember() {
+    if (!newMemberName.trim() || !user?.family_group_id) return;
+    setSaving(true);
+    await base44.entities.FamilyMember.create({
+      family_group_id: user.family_group_id,
+      name: newMemberName.trim(),
+      avatar_color: newMemberColor,
+    });
+    setNewMemberName("");
+    setNewMemberColor("blue");
+    setShowAddForm(false);
+    setSaving(false);
+    loadData();
+  }
 
   async function handleLink(member, appUser) {
     setSaving(true);
@@ -80,6 +99,41 @@ export default function Family() {
   return (
     <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7 pb-8" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <h1 className="font-heading text-3xl font-bold">Family</h1>
+
+      {/* Add Family Member */}
+      {user?.family_group_id && (
+        <div>
+          {showAddForm ? (
+            <div className="bg-card border border-border rounded-lg p-4 space-y-3">
+              <p className="font-medium text-sm">New Family Member</p>
+              <Input
+                placeholder="Name"
+                value={newMemberName}
+                onChange={e => setNewMemberName(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') handleAddMember(); if (e.key === 'Escape') setShowAddForm(false); }}
+                autoFocus
+              />
+              <div className="flex gap-2">
+                {Object.keys(colorMap).map(color => (
+                  <button
+                    key={color}
+                    onClick={() => setNewMemberColor(color)}
+                    className={`w-7 h-7 rounded-full ${colorMap[color]} ${newMemberColor === color ? "ring-2 ring-offset-2 ring-primary" : ""}`}
+                  />
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" onClick={handleAddMember} disabled={saving || !newMemberName.trim()}>Add</Button>
+                <Button size="sm" variant="outline" onClick={() => { setShowAddForm(false); setNewMemberName(""); }}>Cancel</Button>
+              </div>
+            </div>
+          ) : (
+            <Button variant="outline" className="w-full gap-2" onClick={() => setShowAddForm(true)}>
+              <Plus className="w-4 h-4" /> Add Family Member
+            </Button>
+          )}
+        </div>
+      )}
 
       {/* Family Members with linked accounts */}
       {familyMembers.length > 0 ? (
