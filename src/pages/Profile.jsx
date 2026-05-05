@@ -150,37 +150,37 @@ export default function Profile() {
         </div>
 
         {/* My Information */}
-        <div className="bg-card rounded-lg border border-border shadow-sm p-6 mb-6">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4 min-w-0 flex-1">
-              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                <User className="w-5 h-5 text-blue-600" />
+        <div className="bg-card rounded-lg border border-border shadow-sm p-4 mb-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <User className="w-4 h-4 text-blue-600" />
               </div>
               <div className="min-w-0">
-                <p className="font-semibold text-lg text-foreground truncate">{user.full_name}</p>
-                <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+                <p className="font-semibold text-foreground truncate">{user.full_name}</p>
+                <p className="text-xs text-muted-foreground truncate">{user.email}</p>
               </div>
             </div>
             <Button variant="outline" size="sm" onClick={() => { setEditName(user.full_name || ""); setEditOpen(true); }} className="gap-1 shrink-0">
-              <Pencil className="w-4 h-4" /> Edit
+              <Pencil className="w-3 h-3" /> Edit
             </Button>
           </div>
         </div>
 
         {/* Settings Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           {/* Task Reset Time */}
-          <div className="bg-card rounded-lg border border-border shadow-sm p-6">
-            <div className="flex items-start gap-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
-                <Clock className="w-5 h-5 text-amber-600" />
+          <div className="bg-card rounded-lg border border-border shadow-sm p-4">
+            <div className="flex items-start gap-2 mb-3">
+              <div className="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
+                <Clock className="w-4 h-4 text-amber-600" />
               </div>
               <div>
-                <p className="font-semibold text-foreground">New Day Starts At</p>
+                <p className="font-semibold text-sm text-foreground">New Day Starts At</p>
                 <p className="text-xs text-muted-foreground mt-0.5">When tasks reset to pending</p>
               </div>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-2">
               <MobileSelect
                 value={dayStartHour}
                 onValueChange={setDayStartHour}
@@ -199,17 +199,17 @@ export default function Profile() {
 
           {/* Start Dates */}
           <Link to="/task-start-dates" className="block">
-            <div className="bg-card rounded-lg border border-border shadow-sm p-6 h-full hover:shadow-md transition-shadow">
-              <div className="flex items-start gap-3 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-cyan-100 flex items-center justify-center flex-shrink-0">
-                  <CalendarDays className="w-5 h-5 text-cyan-600" />
+            <div className="bg-card rounded-lg border border-border shadow-sm p-4 h-full hover:shadow-md transition-shadow">
+              <div className="flex items-start gap-2 mb-2">
+                <div className="w-9 h-9 rounded-lg bg-cyan-100 flex items-center justify-center flex-shrink-0">
+                  <CalendarDays className="w-4 h-4 text-cyan-600" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-semibold text-foreground">Task Start Dates</p>
+                  <p className="font-semibold text-sm text-foreground">Task Start Dates</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Set when each task type begins</p>
                 </div>
               </div>
-              <div className="flex items-center text-muted-foreground mt-4">
+              <div className="flex items-center text-muted-foreground mt-2">
                 <ChevronRight className="w-4 h-4 ml-auto" />
               </div>
             </div>
@@ -217,30 +217,30 @@ export default function Profile() {
         </div>
 
         {/* Quick Navigation Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
           <Link to="/presets" className="block">
-            <div className="bg-card rounded-lg border border-border shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer">
-              <div className="flex items-center gap-3 mb-3">
-                <span className="text-2xl">📋</span>
-                <p className="font-semibold text-foreground">Presets</p>
+            <div className="bg-card rounded-lg border border-border shadow-sm p-3 hover:shadow-md transition-shadow cursor-pointer">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xl">📋</span>
+                <p className="font-semibold text-sm text-foreground">Presets</p>
               </div>
               <p className="text-xs text-muted-foreground">Browse task templates</p>
             </div>
           </Link>
           <Link to="/family" className="block">
-            <div className="bg-card rounded-lg border border-border shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer">
-              <div className="flex items-center gap-3 mb-3">
-                <span className="text-2xl">👨‍👩‍👧‍👦</span>
-                <p className="font-semibold text-foreground">Family</p>
+            <div className="bg-card rounded-lg border border-border shadow-sm p-3 hover:shadow-md transition-shadow cursor-pointer">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xl">👨‍👩‍👧‍👦</span>
+                <p className="font-semibold text-sm text-foreground">Family</p>
               </div>
               <p className="text-xs text-muted-foreground">Manage members</p>
             </div>
           </Link>
           <Link to="/home-setup" className="block">
-            <div className="bg-card rounded-lg border border-border shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer">
-              <div className="flex items-center gap-3 mb-3">
-                <span className="text-2xl">🏠</span>
-                <p className="font-semibold text-foreground">Home Setup</p>
+            <div className="bg-card rounded-lg border border-border shadow-sm p-3 hover:shadow-md transition-shadow cursor-pointer">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xl">🏠</span>
+                <p className="font-semibold text-sm text-foreground">Home Setup</p>
               </div>
               <p className="text-xs text-muted-foreground">Configure your home</p>
             </div>
@@ -248,23 +248,23 @@ export default function Profile() {
         </div>
 
         {/* Security & Sign Out */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
           <Link to="/encryption" className="block">
-            <Button variant="outline" className="w-full gap-2 h-auto py-3 justify-start">
+            <Button variant="outline" className="w-full gap-2 h-auto py-2 px-3 justify-start text-sm">
               <Shield className="w-4 h-4" />
               <span>Security & Privacy</span>
             </Button>
           </Link>
-          <Button onClick={() => base44.auth.logout("/")} variant="outline" className="gap-2 h-auto py-3 justify-start text-red-600 hover:text-red-700 hover:bg-red-50">
+          <Button onClick={() => base44.auth.logout("/")} variant="outline" className="gap-2 h-auto py-2 px-3 justify-start text-red-600 hover:text-red-700 hover:bg-red-50 text-sm">
             <LogOut className="w-4 h-4" />
             <span>Sign Out</span>
           </Button>
         </div>
 
         {/* Data Management Section */}
-        <div className="bg-card rounded-lg border border-border shadow-sm p-6">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-4">Data Management</p>
-          <div className="space-y-3">
+        <div className="bg-card rounded-lg border border-border shadow-sm p-4">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Data Management</p>
+          <div className="space-y-2">
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="outline" className="w-full justify-start text-amber-700 hover:bg-amber-50">
