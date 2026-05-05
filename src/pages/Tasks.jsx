@@ -358,7 +358,7 @@ export default function Tasks() {
 
       <div className="grid grid-cols-1 gap-4 sm:gap-5">
          <button onClick={() => setDialogOpen(true)} className="w-full h-full">
-           <StatCard large={largeIcons} icon={Plus} value="Add" label="New Task" color="bg-blue-100 text-blue-600" />
+           <StatCard large={largeIcons} labelRight icon={Plus} value="Add New Task" label="" color="bg-blue-100 text-blue-600" />
          </button>
          <button onClick={() => navigate("/presets")} className="w-full h-full">
            <StatCard large={largeIcons} icon={CheckCircle} value="Browse" label="Presets" color="bg-purple-100 text-purple-600" />
