@@ -143,7 +143,7 @@ export default function Profile() {
   const earnedBadges = profile ? getEarnedBadges(profile) : [];
 
   return (
-    <div className="space-y-7 max-w-md md:max-w-2xl mx-auto px-3 sm:px-2 pt-7 pb-8" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div className="space-y-3 max-w-md md:max-w-2xl mx-auto px-3 sm:px-2 pt-7 pb-8" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
 
       <h1 className="font-heading text-3xl font-bold md:hidden">Profile</h1>
 
