@@ -13,36 +13,30 @@ Deno.serve(async (req) => {
     const userEmail = user.email;
     const familyGroupId = user.family_group_id;
 
-    // Helper: batch delete records with optimized rate limiting
+    // Helper: delete records one at a time with proper rate limit handling
     const deleteAll = async (entity, filter) => {
       try {
         const records = await base44.asServiceRole.entities[entity].filter(filter, '-created_date', 1000);
         if (records.length === 0) return;
         
-        // Delete in parallel batches of 5 to be efficient but not hit rate limits
-        for (let i = 0; i < records.length; i += 5) {
-          const batch = records.slice(i, i + 5);
-          await Promise.all(
-            batch.map(r =>
-              base44.asServiceRole.entities[entity].delete(r.id)
-                .catch(err => {
-                  if (!err.message?.includes('not found')) {
-                    console.error(`Error deleting ${entity} ${r.id}:`, err.message);
-                  }
-                })
-            )
-          );
-          // Small delay between batches to avoid rate limits
-          if (i + 5 < records.length) {
-            await new Promise(resolve => setTimeout(resolve, 100));
+        for (const record of records) {
+          try {
+            await base44.asServiceRole.entities[entity].delete(record.id);
+          } catch (err) {
+            // Ignore 'not found' errors, they're already deleted
+            if (!err.message?.includes('not found')) {
+              console.error(`Error deleting ${entity} ${record.id}:`, err.message);
+            }
           }
+          // 50ms delay between deletions to stay below rate limits
+          await new Promise(resolve => setTimeout(resolve, 50));
         }
       } catch (err) {
         console.log(`Error fetching ${entity}:`, err.message);
       }
     };
 
-    // Delete all user data in parallel for speed
+    // Delete sequentially to avoid rate limiting, but process multiple entities in parallel
     await Promise.all([
       deleteAll('Task', { created_by: userEmail }),
       deleteAll('GamificationProfile', { family_member_id: userId }),
