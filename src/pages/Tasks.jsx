@@ -355,8 +355,8 @@ export default function Tasks() {
   });
 
   return (
-    <div className="space-y-2 md:space-y-6 w-full md:max-w-2xl md:mx-auto px-4 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-      <h1 className="font-heading text-4xl font-bold md:hidden">Tasks</h1>
+    <div className="space-y-2 md:space-y-6 w-full md:max-w-5xl md:mx-auto px-4 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+      <h1 className="font-heading text-3xl font-bold md:hidden">Tasks</h1>
 
       <Button onClick={() => setScanDialogOpen(true)} className="w-full gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600">
         <Camera className="w-4 h-4" />
