@@ -308,7 +308,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
             <TabsTrigger value="preset" className="flex-1 text-xs">From Preset</TabsTrigger>
             <TabsTrigger value="custom" className="flex-1 text-xs">Custom</TabsTrigger>
             <TabsTrigger value="todo" className="flex-1 text-xs">To-Do</TabsTrigger>
-            <TabsTrigger value="scan" className="flex-1 text-xs">Scan</TabsTrigger>
+            <TabsTrigger value="scan" className="flex-1 text-xs">Scan tasks and appointments</TabsTrigger>
           </TabsList>
 
           <TabsContent value="preset" className="space-y-4 mt-4">
