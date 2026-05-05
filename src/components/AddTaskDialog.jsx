@@ -16,6 +16,12 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState("preset");
 
+  // To-do form
+  const [todoName, setTodoName] = useState("");
+  const [todoPriority, setTodoPriority] = useState("Medium");
+  const [todoDueDate, setTodoDueDate] = useState(format(new Date(), "yyyy-MM-dd"));
+  const [todoDescription, setTodoDescription] = useState("");
+
   // Preset form
   const [selectedPresets, setSelectedPresets] = useState(new Set());
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -100,7 +106,31 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
       return null;
     };
 
-    if (tab === "preset") {
+    if (tab === "todo") {
+      await base44.entities.Task.create({
+        name: todoName,
+        category: "To-Do",
+        priority: todoPriority,
+        difficulty: "Easy",
+        frequency_days: 9999,
+        description: todoDescription,
+        assigned_to: assignedTo || undefined,
+        assigned_to_name: member?.name || undefined,
+        start_date: todoDueDate,
+        next_due_date: todoDueDate,
+        status: "Pending",
+        overdue_grace_days: 999,
+        family_group_id,
+      });
+      setTodoName("");
+      setTodoPriority("Medium");
+      setTodoDueDate(format(new Date(), "yyyy-MM-dd"));
+      setTodoDescription("");
+      setAssignedTo("");
+      setLoading(false);
+      onTaskAdded?.();
+      return;
+    } else if (tab === "preset") {
       // Create tasks for all selected presets
       const selectedPresetObjs = presets.filter(p => selectedPresets.has(p.id));
       
@@ -203,8 +233,9 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
         <Tabs value={tab} onValueChange={setTab} className="mt-2">
           <TabsList className="w-full">
-            <TabsTrigger value="preset" className="flex-1">From Preset</TabsTrigger>
-            <TabsTrigger value="custom" className="flex-1">Custom Task</TabsTrigger>
+            <TabsTrigger value="preset" className="flex-1 text-xs">From Preset</TabsTrigger>
+            <TabsTrigger value="custom" className="flex-1 text-xs">Custom</TabsTrigger>
+            <TabsTrigger value="todo" className="flex-1 text-xs">To-Do</TabsTrigger>
           </TabsList>
 
           <TabsContent value="preset" className="space-y-4 mt-4">
@@ -346,6 +377,55 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
             )}
           </TabsContent>
 
+          <TabsContent value="todo" className="space-y-4 mt-4">
+            <p className="text-xs text-muted-foreground">One-time tasks that don't repeat — great for to-do lists and errands.</p>
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Task Name</Label>
+              <Input value={todoName} onChange={e => setTodoName(e.target.value)} placeholder="e.g., Call the dentist" className="mt-1" />
+            </div>
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Priority</Label>
+              <MobileSelect
+                value={todoPriority}
+                onValueChange={setTodoPriority}
+                title="Select Priority"
+                triggerClassName="mt-1"
+                options={[
+                  { value: "High", label: "🔴 High" },
+                  { value: "Medium", label: "🟡 Medium" },
+                  { value: "Low", label: "⚪ Low" },
+                ]}
+              />
+            </div>
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Due Date</Label>
+              <Input type="date" value={todoDueDate} onChange={e => setTodoDueDate(e.target.value)} className="mt-1" />
+            </div>
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Notes (optional)</Label>
+              <Input value={todoDescription} onChange={e => setTodoDescription(e.target.value)} placeholder="Any extra details" className="mt-1" />
+            </div>
+            {familyMembers.length > 0 && (
+              <div>
+                <Label className="text-xs font-medium text-muted-foreground">Assign to (optional)</Label>
+                <MobileSelect
+                  value={assignedTo}
+                  onValueChange={setAssignedTo}
+                  title="Assign to"
+                  triggerClassName="mt-1"
+                  options={[{ value: "", label: "Unassigned" }, ...familyMembers.map(m => ({ value: m.id, label: m.name }))]}
+                />
+              </div>
+            )}
+            <Button
+              className="w-full"
+              onClick={handleSubmit}
+              disabled={loading || !todoName.trim()}
+            >
+              {loading ? "Adding..." : "Add To-Do"}
+            </Button>
+          </TabsContent>
+
           <TabsContent value="custom" className="space-y-4 mt-4">
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Task Name</Label>
@@ -414,7 +494,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
           </TabsContent>
         </Tabs>
 
-        <div className="space-y-4 mt-4 pt-4 border-t border-border">
+        <div className={`space-y-4 mt-4 pt-4 border-t border-border ${tab === "todo" ? "hidden" : ""}`}>
           {/* Bill day-of-month option */}
           {((tab === "preset" && [...selectedPresets].map(id => presets.find(p => p.id === id)).some(p => p?.task_type === "Bills")) || (tab === "custom" && customCategory === "Bills")) && (
             <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 space-y-2">

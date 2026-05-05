@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown, ListChecks, Clock, CheckCircle, Tag, Receipt, Home, Filter, Leaf } from "lucide-react";
+import { Plus, Trash2, CheckSquare, Zap, Calendar, AlertTriangle, ChevronDown, ListChecks, Clock, CheckCircle, Tag, Receipt, Home, Filter, Leaf, ClipboardList } from "lucide-react";
 import { useLargeIcons } from "@/lib/LargeIconsContext";
 import { Link, useNavigate } from "react-router-dom";
 import { awardPoints, getTaskPoints, revokePoints } from "@/utils/gamification";
@@ -375,6 +375,9 @@ export default function Tasks() {
          <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Garden" ? "all" : "Garden"); }} className="w-full h-full">
            <StatCard large={largeIcons} icon={Leaf} value="View" label="Garden" color="bg-lime-100 text-lime-600" />
          </button>
+         <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "To-Do" ? "all" : "To-Do"); }} className="w-full h-full">
+           <StatCard large={largeIcons} icon={ClipboardList} value="View" label="To-Do List" color="bg-indigo-100 text-indigo-600" />
+         </button>
        </div>
 
       <div className="grid grid-cols-2 gap-3">
@@ -415,7 +418,7 @@ export default function Tasks() {
             <DropdownMenuItem onClick={() => setCategoryFilter("all")}>
               <span className={categoryFilter === "all" ? "font-semibold text-primary" : ""}>All Types</span>
             </DropdownMenuItem>
-            {(viewMode === "rooms" ? ["Cleaning", "Maintenance"] : ["Cleaning", "Maintenance", "Bills", "Personal", "Garden"]).map(cat => (
+            {(viewMode === "rooms" ? ["Cleaning", "Maintenance"] : ["Cleaning", "Maintenance", "Bills", "Personal", "Garden", "To-Do"]).map(cat => (
               <DropdownMenuItem key={cat} onClick={() => setCategoryFilter(cat)}>
                 <span className={categoryFilter === cat ? "font-semibold text-primary" : ""}>{cat}</span>
               </DropdownMenuItem>
