@@ -148,10 +148,10 @@ export default function Profile() {
       <h1 className="font-heading text-3xl font-bold md:hidden">Profile</h1>
 
       {/* My Information */}
-      <div className="bg-violet-100 border border-violet-200 rounded-lg px-4 py-3 flex items-center justify-between gap-3">
+      <div className="bg-slate-100 border border-slate-200 rounded-lg px-4 py-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-8 h-8 rounded-full bg-violet-200 flex items-center justify-center flex-shrink-0">
-            <User className="w-4 h-4 text-violet-600" />
+          <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center flex-shrink-0">
+            <User className="w-4 h-4 text-slate-600" />
           </div>
           <div className="min-w-0">
             <p className="font-medium text-base text-foreground truncate">{user.full_name}</p>
@@ -204,24 +204,24 @@ export default function Profile() {
       {/* Quick Links */}
       <div className="flex flex-col gap-3">
         <Link to="/presets" className="block">
-          <div className="bg-purple-100 border border-purple-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-purple-50 transition-colors">
+          <div className="bg-slate-100 border border-slate-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-slate-50 transition-colors">
             <span className="text-xl">📋</span>
-            <p className="text-base font-medium text-purple-700">Presets</p>
-            <ChevronRight className="w-4 h-4 text-purple-400 ml-auto" />
+            <p className="text-base font-medium text-slate-700">Presets</p>
+            <ChevronRight className="w-4 h-4 text-slate-400 ml-auto" />
           </div>
         </Link>
         <Link to="/family" className="block">
-          <div className="bg-violet-100 border border-violet-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-violet-50 transition-colors">
+          <div className="bg-slate-100 border border-slate-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-slate-50 transition-colors">
             <span className="text-xl">👨‍👩‍👧‍👦</span>
-            <p className="text-base font-medium text-violet-700">Family</p>
-            <ChevronRight className="w-4 h-4 text-violet-400 ml-auto" />
+            <p className="text-base font-medium text-slate-700">Family</p>
+            <ChevronRight className="w-4 h-4 text-slate-400 ml-auto" />
           </div>
         </Link>
         <Link to="/home-setup" className="block">
-          <div className="bg-orange-100 border border-orange-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-orange-50 transition-colors">
+          <div className="bg-slate-100 border border-slate-200 rounded-lg px-4 py-3 flex items-center gap-3 hover:bg-slate-50 transition-colors">
             <span className="text-xl">🏠</span>
-            <p className="text-base font-medium text-orange-700">Home Setup</p>
-            <ChevronRight className="w-4 h-4 text-orange-400 ml-auto" />
+            <p className="text-base font-medium text-slate-700">Home Setup</p>
+            <ChevronRight className="w-4 h-4 text-slate-400 ml-auto" />
           </div>
         </Link>
       </div>
