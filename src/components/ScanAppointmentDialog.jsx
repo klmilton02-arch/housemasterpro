@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -12,8 +12,8 @@ export default function ScanAppointmentDialog({ open, onOpenChange, onTaskCreate
   const [fileUrl, setFileUrl] = useState(null);
   const [extracted, setExtracted] = useState(null);
   const [error, setError] = useState(null);
-  const [fileInput, setFileInput] = useState(null);
-  const [cameraInput, setCameraInput] = useState(null);
+  const fileInputRef = useRef(null);
+  const cameraInputRef = useRef(null);
 
   const handleFileSelect = async (file) => {
     if (!file) return;
@@ -60,7 +60,8 @@ export default function ScanAppointmentDialog({ open, onOpenChange, onTaskCreate
     setFileUrl(null);
     setExtracted(null);
     setError(null);
-    setFileInput(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (cameraInputRef.current) cameraInputRef.current.value = '';
     onOpenChange(false);
   };
 
@@ -80,7 +81,7 @@ export default function ScanAppointmentDialog({ open, onOpenChange, onTaskCreate
               <Button
                 variant="outline"
                 className="flex-1 gap-2"
-                onClick={() => fileInput?.click()}
+                onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
               >
                 <Upload className="w-4 h-4" />
@@ -89,25 +90,25 @@ export default function ScanAppointmentDialog({ open, onOpenChange, onTaskCreate
               <Button
                  variant="outline"
                  className="flex-1 gap-2"
-                 onClick={() => cameraInput?.click()}
+                 onClick={() => cameraInputRef.current?.click()}
                  disabled={uploading}
                >
                  <Camera className="w-4 h-4" />
                  Take Photo
                </Button>
-                <input
-                  ref={setCameraInput}
-                  type="file"
-                  accept="image/*"
-                  capture="environment"
-                  className="hidden"
-                  onChange={(e) => handleFileSelect(e.target.files?.[0])}
-                />
             </div>
             <input
-              ref={setFileInput}
+              ref={fileInputRef}
               type="file"
               accept="image/*"
+              className="hidden"
+              onChange={(e) => handleFileSelect(e.target.files?.[0])}
+            />
+            <input
+              ref={cameraInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
               className="hidden"
               onChange={(e) => handleFileSelect(e.target.files?.[0])}
             />
