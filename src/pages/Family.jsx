@@ -49,6 +49,7 @@ export default function Family() {
   async function handleLink(member, appUser) {
     setSaving(true);
     await base44.entities.FamilyMember.update(member.id, {
+      family_group_id: member.family_group_id,
       linked_user_id: appUser.id,
       linked_user_email: appUser.email,
     });
