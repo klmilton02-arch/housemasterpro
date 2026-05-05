@@ -41,15 +41,27 @@ export default function ScanAppointmentDialog({ open, onOpenChange, onTaskCreate
       });
 
       setExtracted(response.extracted);
-      setStep('success');
+      setStep('confirm');
+      setProcessing(false);
+    } catch (err) {
+      setError(err.message || 'Failed to scan appointment. Please try again.');
+      setStep('error');
+      setProcessing(false);
+    }
+  };
+
+  const handleConfirm = async () => {
+    setProcessing(true);
+    try {
       onTaskCreated?.();
+      setStep('success');
       
       // Reset after 2 seconds
       setTimeout(() => {
         handleClose();
       }, 2000);
     } catch (err) {
-      setError(err.message || 'Failed to scan appointment. Please try again.');
+      setError(err.message || 'Failed to add appointment.');
       setStep('error');
       setProcessing(false);
     }
@@ -126,6 +138,60 @@ export default function ScanAppointmentDialog({ open, onOpenChange, onTaskCreate
             <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
               <Loader2 className="w-4 h-4 animate-spin" />
               Extracting appointment details...
+            </div>
+          </div>
+        )}
+
+        {step === 'confirm' && extracted && (
+          <div className="space-y-4">
+            <div className="text-sm font-medium text-foreground mb-3">Confirm Appointment Details</div>
+            
+            <div className="bg-blue-50 dark:bg-blue-950 rounded-lg p-4 space-y-3 text-sm">
+              {extracted.doctor_name && (
+                <div>
+                  <p className="text-muted-foreground text-xs mb-1">Doctor</p>
+                  <p className="font-semibold text-foreground">{extracted.doctor_name}</p>
+                </div>
+              )}
+              {extracted.date && (
+                <div>
+                  <p className="text-muted-foreground text-xs mb-1">Date</p>
+                  <p className="font-semibold text-foreground">{extracted.date}</p>
+                </div>
+              )}
+              {extracted.time && (
+                <div>
+                  <p className="text-muted-foreground text-xs mb-1">Time</p>
+                  <p className="font-semibold text-foreground">{extracted.time}</p>
+                </div>
+              )}
+              {extracted.location && (
+                <div>
+                  <p className="text-muted-foreground text-xs mb-1">Location</p>
+                  <p className="font-semibold text-foreground">{extracted.location}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => {
+                  setStep('upload');
+                  setFileUrl(null);
+                  setExtracted(null);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="flex-1"
+                onClick={handleConfirm}
+                disabled={processing}
+              >
+                {processing ? 'Adding...' : 'Confirm & Add'}
+              </Button>
             </div>
           </div>
         )}
