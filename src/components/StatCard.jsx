@@ -14,19 +14,23 @@ export default function StatCard({ icon: Icon, label, value, color, onClick, lab
         <Icon className={large ? "w-6 h-6" : "w-4 h-4"} />
       </div>
       {labelRight ? (
-        <div className="min-w-0 flex items-center gap-2">
-          <p className="font-heading font-bold text-muted-foreground text-base leading-tight">{value}</p>
-          {label ? <p className="font-medium text-muted-foreground text-base leading-tight">{label}</p> : null}
+        <div className="min-w-0 flex items-center gap-2 w-full">
+          <p className="font-heading font-bold text-foreground text-base leading-tight text-left">{value}</p>
+          {label ? <p className="font-medium text-muted-foreground text-base leading-tight text-left">{label}</p> : null}
         </div>
       ) : labelOnTop ? (
         <div className="min-w-0 flex flex-col items-start justify-center flex-1 text-left">
-          <p className={cn("text-muted-foreground leading-tight", large ? "text-lg" : "text-base")}>{label}</p>
-          <p className={cn("font-heading font-bold text-foreground leading-tight", large ? "text-2xl" : "text-lg")}>{value}</p>
+          <p className={cn("text-muted-foreground leading-tight text-left", large ? "text-lg" : "text-base")}>{label}</p>
+          <p className={cn("font-heading font-bold text-foreground leading-tight text-left", large ? "text-2xl" : "text-lg")}>{value}</p>
         </div>
-      ) : (
+      ) : value ? (
         <div className="min-w-0 flex flex-col items-start justify-center flex-1">
           <p className={cn("font-heading font-bold text-foreground text-left", large ? "text-2xl" : "text-lg")}>{value}</p>
-          <p className={cn("font-heading font-bold text-muted-foreground text-left", large ? "text-lg" : "text-base")}>{label}</p>
+          <p className={cn("font-heading font-medium text-muted-foreground text-left", large ? "text-base" : "text-sm")}>{label}</p>
+        </div>
+      ) : (
+        <div className="min-w-0 flex items-center flex-1">
+          <p className={cn("font-heading font-medium text-muted-foreground text-left", large ? "text-base" : "text-sm")}>{label}</p>
         </div>
       )}
     </div>
