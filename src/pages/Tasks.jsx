@@ -377,13 +377,13 @@ export default function Tasks() {
             <StatCard large={largeIcons} labelRight icon={Receipt} value="Bills" label="" color="bg-green-100 text-green-600" />
           </button>
           <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Personal" || categoryFilter === "To-Do" ? "all" : "Personal"); }} className="w-full h-full">
-            <StatCard large={largeIcons} labelRight icon={Tag} value="Personal Tasks" label="" color="bg-pink-100 text-pink-600" />
+            <StatCard large={largeIcons} labelRight icon={Tag} value="Personal" label="" color="bg-pink-100 text-pink-600" />
           </button>
           <button onClick={() => { setViewMode("list"); setCategoryFilter(categoryFilter === "Garden" ? "all" : "Garden"); }} className="w-full h-full">
-            <StatCard large={largeIcons} labelRight icon={Leaf} value="Garden Tasks" label="" color="bg-lime-100 text-lime-600" />
+            <StatCard large={largeIcons} labelRight icon={Leaf} value="Garden" label="" color="bg-lime-100 text-lime-600" />
           </button>
           <button onClick={() => setViewMode(viewMode === "rooms" ? "list" : "rooms")} className="w-full h-full">
-            <StatCard large={largeIcons} labelRight icon={Home} value="Home Tasks (by room)" label="" color="bg-orange-100 text-orange-600" />
+            <StatCard large={largeIcons} labelRight icon={Home} value="Home (by room)" label="" color="bg-orange-100 text-orange-600" />
           </button>
         </div>
 
