@@ -114,7 +114,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
 
   return (
     <div className={cn(
-      "border rounded-lg px-3 py-3 hover:shadow-md transition-all group w-full cursor-pointer flex items-center overflow-hidden",
+      "border rounded-lg px-3 py-4 hover:shadow-md transition-all group w-full cursor-pointer flex items-center overflow-hidden",
       cardBg
     )} onClick={() => onViewDetails?.(task)}>
       <div className="flex items-center justify-between gap-2 w-full">
