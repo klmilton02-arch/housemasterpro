@@ -292,7 +292,7 @@ export default function Dashboard() {
 
       <Button onClick={() => setScanDialogOpen(true)} className="w-full gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600">
         <Camera className="w-4 h-4" />
-        Scan Appointment
+        Scan To-Do List and Appointments
       </Button>
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
