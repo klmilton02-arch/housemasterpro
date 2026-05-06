@@ -114,11 +114,13 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
 
   return (
     <div className={cn(
-      "border rounded-lg px-3 py-4 hover:shadow-md transition-all group w-full cursor-pointer flex items-center overflow-hidden",
+      "border rounded-lg px-3 py-3 hover:shadow-md transition-all group w-full cursor-pointer",
       cardBg
     )} onClick={() => onViewDetails?.(task)}>
-      <div className="flex items-center justify-between gap-2 w-full">
-         <div className="flex-1 min-w-0 overflow-hidden flex items-center gap-2">
+      <div className="flex items-start justify-between gap-2 w-full">
+        {/* Left: name + meta stacked */}
+        <div className="flex-1 min-w-0 flex flex-col gap-1.5">
+          {/* Row 1: task name */}
           {editing ? (
             <input
               ref={inputRef}
@@ -130,8 +132,8 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
               className="font-heading font-semibold text-sm text-foreground w-full border border-primary rounded px-1 py-0.5 outline-none bg-background"
             />
           ) : (
-            <div className="flex items-center gap-1 group/name min-w-0 flex-shrink-0 max-w-[40%]">
-              <h3 className={cn("font-heading font-semibold text-xs truncate", visuallyCompleted ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
+            <div className="flex items-center gap-1 group/name min-w-0">
+              <h3 className={cn("font-heading font-semibold text-sm leading-snug", visuallyCompleted ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
               <button
                 onClick={e => { e.stopPropagation(); setEditing(true); }}
                 className="opacity-0 group-hover/name:opacity-100 transition-opacity p-0.5 rounded hover:bg-muted flex-shrink-0"
@@ -140,37 +142,39 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
               </button>
             </div>
           )}
-          <div className="flex items-center gap-1 overflow-hidden whitespace-nowrap flex-1 min-w-0">
-           <span className={cn("inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-semibold shadow-sm flex-shrink-0", status.color)}>
-             <StatusIcon className="w-3 h-3" />
-             {status.label}
-           </span>
-           {showDate && (
-             <span className="text-xs text-muted-foreground flex-shrink-0">{format(parseISO(task.next_due_date), "MMM d")}</span>
-           )}
-           {task.streak > 0 && (
-             <span className="inline-flex items-center gap-0.5 text-xs font-medium text-orange-500 flex-shrink-0">
-               <Flame className="w-3 h-3" />{task.streak}
-             </span>
-           )}
-           {task.priority && task.priority !== "Medium" && !visuallyCompleted && (() => {
-             const pc = PRIORITY_CONFIG[task.priority];
-             const PIcon = pc?.icon;
-             return pc ? (
-               <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-semibold flex-shrink-0 ${pc.color}`}>
-                 <PIcon className="w-3 h-3" />
-               </span>
-             ) : null;
-           })()}
-           {task.assigned_to_name && !visuallyCompleted && (
-               <span className="text-xs text-muted-foreground flex-shrink-0 truncate">· {task.assigned_to_name}</span>
-             )}
-           {visuallyCompleted && (task.completed_by_name || task.assigned_to_name) && (
-               <span className="text-xs font-medium text-green-700 dark:text-green-400 flex-shrink-0 truncate">· ✓ {task.completed_by_name || task.assigned_to_name}</span>
-             )}
+          {/* Row 2: badges / meta */}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className={cn("inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-semibold shadow-sm", status.color)}>
+              <StatusIcon className="w-3 h-3" />
+              {status.label}
+            </span>
+            {showDate && (
+              <span className="text-xs text-muted-foreground">{format(parseISO(task.next_due_date), "MMM d")}</span>
+            )}
+            {task.streak > 0 && (
+              <span className="inline-flex items-center gap-0.5 text-xs font-medium text-orange-500">
+                <Flame className="w-3 h-3" />{task.streak}
+              </span>
+            )}
+            {task.priority && task.priority !== "Medium" && !visuallyCompleted && (() => {
+              const pc = PRIORITY_CONFIG[task.priority];
+              const PIcon = pc?.icon;
+              return pc ? (
+                <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-semibold ${pc.color}`}>
+                  <PIcon className="w-3 h-3" />{pc.label}
+                </span>
+              ) : null;
+            })()}
+            {task.assigned_to_name && !visuallyCompleted && (
+              <span className="text-xs text-muted-foreground">· {task.assigned_to_name}</span>
+            )}
+            {visuallyCompleted && (task.completed_by_name || task.assigned_to_name) && (
+              <span className="text-xs font-medium text-green-700 dark:text-green-400">✓ {task.completed_by_name || task.assigned_to_name}</span>
+            )}
           </div>
         </div>
-        <div className="flex items-center gap-1 shrink-0">
+        {/* Right: checkbox + chevron */}
+        <div className="flex items-center gap-1 shrink-0 mt-0.5">
           <button
             className={`h-7 w-7 flex items-center justify-center rounded-md border-2 transition-all ${
               visuallyCompleted
