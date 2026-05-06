@@ -360,7 +360,7 @@ export default function Tasks() {
 
       <Button onClick={() => setScanDialogOpen(true)} className="w-full gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600">
         <Camera className="w-4 h-4" />
-        Scan Appointments, Reminders, Tasks
+        Scan Appointment Reminders
       </Button>
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
