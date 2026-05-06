@@ -10,69 +10,59 @@ Deno.serve(async (req) => {
     }
 
     const { file_url } = await req.json();
-
     if (!file_url) {
       return Response.json({ error: 'File URL required' }, { status: 400 });
     }
 
-    // Step 1: Detect content type and extract all relevant data in one LLM call
+    const today = new Date().toISOString().split('T')[0];
+    const currentYear = new Date().getFullYear();
+
+    // Single LLM call to detect and extract everything
     const extractionResult = await base44.integrations.Core.InvokeLLM({
-      prompt: `Analyze this image and extract ALL information from it. The image may contain one or more of:
-1. An appointment reminder (doctor/dentist/service appointment card or note)
-2. A bill or invoice (utility, phone, insurance, subscription, etc.)
-3. A handwritten task list or to-do items
+      prompt: `Look at this image carefully. It may contain any combination of:
+- An appointment reminder or card (doctor, dentist, mechanic, etc.)
+- A bill or invoice (utility, phone, internet, insurance, subscription, etc.)
+- A handwritten or printed to-do list or task list
 
-Return a JSON object with the following structure:
-{
-  "content_types": ["appointment", "bill", "tasks"] (include only detected types),
-  "appointment": {
-    "name": "appointment name or doctor/provider name",
-    "date": "YYYY-MM-DD or null",
-    "time": "HH:MM 24h format or null",
-    "location": "location or null",
-    "notes": "any extra notes or null"
-  },
-  "bill": {
-    "bill_type": "type of bill e.g. Electric, Water, Phone, Internet, Insurance, etc.",
-    "due_day_of_month": number (1-28) or null,
-    "due_date": "YYYY-MM-DD full date if found, or null",
-    "amount": "dollar amount as string or null",
-    "provider": "company/provider name or null",
-    "notes": "any extra notes or null"
-  },
-  "tasks": [
-    { "name": "task name", "notes": "any extra details or null" }
-  ]
-}
+Extract ALL information you can see. Current year is ${currentYear}.
 
-Only include the fields relevant to detected content types. For tasks, extract each individual task/to-do item as a separate entry.`,
+For appointments: extract the name/doctor, date (YYYY-MM-DD), time (HH:MM in 24-hour), and location.
+For bills: extract the company/provider name, what type of bill it is, what day of the month it's due (1-28), any full due date (YYYY-MM-DD), and the amount owed.
+For tasks/to-do items: extract each individual task as a separate item with its name and any notes.
+
+Return a flat JSON object with these fields:
+- has_appointment: true or false
+- appt_name: name or doctor name (string or null)
+- appt_date: date in YYYY-MM-DD (string or null)
+- appt_time: time in HH:MM 24h (string or null)
+- appt_location: location (string or null)
+- appt_notes: any extra notes (string or null)
+- has_bill: true or false
+- bill_provider: company name (string or null)
+- bill_type: type of bill like "Electric", "Phone", "Internet", "Insurance" (string or null)
+- bill_due_day: day of month as number 1-28 (number or null)
+- bill_due_date: full date YYYY-MM-DD if shown (string or null)
+- bill_amount: amount as string like "$45.00" (string or null)
+- has_tasks: true or false
+- task_list: array of objects with "name" and "notes" fields`,
       file_urls: [file_url],
       response_json_schema: {
         type: 'object',
         properties: {
-          content_types: { type: 'array', items: { type: 'string' } },
-          appointment: {
-            type: 'object',
-            properties: {
-              name: { type: 'string' },
-              date: { type: 'string' },
-              time: { type: 'string' },
-              location: { type: 'string' },
-              notes: { type: 'string' }
-            }
-          },
-          bill: {
-            type: 'object',
-            properties: {
-              bill_type: { type: 'string' },
-              due_day_of_month: { type: 'number' },
-              due_date: { type: 'string' },
-              amount: { type: 'string' },
-              provider: { type: 'string' },
-              notes: { type: 'string' }
-            }
-          },
-          tasks: {
+          has_appointment: { type: 'boolean' },
+          appt_name: { type: 'string' },
+          appt_date: { type: 'string' },
+          appt_time: { type: 'string' },
+          appt_location: { type: 'string' },
+          appt_notes: { type: 'string' },
+          has_bill: { type: 'boolean' },
+          bill_provider: { type: 'string' },
+          bill_type: { type: 'string' },
+          bill_due_day: { type: 'number' },
+          bill_due_date: { type: 'string' },
+          bill_amount: { type: 'string' },
+          has_tasks: { type: 'boolean' },
+          task_list: {
             type: 'array',
             items: {
               type: 'object',
@@ -86,19 +76,16 @@ Only include the fields relevant to detected content types. For tasks, extract e
       }
     });
 
-    const contentTypes = extractionResult.content_types || [];
+    const r = extractionResult;
     const createdTasks = [];
-    const today = new Date().toISOString().split('T')[0];
 
-    // Process appointment
-    if (contentTypes.includes('appointment') && extractionResult.appointment) {
-      const appt = extractionResult.appointment;
-      const taskName = appt.name ? `Appointment: ${appt.name}` : 'Appointment';
-      const description = [
-        appt.time ? `Time: ${appt.time}` : null,
-        appt.location ? `Location: ${appt.location}` : null,
-        appt.notes || null
-      ].filter(Boolean).join(' | ');
+    // --- Appointment ---
+    if (r.has_appointment && r.appt_date) {
+      const taskName = r.appt_name ? `Appointment: ${r.appt_name}` : 'Appointment';
+      const descParts = [];
+      if (r.appt_time) descParts.push(`Time: ${r.appt_time}`);
+      if (r.appt_location) descParts.push(`Location: ${r.appt_location}`);
+      if (r.appt_notes) descParts.push(r.appt_notes);
 
       const taskData = {
         name: taskName,
@@ -107,28 +94,28 @@ Only include the fields relevant to detected content types. For tasks, extract e
         difficulty: 'Easy',
         frequency_days: 9999,
         overdue_grace_days: 999,
-        next_due_date: appt.date || today,
-        start_date: appt.date || today,
+        next_due_date: r.appt_date,
+        start_date: r.appt_date,
         status: 'Pending',
-        description: description || undefined,
+        description: descParts.join(' | ') || undefined,
         family_group_id: user.family_group_id || null
       };
 
       const task = await base44.entities.Task.create(taskData);
       createdTasks.push({ type: 'appointment', task });
 
-      // Sync to Google Calendar
+      // Try sync to Google Calendar
       try {
         const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlecalendar');
         const calBody = {
           summary: taskName,
-          description: description || undefined,
-          start: appt.time
-            ? { dateTime: `${appt.date}T${appt.time}:00`, timeZone: 'America/Los_Angeles' }
-            : { date: appt.date || today },
-          end: appt.time
-            ? { dateTime: `${appt.date}T${appt.time}:00`, timeZone: 'America/Los_Angeles' }
-            : { date: appt.date || today }
+          description: taskData.description || undefined,
+          start: r.appt_time
+            ? { dateTime: `${r.appt_date}T${r.appt_time}:00`, timeZone: 'America/Los_Angeles' }
+            : { date: r.appt_date },
+          end: r.appt_time
+            ? { dateTime: `${r.appt_date}T${r.appt_time}:00`, timeZone: 'America/Los_Angeles' }
+            : { date: r.appt_date }
         };
         const calRes = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
           method: 'POST',
@@ -140,39 +127,35 @@ Only include the fields relevant to detected content types. For tasks, extract e
           await base44.entities.Task.update(task.id, { calendar_event_id: calEvent.id });
         }
       } catch (calErr) {
-        console.error('Calendar sync failed:', calErr);
+        console.error('Calendar sync failed:', calErr.message);
       }
     }
 
-    // Process bill
-    if (contentTypes.includes('bill') && extractionResult.bill) {
-      const bill = extractionResult.bill;
-      const taskName = [bill.provider, bill.bill_type ? `${bill.bill_type} Bill` : 'Bill'].filter(Boolean).join(' - ');
-      const description = [
-        bill.amount ? `Amount: ${bill.amount}` : null,
-        bill.notes || null
-      ].filter(Boolean).join(' | ');
+    // --- Bill ---
+    if (r.has_bill && (r.bill_provider || r.bill_type)) {
+      const taskName = [r.bill_provider, r.bill_type ? `${r.bill_type} Bill` : null].filter(Boolean).join(' - ');
+      const descParts = [];
+      if (r.bill_amount) descParts.push(`Amount: ${r.bill_amount}`);
 
-      // Determine due date: prefer full due_date, fall back to day of month
-      let nextDueDate = bill.due_date || today;
-      if (!bill.due_date && bill.due_day_of_month) {
+      let nextDueDate = r.bill_due_date || today;
+      if (!r.bill_due_date && r.bill_due_day) {
         const now = new Date();
-        let candidate = new Date(now.getFullYear(), now.getMonth(), bill.due_day_of_month);
-        if (candidate < now) candidate = new Date(now.getFullYear(), now.getMonth() + 1, bill.due_day_of_month);
+        let candidate = new Date(now.getFullYear(), now.getMonth(), r.bill_due_day);
+        if (candidate < now) candidate = new Date(now.getFullYear(), now.getMonth() + 1, r.bill_due_day);
         nextDueDate = candidate.toISOString().split('T')[0];
       }
 
       const taskData = {
-        name: taskName,
+        name: taskName || 'Bill',
         category: 'Bills',
         priority: 'Medium',
         difficulty: 'Easy',
         frequency_days: 30,
-        bill_day_of_month: bill.due_day_of_month || undefined,
+        bill_day_of_month: r.bill_due_day || undefined,
         next_due_date: nextDueDate,
         start_date: nextDueDate,
         status: 'Pending',
-        description: description || undefined,
+        description: descParts.join(' | ') || undefined,
         family_group_id: user.family_group_id || null
       };
 
@@ -180,11 +163,11 @@ Only include the fields relevant to detected content types. For tasks, extract e
       createdTasks.push({ type: 'bill', task });
     }
 
-    // Process handwritten tasks
-    if (contentTypes.includes('tasks') && Array.isArray(extractionResult.tasks)) {
-      for (const item of extractionResult.tasks) {
+    // --- Handwritten tasks ---
+    if (r.has_tasks && Array.isArray(r.task_list)) {
+      for (const item of r.task_list) {
         if (!item.name) continue;
-        const taskData = {
+        const task = await base44.entities.Task.create({
           name: item.name,
           category: 'Personal',
           priority: 'Medium',
@@ -196,8 +179,7 @@ Only include the fields relevant to detected content types. For tasks, extract e
           status: 'Pending',
           description: item.notes || undefined,
           family_group_id: user.family_group_id || null
-        };
-        const task = await base44.entities.Task.create(taskData);
+        });
         createdTasks.push({ type: 'task', task });
       }
     }
@@ -208,10 +190,10 @@ Only include the fields relevant to detected content types. For tasks, extract e
 
     return Response.json({
       success: true,
-      content_types: contentTypes,
-      extracted: extractionResult,
+      extracted: r,
       created_tasks: createdTasks
     });
+
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
