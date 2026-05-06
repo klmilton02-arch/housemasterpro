@@ -33,12 +33,18 @@ export default function ScanAppointmentDialog({ open, onOpenChange, onTaskCreate
     try {
       const response = await base44.functions.invoke('scanAppointment', { file_url: url });
       const data = response.data;
+      if (!data.success) {
+        setError(data.error || 'Could not detect content in image.');
+        setStep('error');
+        return;
+      }
       setExtracted(data.extracted);
       setCreatedTasks(data.created_tasks || []);
       setStep('success');
       onTaskCreated?.();
     } catch (err) {
-      setError(err?.response?.data?.error || err.message || 'Failed to scan image. Please try again.');
+      const msg = err?.response?.data?.error || err?.message || 'Failed to scan image.';
+      setError(msg);
       setStep('error');
     }
   };

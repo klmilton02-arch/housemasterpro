@@ -17,34 +17,32 @@ Deno.serve(async (req) => {
     const today = new Date().toISOString().split('T')[0];
     const currentYear = new Date().getFullYear();
 
-    // Single LLM call to detect and extract everything
-    const extractionResult = await base44.integrations.Core.InvokeLLM({
-      prompt: `Look at this image carefully. It may contain any combination of:
-- An appointment reminder or card (doctor, dentist, mechanic, etc.)
-- A bill or invoice (utility, phone, internet, insurance, subscription, etc.)
-- A handwritten or printed to-do list or task list
+    // Use InvokeLLM with vision to extract all data
+    const raw = await base44.integrations.Core.InvokeLLM({
+      prompt: `You are analyzing an image. The image may show an appointment card, a bill/invoice, a handwritten to-do list, or any combination.
 
-Extract ALL information you can see. Current year is ${currentYear}.
+Current year: ${currentYear}. Today: ${today}.
 
-For appointments: extract the name/doctor, date (YYYY-MM-DD), time (HH:MM in 24-hour), and location.
-For bills: extract the company/provider name, what type of bill it is, what day of the month it's due (1-28), any full due date (YYYY-MM-DD), and the amount owed.
-For tasks/to-do items: extract each individual task as a separate item with its name and any notes.
+Please extract everything you can see. Return a JSON object with ALL of these fields (use null if not found):
 
-Return a flat JSON object with these fields:
-- has_appointment: true or false
-- appt_name: name or doctor name (string or null)
-- appt_date: date in YYYY-MM-DD (string or null)
-- appt_time: time in HH:MM 24h (string or null)
-- appt_location: location (string or null)
-- appt_notes: any extra notes (string or null)
-- has_bill: true or false
-- bill_provider: company name (string or null)
-- bill_type: type of bill like "Electric", "Phone", "Internet", "Insurance" (string or null)
-- bill_due_day: day of month as number 1-28 (number or null)
-- bill_due_date: full date YYYY-MM-DD if shown (string or null)
-- bill_amount: amount as string like "$45.00" (string or null)
-- has_tasks: true or false
-- task_list: array of objects with "name" and "notes" fields`,
+{
+  "has_appointment": true/false,
+  "appt_name": "name of doctor/provider/service",
+  "appt_date": "YYYY-MM-DD",
+  "appt_time": "HH:MM in 24h format",
+  "appt_location": "address or place name",
+  "appt_notes": "any other relevant details",
+  "has_bill": true/false,
+  "bill_provider": "company name",
+  "bill_type": "e.g. Electric, Water, Phone, Internet, Insurance",
+  "bill_due_day": 15,
+  "bill_due_date": "YYYY-MM-DD",
+  "bill_amount": "$XX.XX",
+  "has_tasks": true/false,
+  "task_list": [{"name": "task name", "notes": "optional notes"}]
+}
+
+Be generous — if you see ANY date-related content, set has_appointment to true and fill in appt_date. If you see any bill or payment info, set has_bill to true. If you see any list items or to-dos, set has_tasks to true.`,
       file_urls: [file_url],
       response_json_schema: {
         type: 'object',
@@ -76,7 +74,9 @@ Return a flat JSON object with these fields:
       }
     });
 
-    const r = extractionResult;
+    console.log('LLM extraction result:', JSON.stringify(raw));
+
+    const r = raw;
     const createdTasks = [];
 
     // --- Appointment ---
@@ -87,7 +87,7 @@ Return a flat JSON object with these fields:
       if (r.appt_location) descParts.push(`Location: ${r.appt_location}`);
       if (r.appt_notes) descParts.push(r.appt_notes);
 
-      const taskData = {
+      const task = await base44.entities.Task.create({
         name: taskName,
         category: 'Personal',
         priority: 'Medium',
@@ -99,9 +99,7 @@ Return a flat JSON object with these fields:
         status: 'Pending',
         description: descParts.join(' | ') || undefined,
         family_group_id: user.family_group_id || null
-      };
-
-      const task = await base44.entities.Task.create(taskData);
+      });
       createdTasks.push({ type: 'appointment', task });
 
       // Try sync to Google Calendar
@@ -109,7 +107,7 @@ Return a flat JSON object with these fields:
         const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlecalendar');
         const calBody = {
           summary: taskName,
-          description: taskData.description || undefined,
+          description: descParts.join(' | ') || undefined,
           start: r.appt_time
             ? { dateTime: `${r.appt_date}T${r.appt_time}:00`, timeZone: 'America/Los_Angeles' }
             : { date: r.appt_date },
@@ -133,7 +131,7 @@ Return a flat JSON object with these fields:
 
     // --- Bill ---
     if (r.has_bill && (r.bill_provider || r.bill_type)) {
-      const taskName = [r.bill_provider, r.bill_type ? `${r.bill_type} Bill` : null].filter(Boolean).join(' - ');
+      const taskName = [r.bill_provider, r.bill_type ? `${r.bill_type} Bill` : null].filter(Boolean).join(' - ') || 'Bill';
       const descParts = [];
       if (r.bill_amount) descParts.push(`Amount: ${r.bill_amount}`);
 
@@ -145,8 +143,8 @@ Return a flat JSON object with these fields:
         nextDueDate = candidate.toISOString().split('T')[0];
       }
 
-      const taskData = {
-        name: taskName || 'Bill',
+      const task = await base44.entities.Task.create({
+        name: taskName,
         category: 'Bills',
         priority: 'Medium',
         difficulty: 'Easy',
@@ -157,9 +155,7 @@ Return a flat JSON object with these fields:
         status: 'Pending',
         description: descParts.join(' | ') || undefined,
         family_group_id: user.family_group_id || null
-      };
-
-      const task = await base44.entities.Task.create(taskData);
+      });
       createdTasks.push({ type: 'bill', task });
     }
 
@@ -185,7 +181,11 @@ Return a flat JSON object with these fields:
     }
 
     if (createdTasks.length === 0) {
-      return Response.json({ error: 'Could not extract any recognizable content from the image.' }, { status: 400 });
+      // Return the raw extraction so the frontend can show a helpful message
+      return Response.json({
+        error: 'Could not extract any recognizable content from the image.',
+        debug: r
+      }, { status: 400 });
     }
 
     return Response.json({
@@ -195,6 +195,7 @@ Return a flat JSON object with these fields:
     });
 
   } catch (error) {
+    console.error('scanAppointment error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
