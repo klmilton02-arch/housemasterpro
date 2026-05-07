@@ -15,11 +15,9 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
   const [completeAsOpen, setCompleteAsOpen] = useState(false);
   const [familyMembers, setFamilyMembers] = useState([]);
   const [completingAs, setCompletingAs] = useState(null);
-  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     if (open) {
-      setSubmitted(false);
       base44.entities.FamilyMember.list().then(setFamilyMembers);
     }
   }, [open]);
@@ -61,8 +59,7 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
   }
 
   async function handleCompleteAs(member) {
-    if (!task?.id || submitted) return;
-    setSubmitted(true);
+    if (!task?.id) return;
     setCompletingAs(member.id);
     const today = new Date();
     const todayStr = today.toISOString().split("T")[0];
@@ -149,7 +146,6 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
                 <Button
                 className="w-full gap-2 bg-green-200 hover:bg-green-300 text-green-900"
                 onClick={() => setCompleteAsOpen(v => !v)}
-                disabled={submitted}
                 >
                 <Users className="w-4 h-4" />
                 Complete as Family Member
