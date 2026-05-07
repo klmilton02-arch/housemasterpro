@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronDown, User } from "lucide-react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
-export default function CompletingAsCard({ familyMembers, activeCompletingAs, onSelect }) {
+export default function CompletingAsCard({ familyMembers, activeCompletingAs, onSelect, selfMember }) {
   const [open, setOpen] = useState(false);
 
   const colorMap = {
@@ -46,24 +46,26 @@ export default function CompletingAsCard({ familyMembers, activeCompletingAs, on
             <DrawerTitle>Who is completing tasks?</DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-6 space-y-2">
-            {/* "Ask each time" / Me option */}
-            <button
-              onClick={() => { onSelect(null); setOpen(false); }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${
-                !activeCompletingAs
-                  ? "bg-primary/10 border-primary text-primary"
-                  : "bg-card border-border text-foreground hover:bg-muted"
-              }`}
-            >
-              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                <User className="w-4 h-4 text-muted-foreground" />
-              </div>
-              <div className="text-left">
-                <p className="text-sm font-semibold">Me</p>
-                <p className="text-xs text-muted-foreground">Complete as yourself</p>
-              </div>
-              {!activeCompletingAs && <div className="ml-auto w-2 h-2 rounded-full bg-primary" />}
-            </button>
+            {/* Only show generic "Me" if user isn't linked to any member */}
+            {!selfMember && (
+              <button
+                onClick={() => { onSelect(null); setOpen(false); }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${
+                  !activeCompletingAs
+                    ? "bg-primary/10 border-primary text-primary"
+                    : "bg-card border-border text-foreground hover:bg-muted"
+                }`}
+              >
+                <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                  <User className="w-4 h-4 text-muted-foreground" />
+                </div>
+                <div className="text-left">
+                  <p className="text-sm font-semibold">Me</p>
+                  <p className="text-xs text-muted-foreground">Complete as yourself</p>
+                </div>
+                {!activeCompletingAs && <div className="ml-auto w-2 h-2 rounded-full bg-primary" />}
+              </button>
+            )}
 
             {/* Family members */}
             {familyMembers.map(m => (
@@ -79,7 +81,9 @@ export default function CompletingAsCard({ familyMembers, activeCompletingAs, on
                 <div className={`w-8 h-8 rounded-full ${colorMap[m.avatar_color] || "bg-blue-500"} flex items-center justify-center text-white text-sm font-bold`}>
                   {m.name[0]}
                 </div>
-                <p className="text-sm font-semibold">{m.name}</p>
+                <div className="text-left">
+                  <p className="text-sm font-semibold">{m.name}{selfMember?.id === m.id ? " (Me)" : ""}</p>
+                </div>
                 {activeCompletingAs?.id === m.id && <div className="ml-auto w-2 h-2 rounded-full bg-primary" />}
               </button>
             ))}

@@ -51,6 +51,7 @@ export default function Tasks() {
   const [showYesterdayDialog, setShowYesterdayDialog] = useState(false);
   const [completeAsSheet, setCompleteAsSheet] = useState(null); // task pending completion
   const [activeCompletingAs, setActiveCompletingAs] = useState(null); // globally selected member
+  const [selfMember, setSelfMember] = useState(null); // the family member linked to the logged-in user
   const [scanDialogOpen, setScanDialogOpen] = useState(false);
   const { isActive: blastActive } = useBlastMode();
   const { largeIcons } = useLargeIcons();
@@ -99,7 +100,10 @@ export default function Tasks() {
       const me = await base44.auth.me();
       if (me?.email) {
         const linked = members.find(m => m.linked_user_email === me.email);
-        if (linked) setActiveCompletingAs(linked);
+        if (linked) {
+          setSelfMember(linked);
+          setActiveCompletingAs(linked);
+        }
       }
     });
   }, []);
@@ -450,6 +454,7 @@ export default function Tasks() {
           familyMembers={familyMembers}
           activeCompletingAs={activeCompletingAs}
           onSelect={setActiveCompletingAs}
+          selfMember={selfMember}
         />
       )}
 
