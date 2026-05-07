@@ -14,9 +14,9 @@ export default function StatCard({ icon: Icon, label, value, color, onClick, lab
         <Icon className={large ? "w-6 h-6" : "w-4 h-4"} />
       </div>
       {labelRight ? (
-        <div className="min-w-0 flex items-center gap-2 w-full">
-          <p className="font-heading font-bold text-foreground text-base leading-tight text-left">{value}</p>
-          {label ? <p className="font-medium text-foreground/70 text-base leading-tight text-left">{label}</p> : null}
+        <div className="min-w-0 flex items-center gap-2 w-full overflow-hidden">
+          <p className="font-heading font-bold text-foreground text-base leading-tight text-left shrink-0">{value}</p>
+          {label ? <p className="font-medium text-foreground/70 text-base leading-tight text-left truncate">{label}</p> : null}
         </div>
       ) : labelOnTop ? (
         <div className="min-w-0 flex flex-col items-start justify-center flex-1 text-left">
@@ -26,11 +26,11 @@ export default function StatCard({ icon: Icon, label, value, color, onClick, lab
       ) : value ? (
         <div className="min-w-0 flex flex-col items-start justify-center flex-1">
           <p className={cn("font-heading font-bold text-foreground text-left", large ? "text-2xl" : "text-lg")}>{value}</p>
-          <p className={cn("font-heading font-medium text-foreground/70 text-left", large ? "text-base" : "text-sm")}>{label}</p>
+          <p className={cn("font-heading font-medium text-foreground/70 text-left truncate w-full", large ? "text-base" : "text-sm")}>{label}</p>
         </div>
       ) : (
-        <div className="min-w-0 flex items-center flex-1">
-          <p className={cn("font-heading font-medium text-foreground/80 text-left", large ? "text-base" : "text-sm")}>{label}</p>
+        <div className="min-w-0 flex items-center flex-1 overflow-hidden">
+          <p className={cn("font-heading font-medium text-foreground/80 text-left truncate", large ? "text-base" : "text-sm")}>{label}</p>
         </div>
       )}
     </div>
