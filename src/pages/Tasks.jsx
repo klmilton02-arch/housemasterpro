@@ -93,7 +93,15 @@ export default function Tasks() {
   }, [tasks]);
 
   useEffect(() => {
-    base44.entities.FamilyMember.list().then(setFamilyMembers);
+    base44.entities.FamilyMember.list().then(async (members) => {
+      setFamilyMembers(members);
+      // Auto-select the family member linked to the current user
+      const me = await base44.auth.me();
+      if (me?.email) {
+        const linked = members.find(m => m.linked_user_email === me.email);
+        if (linked) setActiveCompletingAs(linked);
+      }
+    });
   }, []);
 
   usePullToRefresh(loadTasks);
