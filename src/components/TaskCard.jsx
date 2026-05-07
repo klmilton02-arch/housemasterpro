@@ -73,6 +73,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
   const StatusIcon = status.icon;
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(task.name);
+  const [completing, setCompleting] = useState(false);
   const inputRef = useRef(null);
 
   // Sync if parent resets to Pending (e.g. uncomplete from detail modal), but not during animation
@@ -95,9 +96,11 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
 
   function handleCheckboxClick(e) {
     e.stopPropagation();
+    if (completing) return;
+    setCompleting(true);
     const nowCompleted = !visuallyCompleted;
     setVisuallyCompleted(nowCompleted);
-    onComplete?.(task);
+    Promise.resolve(onComplete?.(task)).finally(() => setCompleting(false));
   }
 
   const cardBg = visuallyCompleted
@@ -182,6 +185,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
                 : "border-muted-foreground/40 hover:border-primary bg-transparent"
             }`}
             onClick={handleCheckboxClick}
+            disabled={completing}
             title={visuallyCompleted ? "Mark incomplete" : "Mark complete"}
           >
             <Check className={`w-4 h-4 transition-opacity ${visuallyCompleted ? "text-white opacity-100" : "opacity-0"}`} />
