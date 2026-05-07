@@ -82,7 +82,7 @@ export default function CompletingAsCard({ familyMembers, activeCompletingAs, on
                   {m.name[0]}
                 </div>
                 <div className="text-left">
-                  <p className="text-sm font-semibold">{m.name}{selfMember?.id === m.id ? " (Me)" : ""}</p>
+                  <p className="text-sm font-semibold">{selfMember?.id === m.id ? `Me (${m.name})` : m.name}</p>
                 </div>
                 {activeCompletingAs?.id === m.id && <div className="ml-auto w-2 h-2 rounded-full bg-primary" />}
               </button>
