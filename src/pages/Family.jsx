@@ -36,6 +36,10 @@ export default function Family() {
   const [joiningFamily, setJoiningFamily] = useState(false);
   const [familyGroup, setFamilyGroup] = useState(null);
   const [copiedCode, setCopiedCode] = useState(false);
+  const [showInviteUser, setShowInviteUser] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState("user");
+  const [invitingUser, setInvitingUser] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -157,6 +161,21 @@ export default function Family() {
     loadData();
   }
 
+  async function handleInviteUser() {
+    if (!inviteEmail.trim()) return;
+    setInvitingUser(true);
+    try {
+      await base44.users.inviteUser(inviteEmail.trim(), inviteRole);
+      setInviteEmail("");
+      setInviteRole("user");
+      setShowInviteUser(false);
+    } catch (err) {
+      console.error("Failed to invite user:", err);
+    } finally {
+      setInvitingUser(false);
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -222,26 +241,66 @@ export default function Family() {
 
       {/* Share Family Invite Code */}
       {user?.family_group_id && familyGroup?.invite_code && (
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 space-y-2">
-          <p className="text-sm font-medium text-blue-900 dark:text-blue-200">Family Invite Code</p>
-          <div className="flex items-center gap-2">
-            <code className="flex-1 bg-blue-100 dark:bg-blue-900/40 px-3 py-2 rounded font-mono font-semibold text-blue-700 dark:text-blue-300 text-center">
-              {familyGroup.invite_code}
-            </code>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => {
-                navigator.clipboard.writeText(familyGroup.invite_code);
-                setCopiedCode(true);
-                setTimeout(() => setCopiedCode(false), 2000);
-              }}
-              className="shrink-0"
-            >
-              {copiedCode ? "✓ Copied" : "Copy"}
-            </Button>
+        <div className="space-y-3">
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 space-y-2">
+            <p className="text-sm font-medium text-blue-900 dark:text-blue-200">Family Invite Code</p>
+            <div className="flex items-center gap-2">
+              <code className="flex-1 bg-blue-100 dark:bg-blue-900/40 px-3 py-2 rounded font-mono font-semibold text-blue-700 dark:text-blue-300 text-center">
+                {familyGroup.invite_code}
+              </code>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  navigator.clipboard.writeText(familyGroup.invite_code);
+                  setCopiedCode(true);
+                  setTimeout(() => setCopiedCode(false), 2000);
+                }}
+                className="shrink-0"
+              >
+                {copiedCode ? "✓ Copied" : "Copy"}
+              </Button>
+            </div>
+            <p className="text-xs text-blue-700 dark:text-blue-300">Share this code with family members to join</p>
           </div>
-          <p className="text-xs text-blue-700 dark:text-blue-300">Share this code with family members to join</p>
+
+          <Dialog open={showInviteUser} onOpenChange={setShowInviteUser}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="w-full gap-2">
+                <Plus className="w-4 h-4" /> Invite User to App
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-sm">
+              <DialogHeader>
+                <DialogTitle>Invite User to App</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-3">
+                <Input
+                  placeholder="Email address"
+                  type="email"
+                  value={inviteEmail}
+                  onChange={e => setInviteEmail(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') handleInviteUser(); if (e.key === 'Escape') setShowInviteUser(false); }}
+                  autoFocus
+                />
+                <div className="space-y-1">
+                  <label className="text-sm font-medium">Role</label>
+                  <select
+                    value={inviteRole}
+                    onChange={e => setInviteRole(e.target.value)}
+                    className="w-full px-3 py-2 border border-input bg-transparent rounded-md text-sm"
+                  >
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+                <div className="flex gap-2">
+                  <Button onClick={handleInviteUser} disabled={invitingUser || !inviteEmail.trim()}>Send Invite</Button>
+                  <Button variant="outline" onClick={() => setShowInviteUser(false)}>Cancel</Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       )}
 
