@@ -19,10 +19,11 @@ Deno.serve(async (req) => {
     await base44.users.inviteUser(email, role);
 
     // Send custom email with invite code
+    const appUrl = 'https://homelifefocus.base44.app';
     await base44.integrations.Core.SendEmail({
       to: email,
       subject: "You're invited to HomeLifeFocus",
-      body: `You've been invited to join HomeLifeFocus!\n\nFamily Invite Code: ${invite_code}\n\nUse this code when you sign up to join the family group.`
+      body: `You've been invited to join HomeLifeFocus!\n\n1. Sign up or log in at: ${appUrl}\n\n2. After signing up, you'll see a screen to join a family\n\n3. Enter this family invite code: ${invite_code}\n\nThat's it! You'll be added to the family group.`
     });
 
     return Response.json({ success: true });
