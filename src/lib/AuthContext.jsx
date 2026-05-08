@@ -60,6 +60,11 @@ export const AuthProvider = ({ children }) => {
         setUser(authResult.value);
         setIsAuthenticated(true);
         setIsLoadingAuth(false);
+        
+        // Auto-redirect new users without a family to join flow
+        if (!authResult.value.family_group_id && window.location.pathname !== '/join-family') {
+          window.location.href = '/join-family';
+        }
       } else {
         const error = authResult.reason || authResult.value?._authError;
         setIsAuthenticated(false);
