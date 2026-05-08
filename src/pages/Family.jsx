@@ -154,10 +154,14 @@ async function handleCreateFamily() {
   }
 
   async function handleInviteUser() {
-    if (!inviteEmail.trim()) return;
+    if (!inviteEmail.trim() || !familyGroup) return;
     setInvitingUser(true);
     try {
-      await base44.users.inviteUser(inviteEmail.trim(), inviteRole);
+      await base44.functions.invoke('inviteUserWithFamilyCode', {
+        email: inviteEmail.trim(),
+        role: inviteRole,
+        invite_code: familyGroup.invite_code,
+      });
       setInviteEmail("");
       setInviteRole("user");
       setShowInviteUser(false);
