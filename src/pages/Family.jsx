@@ -101,8 +101,21 @@ async function handleCreateFamily() {
       const result = await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
       console.log("Join result:", result);
       setInviteCode("");
-      // Refresh user data from auth to get updated family_group_id
-      await loadData();
+      // Refresh user data and refetch to ensure family_group_id is updated
+      const me = await base44.auth.me();
+      console.log("Updated user:", me);
+      setUser(me);
+      if (me?.family_group_id) {
+        const [allUsers, members, fg] = await Promise.all([
+          base44.entities.User.list(),
+          base44.entities.FamilyMember.filter({ family_group_id: me.family_group_id }),
+          base44.entities.FamilyGroup.get(me.family_group_id),
+        ]);
+        const validUsers = allUsers.filter(u => u.family_group_id === me.family_group_id);
+        setFamilyUsers(validUsers);
+        setFamilyMembers(members);
+        setFamilyGroup(fg);
+      }
     } catch (err) {
       console.error("Join failed:", err);
       const message = err?.response?.data?.error || err?.data?.error || err.message || "Failed to join family";
