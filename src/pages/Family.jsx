@@ -188,14 +188,6 @@ export default function Family() {
     <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7 pb-8" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <h1 className="font-heading text-3xl font-bold">Family</h1>
 
-      {/* Restore Missing Family Group */}
-      {user?.family_group_id && isMissingFamilyGroup && (
-        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
-          <p className="text-sm text-amber-800 dark:text-amber-200 mb-3">Your family group data is missing. Restore it to continue.</p>
-          <Button onClick={handleRestoreFamily} disabled={saving} className="w-full">Restore Family</Button>
-        </div>
-      )}
-
       {/* Join or Create Family Group */}
       {!user?.family_group_id && (
         <div className="space-y-3">
