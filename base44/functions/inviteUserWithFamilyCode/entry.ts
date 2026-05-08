@@ -31,16 +31,31 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Only family owner can invite members' }, { status: 403 });
     }
 
-    // Send email with family invite code first
+    // Send email with family invite code using Resend
     const appUrl = 'https://homelifefocus.base44.app';
     try {
       console.log(`Attempting to send email to: ${email}`);
-      const sendResult = await base44.integrations.Core.SendEmail({
-        to: email,
-        subject: `Join your family in HomeLifeFocus - Code: ${invite_code}`,
-        body: `Hi there!\n\nYou've been invited to join HomeLifeFocus!\n\n══════════════════════════════════════\nFAMILY INVITE CODE: ${invite_code}\n══════════════════════════════════════\n\nHow to join:\n1. Visit ${appUrl}\n2. Sign up with your email (${email})\n3. On the join screen, paste or enter the code above: ${invite_code}\n4. Choose your display name\n5. Start managing household tasks with your family!\n\nQuestions? Reply to this email.\n\nEnjoy!\nThe HomeLifeFocus Team`
+      const resendApiKey = Deno.env.get('RESEND_API_KEY');
+      const sendResult = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'noreply@homelifefocus.com',
+          to: email,
+          subject: `Join your family in HomeLifeFocus - Code: ${invite_code}`,
+          html: `<p>Hi there!</p><p>You've been invited to join HomeLifeFocus!</p><hr><h2 style="text-align:center">${invite_code}</h2><hr><p><strong>How to join:</strong></p><ol><li>Visit <a href="${appUrl}">${appUrl}</a></li><li>Sign up with your email (${email})</li><li>On the join screen, enter the code above</li><li>Choose your display name</li><li>Start managing household tasks with your family!</li></ol><p>Questions? Reply to this email.</p><p>Enjoy!<br>The HomeLifeFocus Team</p>`
+        })
       });
-      console.log(`Email send result:`, sendResult);
+      
+      if (!sendResult.ok) {
+        const error = await sendResult.json();
+        throw new Error(`Resend error: ${error.message}`);
+      }
+      const data = await sendResult.json();
+      console.log(`Email send result:`, data);
     } catch (err) {
       console.error(`Email error:`, err?.message || JSON.stringify(err));
       throw err;
