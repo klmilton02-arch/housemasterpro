@@ -36,49 +36,44 @@ Deno.serve(async (req) => {
     try {
       console.log(`Attempting to send email to: ${email}`);
       
-      // Get Gmail access token using service account credentials
-      const clientId = Deno.env.get('ClientIDGoogle');
-      const clientSecret = Deno.env.get('ClientSecretGoogle');
+      // Get Gmail access token via the app builder's Google connection
+      const { accessToken } = await base44.asServiceRole.connectors.getConnection('gmail');
       
-      if (!clientId || !clientSecret) {
-        throw new Error('Missing Google OAuth credentials');
-      }
-
-      // For Gmail API, we'll use the Resend API as fallback since it's simpler
-      // or construct a direct Gmail API call
-      const resendApiKey = Deno.env.get('RESEND_API_KEY');
-      
-      if (!resendApiKey) {
-        throw new Error('RESEND_API_KEY not configured');
-      }
-
       const emailText = `You've been invited to join HomeLifeFocus!\n\nCode: ${invite_code}\n\nHow to join:\n1. Visit ${appUrl}\n2. Sign up with your email (${email})\n3. On the join screen, enter the code above\n4. Choose your display name\n5. Start managing household tasks with your family!\n\nQuestions? Reply to this email.\n\nEnjoy!\nThe HomeLifeFocus Team`;
 
       const emailHtml = `<p>Hi there!</p><p>You've been invited to join HomeLifeFocus!</p><hr><h2 style="text-align:center">${invite_code}</h2><hr><p><strong>How to join:</strong></p><ol><li>Visit <a href="${appUrl}">${appUrl}</a></li><li>Sign up with your email (${email})</li><li>On the join screen, enter the code above</li><li>Choose your display name</li><li>Start managing household tasks with your family!</li></ol><p>Questions? Reply to this email.</p><p>Enjoy!<br>The HomeLifeFocus Team</p>`;
 
-      const sendResult = await fetch('https://api.resend.com/emails', {
+      // Create MIME message
+      const mimeMessage = [
+        `To: ${email}`,
+        `Subject: Join your family in HomeLifeFocus - Code: ${invite_code}`,
+        'Content-Type: text/html; charset="UTF-8"',
+        'MIME-Version: 1.0',
+        '',
+        emailHtml
+      ].join('\n');
+
+      const encodedMessage = btoa(mimeMessage).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+
+      const sendResult = await fetch('https://www.googleapis.com/gmail/v1/users/me/messages/send', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${resendApiKey}`,
+          'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'HomeLifeFocus <noreply@homelifefocus.base44.app>',
-          to: email,
-          subject: `Join your family in HomeLifeFocus - Code: ${invite_code}`,
-          text: emailText,
-          html: emailHtml,
+          raw: encodedMessage
         })
       });
       
       if (!sendResult.ok) {
         const error = await sendResult.json();
-        console.error("Resend API error:", error);
-        throw new Error(`Email error: ${error.message || JSON.stringify(error)}`);
+        console.error("Gmail API error:", error);
+        throw new Error(`Gmail error: ${error.error?.message || JSON.stringify(error)}`);
       }
       
       const data = await sendResult.json();
-      console.log(`Email sent successfully:`, data);
+      console.log(`Email sent successfully via Gmail:`, data.id);
     } catch (err) {
       console.error(`Email error:`, err?.message || JSON.stringify(err));
       throw err;
