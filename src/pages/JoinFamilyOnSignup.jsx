@@ -28,8 +28,7 @@ export default function JoinFamilyOnSignup() {
       await base44.functions.invoke("joinFamilyWithCode", {
         invite_code: inviteCode.trim().toUpperCase(),
       });
-      // Force a full page reload to refresh auth state
-      window.location.href = "/dashboard";
+      navigate("/dashboard", { replace: true });
     } catch (err) {
       setError(err?.response?.data?.error || err.message || "Failed to join family");
       setJoining(false);
