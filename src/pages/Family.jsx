@@ -76,11 +76,6 @@ export default function Family() {
 
   useEffect(() => { 
     loadData();
-    // Also reload if we just joined (check for redirect parameter)
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('joined') === 'true') {
-      window.location.search = '';
-    }
   }, [loadData]);
 
 async function handleCreateFamily() {
@@ -104,9 +99,8 @@ async function handleCreateFamily() {
     setJoinError("");
     try {
       await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
-      // Success - wait a moment for backend to settle, then reload
-      await new Promise(r => setTimeout(r, 1000));
-      window.location.href = '/family?joined=true';
+      // Success - hard reload to get fresh user data
+      setTimeout(() => window.location.reload(), 500);
     } catch (err) {
       console.error("Join failed:", err);
       const message = err?.response?.data?.error || err?.data?.error || err.message || "Failed to join family";
