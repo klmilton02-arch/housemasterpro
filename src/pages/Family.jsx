@@ -95,7 +95,8 @@ async function handleCreateFamily() {
     try {
       await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
       setInviteCode("");
-      loadData();
+      await loadData();
+      window.location.reload();
     } catch (err) {
       console.error("Failed to join family:", err);
     } finally {
