@@ -32,8 +32,8 @@ Deno.serve(async (req) => {
       console.log(`Attempting to send email to: ${email}`);
       const sendResult = await base44.integrations.Core.SendEmail({
         to: email,
-        subject: `You're invited to HomeLifeFocus - Code: ${invite_code}`,
-        body: `You've been invited to join HomeLifeFocus!\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nFamily Invite Code: ${invite_code}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nSteps to join:\n1. Go to: ${appUrl}\n2. Sign up with your email (${email})\n3. Enter the family invite code above on the join screen\n4. Choose your display name\n\nYou'll be part of the family immediately!\n\nIf you have any questions, reply to this email.`
+        subject: `Join your family in HomeLifeFocus - Code: ${invite_code}`,
+        body: `Hi there!\n\nYou've been invited to join HomeLifeFocus!\n\n══════════════════════════════════════\nFAMILY INVITE CODE: ${invite_code}\n══════════════════════════════════════\n\nHow to join:\n1. Visit ${appUrl}\n2. Sign up with your email (${email})\n3. On the join screen, paste or enter the code above: ${invite_code}\n4. Choose your display name\n5. Start managing household tasks with your family!\n\nQuestions? Reply to this email.\n\nEnjoy!\nThe HomeLifeFocus Team`
       });
       console.log(`Email send result:`, sendResult);
     } catch (err) {
