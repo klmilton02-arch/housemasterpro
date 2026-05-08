@@ -34,6 +34,7 @@ export default function Family() {
 
   const [inviteCode, setInviteCode] = useState("");
   const [joiningFamily, setJoiningFamily] = useState(false);
+  const [joinError, setJoinError] = useState("");
   const [familyGroup, setFamilyGroup] = useState(null);
   const [copiedCode, setCopiedCode] = useState(false);
   const [showInviteUser, setShowInviteUser] = useState(false);
@@ -92,12 +93,15 @@ async function handleCreateFamily() {
   async function handleJoinFamily() {
     if (!inviteCode.trim()) return;
     setJoiningFamily(true);
+    setJoinError("");
     try {
       await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
       setInviteCode("");
       await loadData();
       window.location.reload();
     } catch (err) {
+      const message = err?.response?.data?.error || err.message || "Failed to join family";
+      setJoinError(message);
       console.error("Failed to join family:", err);
     } finally {
       setJoiningFamily(false);
@@ -210,11 +214,14 @@ async function handleCreateFamily() {
             <Input
               placeholder="Enter invite code"
               value={inviteCode}
-              onChange={e => setInviteCode(e.target.value)}
+              onChange={e => { setInviteCode(e.target.value); setJoinError(""); }}
               onKeyDown={e => { if (e.key === 'Enter') handleJoinFamily(); }}
               autoFocus={false}
             />
-            <Button onClick={handleJoinFamily} disabled={joiningFamily || !inviteCode.trim()} className="w-full">Join Family</Button>
+            {joinError && <p className="text-xs text-destructive">{joinError}</p>}
+            <Button onClick={handleJoinFamily} disabled={joiningFamily || !inviteCode.trim()} className="w-full">
+              {joiningFamily ? "Joining..." : "Join Family"}
+            </Button>
           </div>
         </div>
       )}
