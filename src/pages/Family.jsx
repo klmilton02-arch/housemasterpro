@@ -42,6 +42,7 @@ export default function Family() {
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState("user");
   const [invitingUser, setInvitingUser] = useState(false);
+  const [inviteError, setInviteError] = useState("");
 
   const loadData = useCallback(async () => {
     try {
@@ -171,6 +172,7 @@ async function handleCreateFamily() {
   async function handleInviteUser() {
     if (!inviteEmail.trim() || !familyGroup) return;
     setInvitingUser(true);
+    setInviteError("");
     try {
       await base44.functions.invoke('inviteUserWithFamilyCode', {
         email: inviteEmail.trim(),
@@ -180,6 +182,8 @@ async function handleCreateFamily() {
       setInviteEmail("");
       setShowInviteUser(false);
     } catch (err) {
+      const errorMsg = err?.response?.data?.error || err?.data?.error || err.message || "Failed to send invite";
+      setInviteError(errorMsg);
       console.error("Failed to invite user:", err);
     } finally {
       setInvitingUser(false);
@@ -303,10 +307,11 @@ async function handleCreateFamily() {
                   placeholder="Email address"
                   type="email"
                   value={inviteEmail}
-                  onChange={e => setInviteEmail(e.target.value)}
+                  onChange={e => { setInviteEmail(e.target.value); setInviteError(""); }}
                   onKeyDown={e => { if (e.key === 'Enter') handleInviteUser(); if (e.key === 'Escape') setShowInviteUser(false); }}
                   autoFocus
                 />
+                {inviteError && <p className="text-xs text-destructive">{inviteError}</p>}
                 <div className="flex gap-2">
                   <Button onClick={handleInviteUser} disabled={invitingUser || !inviteEmail.trim()} className="flex-1">
                     {invitingUser ? "Sending..." : "Send Invite"}
