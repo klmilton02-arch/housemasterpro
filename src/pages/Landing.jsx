@@ -60,7 +60,7 @@ export default function Landing() {
 
   const handleSignIn = () => {
     setSigningIn(true);
-    base44.auth.redirectToLogin(window.location.origin + "/dashboard");
+    base44.auth.redirectToLogin(window.location.origin + "/join-family");
   };
 
   async function handleSubmit(e) {

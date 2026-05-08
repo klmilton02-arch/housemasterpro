@@ -28,6 +28,7 @@ import FAQ from './pages/FAQ';
 import Leaderboard from './pages/Leaderboard';
 import CalendarPage from './pages/Calendar';
 import TaskStartDates from './pages/TaskStartDates';
+import JoinFamilyOnSignup from './pages/JoinFamilyOnSignup';
 
 
 
@@ -111,6 +112,13 @@ const AuthenticatedApp = () => {
           </motion.div>
         } />
         
+        {/* Post-signup family join */}
+        <Route path="/join-family" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+            <JoinFamilyOnSignup />
+          </motion.div>
+        } />
+
         {/* Protected routes */}
         <Route element={<Layout />}>
           {[{ path: "/dashboard", el: <Dashboard /> }, { path: "/tasks", el: <Tasks /> }, { path: "/needs-attention", el: <NeedsAttention /> }, { path: "/presets", el: <Presets /> }, { path: "/home-setup", el: <HomeSetup /> }, { path: "/profile", el: <Profile /> },
