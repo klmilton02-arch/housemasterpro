@@ -234,6 +234,24 @@ async function handleCreateFamily() {
         </div>
       )}
 
+      {/* Leave Family Button */}
+      {user?.family_group_id && familyGroup && (
+        <Button 
+          variant="outline" 
+          onClick={async () => {
+            if (window.confirm("Are you sure you want to leave this family?")) {
+              await base44.auth.updateMe({ family_group_id: null });
+              setUser(null);
+              setFamilyGroup(null);
+              loadData();
+            }
+          }}
+          className="w-full text-destructive hover:bg-destructive/10"
+        >
+          Leave Family
+        </Button>
+      )}
+
       {/* Share Family Invite Code */}
       {user?.family_group_id && familyGroup && (
         <div className="space-y-3">
