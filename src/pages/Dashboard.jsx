@@ -235,7 +235,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-3 max-w-md md:max-w-2xl mx-auto px-2 sm:px-1 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div className="space-y-3 max-w-md md:max-w-2xl mx-auto px-2 sm:px-1 pt-7 text-black dark:text-black [&_*]:text-black [&_p]:text-black [&_h1]:text-black [&_h2]:text-black [&_span]:text-black" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
 
       <h1 className="font-heading text-4xl font-bold md:hidden">Dashboard</h1>
 
