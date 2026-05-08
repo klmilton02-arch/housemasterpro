@@ -31,7 +31,7 @@ export default function Family() {
   const [showCreateFamily, setShowCreateFamily] = useState(false);
   const [newFamilyName, setNewFamilyName] = useState("");
   const [creatingFamily, setCreatingFamily] = useState(false);
-  const [isMissingFamilyGroup, setIsMissingFamilyGroup] = useState(false);
+
   const [inviteCode, setInviteCode] = useState("");
   const [joiningFamily, setJoiningFamily] = useState(false);
   const [familyGroup, setFamilyGroup] = useState(null);
@@ -56,12 +56,10 @@ export default function Family() {
           setFamilyUsers(allUsers.filter(u => u.family_group_id === me.family_group_id));
           setFamilyMembers(members);
           setFamilyGroup(fg);
-          setIsMissingFamilyGroup(false);
+
         } catch (err) {
           // Family group exists in user record but FamilyGroup record is missing
-          if (err.message?.includes('404') || err.message?.includes('not found')) {
-            setIsMissingFamilyGroup(true);
-          }
+
           console.error("Failed to load family data:", err);
         }
       }
@@ -74,20 +72,7 @@ export default function Family() {
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  async function handleRestoreFamily() {
-    setSaving(true);
-    try {
-      await base44.functions.invoke('restoreFamilyGroup', {});
-      setIsMissingFamilyGroup(false);
-      loadData();
-    } catch (err) {
-      console.error("Failed to restore family:", err);
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  async function handleCreateFamily() {
+async function handleCreateFamily() {
     if (!newFamilyName.trim()) return;
     setCreatingFamily(true);
     try {
@@ -232,7 +217,7 @@ export default function Family() {
       )}
 
       {/* Share Family Invite Code */}
-      {user?.family_group_id && !isMissingFamilyGroup && (
+      {user?.family_group_id && (
         <div className="space-y-3">
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 space-y-2">
             <p className="text-sm font-medium text-blue-900 dark:text-blue-200">Family Invite Code</p>
