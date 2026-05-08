@@ -33,11 +33,13 @@ Deno.serve(async (req) => {
     // Find owner (usually the one created by klmilton02@gmail.com or the admin)
     const owner = familyMembers.find(m => m.created_by === 'klmilton02@gmail.com') || familyMembers[0];
 
+    // Generate a unique invite code
+    const inviteCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+
     // Create the missing FamilyGroup using service role
     const newFamilyGroup = await base44.asServiceRole.entities.FamilyGroup.create({
-      id: user.family_group_id,
       name: "Family",
-      invite_code: Math.random().toString(36).substring(2, 10).toUpperCase(),
+      invite_code: inviteCode,
       owner_email: owner.created_by || 'klmilton02@gmail.com',
     });
 

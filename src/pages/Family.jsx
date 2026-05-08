@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { base44 } from "@/api/base44Client";
-import { Users, Link2, Link2Off, Plus } from "lucide-react";
+import { Users, Link2, Link2Off, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -146,6 +146,13 @@ export default function Family() {
       linked_user_id: null,
       linked_user_email: null,
     });
+    setSaving(false);
+    loadData();
+  }
+
+  async function handleDeleteMember(memberId) {
+    setSaving(true);
+    await base44.entities.FamilyMember.delete(memberId);
     setSaving(false);
     loadData();
   }
@@ -311,45 +318,80 @@ export default function Family() {
                       </Button>
                     </div>
                   ) : (
-                    <div>
-                      {isLinking ? (
-                        <div className="space-y-1 border border-border rounded-md overflow-hidden">
-                          <p className="text-xs text-muted-foreground px-3 pt-2 pb-1">Select a user account to link:</p>
-                          {familyUsers.filter(u => !familyMembers.some(m => m.id !== member.id && m.linked_user_id === u.id)).map(u => (
-                            <button
-                              key={u.id}
-                              onClick={() => handleLink(member, u)}
-                              disabled={saving}
-                              className="w-full text-left px-3 py-2 hover:bg-muted text-sm flex items-center gap-2 border-t border-border first:border-t-0"
-                            >
-                              <div className="w-6 h-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold">
-                                {u.full_name?.[0]?.toUpperCase()}
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium">{u.full_name}</p>
-                                <p className="text-xs text-muted-foreground">{u.email}</p>
-                              </div>
-                            </button>
-                          ))}
-                          <button
-                            onClick={() => setLinkingMemberId(null)}
-                            className="w-full text-left px-3 py-2 hover:bg-muted text-xs text-muted-foreground border-t border-border"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      ) : (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setLinkingMemberId(member.id)}
-                          className="text-xs gap-1 w-full justify-center"
-                        >
-                          <Link2 className="w-3 h-3" /> Link to User Account
-                        </Button>
-                      )}
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setLinkingMemberId(member.id)}
+                        className="text-xs gap-1 flex-1 justify-center"
+                      >
+                        <Link2 className="w-3 h-3" /> Link to User Account
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteMember(member.id)}
+                        disabled={saving}
+                        className="text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
                     </div>
                   )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <Users className="w-12 h-12 text-muted-foreground mb-3 opacity-50" />
+          <p className="text-muted-foreground">No family members yet</p>
+        </div>
+      )}
+
+                    {isLinking ? (
+                      <div className="space-y-1 border border-border rounded-md overflow-hidden">
+                        <p className="text-xs text-muted-foreground px-3 pt-2 pb-1">Select a user account to link:</p>
+                        {familyUsers.filter(u => !familyMembers.some(m => m.id !== member.id && m.linked_user_id === u.id)).map(u => (
+                          <button
+                            key={u.id}
+                            onClick={() => handleLink(member, u)}
+                            disabled={saving}
+                            className="w-full text-left px-3 py-2 hover:bg-muted text-sm flex items-center gap-2 border-t border-border first:border-t-0"
+                          >
+                            <div className="w-6 h-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold">
+                              {u.full_name?.[0]?.toUpperCase()}
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">{u.full_name}</p>
+                              <p className="text-xs text-muted-foreground">{u.email}</p>
+                            </div>
+                          </button>
+                        ))}
+                        <button
+                          onClick={() => setLinkingMemberId(null)}
+                          className="w-full text-left px-3 py-2 hover:bg-muted text-xs text-muted-foreground border-t border-border"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
+                )}
+              </div>
+            );
+            })}
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <Users className="w-12 h-12 text-muted-foreground mb-3 opacity-50" />
+          <p className="text-muted-foreground">No family members yet</p>
+        </div>
+      )}
+
+      {/* App users in this family group */}
                 </div>
               );
             })}
