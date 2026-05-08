@@ -15,17 +15,16 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Invalid invite code' }, { status: 400 });
     }
 
-    // Find family group by invite code
-    const familyGroups = await base44.asServiceRole.entities.FamilyGroup.filter({ invite_code: invite_code.toUpperCase() });
+    // Find family group by invite code (case-insensitive search)
+    const allFamilyGroups = await base44.asServiceRole.entities.FamilyGroup.list();
+    const matchedFamily = allFamilyGroups.find(fg => fg.invite_code?.toUpperCase() === invite_code.toUpperCase());
 
-    if (familyGroups.length === 0) {
+    if (!matchedFamily) {
       return Response.json({ error: 'Invalid invite code' }, { status: 404 });
     }
 
-    const familyGroup = familyGroups[0];
-
     // Update user to add family_group_id
-    await base44.auth.updateMe({ family_group_id: familyGroup.id });
+    await base44.auth.updateMe({ family_group_id: matchedFamily.id });
     
     // Verify the update worked by re-fetching the user
     const verifiedUser = await base44.auth.me();
@@ -33,7 +32,7 @@ Deno.serve(async (req) => {
     return Response.json({
       success: true,
       message: 'Successfully joined family',
-      family_group: familyGroup,
+      family_group: matchedFamily,
       user: verifiedUser,
     });
   } catch (error) {
