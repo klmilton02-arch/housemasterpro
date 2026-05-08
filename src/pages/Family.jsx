@@ -53,7 +53,8 @@ export default function Family() {
             base44.entities.FamilyMember.filter({ family_group_id: me.family_group_id }),
             base44.entities.FamilyGroup.get(me.family_group_id),
           ]);
-          setFamilyUsers(allUsers.filter(u => u.family_group_id === me.family_group_id));
+          const validUsers = allUsers.filter(u => u.family_group_id === me.family_group_id);
+          setFamilyUsers(validUsers);
           setFamilyMembers(members);
           setFamilyGroup(fg);
 
