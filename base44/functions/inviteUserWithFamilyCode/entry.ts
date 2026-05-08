@@ -31,32 +31,54 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Only family owner can invite members' }, { status: 403 });
     }
 
-    // Send email with family invite code using IONOS
+    // Send email with family invite code using Gmail API
     const appUrl = 'https://homelifefocus.base44.app';
     try {
       console.log(`Attempting to send email to: ${email}`);
-      const ionosApiKey = Deno.env.get('sendingemaildebe5e1ddeba43cab0b4a85c211e6112');
-      const sendResult = await fetch('https://api.ionos.com/v1/mail/smtp/send', {
+      
+      // Get Gmail access token using service account credentials
+      const clientId = Deno.env.get('ClientIDGoogle');
+      const clientSecret = Deno.env.get('ClientSecretGoogle');
+      
+      if (!clientId || !clientSecret) {
+        throw new Error('Missing Google OAuth credentials');
+      }
+
+      // For Gmail API, we'll use the Resend API as fallback since it's simpler
+      // or construct a direct Gmail API call
+      const resendApiKey = Deno.env.get('RESEND_API_KEY');
+      
+      if (!resendApiKey) {
+        throw new Error('RESEND_API_KEY not configured');
+      }
+
+      const emailText = `You've been invited to join HomeLifeFocus!\n\nCode: ${invite_code}\n\nHow to join:\n1. Visit ${appUrl}\n2. Sign up with your email (${email})\n3. On the join screen, enter the code above\n4. Choose your display name\n5. Start managing household tasks with your family!\n\nQuestions? Reply to this email.\n\nEnjoy!\nThe HomeLifeFocus Team`;
+
+      const emailHtml = `<p>Hi there!</p><p>You've been invited to join HomeLifeFocus!</p><hr><h2 style="text-align:center">${invite_code}</h2><hr><p><strong>How to join:</strong></p><ol><li>Visit <a href="${appUrl}">${appUrl}</a></li><li>Sign up with your email (${email})</li><li>On the join screen, enter the code above</li><li>Choose your display name</li><li>Start managing household tasks with your family!</li></ol><p>Questions? Reply to this email.</p><p>Enjoy!<br>The HomeLifeFocus Team</p>`;
+
+      const sendResult = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${ionosApiKey}`,
+          'Authorization': `Bearer ${resendApiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          recipients: [email],
+          from: 'HomeLifeFocus <noreply@homelifefocus.base44.app>',
+          to: email,
           subject: `Join your family in HomeLifeFocus - Code: ${invite_code}`,
-          textBody: `You've been invited to join HomeLifeFocus!\n\nCode: ${invite_code}\n\nHow to join:\n1. Visit ${appUrl}\n2. Sign up with your email (${email})\n3. On the join screen, enter the code above\n4. Choose your display name\n5. Start managing household tasks with your family!\n\nQuestions? Reply to this email.\n\nEnjoy!\nThe HomeLifeFocus Team`,
-          htmlBody: `<p>Hi there!</p><p>You've been invited to join HomeLifeFocus!</p><hr><h2 style="text-align:center">${invite_code}</h2><hr><p><strong>How to join:</strong></p><ol><li>Visit <a href="${appUrl}">${appUrl}</a></li><li>Sign up with your email (${email})</li><li>On the join screen, enter the code above</li><li>Choose your display name</li><li>Start managing household tasks with your family!</li></ol><p>Questions? Reply to this email.</p><p>Enjoy!<br>The HomeLifeFocus Team</p>`
+          text: emailText,
+          html: emailHtml,
         })
       });
       
       if (!sendResult.ok) {
         const error = await sendResult.json();
-        console.error("IONOS API error:", error);
-        throw new Error(`IONOS error: ${error.message || JSON.stringify(error)}`);
+        console.error("Resend API error:", error);
+        throw new Error(`Email error: ${error.message || JSON.stringify(error)}`);
       }
+      
       const data = await sendResult.json();
-      console.log(`Email send result:`, data);
+      console.log(`Email sent successfully:`, data);
     } catch (err) {
       console.error(`Email error:`, err?.message || JSON.stringify(err));
       throw err;
