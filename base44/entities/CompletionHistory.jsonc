@@ -30,6 +30,11 @@
     "is_overdue": {
       "type": "boolean",
       "title": "Was Overdue"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description",
+      "maxLength": 1000
     }
   },
   "required": [

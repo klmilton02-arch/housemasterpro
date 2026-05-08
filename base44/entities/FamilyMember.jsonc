@@ -30,6 +30,11 @@
     "linked_user_email": {
       "type": "string",
       "title": "Linked User Email"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description",
+      "maxLength": 1000
     }
   },
   "required": [

@@ -13,6 +13,11 @@
     "owner_email": {
       "type": "string",
       "title": "Owner Email"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description",
+      "maxLength": 1000
     }
   },
   "required": [
@@ -21,7 +26,9 @@
     "owner_email"
   ],
   "rls": {
-    "create": {},
+    "create": {
+      "owner_email": "{{user.email}}"
+    },
     "read": {
       "$or": [
         {
