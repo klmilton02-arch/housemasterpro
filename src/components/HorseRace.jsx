@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { getLevelInfo } from "@/utils/gamification";
-import { getHorseEmoji, getTotalBonus, getEquippedEmojis, JOCKEY_COLORS } from "@/utils/horseItems";
 
 const TRACK_DEFAULT_EMOJI = "🐴";
 
@@ -27,14 +26,8 @@ export default function HorseRace() {
   const racingRef = useRef(false);
 
   useEffect(() => {
-    Promise.all([
-      base44.entities.GamificationProfile.list("-total_xp", 6),
-      base44.entities.HorseStable.list(),
-    ]).then(([profs, stableList]) => {
+    base44.entities.GamificationProfile.list("-total_xp", 6).then((profs) => {
       setProfiles(profs);
-      const stableMap = {};
-      stableList.forEach(s => { stableMap[s.family_member_id] = s; });
-      setStables(stableMap);
       const init = {};
       profs.forEach(p => { init[p.id] = Math.PI / 2; });
       setAngles(init);
@@ -54,10 +47,8 @@ export default function HorseRace() {
 
     const maxXP = Math.max(...profiles.map(p => p.total_xp || 1), 1);
     profiles.forEach(p => {
-      const stable = stables[p.family_member_id];
       const xpFactor = ((p.total_xp || 0) / maxXP) * 0.4 + 0.6;
-      const itemBonus = getTotalBonus(stable) / 100; // convert % to multiplier
-      speedsRef.current[p.id] = (xpFactor + itemBonus * 0.3) * (0.012 + Math.random() * 0.008);
+      speedsRef.current[p.id] = (xpFactor) * (0.012 + Math.random() * 0.008);
     });
 
     const traveled = {};
@@ -160,10 +151,6 @@ export default function HorseRace() {
             const horseRX = RX - laneRatio * TRACK_WIDTH;
             const horseRY = RY - laneRatio * TRACK_WIDTH;
             const pos = ellipsePoint(CX, CY, horseRX, horseRY, angle);
-            const stable = stables[profile.family_member_id];
-            const horseEmoji = getHorseEmoji(stable?.horse_skin);
-            const equippedEmojis = getEquippedEmojis(stable);
-            const jockeyColor = JOCKEY_COLORS.find(c => c.id === stable?.jockey_color)?.color || "#ef4444";
             const isFirst = finishRef.current[0] === profile.id;
 
             return (
@@ -171,20 +158,10 @@ export default function HorseRace() {
                 {/* Shadow */}
                 <ellipse cx={pos.x + 1} cy={pos.y + 2} rx={10} ry={5} fill="black" opacity="0.18" />
 
-                {/* Jockey color dot */}
-                <circle cx={pos.x + 7} cy={pos.y - 8} r={5} fill={jockeyColor} stroke="white" strokeWidth="1" />
-
                 {/* Horse */}
                 <text x={pos.x} y={pos.y + 6} fontSize="18" textAnchor="middle" style={{ userSelect: "none" }}>
-                  {horseEmoji}
+                  🐴
                 </text>
-
-                {/* Equipped item emojis (tiny) */}
-                {equippedEmojis.slice(0, 2).map((e, i) => (
-                  <text key={i} x={pos.x - 10 + i * 10} y={pos.y - 10} fontSize="8" textAnchor="middle" style={{ userSelect: "none" }}>
-                    {e}
-                  </text>
-                ))}
 
                 {/* Name */}
                 <text x={pos.x} y={pos.y - 18} fontSize="7" textAnchor="middle" fill="white" fontWeight="bold"
@@ -204,17 +181,15 @@ export default function HorseRace() {
         {/* Legend */}
         <div className="absolute bottom-2 left-2 flex flex-col gap-0.5">
           {profiles.map((profile, idx) => {
-            const stable = stables[profile.family_member_id];
-            const horseEmoji = getHorseEmoji(stable?.horse_skin);
-            return (
-              <div key={profile.id} className="flex items-center gap-1">
-                <span className="text-xs">{horseEmoji}</span>
-                <span className="text-xs text-white font-medium drop-shadow">
-                  {profile.family_member_name?.split(" ")[0]}
-                </span>
-              </div>
-            );
-          })}
+              return (
+                <div key={profile.id} className="flex items-center gap-1">
+                  <span className="text-xs">🐴</span>
+                  <span className="text-xs text-white font-medium drop-shadow">
+                    {profile.family_member_name?.split(" ")[0]}
+                  </span>
+                </div>
+              );
+            })}
         </div>
       </div>
 
@@ -243,16 +218,12 @@ export default function HorseRace() {
       <div className="grid grid-cols-2 gap-2">
         {profiles.map((profile, idx) => {
           const levelInfo = getLevelInfo(profile.total_xp || 0);
-          const stable = stables[profile.family_member_id];
-          const horseEmoji = getHorseEmoji(stable?.horse_skin);
-          const bonus = getTotalBonus(stable);
           return (
             <div key={profile.id} className="bg-card border border-border rounded-lg px-3 py-2 flex items-center gap-2">
-              <span className="text-lg">{horseEmoji}</span>
+              <span className="text-lg">🐴</span>
               <div className="min-w-0">
                 <p className="text-xs font-semibold truncate">{profile.family_member_name?.split(" ")[0]}</p>
                 <p className="text-xs text-muted-foreground">Lv.{levelInfo.level} · {profile.total_xp || 0} XP</p>
-                {bonus > 0 && <p className="text-xs text-amber-600 font-bold">+{bonus}% gear</p>}
               </div>
             </div>
           );
