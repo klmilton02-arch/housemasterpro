@@ -401,6 +401,31 @@ async function handleCreateFamily() {
                         <Link2Off className="w-3 h-3" /> Unlink
                       </Button>
                     </div>
+                  ) : isLinking ? (
+                    <div className="space-y-2">
+                      <p className="text-xs text-muted-foreground font-medium">Select user to link:</p>
+                      <div className="space-y-1 max-h-40 overflow-y-auto">
+                        {familyUsers.filter(u => !u.linked_to_member).map(appUser => (
+                          <button
+                            key={appUser.id}
+                            onClick={() => handleLink(member, appUser)}
+                            disabled={saving}
+                            className="w-full text-left px-3 py-2 text-sm bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 border border-blue-200 dark:border-blue-800 rounded-md transition-colors"
+                          >
+                            <p className="font-medium text-blue-900 dark:text-blue-200">{appUser.full_name}</p>
+                            <p className="text-xs text-blue-600 dark:text-blue-400">{appUser.email}</p>
+                          </button>
+                        ))}
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setLinkingMemberId(null)}
+                        className="w-full text-xs"
+                      >
+                        Cancel
+                      </Button>
+                    </div>
                   ) : (
                     <div className="flex items-center gap-2">
                       <Button
