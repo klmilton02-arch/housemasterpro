@@ -10,6 +10,9 @@ export default function JoinFamilyOnSignup() {
   const [joining, setJoining] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [joined, setJoined] = useState(false);
+  const [memberName, setMemberName] = useState("");
+  const [settingName, setSettingName] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(user => {
@@ -25,14 +28,29 @@ export default function JoinFamilyOnSignup() {
     setJoining(true);
     setError("");
     try {
-      const res = await base44.functions.invoke("joinFamilyWithCode", {
+      await base44.functions.invoke("joinFamilyWithCode", {
         invite_code: inviteCode.trim().toUpperCase(),
       });
-      // Navigate and let AuthContext pick up the updated user state
-      navigate("/dashboard", { replace: true });
+      setJoined(true);
     } catch (err) {
       setError(err?.response?.data?.error || err.message || "Failed to join family");
       setJoining(false);
+    }
+  }
+
+  async function handleSetName() {
+    if (!memberName.trim()) return;
+    setSettingName(true);
+    try {
+      const user = await base44.auth.me();
+      await base44.functions.invoke("updateFamilyMemberName", {
+        member_email: user.email,
+        new_name: memberName.trim(),
+      });
+      navigate("/dashboard", { replace: true });
+    } catch (err) {
+      setError(err?.response?.data?.error || err.message || "Failed to set name");
+      setSettingName(false);
     }
   }
 
@@ -50,40 +68,67 @@ export default function JoinFamilyOnSignup() {
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-heading font-bold">Welcome!</h1>
           <p className="text-sm text-muted-foreground">
-            Join an existing family or skip to get started
+            {joined ? "Choose your display name" : "Join an existing family or skip to get started"}
           </p>
         </div>
 
-        <div className="space-y-3">
-          <Input
-            placeholder="Family invite code"
-            value={inviteCode}
-            onChange={(e) => {
-              setInviteCode(e.target.value);
-              setError("");
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleJoin();
-            }}
-            autoFocus
-          />
-          {error && <p className="text-xs text-destructive">{error}</p>}
-          <Button
-            onClick={handleJoin}
-            disabled={joining || !inviteCode.trim()}
-            className="w-full"
-          >
-            {joining ? "Joining..." : "Join Family"}
-          </Button>
-        </div>
+        {joined ? (
+          <div className="space-y-3">
+            <Input
+              placeholder="Your display name"
+              value={memberName}
+              onChange={(e) => {
+                setMemberName(e.target.value);
+                setError("");
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSetName();
+              }}
+              autoFocus
+            />
+            {error && <p className="text-xs text-destructive">{error}</p>}
+            <Button
+              onClick={handleSetName}
+              disabled={settingName || !memberName.trim()}
+              className="w-full"
+            >
+              {settingName ? "Setting..." : "Continue"}
+            </Button>
+          </div>
+        ) : (
+          <>
+            <div className="space-y-3">
+              <Input
+                placeholder="Family invite code"
+                value={inviteCode}
+                onChange={(e) => {
+                  setInviteCode(e.target.value);
+                  setError("");
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleJoin();
+                }}
+                autoFocus
+              />
+              {error && <p className="text-xs text-destructive">{error}</p>}
+              <Button
+                onClick={handleJoin}
+                disabled={joining || !inviteCode.trim()}
+                className="w-full"
+              >
+                {joining ? "Joining..." : "Join Family"}
+              </Button>
+            </div>
 
-        <Button
-          variant="outline"
-          onClick={() => navigate("/dashboard")}
-          className="w-full"
-        >
-          Skip for Now
-        </Button>
+            <Button
+              variant="outline"
+              onClick={() => navigate("/dashboard")}
+              className="w-full"
+            >
+              Skip for Now
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );
