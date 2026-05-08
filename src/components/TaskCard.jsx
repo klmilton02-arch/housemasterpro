@@ -164,15 +164,16 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
         <div className="flex items-center gap-1 shrink-0 mt-0.5" onClick={e => e.stopPropagation()}>
           <button
             className={cn(
-              "h-7 w-7 flex items-center justify-center rounded-md border-2 transition-all",
+              "h-7 w-7 flex items-center justify-center rounded-md border-2 transition-all pointer-events-auto",
               visuallyCompleted
                 ? "border-green-500 bg-green-500"
                 : "border-muted-foreground/40 hover:border-primary bg-transparent"
             )}
-            onClick={handleCheckboxClick}
+            onPointerDown={e => { e.stopPropagation(); e.preventDefault(); }}
+            onPointerUp={e => { e.stopPropagation(); e.preventDefault(); onComplete?.(task); }}
             title={visuallyCompleted ? "Mark incomplete" : "Mark complete"}
           >
-            <Check className={cn("w-4 h-4 transition-opacity", visuallyCompleted ? "text-white opacity-100" : "opacity-0")} />
+            <Check className={cn("w-4 h-4 transition-opacity pointer-events-none", visuallyCompleted ? "text-white opacity-100" : "opacity-0")} />
           </button>
           {onViewDetails && (
             <button
