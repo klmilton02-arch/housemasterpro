@@ -98,12 +98,10 @@ async function handleCreateFamily() {
     setJoiningFamily(true);
     setJoinError("");
     try {
-      const response = await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
-      const { user, family_group } = response.data;
+      await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
       setInviteCode("");
-      setUser(user);
-      setFamilyGroup(family_group);
       setJoiningFamily(false);
+      loadData(); // Reload all data to sync with backend
     } catch (err) {
       console.error("Join failed:", err);
       const message = err?.response?.data?.error || err?.data?.error || err.message || "Failed to join family";
