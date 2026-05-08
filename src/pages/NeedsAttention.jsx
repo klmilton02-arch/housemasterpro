@@ -55,9 +55,16 @@ export default function NeedsAttention() {
   }
 
   const urgentTasks = tasks.filter(t => {
+    if (justCompletedIds.has(t.id)) return true; // keep pinned during animation
     const s = getStatusInfo(t);
     return s.label === "Overdue" || s.label === "Past Due" || s.label === "Due Soon";
-  }).sort((a, b) => new Date(a.next_due_date) - new Date(b.next_due_date));
+  }).sort((a, b) => {
+    // Push just-completed to bottom
+    const aComp = justCompletedIds.has(a.id);
+    const bComp = justCompletedIds.has(b.id);
+    if (aComp !== bComp) return aComp ? 1 : -1;
+    return new Date(a.next_due_date) - new Date(b.next_due_date);
+  });
 
   if (loading) {
     return (
