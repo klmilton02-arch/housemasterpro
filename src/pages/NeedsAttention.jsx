@@ -12,6 +12,7 @@ export default function NeedsAttention() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [reward, setReward] = useState(null);
+  const [justCompletedIds, setJustCompletedIds] = useState(new Set());
 
   const loadTasks = useCallback(async () => {
     const all = await base44.entities.Task.list("-created_date", 500);
@@ -31,18 +32,26 @@ export default function NeedsAttention() {
       last_completed_date: today.toISOString().split("T")[0],
       next_due_date: nextDue.toISOString().split("T")[0],
     };
+
+    // Mark as just-completed so TaskCard turns green immediately
+    setJustCompletedIds(prev => new Set([...prev, task.id]));
     setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
-    await base44.entities.Task.update(task.id, {
+
+    confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+
+    // After a pause, remove from urgent list by reloading
+    setTimeout(() => {
+      setJustCompletedIds(prev => { const n = new Set(prev); n.delete(task.id); return n; });
+      loadTasks();
+    }, 1500);
+
+    base44.entities.Task.update(task.id, {
       status: "Completed",
       last_completed_date: updated.last_completed_date,
       next_due_date: updated.next_due_date,
     });
     const result = await awardPoints(task, blastActive);
-    if (result) {
-      setReward(result);
-      confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
-    }
-    loadTasks();
+    if (result) setReward(result);
   }
 
   const urgentTasks = tasks.filter(t => {
@@ -73,7 +82,7 @@ export default function NeedsAttention() {
       ) : (
         <div className="grid gap-2 sm:grid-cols-2">
           {urgentTasks.map(task => (
-            <TaskCard key={task.id} task={task} onComplete={handleComplete} />
+            <TaskCard key={task.id} task={task} onComplete={handleComplete} isInJustCompleted={justCompletedIds.has(task.id)} />
           ))}
         </div>
       )}
