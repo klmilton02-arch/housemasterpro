@@ -350,60 +350,6 @@ export default function Family() {
         </div>
       )}
 
-                    {isLinking ? (
-                      <div className="space-y-1 border border-border rounded-md overflow-hidden">
-                        <p className="text-xs text-muted-foreground px-3 pt-2 pb-1">Select a user account to link:</p>
-                        {familyUsers.filter(u => !familyMembers.some(m => m.id !== member.id && m.linked_user_id === u.id)).map(u => (
-                          <button
-                            key={u.id}
-                            onClick={() => handleLink(member, u)}
-                            disabled={saving}
-                            className="w-full text-left px-3 py-2 hover:bg-muted text-sm flex items-center gap-2 border-t border-border first:border-t-0"
-                          >
-                            <div className="w-6 h-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold">
-                              {u.full_name?.[0]?.toUpperCase()}
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium">{u.full_name}</p>
-                              <p className="text-xs text-muted-foreground">{u.email}</p>
-                            </div>
-                          </button>
-                        ))}
-                        <button
-                          onClick={() => setLinkingMemberId(null)}
-                          className="w-full text-left px-3 py-2 hover:bg-muted text-xs text-muted-foreground border-t border-border"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    ) : null}
-                  </div>
-                )}
-              </div>
-            );
-            })}
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <Users className="w-12 h-12 text-muted-foreground mb-3 opacity-50" />
-          <p className="text-muted-foreground">No family members yet</p>
-        </div>
-      )}
-
-      {/* App users in this family group */}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <Users className="w-12 h-12 text-muted-foreground mb-3 opacity-50" />
-          <p className="text-muted-foreground">No family members yet</p>
-        </div>
-      )}
-
       {/* App users in this family group */}
       {familyUsers.length > 0 && (
         <div className="space-y-3">
