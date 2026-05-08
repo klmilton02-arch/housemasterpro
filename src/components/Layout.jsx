@@ -9,6 +9,7 @@ const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard, iconColor: "text-black dark:text-white" },
   { path: "/tasks", label: "Tasks", icon: ListChecks, iconColor: "text-black dark:text-white" },
   { path: "/home-setup", label: "Home Setup", icon: Home, iconColor: "text-black dark:text-white" },
+  { path: "/leaderboard", label: "Leaderboard", icon: Zap, iconColor: "text-black dark:text-white" },
 ];
 
 const rootPaths = ["/", "/tasks", "/home-setup"];
