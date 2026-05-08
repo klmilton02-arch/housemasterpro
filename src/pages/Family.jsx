@@ -217,13 +217,13 @@ async function handleCreateFamily() {
       )}
 
       {/* Share Family Invite Code */}
-      {user?.family_group_id && (
+      {user?.family_group_id && familyGroup && (
         <div className="space-y-3">
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 space-y-2">
             <p className="text-sm font-medium text-blue-900 dark:text-blue-200">Family Invite Code</p>
             <div className="flex items-center gap-2">
               <code className="flex-1 bg-blue-100 dark:bg-blue-900/40 px-3 py-2 rounded font-mono font-semibold text-blue-700 dark:text-blue-300 text-center">
-                {familyGroup.invite_code}
+                {familyGroup?.invite_code}
               </code>
               <Button
                 size="sm"
