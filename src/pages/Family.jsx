@@ -96,13 +96,12 @@ async function handleCreateFamily() {
     setJoiningFamily(true);
     setJoinError("");
     try {
-      const response = await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
-      console.log("Join successful:", response);
-      // Backend confirmed join succeeded - reload immediately
-      setTimeout(() => window.location.reload(), 500);
+      await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
+      // Success - reload page to refresh user data
+      window.location.reload();
     } catch (err) {
       console.error("Join failed:", err);
-      const message = err?.response?.data?.error || err.message || "Failed to join family";
+      const message = err?.response?.data?.error || err?.data?.error || err.message || "Failed to join family";
       setJoinError(message);
       setJoiningFamily(false);
     }
