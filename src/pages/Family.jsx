@@ -254,7 +254,8 @@ async function handleCreateFamily() {
             <p className="text-xs text-blue-700 dark:text-blue-300">Share this code with family members to join</p>
           </div>
 
-          <Dialog open={showInviteUser} onOpenChange={setShowInviteUser}>
+          {/* Invite user feature disabled - share code directly instead */}
+          {false && <Dialog open={showInviteUser} onOpenChange={setShowInviteUser}>
             <DialogTrigger asChild>
               <Button variant="outline" className="w-full gap-2">
                 <Plus className="w-4 h-4" /> Invite User to App
@@ -290,7 +291,7 @@ async function handleCreateFamily() {
                 </div>
               </div>
             </DialogContent>
-          </Dialog>
+          </Dialog>}
         </div>
       )}
 

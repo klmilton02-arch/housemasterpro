@@ -15,10 +15,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Invite the user
-    await base44.users.inviteUser(email, role);
-
-    // Send custom email with invite code
+    // Send email with family invite code
     const appUrl = 'https://homelifefocus.base44.app';
     await base44.integrations.Core.SendEmail({
       to: email,
