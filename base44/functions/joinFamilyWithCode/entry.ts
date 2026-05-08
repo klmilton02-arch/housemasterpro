@@ -23,6 +23,11 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Invalid invite code' }, { status: 404 });
     }
 
+    // Ensure user is not joining their own family
+    if (matchedFamily.owner_email === user.email) {
+      return Response.json({ error: 'You cannot join your own family with an invite code' }, { status: 400 });
+    }
+
     // Update user to add family_group_id
     await base44.auth.updateMe({ family_group_id: matchedFamily.id });
     
