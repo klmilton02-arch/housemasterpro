@@ -58,9 +58,10 @@ export default function Family() {
           setFamilyGroup(fg);
 
         } catch (err) {
-          // Family group exists in user record but FamilyGroup record is missing
-
+          // Family group doesn't exist - clear the user's family_group_id
           console.error("Failed to load family data:", err);
+          await base44.auth.updateMe({ family_group_id: null });
+          setFamilyGroup(null);
         }
       }
     } catch (err) {
