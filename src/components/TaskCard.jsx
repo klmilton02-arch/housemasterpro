@@ -1,16 +1,16 @@
 import { useState, useRef } from "react";
 import { Check, Clock, AlertTriangle, Calendar, Pencil, Flame, ChevronRight, Zap, ArrowUp, ArrowRight, ArrowDown } from "lucide-react";
-
-const PRIORITY_CONFIG = {
-  High:   { label: "High",   color: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",    icon: ArrowUp },
-  Medium: { label: "Medium", color: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400", icon: ArrowRight },
-  Low:    { label: "Low",    color: "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400", icon: ArrowDown },
-};
 import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays, parseISO } from "date-fns";
 
-function getStatusInfo(task) {
+const PRIORITY_CONFIG = {
+  High:   { label: "High",   color: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400", icon: ArrowUp },
+  Medium: { label: "Medium", color: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400", icon: ArrowRight },
+  Low:    { label: "Low",    color: "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400", icon: ArrowDown },
+};
+
+export function getStatusInfo(task) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const due = parseISO(task.next_due_date);
@@ -25,8 +25,7 @@ function getStatusInfo(task) {
     if (task.last_completed_date) {
       const lastCompleted = parseISO(task.last_completed_date);
       lastCompleted.setHours(0, 0, 0, 0);
-      const isCompletedToday = differenceInDays(today, lastCompleted) === 0;
-      if (!isCompletedToday) {
+      if (differenceInDays(today, lastCompleted) !== 0) {
         return { label: "Due Today", color: "bg-blue-500 text-white", icon: Zap, priority: 1 };
       }
     }
@@ -48,7 +47,7 @@ function getStatusInfo(task) {
   return { label: "Upcoming", color: "bg-blue-100 text-blue-700", icon: Calendar, priority: 2 };
 }
 
-function formatFrequency(days) {
+export function formatFrequency(days) {
   if (days === 1) return "Daily";
   if (days <= 3) return `Every ${days} days`;
   if (days === 7) return "Weekly";
@@ -60,11 +59,8 @@ function formatFrequency(days) {
   return `Every ${days} days`;
 }
 
-export { getStatusInfo, formatFrequency };
-
 export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, isInJustCompleted }) {
   const isCompleted = task.status === "Completed";
-  // Drive green state purely from props — no internal state fighting
   const visuallyCompleted = isCompleted || !!isInJustCompleted;
   const status = getStatusInfo({ ...task, status: visuallyCompleted ? "Completed" : task.status });
   const StatusIcon = status.icon;
@@ -83,28 +79,26 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
   function handleCheckboxClick(e) {
     e.stopPropagation();
     e.preventDefault();
-    if (!isInJustCompleted && !isCompleted) {
-      onComplete?.(task);
-    }
+    onComplete?.(task);
   }
 
   const cardBg = visuallyCompleted
     ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/20"
     : {
-        "Overdue": "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20",
+        "Overdue":  "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20",
         "Past Due": "border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-900/20",
         "Due Soon": "border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-900/20",
-        "Due Today": "border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-900/20",
+        "Due Today":"border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-900/20",
         "Upcoming": "border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-900/20",
       }[status.label] || "border-border bg-card";
 
   const showDate = !visuallyCompleted && ["Overdue", "Past Due", "Due Soon"].includes(status.label);
 
   return (
-    <div className={cn(
-      "border rounded-lg px-3 py-3 hover:shadow-md transition-all group w-full cursor-pointer",
-      cardBg
-    )} onClick={() => onViewDetails?.(task)}>
+    <div
+      className={cn("border rounded-lg px-3 py-3 hover:shadow-md transition-all group w-full cursor-pointer", cardBg)}
+      onClick={() => onViewDetails?.(task)}
+    >
       <div className="flex items-start justify-between gap-2 w-full">
         <div className="flex-1 min-w-0 flex flex-col gap-1.5">
           {editing ? (
@@ -114,12 +108,17 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
               value={name}
               onChange={e => setName(e.target.value)}
               onBlur={saveName}
-              onKeyDown={e => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') { setEditing(false); setName(task.name); } }}
+              onKeyDown={e => {
+                if (e.key === "Enter") saveName();
+                if (e.key === "Escape") { setEditing(false); setName(task.name); }
+              }}
               className="font-heading font-semibold text-sm text-foreground w-full border border-primary rounded px-1 py-0.5 outline-none bg-background"
             />
           ) : (
             <div className="flex items-center gap-1 group/name min-w-0">
-              <h3 className={cn("font-heading font-semibold text-sm leading-snug", visuallyCompleted ? "line-through text-muted-foreground" : "text-foreground")}>{name}</h3>
+              <h3 className={cn("font-heading font-semibold text-sm leading-snug", visuallyCompleted ? "line-through text-muted-foreground" : "text-foreground")}>
+                {name}
+              </h3>
               <button
                 onClick={e => { e.stopPropagation(); setEditing(true); }}
                 className="opacity-0 group-hover/name:opacity-100 transition-opacity p-0.5 rounded hover:bg-muted flex-shrink-0"
@@ -143,40 +142,47 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
             )}
             {task.priority && task.priority !== "Medium" && !visuallyCompleted && (() => {
               const pc = PRIORITY_CONFIG[task.priority];
-              const PIcon = pc?.icon;
-              return pc ? (
+              if (!pc) return null;
+              const PIcon = pc.icon;
+              return (
                 <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-semibold ${pc.color}`}>
                   <PIcon className="w-3 h-3" />{pc.label}
                 </span>
-              ) : null;
+              );
             })()}
             {task.assigned_to_name && !visuallyCompleted && (
               <span className="text-xs text-muted-foreground">· {task.assigned_to_name}</span>
             )}
             {visuallyCompleted && (task.completed_by_name || task.assigned_to_name) && (
-              <span className="text-xs font-medium text-green-700 dark:text-green-400">✓ {task.completed_by_name || task.assigned_to_name}</span>
+              <span className="text-xs font-medium text-green-700 dark:text-green-400">
+                ✓ {task.completed_by_name || task.assigned_to_name}
+              </span>
             )}
           </div>
         </div>
+
         <div className="flex items-center gap-1 shrink-0 mt-0.5" onClick={e => e.stopPropagation()}>
           <button
-            className={`h-7 w-7 flex items-center justify-center rounded-md border-2 transition-all ${
+            className={cn(
+              "h-7 w-7 flex items-center justify-center rounded-md border-2 transition-all",
               visuallyCompleted
                 ? "border-green-500 bg-green-500"
                 : "border-muted-foreground/40 hover:border-primary bg-transparent"
-            }`}
+            )}
             onClick={handleCheckboxClick}
             title={visuallyCompleted ? "Mark incomplete" : "Mark complete"}
           >
-            <Check className={`w-4 h-4 transition-opacity ${visuallyCompleted ? "text-white opacity-100" : "opacity-0"}`} />
+            <Check className={cn("w-4 h-4 transition-opacity", visuallyCompleted ? "text-white opacity-100" : "opacity-0")} />
           </button>
-          <button
-            onClick={e => { e.stopPropagation(); onViewDetails?.(task); }}
-            className="p-1 rounded hover:bg-muted opacity-0 group-hover:opacity-100 transition-opacity"
-            title="View details"
-          >
-            <ChevronRight className="w-4 h-4 text-muted-foreground" />
-          </button>
+          {onViewDetails && (
+            <button
+              onClick={e => { e.stopPropagation(); onViewDetails(task); }}
+              className="p-1 rounded hover:bg-muted opacity-0 group-hover:opacity-100 transition-opacity"
+              title="View details"
+            >
+              <ChevronRight className="w-4 h-4 text-muted-foreground" />
+            </button>
+          )}
         </div>
       </div>
     </div>
