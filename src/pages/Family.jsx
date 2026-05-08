@@ -31,6 +31,7 @@ export default function Family() {
   const [showCreateFamily, setShowCreateFamily] = useState(false);
   const [newFamilyName, setNewFamilyName] = useState("");
   const [creatingFamily, setCreatingFamily] = useState(false);
+  const [isMissingFamilyGroup, setIsMissingFamilyGroup] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -38,12 +39,21 @@ export default function Family() {
       setUser(me);
 
       if (me?.family_group_id) {
-        const [allUsers, members] = await Promise.all([
-          base44.entities.User.list(),
-          base44.entities.FamilyMember.filter({ family_group_id: me.family_group_id }),
-        ]);
-        setFamilyUsers(allUsers.filter(u => u.family_group_id === me.family_group_id));
-        setFamilyMembers(members);
+        try {
+          const [allUsers, members] = await Promise.all([
+            base44.entities.User.list(),
+            base44.entities.FamilyMember.filter({ family_group_id: me.family_group_id }),
+          ]);
+          setFamilyUsers(allUsers.filter(u => u.family_group_id === me.family_group_id));
+          setFamilyMembers(members);
+          setIsMissingFamilyGroup(false);
+        } catch (err) {
+          // Family group exists in user record but FamilyGroup record is missing
+          if (err.message?.includes('404') || err.message?.includes('not found')) {
+            setIsMissingFamilyGroup(true);
+          }
+          console.error("Failed to load family data:", err);
+        }
       }
     } catch (err) {
       console.error("Failed to load family data:", err);
@@ -53,6 +63,19 @@ export default function Family() {
   }, []);
 
   useEffect(() => { loadData(); }, [loadData]);
+
+  async function handleRestoreFamily() {
+    setSaving(true);
+    try {
+      await base44.functions.invoke('restoreFamilyGroup', {});
+      setIsMissingFamilyGroup(false);
+      loadData();
+    } catch (err) {
+      console.error("Failed to restore family:", err);
+    } finally {
+      setSaving(false);
+    }
+  }
 
   async function handleCreateFamily() {
     if (!newFamilyName.trim()) return;
@@ -118,6 +141,14 @@ export default function Family() {
   return (
     <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7 pb-8" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <h1 className="font-heading text-3xl font-bold">Family</h1>
+
+      {/* Restore Missing Family Group */}
+      {user?.family_group_id && isMissingFamilyGroup && (
+        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+          <p className="text-sm text-amber-800 dark:text-amber-200 mb-3">Your family group data is missing. Restore it to continue.</p>
+          <Button onClick={handleRestoreFamily} disabled={saving} className="w-full">Restore Family</Button>
+        </div>
+      )}
 
       {/* Create New Family Group */}
       {!user?.family_group_id && (
