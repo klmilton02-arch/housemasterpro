@@ -133,6 +133,11 @@ export default function Stable() {
   const { toast } = useToast();
 
   useEffect(() => {
+    document.title = "Horse Stable – HomeLifeFocus";
+    document.querySelector('meta[name="description"]').setAttribute('content', 'Build and care for your virtual horse stable. Feed, train, and customize your horses to earn rewards.');
+  }, []);
+
+  useEffect(() => {
     async function load() {
       const me = await base44.auth.me();
       if (!me) return;
