@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { base44 } from "@/api/base44Client";
-import { Users, Link2, Link2Off, ChevronDown, Plus } from "lucide-react";
+import { Users, Link2, Link2Off, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 

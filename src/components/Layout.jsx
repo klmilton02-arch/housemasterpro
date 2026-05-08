@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, ListChecks, Trophy, Home, User, Zap } from "lucide-react";
+import { LayoutDashboard, ListChecks, Home, User, Zap } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import MobileHeader from "./MobileHeader";
@@ -8,11 +8,10 @@ import { useBlastMode } from "@/lib/BlastModeContext";
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard, iconColor: "text-black dark:text-white" },
   { path: "/tasks", label: "Tasks", icon: ListChecks, iconColor: "text-black dark:text-white" },
-  { path: "/leaderboard", label: "Rewards", icon: Trophy, iconColor: "text-black dark:text-white" },
   { path: "/home-setup", label: "Home Setup", icon: Home, iconColor: "text-black dark:text-white" },
 ];
 
-const rootPaths = ["/", "/tasks", "/leaderboard", "/home-setup"];
+const rootPaths = ["/", "/tasks", "/home-setup"];
 
 export default function Layout() {
   const location = useLocation();
