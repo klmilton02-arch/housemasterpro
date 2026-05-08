@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, ListChecks, Trophy, Home, User, Zap, Cat } from "lucide-react";
+import { LayoutDashboard, ListChecks, Trophy, Home, User, Zap } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import MobileHeader from "./MobileHeader";
@@ -9,11 +9,10 @@ const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard, iconColor: "text-black dark:text-white" },
   { path: "/tasks", label: "Tasks", icon: ListChecks, iconColor: "text-black dark:text-white" },
   { path: "/leaderboard", label: "Rewards", icon: Trophy, iconColor: "text-black dark:text-white" },
-  { path: "/cats", label: "My Cats", icon: Cat, iconColor: "text-black dark:text-white" },
   { path: "/home-setup", label: "Home Setup", icon: Home, iconColor: "text-black dark:text-white" },
 ];
 
-const rootPaths = ["/", "/tasks", "/leaderboard", "/cats", "/home-setup"];
+const rootPaths = ["/", "/tasks", "/leaderboard", "/home-setup"];
 
 export default function Layout() {
   const location = useLocation();
