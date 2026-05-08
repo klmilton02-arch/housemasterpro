@@ -9,10 +9,6 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    if (user.family_group_id) {
-      return Response.json({ error: 'User already in a family group' }, { status: 400 });
-    }
-
     const { invite_code } = await req.json();
 
     if (!invite_code || typeof invite_code !== 'string') {
