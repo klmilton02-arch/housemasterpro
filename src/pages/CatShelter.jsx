@@ -3,14 +3,14 @@ import { base44 } from "@/api/base44Client";
 import { getLevelInfo } from "@/utils/gamification";
 import {
   CAT_FURS, COLLARS, TOYS, ACCESSORIES,
-  getCatEmoji, getCatEquippedEmojis, getCatTotalBonus,
+  getCatEmoji, getCatEquippedEmojis,
 } from "@/utils/catItems";
-import { Lock, CheckCircle2, Plus, Trash2, Heart, AlertTriangle } from "lucide-react";
+import { Lock, CheckCircle2, Plus, Trash2, Heart, AlertTriangle, BookOpen, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { differenceInDays, parseISO, subDays } from "date-fns";
+import { differenceInDays, parseISO, format } from "date-fns";
 
-// ─── Item Grid (collars / toys / accessories) ─────────────────────────────────
+// ─── Item Grid ─────────────────────────────────────────────────────────────────
 function ItemGrid({ items, equipped, onEquip, level }) {
   return (
     <div className="grid grid-cols-3 gap-2">
@@ -129,6 +129,115 @@ function CatCard({ cat, onSelect, isSelected, onDelete }) {
   );
 }
 
+// ─── Memory / Stats Section ────────────────────────────────────────────────────
+function CatMemory({ cat }) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const adoptedDate = cat.created_date ? parseISO(cat.created_date) : null;
+  const daysOwned = adoptedDate ? differenceInDays(today, adoptedDate) : 0;
+
+  const lastFed = cat.last_fed_date ? parseISO(cat.last_fed_date) : null;
+  lastFed?.setHours(0, 0, 0, 0);
+  const daysSinceFed = lastFed ? differenceInDays(today, lastFed) : null;
+
+  const lastPlayed = cat.last_played_date ? parseISO(cat.last_played_date) : null;
+  lastPlayed?.setHours(0, 0, 0, 0);
+  const daysSincePlayed = lastPlayed ? differenceInDays(today, lastPlayed) : null;
+
+  const isHome = cat.is_home !== false;
+  const daysAtHome = isHome ? daysOwned : (
+    cat.ran_away_date
+      ? differenceInDays(parseISO(cat.ran_away_date), adoptedDate || today)
+      : 0
+  );
+
+  const stats = [
+    { label: "Days Together", value: daysOwned, emoji: "📅" },
+    { label: "Days Happy & Home", value: daysAtHome, emoji: "🏠" },
+    { label: isHome ? "Last Fed" : "Status", value: isHome ? (daysSinceFed === 0 ? "Today" : daysSinceFed === 1 ? "Yesterday" : `${daysSinceFed}d ago`) : "Away", emoji: "🐟" },
+    { label: "Last Played", value: daysSincePlayed === null ? "Never" : daysSincePlayed === 0 ? "Today" : daysSincePlayed === 1 ? "Yesterday" : `${daysSincePlayed}d ago`, emoji: "🧶" },
+  ];
+
+  return (
+    <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
+      <div className="flex items-center gap-2">
+        <BookOpen className="w-4 h-4 text-muted-foreground" />
+        <h3 className="font-semibold text-sm">Memory Book</h3>
+        {adoptedDate && <span className="text-xs text-muted-foreground ml-auto">Adopted {format(adoptedDate, "MMM d, yyyy")}</span>}
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        {stats.map(s => (
+          <div key={s.label} className="bg-muted/40 rounded-xl p-3 text-center">
+            <p className="text-xl">{s.emoji}</p>
+            <p className="font-heading font-bold text-lg">{s.value}</p>
+            <p className="text-xs text-muted-foreground leading-tight">{s.label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Activity Feed ─────────────────────────────────────────────────────────────
+function ActivityFeed({ events }) {
+  if (!events || events.length === 0) return null;
+  return (
+    <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
+      <div className="flex items-center gap-2">
+        <Activity className="w-4 h-4 text-muted-foreground" />
+        <h3 className="font-semibold text-sm">Recent Activity</h3>
+      </div>
+      <div className="space-y-2">
+        {events.map((ev, i) => (
+          <div key={i} className="flex items-center gap-3 text-sm">
+            <span className="text-lg w-7 text-center shrink-0">{ev.emoji}</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm leading-tight">{ev.text}</p>
+            </div>
+            <span className="text-xs text-muted-foreground shrink-0">{ev.time}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Build activity events from a cat's data
+function buildActivityEvents(cat) {
+  const events = [];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  function label(dateStr) {
+    if (!dateStr) return null;
+    const d = parseISO(dateStr);
+    d.setHours(0, 0, 0, 0);
+    const diff = differenceInDays(today, d);
+    if (diff === 0) return "Today";
+    if (diff === 1) return "Yesterday";
+    if (diff < 7) return `${diff} days ago`;
+    return format(d, "MMM d");
+  }
+
+  if (cat.last_fed_date) {
+    events.push({ emoji: "🐟", text: `Fed ${cat.cat_name}`, time: label(cat.last_fed_date), _date: cat.last_fed_date });
+  }
+  if (cat.last_played_date) {
+    events.push({ emoji: "🧶", text: `Played with ${cat.cat_name}`, time: label(cat.last_played_date), _date: cat.last_played_date });
+  }
+  if (cat.is_home === false && cat.ran_away_date) {
+    events.push({ emoji: "😿", text: `${cat.cat_name} ran away`, time: label(cat.ran_away_date), _date: cat.ran_away_date });
+  }
+  if (cat.created_date) {
+    events.push({ emoji: "🐱", text: `Adopted ${cat.cat_name}`, time: label(cat.created_date.split("T")[0]), _date: cat.created_date.split("T")[0] });
+  }
+
+  // Sort most recent first
+  events.sort((a, b) => (b._date || "").localeCompare(a._date || ""));
+  return events.slice(0, 6);
+}
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function CatShelter() {
   const [profile, setProfile] = useState(null);
@@ -148,7 +257,6 @@ export default function CatShelter() {
         base44.entities.Task.list(),
       ]);
 
-      // Count seriously overdue tasks (more than grace period)
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const severelyOverdue = allTasks.filter(t => {
@@ -160,10 +268,8 @@ export default function CatShelter() {
         return differenceInDays(today, due) > graceDays;
       }).length;
 
-      // If 3+ severely overdue tasks, cats that are home may run away
       const updatedCats = await Promise.all(allCats.map(async cat => {
         if (cat.is_home && severelyOverdue >= 3) {
-          // Each cat has a chance to run — more overdue = more likely
           const threshold = Math.max(3, 6 - Math.floor(severelyOverdue / 2));
           if (severelyOverdue >= threshold) {
             await base44.entities.CatShelter.update(cat.id, {
@@ -314,6 +420,7 @@ export default function CatShelter() {
   const levelInfo = getLevelInfo(profile.total_xp || 0);
   const level = levelInfo.level;
   const isAway = selectedCat?.is_home === false;
+  const activityEvents = selectedCat ? buildActivityEvents(selectedCat) : [];
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto px-1 pt-6 pb-12">
@@ -328,7 +435,7 @@ export default function CatShelter() {
         </Button>
       </div>
 
-      {/* Info banner: cats run away */}
+      {/* Info banner */}
       <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-3 text-xs text-amber-800 dark:text-amber-300">
         ⚠️ <strong>Heads up:</strong> Cats can run away if you leave too many tasks overdue! Keep up with chores to keep them happy and home.
       </div>
@@ -381,7 +488,6 @@ export default function CatShelter() {
                   </div>
                 )}
 
-                {/* Actions */}
                 <div className="grid grid-cols-2 gap-2">
                   {isAway ? (
                     <Button
@@ -393,20 +499,10 @@ export default function CatShelter() {
                     </Button>
                   ) : (
                     <>
-                      <Button
-                        onClick={feedCat}
-                        disabled={saving || (profile.total_xp || 0) < 5}
-                        variant="outline"
-                        className="gap-1"
-                      >
+                      <Button onClick={feedCat} disabled={saving || (profile.total_xp || 0) < 5} variant="outline" className="gap-1">
                         🐟 Feed (5 XP)
                       </Button>
-                      <Button
-                        onClick={playCat}
-                        disabled={saving || (profile.total_xp || 0) < 10}
-                        variant="outline"
-                        className="gap-1"
-                      >
+                      <Button onClick={playCat} disabled={saving || (profile.total_xp || 0) < 10} variant="outline" className="gap-1">
                         🧶 Play (10 XP)
                       </Button>
                     </>
@@ -416,25 +512,25 @@ export default function CatShelter() {
                 {saving && <p className="text-xs text-muted-foreground animate-pulse">Saving...</p>}
               </div>
 
-              {/* Fur */}
+              {/* Memory Book */}
+              <CatMemory cat={selectedCat} />
+
+              {/* Activity Feed */}
+              <ActivityFeed events={activityEvents} />
+
+              {/* Customization */}
               <section>
                 <h2 className="font-heading font-semibold text-sm mb-2 text-muted-foreground uppercase tracking-wide">🐾 Fur Type</h2>
                 <FurGrid items={CAT_FURS} equipped={selectedCat.cat_fur} onEquip={v => updateCat("cat_fur", v)} level={level} />
               </section>
-
-              {/* Collars */}
               <section>
                 <h2 className="font-heading font-semibold text-sm mb-2 text-muted-foreground uppercase tracking-wide">🔔 Collar</h2>
                 <ItemGrid items={COLLARS} equipped={selectedCat.collar} onEquip={v => updateCat("collar", v)} level={level} />
               </section>
-
-              {/* Toys */}
               <section>
                 <h2 className="font-heading font-semibold text-sm mb-2 text-muted-foreground uppercase tracking-wide">🧶 Toy</h2>
                 <ItemGrid items={TOYS} equipped={selectedCat.toy} onEquip={v => updateCat("toy", v)} level={level} />
               </section>
-
-              {/* Accessories */}
               <section>
                 <h2 className="font-heading font-semibold text-sm mb-2 text-muted-foreground uppercase tracking-wide">🎀 Accessory</h2>
                 <ItemGrid items={ACCESSORIES} equipped={selectedCat.accessory} onEquip={v => updateCat("accessory", v)} level={level} />
