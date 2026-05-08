@@ -14,9 +14,9 @@ export default function StatCard({ icon: Icon, label, value, color, onClick, lab
         <Icon className={large ? "w-6 h-6" : "w-4 h-4"} />
       </div>
       {labelRight ? (
-        <div className="min-w-0 flex items-center gap-2 w-full overflow-hidden">
-          <p className="font-heading font-bold text-foreground text-xs leading-tight text-left">{value}</p>
-          {label ? <p className="font-medium text-foreground/70 text-xs leading-tight text-left">{label}</p> : null}
+        <div className="min-w-0 flex items-center gap-2 w-full">
+          <p className="font-heading font-bold text-foreground text-xs leading-snug text-left break-words">{value}</p>
+          {label ? <p className="font-medium text-foreground/70 text-xs leading-snug text-left break-words">{label}</p> : null}
         </div>
       ) : labelOnTop ? (
         <div className="min-w-0 flex flex-col items-start justify-center flex-1 text-left">
