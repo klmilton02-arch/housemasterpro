@@ -50,13 +50,14 @@ export default function Family() {
 
       if (me?.family_group_id) {
         try {
-          const [members, fg] = await Promise.all([
+          const [membersRes, fgRes, usersRes] = await Promise.all([
             base44.entities.FamilyMember.filter({ family_group_id: me.family_group_id }),
             base44.entities.FamilyGroup.get(me.family_group_id),
+            base44.functions.invoke('getFamilyAppUsers', {}),
           ]);
-          setFamilyUsers([me]);
-          setFamilyMembers(members);
-          setFamilyGroup(fg);
+          setFamilyUsers(usersRes.data.users || [me]);
+          setFamilyMembers(membersRes);
+          setFamilyGroup(fgRes);
 
         } catch (err) {
           // Family group doesn't exist - clear the user's family_group_id
@@ -104,13 +105,14 @@ async function handleCreateFamily() {
       console.log("Updated user:", me);
       setUser(me);
       if (me?.family_group_id) {
-        const [members, fg] = await Promise.all([
+        const [membersRes, fgRes, usersRes] = await Promise.all([
           base44.entities.FamilyMember.filter({ family_group_id: me.family_group_id }),
           base44.entities.FamilyGroup.get(me.family_group_id),
+          base44.functions.invoke('getFamilyAppUsers', {}),
         ]);
-        setFamilyUsers([me]);
-        setFamilyMembers(members);
-        setFamilyGroup(fg);
+        setFamilyUsers(usersRes.data.users || [me]);
+        setFamilyMembers(membersRes);
+        setFamilyGroup(fgRes);
       }
     } catch (err) {
       console.error("Join failed:", err);
