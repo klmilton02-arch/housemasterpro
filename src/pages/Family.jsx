@@ -43,6 +43,7 @@ export default function Family() {
   const [inviteRole, setInviteRole] = useState("user");
   const [invitingUser, setInvitingUser] = useState(false);
   const [inviteError, setInviteError] = useState("");
+  const [createFamilyError, setCreateFamilyError] = useState("");
 
   const loadData = useCallback(async () => {
     try {
@@ -81,12 +82,15 @@ export default function Family() {
 async function handleCreateFamily() {
     if (!newFamilyName.trim()) return;
     setCreatingFamily(true);
+    setCreateFamilyError("");
     try {
       const res = await base44.functions.invoke('createNewFamilyGroup', { family_name: newFamilyName });
       setNewFamilyName("");
       setShowCreateFamily(false);
-      loadData();
+      await loadData();
     } catch (err) {
+      const errorMsg = err?.response?.data?.error || err?.data?.error || err.message || "Failed to create family";
+      setCreateFamilyError(errorMsg);
       console.error("Failed to create family:", err);
     } finally {
       setCreatingFamily(false);
@@ -219,13 +223,16 @@ async function handleCreateFamily() {
                 <Input
                   placeholder="Family name"
                   value={newFamilyName}
-                  onChange={e => setNewFamilyName(e.target.value)}
+                  onChange={e => { setNewFamilyName(e.target.value); setCreateFamilyError(""); }}
                   onKeyDown={e => { if (e.key === 'Enter') handleCreateFamily(); if (e.key === 'Escape') setShowCreateFamily(false); }}
                   autoFocus
                 />
+                {createFamilyError && <p className="text-xs text-destructive">{createFamilyError}</p>}
                 <div className="flex gap-2">
-                  <Button onClick={handleCreateFamily} disabled={creatingFamily || !newFamilyName.trim()}>Create</Button>
-                  <Button variant="outline" onClick={() => setShowCreateFamily(false)}>Cancel</Button>
+                  <Button onClick={handleCreateFamily} disabled={creatingFamily || !newFamilyName.trim()}>
+                    {creatingFamily ? "Creating..." : "Create"}
+                  </Button>
+                  <Button variant="outline" onClick={() => { setShowCreateFamily(false); setCreateFamilyError(""); }}>Cancel</Button>
                 </div>
               </div>
             </DialogContent>
