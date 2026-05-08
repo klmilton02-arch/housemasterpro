@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { getStatusInfo } from "../components/TaskCard";
 import AccountSetup from "../components/AccountSetup";
+import { toast } from "sonner";
 
 const colorMap = {
   blue: { bg: "bg-blue-100", text: "text-blue-700", dot: "bg-blue-500" },
@@ -282,10 +283,12 @@ export default function Profile() {
                       setResettingData(true);
                       try {
                         await base44.functions.invoke('fullReset', {});
-                        loadData();
+                        await loadData();
+                        toast.success("Data reset successfully! Starting fresh.");
                         setResettingData(false);
                       } catch (error) {
                         console.error("Failed to reset data:", error);
+                        toast.error("Failed to reset data. Please try again.");
                         setResettingData(false);
                       }
                     }}
