@@ -1,0 +1,42 @@
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+
+Deno.serve(async (req) => {
+  try {
+    const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    if (user.family_group_id) {
+      return Response.json({ error: 'User already in a family group' }, { status: 400 });
+    }
+
+    const { invite_code } = await req.json();
+
+    if (!invite_code || typeof invite_code !== 'string') {
+      return Response.json({ error: 'Invalid invite code' }, { status: 400 });
+    }
+
+    // Find family group by invite code
+    const familyGroups = await base44.asServiceRole.entities.FamilyGroup.filter({ invite_code: invite_code.toUpperCase() });
+
+    if (familyGroups.length === 0) {
+      return Response.json({ error: 'Invalid invite code' }, { status: 404 });
+    }
+
+    const familyGroup = familyGroups[0];
+
+    // Update user to add family_group_id
+    await base44.auth.updateMe({ family_group_id: familyGroup.id });
+
+    return Response.json({
+      success: true,
+      message: 'Successfully joined family',
+      family_group: familyGroup,
+    });
+  } catch (error) {
+    return Response.json({ error: error.message }, { status: 500 });
+  }
+});

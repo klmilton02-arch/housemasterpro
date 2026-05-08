@@ -32,6 +32,8 @@ export default function Family() {
   const [newFamilyName, setNewFamilyName] = useState("");
   const [creatingFamily, setCreatingFamily] = useState(false);
   const [isMissingFamilyGroup, setIsMissingFamilyGroup] = useState(false);
+  const [inviteCode, setInviteCode] = useState("");
+  const [joiningFamily, setJoiningFamily] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -89,6 +91,20 @@ export default function Family() {
       console.error("Failed to create family:", err);
     } finally {
       setCreatingFamily(false);
+    }
+  }
+
+  async function handleJoinFamily() {
+    if (!inviteCode.trim()) return;
+    setJoiningFamily(true);
+    try {
+      await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
+      setInviteCode("");
+      loadData();
+    } catch (err) {
+      console.error("Failed to join family:", err);
+    } finally {
+      setJoiningFamily(false);
     }
   }
 
@@ -150,33 +166,47 @@ export default function Family() {
         </div>
       )}
 
-      {/* Create New Family Group */}
+      {/* Join or Create Family Group */}
       {!user?.family_group_id && (
-        <Dialog open={showCreateFamily} onOpenChange={setShowCreateFamily}>
-          <DialogTrigger asChild>
-            <Button className="w-full gap-2">
-              <Plus className="w-4 h-4" /> Create New Family
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-sm">
-            <DialogHeader>
-              <DialogTitle>Create Family Group</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-3">
-              <Input
-                placeholder="Family name"
-                value={newFamilyName}
-                onChange={e => setNewFamilyName(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter') handleCreateFamily(); if (e.key === 'Escape') setShowCreateFamily(false); }}
-                autoFocus
-              />
-              <div className="flex gap-2">
-                <Button onClick={handleCreateFamily} disabled={creatingFamily || !newFamilyName.trim()}>Create</Button>
-                <Button variant="outline" onClick={() => setShowCreateFamily(false)}>Cancel</Button>
+        <div className="space-y-3">
+          <Dialog open={showCreateFamily} onOpenChange={setShowCreateFamily}>
+            <DialogTrigger asChild>
+              <Button className="w-full gap-2">
+                <Plus className="w-4 h-4" /> Create New Family
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-sm">
+              <DialogHeader>
+                <DialogTitle>Create Family Group</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-3">
+                <Input
+                  placeholder="Family name"
+                  value={newFamilyName}
+                  onChange={e => setNewFamilyName(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') handleCreateFamily(); if (e.key === 'Escape') setShowCreateFamily(false); }}
+                  autoFocus
+                />
+                <div className="flex gap-2">
+                  <Button onClick={handleCreateFamily} disabled={creatingFamily || !newFamilyName.trim()}>Create</Button>
+                  <Button variant="outline" onClick={() => setShowCreateFamily(false)}>Cancel</Button>
+                </div>
               </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+            </DialogContent>
+          </Dialog>
+
+          <div className="bg-card border border-border rounded-lg p-4 space-y-3">
+            <p className="text-sm font-medium">Already have a family code?</p>
+            <Input
+              placeholder="Enter invite code"
+              value={inviteCode}
+              onChange={e => setInviteCode(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') handleJoinFamily(); }}
+              autoFocus={false}
+            />
+            <Button onClick={handleJoinFamily} disabled={joiningFamily || !inviteCode.trim()} className="w-full">Join Family</Button>
+          </div>
+        </div>
       )}
 
       {/* Add Family Member */}
