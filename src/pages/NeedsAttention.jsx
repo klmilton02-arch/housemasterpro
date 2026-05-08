@@ -29,12 +29,13 @@ export default function NeedsAttention() {
     const todayStr = today.toISOString().split("T")[0];
     const nextDueStr = nextDue.toISOString().split("T")[0];
 
-    // Immediately turn green in place
-    setJustCompletedIds(prev => new Set([...prev, task.id]));
+    // Immediately update task to Completed in local state (makes TaskCard go green)
     setTasks(prev => prev.map(t => t.id === task.id
       ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr }
       : t
     ));
+    // Pin it so the filter keeps it visible
+    setJustCompletedIds(prev => new Set([...prev, task.id]));
 
     confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
 
@@ -45,14 +46,15 @@ export default function NeedsAttention() {
       next_due_date: nextDueStr,
     });
 
-    // After pause, remove from list (no reload — avoids race condition)
+    awardPoints(task, blastActive).then(result => {
+      if (result) setReward(result);
+    });
+
+    // After visible pause, remove from list
     setTimeout(() => {
       setJustCompletedIds(prev => { const n = new Set(prev); n.delete(task.id); return n; });
       setTasks(prev => prev.filter(t => t.id !== task.id));
-    }, 1800);
-
-    const result = await awardPoints(task, blastActive);
-    if (result) setReward(result);
+    }, 2000);
   }
 
   const urgentTasks = tasks.filter(t => {

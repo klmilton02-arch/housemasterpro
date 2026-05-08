@@ -76,14 +76,12 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
   const [completing, setCompleting] = useState(false);
   const inputRef = useRef(null);
 
-  // Sync if parent resets to Pending (e.g. uncomplete from detail modal), but not during animation
-  // Never reset visual state while this task is pinned as just-completed
+  // Sync visual state with actual completion state
+  if (isCompleted && !visuallyCompleted) {
+    setVisuallyCompleted(true);
+  }
   if (!isCompleted && visuallyCompleted && !isInJustCompleted) {
     setVisuallyCompleted(false);
-  }
-  // Force visually completed when pinned
-  if (isInJustCompleted && !visuallyCompleted) {
-    setVisuallyCompleted(true);
   }
 
   async function saveName() {
