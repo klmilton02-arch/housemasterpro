@@ -53,6 +53,12 @@
           "created_by": "{{user.email}}"
         },
         {
+          "data.family_member_id": "{{user.id}}"
+        },
+        {
+          "data.family_group_id": "{{user.family_group_id}}"
+        },
+        {
           "user_condition": {
             "role": "admin"
           }
