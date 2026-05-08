@@ -98,12 +98,11 @@ async function handleCreateFamily() {
     setJoiningFamily(true);
     setJoinError("");
     try {
-      const result = await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
-      console.log("Join result:", result.data);
+      const response = await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
+      const { user, family_group } = response.data;
       setInviteCode("");
-      await new Promise(r => setTimeout(r, 1200));
-      setUser(result.data.user);
-      setFamilyGroup(result.data.family_group);
+      setUser(user);
+      setFamilyGroup(family_group);
       setJoiningFamily(false);
     } catch (err) {
       console.error("Join failed:", err);
