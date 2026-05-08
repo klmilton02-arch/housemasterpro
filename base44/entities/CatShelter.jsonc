@@ -1,0 +1,114 @@
+{
+  "name": "CatShelter",
+  "type": "object",
+  "properties": {
+    "family_member_id": {
+      "type": "string",
+      "title": "Family Member ID"
+    },
+    "family_member_name": {
+      "type": "string",
+      "title": "Family Member Name"
+    },
+    "family_group_id": {
+      "type": "string",
+      "title": "Family Group ID"
+    },
+    "cat_name": {
+      "type": "string",
+      "title": "Cat Name"
+    },
+    "cat_fur": {
+      "type": "string",
+      "title": "Cat Fur",
+      "default": "orange"
+    },
+    "collar": {
+      "type": "string",
+      "title": "Collar Equipped",
+      "default": "none"
+    },
+    "toy": {
+      "type": "string",
+      "title": "Toy Equipped",
+      "default": "none"
+    },
+    "accessory": {
+      "type": "string",
+      "title": "Accessory Equipped",
+      "default": "none"
+    },
+    "health": {
+      "type": "number",
+      "title": "Happiness (0-100)",
+      "default": 100
+    },
+    "last_fed_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Last Fed Date"
+    },
+    "last_played_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Last Played Date"
+    },
+    "is_home": {
+      "type": "boolean",
+      "title": "Cat is Home",
+      "default": true
+    },
+    "ran_away_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Ran Away Date"
+    }
+  },
+  "required": [
+    "family_member_id",
+    "family_member_name",
+    "cat_name"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "data.family_group_id": "{{user.family_group_id}}"
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "data.family_group_id": "{{user.family_group_id}}"
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.family_group_id": "{{user.family_group_id}}"
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.family_group_id": "{{user.family_group_id}}"
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    }
+  }
+}
