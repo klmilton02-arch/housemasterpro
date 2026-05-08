@@ -32,9 +32,9 @@ export default function YesterdayTasksDialog({ tasks, onComplete, onClose }) {
     <Dialog open onOpenChange={() => onClose()}>
       <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle className="font-heading text-lg">Did you do these yesterday?</DialogTitle>
+          <DialogTitle className="font-heading text-lg">Any tasks completed recently?</DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground">
-            These tasks were due yesterday. Check off any you completed.
+            These tasks are open and overdue. Check off any you already did.
           </DialogDescription>
         </DialogHeader>
 

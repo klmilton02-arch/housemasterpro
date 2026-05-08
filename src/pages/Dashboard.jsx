@@ -101,16 +101,14 @@ export default function Dashboard() {
     }
   }, []);
 
-  // Once tasks load and we have a pending check, find yesterday's uncompleted tasks
+  // Once tasks load and we have a pending check, find all open overdue/past-due tasks
   useEffect(() => {
     if (yesterdayTasks !== "pending_check" || tasks.length === 0) return;
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().split("T")[0];
+    const todayStr = new Date().toISOString().split("T")[0];
     const missed = tasks.filter(t =>
       t.status !== "Completed" &&
       t.next_due_date &&
-      t.next_due_date <= yesterdayStr
+      t.next_due_date < todayStr
     );
     setYesterdayTasks(missed.length > 0 ? missed : []);
   }, [tasks, yesterdayTasks]);
