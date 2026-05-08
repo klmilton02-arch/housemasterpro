@@ -106,13 +106,11 @@ async function handleCreateFamily() {
       console.log("Updated user:", me);
       setUser(me);
       if (me?.family_group_id) {
-        const [allUsers, members, fg] = await Promise.all([
-          base44.entities.User.list(),
+        const [members, fg] = await Promise.all([
           base44.entities.FamilyMember.filter({ family_group_id: me.family_group_id }),
           base44.entities.FamilyGroup.get(me.family_group_id),
         ]);
-        const validUsers = allUsers.filter(u => u.family_group_id === me.family_group_id);
-        setFamilyUsers(validUsers);
+        setFamilyUsers([me]);
         setFamilyMembers(members);
         setFamilyGroup(fg);
       }
