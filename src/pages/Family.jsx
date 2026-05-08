@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { base44 } from "@/api/base44Client";
+import { queryClientInstance } from '@/lib/query-client';
 import { Users, Link2, Link2Off, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -96,10 +97,11 @@ async function handleCreateFamily() {
     setJoinError("");
     try {
       const res = await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
-      // Wait longer and hard-reload to clear cache
+      // Clear cache and wait for backend to settle
+      await queryClientInstance.invalidateQueries();
       setTimeout(() => {
-        window.location.reload(true);
-      }, 1000);
+        window.location.href = '/family';
+      }, 2000);
     } catch (err) {
       const message = err?.response?.data?.error || err.message || "Failed to join family";
       setJoinError(message);
