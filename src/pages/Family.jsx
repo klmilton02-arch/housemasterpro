@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { base44 } from "@/api/base44Client";
-import { Users, Link2, Link2Off, Plus, Trash2 } from "lucide-react";
+import { Users, Link2, Link2Off, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const colorMap = {
   blue: "bg-blue-500",
@@ -27,6 +28,9 @@ export default function Family() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newMemberName, setNewMemberName] = useState("");
   const [newMemberColor, setNewMemberColor] = useState("blue");
+  const [showCreateFamily, setShowCreateFamily] = useState(false);
+  const [newFamilyName, setNewFamilyName] = useState("");
+  const [creatingFamily, setCreatingFamily] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -49,6 +53,21 @@ export default function Family() {
   }, []);
 
   useEffect(() => { loadData(); }, [loadData]);
+
+  async function handleCreateFamily() {
+    if (!newFamilyName.trim()) return;
+    setCreatingFamily(true);
+    try {
+      const res = await base44.functions.invoke('createNewFamilyGroup', { family_name: newFamilyName });
+      setNewFamilyName("");
+      setShowCreateFamily(false);
+      loadData();
+    } catch (err) {
+      console.error("Failed to create family:", err);
+    } finally {
+      setCreatingFamily(false);
+    }
+  }
 
   async function handleAddMember() {
     if (!newMemberName.trim() || !user?.family_group_id) return;
@@ -99,6 +118,35 @@ export default function Family() {
   return (
     <div className="space-y-7 max-w-sm md:max-w-2xl mx-auto px-3 sm:px-2 pt-7 pb-8" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <h1 className="font-heading text-3xl font-bold">Family</h1>
+
+      {/* Create New Family Group */}
+      {!user?.family_group_id && (
+        <Dialog open={showCreateFamily} onOpenChange={setShowCreateFamily}>
+          <DialogTrigger asChild>
+            <Button className="w-full gap-2">
+              <Plus className="w-4 h-4" /> Create New Family
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-sm">
+            <DialogHeader>
+              <DialogTitle>Create Family Group</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-3">
+              <Input
+                placeholder="Family name"
+                value={newFamilyName}
+                onChange={e => setNewFamilyName(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') handleCreateFamily(); if (e.key === 'Escape') setShowCreateFamily(false); }}
+                autoFocus
+              />
+              <div className="flex gap-2">
+                <Button onClick={handleCreateFamily} disabled={creatingFamily || !newFamilyName.trim()}>Create</Button>
+                <Button variant="outline" onClick={() => setShowCreateFamily(false)}>Cancel</Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
 
       {/* Add Family Member */}
       {user?.family_group_id && (
