@@ -19,8 +19,8 @@ Deno.serve(async (req) => {
     // Generate a random invite code
     const inviteCode = Math.random().toString(36).substring(2, 10).toUpperCase();
 
-    // Create new family group
-    const familyGroup = await base44.asServiceRole.entities.FamilyGroup.create({
+    // Create new family group (must match RLS requirement: owner_email equals user.email)
+    const familyGroup = await base44.entities.FamilyGroup.create({
       name: family_name.trim(),
       invite_code: inviteCode,
       owner_email: user.email,
