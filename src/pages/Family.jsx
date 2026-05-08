@@ -95,11 +95,11 @@ async function handleCreateFamily() {
     setJoiningFamily(true);
     setJoinError("");
     try {
-      await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
-      // Small delay to ensure state propagates, then reload
+      const res = await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
+      // Wait longer and hard-reload to clear cache
       setTimeout(() => {
-        window.location.href = '/family';
-      }, 500);
+        window.location.reload(true);
+      }, 1000);
     } catch (err) {
       const message = err?.response?.data?.error || err.message || "Failed to join family";
       setJoinError(message);
