@@ -82,7 +82,10 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
 
   function handleCheckboxClick(e) {
     e.stopPropagation();
-    onComplete?.(task);
+    e.preventDefault();
+    if (!isInJustCompleted && !isCompleted) {
+      onComplete?.(task);
+    }
   }
 
   const cardBg = visuallyCompleted
@@ -155,7 +158,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
             )}
           </div>
         </div>
-        <div className="flex items-center gap-1 shrink-0 mt-0.5">
+        <div className="flex items-center gap-1 shrink-0 mt-0.5" onClick={e => e.stopPropagation()}>
           <button
             className={`h-7 w-7 flex items-center justify-center rounded-md border-2 transition-all ${
               visuallyCompleted
