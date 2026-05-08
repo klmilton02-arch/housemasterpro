@@ -30,6 +30,11 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No family members found for this group' }, { status: 400 });
     }
 
+    // Authorization: only admin can restore family groups (privilege escalation protection)
+    if (user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden: Only admins can restore family groups' }, { status: 403 });
+    }
+
     // Generate a unique invite code
     const inviteCode = Math.random().toString(36).substring(2, 10).toUpperCase();
 

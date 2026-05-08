@@ -26,6 +26,11 @@ Deno.serve(async (req) => {
 
     const familyGroup = families[0];
 
+    // Authorization: only family owner or admin can invite users
+    if (familyGroup.owner_email !== user.email && user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden: Only family owner can invite members' }, { status: 403 });
+    }
+
     // Send email with family invite code first
     const appUrl = 'https://homelifefocus.base44.app';
     try {
