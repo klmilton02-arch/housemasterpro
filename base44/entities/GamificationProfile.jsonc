@@ -88,14 +88,7 @@
   ],
   "rls": {
     "create": {
-      "$or": [
-        {
-          "data.family_group_id": "{{user.family_group_id}}"
-        },
-        {
-          "created_by": "{{user.email}}"
-        }
-      ]
+      "data.family_member_id": "{{user.id}}"
     },
     "read": {
       "$or": [
@@ -104,26 +97,49 @@
         },
         {
           "created_by": "{{user.email}}"
+        },
+        {
+          "data.family_member_id": "{{user.id}}"
         }
       ]
     },
     "update": {
       "$or": [
         {
-          "data.family_group_id": "{{user.family_group_id}}"
+          "data.family_member_id": "{{user.id}}"
         },
         {
-          "created_by": "{{user.email}}"
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.family_group_id": {
+            "$in": [
+              "{{user.family_group_id}}",
+              "owner_family_group_id"
+            ]
+          }
         }
       ]
     },
     "delete": {
       "$or": [
         {
-          "data.family_group_id": "{{user.family_group_id}}"
+          "data.family_member_id": "{{user.id}}"
         },
         {
-          "created_by": "{{user.email}}"
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.family_group_id": {
+            "$in": [
+              "{{user.family_group_id}}",
+              "owner_family_group_id"
+            ]
+          }
         }
       ]
     }
