@@ -102,42 +102,41 @@ export default function Leaderboard() {
         );
 
         return (
-        <div className="bg-card border border-border rounded-lg overflow-hidden">
-          <div className="space-y-0">
+          <div className="space-y-3">
             {allEntries.map((p, i) => {
               const color = p.avatar_color || "blue";
               const isMedal = i < 3;
-              
+              const bgColor = i === 0 ? "bg-amber-50 border-amber-200" : i === 1 ? "bg-slate-50 border-slate-200" : i === 2 ? "bg-orange-50 border-orange-200" : "bg-card border-border";
+
               return (
                 <div
                   key={p.id}
-                  className={`flex items-center gap-4 px-5 py-4 border-b border-border last:border-b-0 ${
-                  i === 0 ? "bg-amber-50" : i === 1 ? "bg-slate-50" : i === 2 ? "bg-orange-50" : ""
-                  }`}
+                  className={`flex items-center gap-4 px-5 py-4 rounded-xl border ${bgColor}`}
                 >
-                  <div className="w-10 text-center">
-                    <span className={`text-2xl font-bold ${isMedal ? "block" : "hidden"}`}>{medals[i]}</span>
-                    <span className={`text-sm font-semibold text-muted-foreground ${isMedal ? "hidden" : "block"}`}>#{i + 1}</span>
+                  <div className="w-10 text-center shrink-0">
+                    {isMedal
+                      ? <span className="text-2xl">{medals[i]}</span>
+                      : <span className="text-sm font-semibold text-muted-foreground">#{i + 1}</span>
+                    }
                   </div>
-                  
-                  <div className={`w-10 h-10 rounded-full ${colorMap[color] || "bg-blue-200 text-blue-700"} flex items-center justify-center font-bold shrink-0`}>
+
+                  <div className={`w-12 h-12 rounded-full ${colorMap[color] || "bg-blue-200 text-blue-700"} flex items-center justify-center font-bold text-lg shrink-0`}>
                     {p.name?.[0]?.toUpperCase() || "?"}
                   </div>
-                  
+
                   <div className="flex-1 min-w-0">
-                    <p className="font-heading font-semibold text-foreground truncate">{p.name}</p>
-                    <p className="text-xs text-muted-foreground">Level {p.level}</p>
+                    <p className="font-heading font-bold text-lg text-foreground truncate">{p.name}</p>
+                    <p className="text-sm text-muted-foreground">Level {p.level}</p>
                   </div>
-                  
+
                   <div className="text-right shrink-0">
-                    <p className="font-heading font-bold text-lg text-amber-600">{p.total_xp}</p>
+                    <p className="font-heading font-bold text-2xl text-amber-600">{p.total_xp}</p>
                     <p className="text-xs text-muted-foreground">XP</p>
                   </div>
                 </div>
               );
             })}
           </div>
-        </div>
         );
       })()}
     </div>
