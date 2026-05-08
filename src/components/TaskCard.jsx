@@ -18,18 +18,15 @@ function getStatusInfo(task) {
   const daysUntilDue = differenceInDays(due, today);
   const graceDays = task.overdue_grace_days || 3;
 
-  // Check if due today first (for recurring tasks completed yesterday)
   if (daysUntilDue === 0) {
     if (task.status !== "Completed") {
       return { label: "Due Today", color: "bg-orange-500 text-white", icon: Zap, priority: 1 };
     }
-    // If completed, check if it was completed today
     if (task.last_completed_date) {
       const lastCompleted = parseISO(task.last_completed_date);
       lastCompleted.setHours(0, 0, 0, 0);
       const isCompletedToday = differenceInDays(today, lastCompleted) === 0;
       if (!isCompletedToday) {
-        // Completed before today, so it's due again today (recurring task)
         return { label: "Due Today", color: "bg-blue-500 text-white", icon: Zap, priority: 1 };
       }
     }
@@ -67,22 +64,13 @@ export { getStatusInfo, formatFrequency };
 
 export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, isInJustCompleted }) {
   const isCompleted = task.status === "Completed";
-  // Local visual state for immediate feedback; doesn't trigger sort until parent updates
-  const [visuallyCompleted, setVisuallyCompleted] = useState(isCompleted);
+  // Drive green state purely from props — no internal state fighting
+  const visuallyCompleted = isCompleted || !!isInJustCompleted;
   const status = getStatusInfo({ ...task, status: visuallyCompleted ? "Completed" : task.status });
   const StatusIcon = status.icon;
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(task.name);
-  const [completing, setCompleting] = useState(false);
   const inputRef = useRef(null);
-
-  // Sync visual state with actual completion state
-  if (isCompleted && !visuallyCompleted) {
-    setVisuallyCompleted(true);
-  }
-  if (!isCompleted && visuallyCompleted && !isInJustCompleted) {
-    setVisuallyCompleted(false);
-  }
 
   async function saveName() {
     const trimmed = name.trim();
@@ -94,11 +82,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
 
   function handleCheckboxClick(e) {
     e.stopPropagation();
-    if (completing) return;
-    setCompleting(true);
-    const nowCompleted = !visuallyCompleted;
-    setVisuallyCompleted(nowCompleted);
-    Promise.resolve(onComplete?.(task)).finally(() => setCompleting(false));
+    onComplete?.(task);
   }
 
   const cardBg = visuallyCompleted
@@ -119,9 +103,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
       cardBg
     )} onClick={() => onViewDetails?.(task)}>
       <div className="flex items-start justify-between gap-2 w-full">
-        {/* Left: name + meta stacked */}
         <div className="flex-1 min-w-0 flex flex-col gap-1.5">
-          {/* Row 1: task name */}
           {editing ? (
             <input
               ref={inputRef}
@@ -143,7 +125,6 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
               </button>
             </div>
           )}
-          {/* Row 2: badges / meta */}
           <div className="flex items-center gap-1.5 flex-wrap">
             <span className={cn("inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-semibold shadow-sm", status.color)}>
               <StatusIcon className="w-3 h-3" />
@@ -174,7 +155,6 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
             )}
           </div>
         </div>
-        {/* Right: checkbox + chevron */}
         <div className="flex items-center gap-1 shrink-0 mt-0.5">
           <button
             className={`h-7 w-7 flex items-center justify-center rounded-md border-2 transition-all ${
@@ -183,7 +163,6 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
                 : "border-muted-foreground/40 hover:border-primary bg-transparent"
             }`}
             onClick={handleCheckboxClick}
-            disabled={completing}
             title={visuallyCompleted ? "Mark incomplete" : "Mark complete"}
           >
             <Check className={`w-4 h-4 transition-opacity ${visuallyCompleted ? "text-white opacity-100" : "opacity-0"}`} />
