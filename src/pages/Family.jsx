@@ -97,13 +97,12 @@ async function handleCreateFamily() {
     try {
       const res = await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
       setInviteCode("");
-      setUser(res.data.user);
-      await loadData();
+      // Reload page to ensure auth context updates properly
+      window.location.href = '/family';
     } catch (err) {
       const message = err?.response?.data?.error || err.message || "Failed to join family";
       setJoinError(message);
       console.error("Failed to join family:", err);
-    } finally {
       setJoiningFamily(false);
     }
   }

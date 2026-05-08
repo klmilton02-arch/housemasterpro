@@ -25,9 +25,10 @@ export default function JoinFamilyOnSignup() {
     setJoining(true);
     setError("");
     try {
-      await base44.functions.invoke("joinFamilyWithCode", {
+      const res = await base44.functions.invoke("joinFamilyWithCode", {
         invite_code: inviteCode.trim().toUpperCase(),
       });
+      // Navigate and let AuthContext pick up the updated user state
       navigate("/dashboard", { replace: true });
     } catch (err) {
       setError(err?.response?.data?.error || err.message || "Failed to join family");
