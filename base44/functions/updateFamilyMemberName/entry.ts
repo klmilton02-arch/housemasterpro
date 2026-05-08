@@ -29,8 +29,18 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Family member not found' }, { status: 404 });
     }
 
+    const member = members[0];
+
+    // Authorization check: user can only update their own member or if they're admin
+    const isOwnMember = member.linked_user_id === user.id;
+    const isAdmin = user.role === 'admin';
+
+    if (!isOwnMember && !isAdmin) {
+      return Response.json({ error: 'Forbidden: You can only update your own profile' }, { status: 403 });
+    }
+
     // Update the member's name
-    await base44.asServiceRole.entities.FamilyMember.update(members[0].id, {
+    await base44.asServiceRole.entities.FamilyMember.update(member.id, {
       name: new_name.trim(),
     });
 
