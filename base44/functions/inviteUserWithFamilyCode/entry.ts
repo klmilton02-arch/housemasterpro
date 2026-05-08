@@ -52,7 +52,8 @@ Deno.serve(async (req) => {
       
       if (!sendResult.ok) {
         const error = await sendResult.json();
-        throw new Error(`Resend error: ${error.message}`);
+        console.error("Resend API error:", error);
+        throw new Error(`Resend error: ${error.message || JSON.stringify(error)}`);
       }
       const data = await sendResult.json();
       console.log(`Email send result:`, data);
