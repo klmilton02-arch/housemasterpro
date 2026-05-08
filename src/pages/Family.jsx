@@ -174,7 +174,7 @@ async function handleCreateFamily() {
       <h1 className="font-heading text-3xl font-bold">Family</h1>
 
       {/* Join or Create Family Group */}
-      {!user?.family_group_id && (
+      {(!user?.family_group_id || !familyGroup) && (
         <div className="space-y-3">
           <Dialog open={showCreateFamily} onOpenChange={setShowCreateFamily}>
             <DialogTrigger asChild>
