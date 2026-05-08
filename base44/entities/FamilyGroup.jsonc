@@ -27,7 +27,7 @@
   ],
   "rls": {
     "create": {
-      "owner_email": "{{user.email}}"
+      "data.owner_email": "{{user.email}}"
     },
     "read": {
       "$or": [
