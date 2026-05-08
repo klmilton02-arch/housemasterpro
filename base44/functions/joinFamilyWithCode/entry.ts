@@ -15,9 +15,9 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Invalid invite code' }, { status: 400 });
     }
 
-    // Find family group by invite code (case-insensitive search)
-    const allFamilyGroups = await base44.asServiceRole.entities.FamilyGroup.list();
-    const matchedFamily = allFamilyGroups.find(fg => fg.invite_code?.toUpperCase() === invite_code.toUpperCase());
+    // Find family group by invite code (exact match)
+    const families = await base44.asServiceRole.entities.FamilyGroup.filter({ invite_code: invite_code.toUpperCase() });
+    const matchedFamily = families[0];
 
     if (!matchedFamily) {
       return Response.json({ error: 'Invalid invite code' }, { status: 404 });
