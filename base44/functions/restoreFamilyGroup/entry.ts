@@ -30,17 +30,14 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No family members found for this group' }, { status: 400 });
     }
 
-    // Find owner (usually the one created by klmilton02@gmail.com or the admin)
-    const owner = familyMembers.find(m => m.created_by === 'klmilton02@gmail.com') || familyMembers[0];
-
     // Generate a unique invite code
     const inviteCode = Math.random().toString(36).substring(2, 10).toUpperCase();
 
-    // Create the missing FamilyGroup using service role
+    // Create the missing FamilyGroup using service role with current user as owner
     const newFamilyGroup = await base44.asServiceRole.entities.FamilyGroup.create({
       name: "Family",
       invite_code: inviteCode,
-      owner_email: owner.created_by || 'klmilton02@gmail.com',
+      owner_email: user.email,
     });
 
     return Response.json({
