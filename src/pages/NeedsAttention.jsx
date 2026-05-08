@@ -26,30 +26,31 @@ export default function NeedsAttention() {
     const today = new Date();
     const nextDue = new Date(today);
     nextDue.setDate(nextDue.getDate() + task.frequency_days);
-    const updated = {
-      ...task,
-      status: "Completed",
-      last_completed_date: today.toISOString().split("T")[0],
-      next_due_date: nextDue.toISOString().split("T")[0],
-    };
+    const todayStr = today.toISOString().split("T")[0];
+    const nextDueStr = nextDue.toISOString().split("T")[0];
 
-    // Mark as just-completed so TaskCard turns green immediately
+    // Immediately turn green in place
     setJustCompletedIds(prev => new Set([...prev, task.id]));
-    setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
+    setTasks(prev => prev.map(t => t.id === task.id
+      ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr }
+      : t
+    ));
 
     confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
 
-    // After a pause, remove from urgent list by reloading
-    setTimeout(() => {
-      setJustCompletedIds(prev => { const n = new Set(prev); n.delete(task.id); return n; });
-      loadTasks();
-    }, 1500);
-
+    // Fire DB write in background
     base44.entities.Task.update(task.id, {
       status: "Completed",
-      last_completed_date: updated.last_completed_date,
-      next_due_date: updated.next_due_date,
+      last_completed_date: todayStr,
+      next_due_date: nextDueStr,
     });
+
+    // After pause, remove from list (no reload — avoids race condition)
+    setTimeout(() => {
+      setJustCompletedIds(prev => { const n = new Set(prev); n.delete(task.id); return n; });
+      setTasks(prev => prev.filter(t => t.id !== task.id));
+    }, 1800);
+
     const result = await awardPoints(task, blastActive);
     if (result) setReward(result);
   }
