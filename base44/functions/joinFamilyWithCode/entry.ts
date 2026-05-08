@@ -26,14 +26,28 @@ Deno.serve(async (req) => {
     // Update user to add family_group_id
     await base44.auth.updateMe({ family_group_id: matchedFamily.id });
     
-    // Create a FamilyMember record for this user
-    await base44.asServiceRole.entities.FamilyMember.create({
+    // Check if a FamilyMember already exists for this user
+    const existingMember = await base44.asServiceRole.entities.FamilyMember.filter({
       family_group_id: matchedFamily.id,
-      name: user.full_name,
-      linked_user_id: user.id,
       linked_user_email: user.email,
-      avatar_color: 'blue',
     });
+    
+    // Only create if it doesn't exist
+    if (existingMember.length === 0) {
+      await base44.asServiceRole.entities.FamilyMember.create({
+        family_group_id: matchedFamily.id,
+        name: user.full_name,
+        linked_user_id: user.id,
+        linked_user_email: user.email,
+        avatar_color: 'blue',
+      });
+    } else {
+      // Update existing member with the linked user info
+      await base44.asServiceRole.entities.FamilyMember.update(existingMember[0].id, {
+        linked_user_id: user.id,
+        linked_user_email: user.email,
+      });
+    }
     
     // Verify the update worked by re-fetching the user
     const verifiedUser = await base44.auth.me();
