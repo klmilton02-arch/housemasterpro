@@ -28,8 +28,13 @@ export default function JoinFamilyOnSignup() {
       await base44.functions.invoke("joinFamilyWithCode", {
         invite_code: inviteCode.trim().toUpperCase(),
       });
-      // Delay navigation slightly to ensure user data is updated
-      setTimeout(() => navigate("/dashboard"), 500);
+      // Refresh user data and navigate
+      const updatedUser = await base44.auth.me();
+      if (updatedUser?.family_group_id) {
+        navigate("/dashboard");
+      } else {
+        setError("Failed to join family. Please try again.");
+      }
     } catch (err) {
       setError(err?.response?.data?.error || err.message || "Failed to join family");
     } finally {

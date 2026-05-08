@@ -25,12 +25,13 @@ Deno.serve(async (req) => {
     const familyGroup = familyGroups[0];
 
     // Update user to add family_group_id
-    await base44.auth.updateMe({ family_group_id: familyGroup.id });
+    const updatedUser = await base44.auth.updateMe({ family_group_id: familyGroup.id });
 
     return Response.json({
       success: true,
       message: 'Successfully joined family',
       family_group: familyGroup,
+      user: updatedUser,
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
