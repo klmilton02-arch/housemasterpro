@@ -26,15 +26,7 @@ Deno.serve(async (req) => {
 
     const familyGroup = families[0];
 
-    // Create a FamilyMember placeholder for the invited email
-    await base44.asServiceRole.entities.FamilyMember.create({
-      family_group_id: familyGroup.id,
-      name: email.split('@')[0],
-      linked_user_email: email,
-      avatar_color: 'blue',
-    });
-
-    // Send email with family invite code
+    // Send email with family invite code first
     const appUrl = 'https://homelifefocus.base44.app';
     await base44.integrations.Core.SendEmail({
       to: email,
@@ -42,7 +34,15 @@ Deno.serve(async (req) => {
       body: `You've been invited to join HomeLifeFocus!\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nFamily Invite Code: ${invite_code}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nSteps to join:\n1. Go to: ${appUrl}\n2. Sign up with your email (${email})\n3. Enter the family invite code above on the join screen\n4. Choose your display name\n\nYou'll be part of the family immediately!\n\nIf you have any questions, reply to this email.`
     });
 
-    return Response.json({ success: true });
+    // Create a FamilyMember placeholder for the invited email (after email succeeds)
+    await base44.asServiceRole.entities.FamilyMember.create({
+      family_group_id: familyGroup.id,
+      name: email.split('@')[0],
+      linked_user_email: email,
+      avatar_color: 'blue',
+    });
+
+    return Response.json({ success: true, message: 'Invite sent successfully' });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
