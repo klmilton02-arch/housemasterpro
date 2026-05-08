@@ -174,11 +174,10 @@ async function handleCreateFamily() {
     try {
       await base44.functions.invoke('inviteUserWithFamilyCode', {
         email: inviteEmail.trim(),
-        role: inviteRole,
+        role: "user",
         invite_code: familyGroup.invite_code,
       });
       setInviteEmail("");
-      setInviteRole("user");
       setShowInviteUser(false);
     } catch (err) {
       console.error("Failed to invite user:", err);
@@ -288,18 +287,18 @@ async function handleCreateFamily() {
             <p className="text-xs text-blue-700 dark:text-blue-300">Share this code with family members to join</p>
           </div>
 
-          {/* Invite user feature disabled - share code directly instead */}
-          {false && <Dialog open={showInviteUser} onOpenChange={setShowInviteUser}>
+          <Dialog open={showInviteUser} onOpenChange={setShowInviteUser}>
             <DialogTrigger asChild>
-              <Button variant="outline" className="w-full gap-2">
-                <Plus className="w-4 h-4" /> Invite User to App
+              <Button className="w-full gap-2 bg-accent hover:bg-accent/90">
+                <Plus className="w-4 h-4" /> Invite Family Member
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-sm">
               <DialogHeader>
-                <DialogTitle>Invite User to App</DialogTitle>
+                <DialogTitle>Invite Family Member</DialogTitle>
               </DialogHeader>
               <div className="space-y-3">
+                <p className="text-sm text-muted-foreground">Send an invite email with your family code. They'll sign up and choose their name.</p>
                 <Input
                   placeholder="Email address"
                   type="email"
@@ -308,24 +307,15 @@ async function handleCreateFamily() {
                   onKeyDown={e => { if (e.key === 'Enter') handleInviteUser(); if (e.key === 'Escape') setShowInviteUser(false); }}
                   autoFocus
                 />
-                <div className="space-y-1">
-                  <label className="text-sm font-medium">Role</label>
-                  <select
-                    value={inviteRole}
-                    onChange={e => setInviteRole(e.target.value)}
-                    className="w-full px-3 py-2 border border-input bg-transparent rounded-md text-sm"
-                  >
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </div>
                 <div className="flex gap-2">
-                  <Button onClick={handleInviteUser} disabled={invitingUser || !inviteEmail.trim()}>Send Invite</Button>
+                  <Button onClick={handleInviteUser} disabled={invitingUser || !inviteEmail.trim()} className="flex-1">
+                    {invitingUser ? "Sending..." : "Send Invite"}
+                  </Button>
                   <Button variant="outline" onClick={() => setShowInviteUser(false)}>Cancel</Button>
                 </div>
               </div>
             </DialogContent>
-          </Dialog>}
+          </Dialog>
         </div>
       )}
 
