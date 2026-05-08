@@ -32,7 +32,7 @@ export default function CompletingAsCard({ familyMembers, activeCompletingAs, on
           )}
           <div className="text-left">
             <p className="text-xs text-muted-foreground font-medium">Completing as</p>
-            <p className="text-sm font-semibold text-foreground">
+            <p className="text-base font-semibold text-foreground">
               {activeCompletingAs ? activeCompletingAs.name : "Me"}
             </p>
           </div>
