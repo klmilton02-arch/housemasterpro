@@ -240,7 +240,7 @@ export default function Family() {
       )}
 
       {/* Share Family Invite Code */}
-      {user?.family_group_id && familyGroup?.invite_code && (
+      {user?.family_group_id && !isMissingFamilyGroup && (
         <div className="space-y-3">
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 space-y-2">
             <p className="text-sm font-medium text-blue-900 dark:text-blue-200">Family Invite Code</p>
