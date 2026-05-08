@@ -98,12 +98,13 @@ async function handleCreateFamily() {
     setJoiningFamily(true);
     setJoinError("");
     try {
-      await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
+      const result = await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
+      console.log("Join result:", result.data);
       setInviteCode("");
-      await new Promise(r => setTimeout(r, 800));
-      // Invalidate all queries and reload
-      await queryClientInstance.invalidateQueries();
-      await loadData();
+      await new Promise(r => setTimeout(r, 1200));
+      setUser(result.data.user);
+      setFamilyGroup(result.data.family_group);
+      setJoiningFamily(false);
     } catch (err) {
       console.error("Join failed:", err);
       const message = err?.response?.data?.error || err?.data?.error || err.message || "Failed to join family";
