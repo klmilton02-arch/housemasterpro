@@ -98,15 +98,16 @@ async function handleCreateFamily() {
     setJoiningFamily(true);
     setJoinError("");
     try {
-      await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
+      const result = await base44.functions.invoke('joinFamilyWithCode', { invite_code: inviteCode.trim().toUpperCase() });
+      console.log("Join result:", result);
       setInviteCode("");
       // Refresh user data from auth to get updated family_group_id
       await loadData();
-      setJoiningFamily(false);
     } catch (err) {
       console.error("Join failed:", err);
       const message = err?.response?.data?.error || err?.data?.error || err.message || "Failed to join family";
       setJoinError(message);
+    } finally {
       setJoiningFamily(false);
     }
   }
