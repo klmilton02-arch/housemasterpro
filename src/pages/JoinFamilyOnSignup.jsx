@@ -28,10 +28,7 @@ export default function JoinFamilyOnSignup() {
       await base44.functions.invoke("joinFamilyWithCode", {
         invite_code: inviteCode.trim().toUpperCase(),
       });
-      // Wait a moment for backend to sync, then hard redirect
-      setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 500);
+      navigate("/dashboard", { replace: true });
     } catch (err) {
       setError(err?.response?.data?.error || err.message || "Failed to join family");
       setJoining(false);
