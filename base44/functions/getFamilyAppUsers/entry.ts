@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
 
     // Get all users in the same family group
     const allUsers = await base44.asServiceRole.entities.User.filter({ 
-      family_group_id: user.family_group_id 
+      "data.family_group_id": user.family_group_id 
     });
 
     return Response.json({ users: allUsers });
