@@ -351,7 +351,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                      </div>
                    )}
                  </div>
-                 <div className="max-h-48 overflow-y-auto space-y-1 border border-border rounded-lg p-2">
+                 <div className="max-h-72 overflow-y-auto space-y-1 border border-border rounded-lg p-2">
                   {filteredPresets.map(p => (
                     <button
                       key={p.id}
