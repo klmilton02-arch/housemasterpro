@@ -168,8 +168,7 @@ export default function Presets() {
             ]}
           />
         </div>
-        <div className="overflow-y-auto max-h-64">
-          <div className="grid grid-cols-2 gap-3 pr-2">
+        <div className="grid grid-cols-2 gap-3">
             <MobileSelect
               value={roomFilter}
               onValueChange={setRoomFilter}
@@ -217,9 +216,8 @@ export default function Presets() {
                 { value: "quarterly", label: "Quarterly" },
                 { value: "yearly", label: "Yearly" },
               ]}
-            />
-          </div>
-        </div>
+              />
+              </div>
         {(roomFilter !== "all" || taskTypeFilter !== "all" || difficultyFilter !== "all" || frequencyFilter !== "all") && (
           <Button
             variant="outline"
