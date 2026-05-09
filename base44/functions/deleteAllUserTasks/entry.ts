@@ -14,42 +14,32 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No family group found' }, { status: 400 });
     }
 
-    // Get all tasks user can access
-    const allTasks = await base44.entities.Task.list();
+    // Get all tasks in family (paginate if needed)
+    let allTasks = [];
+    let skip = 0;
+    const limit = 100;
     
-    // Filter to only tasks in this family
-    const tasksToDelete = allTasks.filter(t => t.family_group_id === familyGroupId);
+    while (true) {
+      const batch = await base44.asServiceRole.entities.Task.list('', limit, skip);
+      const familyTasks = batch.filter(t => t.family_group_id === familyGroupId);
+      allTasks.push(...familyTasks);
+      
+      if (batch.length < limit) break;
+      skip += limit;
+    }
 
     let deleted = 0;
-
-    // Delete in batches to avoid rate limiting
-    const batchSize = 10;
-    for (let i = 0; i < tasksToDelete.length; i += batchSize) {
-      const batch = tasksToDelete.slice(i, i + batchSize);
+    
+    // Delete in parallel chunks
+    const chunkSize = 20;
+    for (let i = 0; i < allTasks.length; i += chunkSize) {
+      const chunk = allTasks.slice(i, i + chunkSize);
+      const deletePromises = chunk.map(task =>
+        base44.asServiceRole.entities.Task.delete(task.id).catch(() => null)
+      );
       
-      // Delete calendar events first
-      for (const task of batch) {
-        if (task.calendar_event_id) {
-          try {
-            await base44.functions.invoke('deleteCalendarEvent', { taskId: task.id });
-          } catch (e) {
-            console.error(`Failed to delete calendar event for task ${task.id}:`, e);
-          }
-        }
-      }
-
-      // Delete tasks in this batch
-      for (const task of batch) {
-        try {
-          await base44.asServiceRole.entities.Task.delete(task.id);
-          deleted++;
-        } catch (e) {
-          console.error(`Failed to delete task ${task.id}:`, e);
-        }
-      }
-
-      // Small delay between batches
-      await new Promise(resolve => setTimeout(resolve, 100));
+      const results = await Promise.all(deletePromises);
+      deleted += results.filter(r => r !== null).length;
     }
 
     return Response.json({ success: true, deleted, message: `Deleted ${deleted} tasks` });
