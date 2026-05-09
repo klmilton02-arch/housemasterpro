@@ -26,11 +26,11 @@ export default function StatCard({ icon: Icon, label, value, color, onClick, lab
       ) : value ? (
         <div className="min-w-0 flex flex-col items-start justify-center flex-1">
           <p className={cn("font-heading font-bold text-foreground text-left", large ? "text-2xl" : "text-lg")}>{value}</p>
-          <p className={cn("font-heading font-medium text-foreground/70 text-left truncate w-full", large ? "text-base" : "text-sm")}>{label}</p>
+          <p className={cn("font-heading font-medium text-foreground/70 text-left line-clamp-2 leading-tight", large ? "text-base" : "text-sm")}>{label}</p>
         </div>
       ) : (
         <div className="min-w-0 flex items-center flex-1 overflow-hidden">
-          <p className={cn("font-heading font-medium text-foreground/80 text-left truncate", large ? "text-base" : "text-sm")}>{label}</p>
+          <p className={cn("font-heading font-medium text-foreground/80 text-left line-clamp-2 leading-tight", large ? "text-base" : "text-sm")}>{label}</p>
         </div>
       )}
     </div>
