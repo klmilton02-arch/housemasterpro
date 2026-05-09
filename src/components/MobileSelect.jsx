@@ -68,7 +68,7 @@ export default function MobileSelect({ value, onValueChange, options = [], place
               <DrawerTitle>{title}</DrawerTitle>
             </DrawerHeader>
           )}
-          <div className="px-4 pb-6 space-y-1 overflow-y-auto max-h-[60vh]">
+          <div className="px-4 pb-6 space-y-1 overflow-y-auto max-h-[75vh]">
             {options.map(o => (
               <button
                 key={o.value}
