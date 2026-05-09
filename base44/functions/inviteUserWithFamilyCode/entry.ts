@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
         emailHtml
       ].join('\n');
 
-      const encodedMessage = btoa(mimeMessage).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+      const encodedMessage = btoa(unescape(encodeURIComponent(mimeMessage))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 
       const sendResult = await fetch('https://www.googleapis.com/gmail/v1/users/me/messages/send', {
         method: 'POST',
