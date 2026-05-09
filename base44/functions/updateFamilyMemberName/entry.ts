@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
     const member = members[0];
 
     // Authorization check: user can only update their own member or if they're admin
-    const isOwnMember = member.linked_user_id === user.id;
+    const isOwnMember = member.linked_user_id === user.id || member.linked_user_email === user.email;
     const isAdmin = user.role === 'admin';
 
     if (!isOwnMember && !isAdmin) {

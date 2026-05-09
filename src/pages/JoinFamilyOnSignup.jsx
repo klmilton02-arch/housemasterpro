@@ -2,17 +2,16 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 
 export default function JoinFamilyOnSignup() {
   const navigate = useNavigate();
   const [inviteCode, setInviteCode] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [joining, setJoining] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [joined, setJoined] = useState(false);
-  const [memberName, setMemberName] = useState("");
-  const [settingName, setSettingName] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -28,33 +27,18 @@ export default function JoinFamilyOnSignup() {
   }, [navigate]);
 
   async function handleJoin() {
-    if (!inviteCode.trim()) return;
+    if (!inviteCode.trim() || !displayName.trim()) return;
     setJoining(true);
     setError("");
     try {
       await base44.functions.invoke("joinFamilyWithCode", {
         invite_code: inviteCode.trim().toUpperCase(),
-      });
-      setJoined(true);
-    } catch (err) {
-      setError(err?.response?.data?.error || err.message || "Failed to join family");
-      setJoining(false);
-    }
-  }
-
-  async function handleSetName() {
-    if (!memberName.trim()) return;
-    setSettingName(true);
-    try {
-      const user = await base44.auth.me();
-      await base44.functions.invoke("updateFamilyMemberName", {
-        member_email: user.email,
-        new_name: memberName.trim(),
+        display_name: displayName.trim(),
       });
       navigate("/dashboard", { replace: true });
     } catch (err) {
-      setError(err?.response?.data?.error || err.message || "Failed to set name");
-      setSettingName(false);
+      setError(err?.response?.data?.error || err.message || "Failed to join family");
+      setJoining(false);
     }
   }
 
@@ -71,68 +55,51 @@ export default function JoinFamilyOnSignup() {
       <div className="w-full max-w-sm bg-card border border-border rounded-lg shadow-lg p-6 space-y-6">
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-heading font-bold">Welcome!</h1>
-          <p className="text-sm text-muted-foreground">
-            {joined ? "Choose your display name" : "Join an existing family or skip to get started"}
-          </p>
+          <p className="text-sm text-muted-foreground">Enter your invite code and choose your name to join your family.</p>
         </div>
 
-        {joined ? (
-          <div className="space-y-3">
+        <div className="space-y-4">
+          <div className="space-y-1.5">
+            <Label className="text-xs font-medium text-muted-foreground">Family Invite Code</Label>
             <Input
-              placeholder="Your display name"
-              value={memberName}
-              onChange={(e) => {
-                setMemberName(e.target.value);
-                setError("");
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleSetName();
-              }}
-              autoFocus
+              placeholder="e.g., AB12CD"
+              value={inviteCode}
+              onChange={(e) => { setInviteCode(e.target.value.toUpperCase()); setError(""); }}
+              onKeyDown={(e) => { if (e.key === "Enter") handleJoin(); }}
+              className="font-mono tracking-widest text-center text-lg uppercase"
+              autoFocus={!inviteCode}
             />
-            {error && <p className="text-xs text-destructive">{error}</p>}
-            <Button
-              onClick={handleSetName}
-              disabled={settingName || !memberName.trim()}
-              className="w-full"
-            >
-              {settingName ? "Setting..." : "Continue"}
-            </Button>
           </div>
-        ) : (
-          <>
-            <div className="space-y-3">
-              <Input
-                placeholder="Family invite code"
-                value={inviteCode}
-                onChange={(e) => {
-                  setInviteCode(e.target.value);
-                  setError("");
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleJoin();
-                }}
-                autoFocus
-              />
-              {error && <p className="text-xs text-destructive">{error}</p>}
-              <Button
-                onClick={handleJoin}
-                disabled={joining || !inviteCode.trim()}
-                className="w-full"
-              >
-                {joining ? "Joining..." : "Join Family"}
-              </Button>
-            </div>
 
-            <Button
-              variant="outline"
-              onClick={() => navigate("/dashboard")}
-              className="w-full"
-            >
-              Skip for Now
-            </Button>
-          </>
-        )}
+          <div className="space-y-1.5">
+            <Label className="text-xs font-medium text-muted-foreground">Your Name</Label>
+            <Input
+              placeholder="What should your family call you?"
+              value={displayName}
+              onChange={(e) => { setDisplayName(e.target.value); setError(""); }}
+              onKeyDown={(e) => { if (e.key === "Enter") handleJoin(); }}
+              autoFocus={!!inviteCode}
+            />
+          </div>
+
+          {error && <p className="text-xs text-destructive">{error}</p>}
+
+          <Button
+            onClick={handleJoin}
+            disabled={joining || !inviteCode.trim() || !displayName.trim()}
+            className="w-full"
+          >
+            {joining ? "Joining..." : "Join Family"}
+          </Button>
+        </div>
+
+        <Button
+          variant="outline"
+          onClick={() => navigate("/dashboard")}
+          className="w-full"
+        >
+          Skip for Now
+        </Button>
       </div>
     </div>
   );

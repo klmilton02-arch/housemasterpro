@@ -9,7 +9,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { invite_code } = await req.json();
+    const { invite_code, display_name } = await req.json();
 
     if (!invite_code || typeof invite_code !== 'string') {
       return Response.json({ error: 'Invalid invite code' }, { status: 400 });
@@ -32,20 +32,23 @@ Deno.serve(async (req) => {
       linked_user_email: user.email,
     });
     
+    const memberName = (display_name && display_name.trim()) ? display_name.trim() : user.full_name;
+
     // Only create if it doesn't exist
     if (existingMember.length === 0) {
       await base44.asServiceRole.entities.FamilyMember.create({
         family_group_id: matchedFamily.id,
-        name: user.full_name,
+        name: memberName,
         linked_user_id: user.id,
         linked_user_email: user.email,
         avatar_color: 'blue',
       });
     } else {
-      // Update existing member with the linked user info
+      // Update existing member with the linked user info and chosen name
       await base44.asServiceRole.entities.FamilyMember.update(existingMember[0].id, {
         linked_user_id: user.id,
         linked_user_email: user.email,
+        name: memberName,
       });
     }
     
