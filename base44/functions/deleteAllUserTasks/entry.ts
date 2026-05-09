@@ -9,42 +9,21 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const familyGroupId = user.family_group_id;
-    if (!familyGroupId) {
-      return Response.json({ error: 'No family group found' }, { status: 400 });
-    }
-
-    // Get all tasks in family (paginate if needed)
-    let allTasks = [];
-    let skip = 0;
-    const limit = 100;
-    
-    while (true) {
-      const batch = await base44.asServiceRole.entities.Task.list('', limit, skip);
-      const familyTasks = batch.filter(t => t.family_group_id === familyGroupId);
-      allTasks.push(...familyTasks);
-      
-      if (batch.length < limit) break;
-      skip += limit;
-    }
+    // Get all tasks
+    const allTasks = await base44.entities.Task.list();
 
     let deleted = 0;
     
-    // Delete in parallel chunks
-    const chunkSize = 20;
-    for (let i = 0; i < allTasks.length; i += chunkSize) {
-      const chunk = allTasks.slice(i, i + chunkSize);
-      const deletePromises = chunk.map(task =>
-        base44.asServiceRole.entities.Task.delete(task.id)
-          .then(() => true)
-          .catch(e => {
-            console.error(`Failed to delete task ${task.id}:`, e.message);
-            return false;
-          })
-      );
-      
-      const results = await Promise.all(deletePromises);
-      deleted += results.filter(r => r === true).length;
+    // Delete sequentially with delays to avoid rate limit
+    for (const task of allTasks) {
+      try {
+        await base44.entities.Task.delete(task.id);
+        deleted++;
+      } catch (e) {
+        // Skip failures
+      }
+      // Small delay between deletes
+      await new Promise(resolve => setTimeout(resolve, 50));
     }
 
     return Response.json({ success: true, deleted, message: `Deleted ${deleted} tasks` });
