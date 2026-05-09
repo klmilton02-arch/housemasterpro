@@ -80,15 +80,15 @@ export default function Leaderboard() {
         const currentUser = users.find(u => u.email === userProfile?.created_by);
         const familyGroupId = currentUser?.family_group_id;
         
-        // Show only users from the family group
-        const allEntries = users
-          .filter(u => u.family_group_id === familyGroupId)
-          .map(u => {
-            const profile = profiles.find(p => p.family_member_name === u.full_name);
+        // Show all family members from the family group
+        const allEntries = members
+          .filter(m => m.family_group_id === familyGroupId)
+          .map(m => {
+            const profile = profiles.find(p => p.family_member_id === m.id);
             return {
-              id: u.id,
-              name: u.full_name,
-              avatar_color: "blue",
+              id: m.id,
+              name: m.name,
+              avatar_color: m.avatar_color || "blue",
               total_xp: profile?.total_xp || 0,
               level: profile?.level || 1,
             };
