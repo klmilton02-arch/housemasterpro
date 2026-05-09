@@ -144,14 +144,11 @@ export default function Profile() {
   const earnedBadges = profile ? getEarnedBadges(profile) : [];
 
   return (
-    <div className="min-h-screen bg-background p-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-      <div className="max-w-[120rem] mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-heading font-bold text-foreground">Profile</h1>
-        </div>
+    <div className="space-y-3 max-w-md md:max-w-2xl mx-auto px-2 sm:px-1 pt-7" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+      <h1 className="font-heading text-4xl font-bold md:hidden">Profile</h1>
 
         {/* My Information */}
-        <div className="bg-card rounded-lg border border-border shadow-sm p-4 mb-4">
+        <div className="bg-card rounded-lg border border-border shadow-sm p-4">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
@@ -168,8 +165,8 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Settings Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      {/* Settings Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Task Reset Time */}
           <div className="bg-card rounded-lg border border-border shadow-sm p-4">
             <div className="flex items-start gap-2 mb-3">
@@ -216,8 +213,8 @@ export default function Profile() {
           </Link>
         </div>
 
-        {/* Quick Navigation Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+      {/* Quick Navigation Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <Link to="/presets" className="block">
             <div className="bg-card rounded-lg border border-border shadow-sm p-3 hover:shadow-md transition-shadow cursor-pointer">
               <div className="flex items-center gap-2 mb-2">
@@ -247,8 +244,8 @@ export default function Profile() {
           </Link>
         </div>
 
-        {/* Security & Sign Out */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+      {/* Security & Sign Out */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <Link to="/encryption" className="block">
             <Button variant="outline" className="w-full gap-2 h-auto py-2 px-3 justify-start text-sm">
               <Shield className="w-4 h-4" />
@@ -261,8 +258,8 @@ export default function Profile() {
           </Button>
         </div>
 
-        {/* Data Management Section */}
-        <div className="bg-card rounded-lg border border-border shadow-sm p-4">
+      {/* Data Management Section */}
+      <div className="bg-card rounded-lg border border-border shadow-sm p-4">
           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Data Management</p>
           <div className="space-y-2">
             <AlertDialog>
@@ -334,7 +331,6 @@ export default function Profile() {
               </AlertDialogContent>
             </AlertDialog>
           </div>
-        </div>
       </div>
 
       {/* Edit Profile Dialog */}
