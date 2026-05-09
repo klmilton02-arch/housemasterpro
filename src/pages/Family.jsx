@@ -132,8 +132,7 @@ async function handleCreateFamily() {
     if (!newMemberName.trim() || !user?.family_group_id) return;
     setSaving(true);
     try {
-      await base44.entities.FamilyMember.create({
-        family_group_id: user.family_group_id,
+      await base44.functions.invoke('addFamilyMember', {
         name: newMemberName.trim(),
         avatar_color: newMemberColor,
       });
