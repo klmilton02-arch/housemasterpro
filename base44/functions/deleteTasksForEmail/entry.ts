@@ -9,28 +9,33 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Email is required' }, { status: 400 });
     }
 
-    // Get user and their family group
+    // Try to find user first
     const users = await base44.asServiceRole.entities.User.filter({ email });
-    if (users.length === 0) {
-      return Response.json({ error: `User not found with email ${email}` }, { status: 404 });
+    let tasksByEmail = [];
+    let tasksByFamilyGroup = [];
+
+    // If user exists, delete tasks from family group
+    if (users.length > 0) {
+      const user = users[0];
+      if (user.family_group_id) {
+        tasksByFamilyGroup = await base44.asServiceRole.entities.Task.filter({ family_group_id: user.family_group_id });
+      }
     }
 
-    const user = users[0];
-    if (!user.family_group_id) {
-      return Response.json({ success: true, deleted: 0, message: `User has no family group` });
-    }
+    // Also search for tasks created directly by this email
+    tasksByEmail = await base44.asServiceRole.entities.Task.filter({ created_by: email });
 
-    // Get all tasks in the family group
-    const tasks = await base44.asServiceRole.entities.Task.filter({ family_group_id: user.family_group_id });
+    // Combine and deduplicate
+    const allTasks = [...new Map([...tasksByEmail, ...tasksByFamilyGroup].map(t => [t.id, t])).values()];
     
-    if (tasks.length === 0) {
-      return Response.json({ success: true, deleted: 0, message: `No tasks found in family group` });
+    if (allTasks.length === 0) {
+      return Response.json({ success: true, deleted: 0, message: `No tasks found for ${email}` });
     }
 
     // Delete all tasks
-    await Promise.all(tasks.map(task => base44.asServiceRole.entities.Task.delete(task.id)));
+    await Promise.all(allTasks.map(task => base44.asServiceRole.entities.Task.delete(task.id)));
 
-    return Response.json({ success: true, deleted: tasks.length, message: `Deleted ${tasks.length} tasks from family group` });
+    return Response.json({ success: true, deleted: allTasks.length, message: `Deleted ${allTasks.length} tasks for ${email}` });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
