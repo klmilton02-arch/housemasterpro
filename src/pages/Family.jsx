@@ -145,11 +145,10 @@ async function handleCreateFamily() {
 
   async function handleLink(member, appUser) {
     setSaving(true);
-    const fgid = member.family_group_id || user?.family_group_id;
-    await base44.entities.FamilyMember.update(member.id, {
-      family_group_id: fgid,
-      linked_user_id: appUser.id,
-      linked_user_email: appUser.email,
+    await base44.functions.invoke('linkMemberToUser', {
+      member_id: member.id,
+      user_id: appUser.id,
+      user_email: appUser.email,
     });
     setLinkingMemberId(null);
     setSaving(false);
@@ -165,7 +164,7 @@ async function handleCreateFamily() {
 
   async function handleDeleteMember(memberId) {
     setSaving(true);
-    await base44.entities.FamilyMember.delete(memberId);
+    await base44.functions.invoke('deleteFamilyMember', { member_id: memberId });
     setSaving(false);
     loadData();
   }
