@@ -62,13 +62,13 @@ export default function MobileSelect({ value, onValueChange, options = [], place
         <svg className="h-4 w-4 opacity-50 shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
       </button>
       <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerContent>
+        <DrawerContent className="flex flex-col max-h-[90vh]">
           {title && (
             <DrawerHeader>
               <DrawerTitle>{title}</DrawerTitle>
             </DrawerHeader>
           )}
-          <div className="px-4 pb-8 space-y-1 overflow-y-auto flex-1">
+          <div className="px-4 pb-8 space-y-1 overflow-y-auto flex-1 min-h-0">
             {options.map(o => (
               <button
                 key={o.value}
