@@ -33,15 +33,14 @@ Deno.serve(async (req) => {
 
     // Send email with family invite code using Gmail API
     const appUrl = 'https://homelifefocus.base44.app';
+    const joinUrl = `${appUrl}/join-family?code=${invite_code}`;
     try {
       console.log(`Attempting to send email to: ${email}`);
       
       // Get Gmail access token via the app builder's Google connection
       const { accessToken } = await base44.asServiceRole.connectors.getConnection('gmail');
-      
-      const emailText = `You've been invited to join HomeLifeFocus!\n\nCode: ${invite_code}\n\nHow to join:\n1. Visit ${appUrl}\n2. Sign up with your email (${email})\n3. On the join screen, enter the code above\n4. Choose your display name\n5. Start managing household tasks with your family!\n\nQuestions? Reply to this email.\n\nEnjoy!\nThe HomeLifeFocus Team`;
 
-      const emailHtml = `<p>Hi there!</p><p>You've been invited to join HomeLifeFocus!</p><hr><h2 style="text-align:center">${invite_code}</h2><hr><p><strong>How to join:</strong></p><ol><li>Visit <a href="${appUrl}">${appUrl}</a></li><li>Sign up with your email (${email})</li><li>On the join screen, enter the code above</li><li>Choose your display name</li><li>Start managing household tasks with your family!</li></ol><p>Questions? Reply to this email.</p><p>Enjoy!<br>The HomeLifeFocus Team</p>`;
+      const emailHtml = `<p>Hi there!</p><p>You've been invited to join a family on <strong>HomeLifeFocus</strong>!</p><p style="text-align:center;margin:24px 0"><a href="${joinUrl}" style="background:#3b82f6;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Join Family →</a></p><p>Or visit this link directly:<br><a href="${joinUrl}">${joinUrl}</a></p><p>Your invite code is: <strong>${invite_code}</strong></p><p>The link will take you straight to the sign-in page. After logging in, the code will be filled in automatically.</p><p>Enjoy!<br>The HomeLifeFocus Team</p>`;
 
       // Create MIME message
       const mimeMessage = [
