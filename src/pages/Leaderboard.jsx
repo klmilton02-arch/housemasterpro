@@ -25,25 +25,22 @@ export default function Leaderboard() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    // Clear React Query cache to force fresh fetch
-    queryClient.invalidateQueries();
-    
-    Promise.all([
-      base44.entities.GamificationProfile.list("-total_xp", 100),
-      base44.entities.FamilyMember.list(),
-      base44.auth.me(),
-      base44.entities.User.list(),
-    ]).then(([p, m, user, allUsers]) => {
-      setProfiles(p);
-      setMembers(m);
-      setUsers(allUsers || []);
-      if (user) {
-        const myProfile = p.find(prof => prof.family_member_name === user.full_name);
-        setUserProfile(myProfile);
-      }
-      setLoading(false);
+    // Call backend function to bypass client-side caching
+    base44.functions.invoke('getLeaderboardProfiles', {}).then((res) => {
+      const { profiles, members, users } = res.data;
+      setProfiles(profiles);
+      setMembers(members);
+      setUsers(users || []);
+      
+      base44.auth.me().then(user => {
+        if (user) {
+          const myProfile = profiles.find(prof => prof.family_member_name === user.full_name);
+          setUserProfile(myProfile);
+        }
+        setLoading(false);
+      });
     });
-  }, [queryClient]);
+  }, []);
 
   const getMember = (id) => members.find(m => m.id === id);
 
