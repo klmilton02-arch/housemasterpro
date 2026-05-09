@@ -131,16 +131,21 @@ async function handleCreateFamily() {
   async function handleAddMember() {
     if (!newMemberName.trim() || !user?.family_group_id) return;
     setSaving(true);
-    await base44.entities.FamilyMember.create({
-      family_group_id: user.family_group_id,
-      name: newMemberName.trim(),
-      avatar_color: newMemberColor,
-    });
-    setNewMemberName("");
-    setNewMemberColor("blue");
-    setShowAddForm(false);
-    setSaving(false);
-    loadData();
+    try {
+      await base44.entities.FamilyMember.create({
+        family_group_id: user.family_group_id,
+        name: newMemberName.trim(),
+        avatar_color: newMemberColor,
+      });
+      setNewMemberName("");
+      setNewMemberColor("blue");
+      setShowAddForm(false);
+      await loadData();
+    } catch (err) {
+      console.error("Failed to add member:", err);
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function handleLink(member, appUser) {
