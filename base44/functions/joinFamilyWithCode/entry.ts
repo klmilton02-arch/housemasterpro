@@ -23,8 +23,12 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Invalid invite code' }, { status: 404 });
     }
 
-    // Update user to add family_group_id
-    await base44.auth.updateMe({ family_group_id: matchedFamily.id });
+    // Update user to add family_group_id and set display name
+    const updateData = { family_group_id: matchedFamily.id };
+    if (display_name && display_name.trim()) {
+      updateData.full_name = display_name.trim();
+    }
+    await base44.auth.updateMe(updateData);
     
     // Check if a FamilyMember already exists for this user
     const existingMember = await base44.asServiceRole.entities.FamilyMember.filter({
