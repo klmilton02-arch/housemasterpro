@@ -35,11 +35,16 @@ Deno.serve(async (req) => {
     for (let i = 0; i < allTasks.length; i += chunkSize) {
       const chunk = allTasks.slice(i, i + chunkSize);
       const deletePromises = chunk.map(task =>
-        base44.asServiceRole.entities.Task.delete(task.id).catch(() => null)
+        base44.asServiceRole.entities.Task.delete(task.id)
+          .then(() => true)
+          .catch(e => {
+            console.error(`Failed to delete task ${task.id}:`, e.message);
+            return false;
+          })
       );
       
       const results = await Promise.all(deletePromises);
-      deleted += results.filter(r => r !== null).length;
+      deleted += results.filter(r => r === true).length;
     }
 
     return Response.json({ success: true, deleted, message: `Deleted ${deleted} tasks` });
