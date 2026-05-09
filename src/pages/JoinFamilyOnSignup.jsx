@@ -16,7 +16,9 @@ export default function JoinFamilyOnSignup() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const codeFromUrl = params.get("code");
-    if (codeFromUrl) setInviteCode(codeFromUrl.toUpperCase());
+    if (codeFromUrl) {
+      setInviteCode(codeFromUrl.toUpperCase());
+    }
 
     base44.auth.me().then(user => {
       if (user?.family_group_id) {
