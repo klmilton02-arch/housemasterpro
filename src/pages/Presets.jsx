@@ -144,7 +144,7 @@ export default function Presets() {
         <span className="font-medium text-foreground">Back to Tasks</span>
       </button>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="space-y-3">
         <div className="col-span-2">
           <Button onClick={() => { setEditingPreset(null); setEditDialogOpen(true); }} className="gap-2 w-full font-medium bg-violet-200 hover:bg-violet-300 text-violet-900">
             <Plus className="w-5 h-5" /> New Preset
@@ -154,7 +154,7 @@ export default function Presets() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search presets..." className="pl-9 w-full h-12" />
         </div>
-        <div className="col-span-2">
+        <div>
           <MobileSelect
             value={sortBy}
             onValueChange={setSortBy}
@@ -168,54 +168,65 @@ export default function Presets() {
             ]}
           />
         </div>
-        <MobileSelect
-          value={roomFilter}
-          onValueChange={setRoomFilter}
-          title="Filter by Room"
-          triggerClassName="w-full h-12"
-          options={[{ value: "all", label: "All Rooms" }, ...displayRooms.map(r => ({ value: r, label: r }))]}
-        />
-        <MobileSelect
-          value={taskTypeFilter}
-          onValueChange={setTaskTypeFilter}
-          title="Filter by Type"
-          triggerClassName="w-full h-12"
-          options={[
-            { value: "all", label: "All Types" },
-            { value: "Cleaning", label: "Cleaning" },
-            { value: "Maintenance", label: "Maintenance" },
-            { value: "Bills", label: "Bills" },
-            { value: "Personal", label: "Personal" },
-          ]}
-        />
-        <MobileSelect
-          value={difficultyFilter}
-          onValueChange={setDifficultyFilter}
-          title="Filter by Difficulty"
-          triggerClassName="w-full h-12"
-          options={[
-            { value: "all", label: "All Difficulties" },
-            { value: "Trivial", label: "Trivial" },
-            { value: "Easy", label: "Easy" },
-            { value: "Medium", label: "Medium" },
-            { value: "Hard", label: "Hard" },
-            { value: "Very Hard", label: "Very Hard" },
-          ]}
-        />
-        <MobileSelect
-          value={frequencyFilter}
-          onValueChange={setFrequencyFilter}
-          title="Filter by Frequency"
-          triggerClassName="w-full h-12"
-          options={[
-            { value: "all", label: "All Frequencies" },
-            { value: "daily", label: "Daily" },
-            { value: "weekly", label: "Weekly" },
-            { value: "monthly", label: "Monthly" },
-            { value: "quarterly", label: "Quarterly" },
-            { value: "yearly", label: "Yearly" },
-          ]}
-        />
+        <div className="grid grid-cols-2 gap-3">
+          <MobileSelect
+            value={roomFilter}
+            onValueChange={setRoomFilter}
+            title="Filter by Room"
+            triggerClassName="w-full h-12"
+            options={[{ value: "all", label: "All Rooms" }, ...displayRooms.map(r => ({ value: r, label: r }))]}
+          />
+          <MobileSelect
+            value={taskTypeFilter}
+            onValueChange={setTaskTypeFilter}
+            title="Filter by Type"
+            triggerClassName="w-full h-12"
+            options={[
+              { value: "all", label: "All Types" },
+              { value: "Cleaning", label: "Cleaning" },
+              { value: "Maintenance", label: "Maintenance" },
+              { value: "Bills", label: "Bills" },
+              { value: "Personal", label: "Personal" },
+            ]}
+          />
+          <MobileSelect
+            value={difficultyFilter}
+            onValueChange={setDifficultyFilter}
+            title="Filter by Difficulty"
+            triggerClassName="w-full h-12"
+            options={[
+              { value: "all", label: "All Difficulties" },
+              { value: "Trivial", label: "Trivial" },
+              { value: "Easy", label: "Easy" },
+              { value: "Medium", label: "Medium" },
+              { value: "Hard", label: "Hard" },
+              { value: "Very Hard", label: "Very Hard" },
+            ]}
+          />
+          <MobileSelect
+            value={frequencyFilter}
+            onValueChange={setFrequencyFilter}
+            title="Filter by Frequency"
+            triggerClassName="w-full h-12"
+            options={[
+              { value: "all", label: "All Frequencies" },
+              { value: "daily", label: "Daily" },
+              { value: "weekly", label: "Weekly" },
+              { value: "monthly", label: "Monthly" },
+              { value: "quarterly", label: "Quarterly" },
+              { value: "yearly", label: "Yearly" },
+            ]}
+          />
+        </div>
+        {(roomFilter !== "all" || taskTypeFilter !== "all" || difficultyFilter !== "all" || frequencyFilter !== "all") && (
+          <Button
+            variant="outline"
+            onClick={() => { setRoomFilter("all"); setTaskTypeFilter("all"); setDifficultyFilter("all"); setFrequencyFilter("all"); }}
+            className="w-full text-sm"
+          >
+            Clear filters
+          </Button>
+        )}
       </div>
 
       <div className="flex items-center justify-between">
