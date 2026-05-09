@@ -202,8 +202,8 @@ export default function Profile() {
                   <CalendarDays className="w-4 h-4 text-cyan-600" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-semibold text-sm text-foreground">Task Start Dates</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Set when each task type begins</p>
+                  <p className="font-semibold text-base text-foreground">Task Start Dates</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">Set when each task type begins</p>
                 </div>
               </div>
               <div className="flex items-center text-muted-foreground mt-2">
