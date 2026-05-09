@@ -158,10 +158,7 @@ async function handleCreateFamily() {
 
   async function handleUnlink(member) {
     setSaving(true);
-    await base44.entities.FamilyMember.update(member.id, {
-      linked_user_id: null,
-      linked_user_email: null,
-    });
+    await base44.functions.invoke('unlinkFamilyMember', { member_id: member.id });
     setSaving(false);
     loadData();
   }
