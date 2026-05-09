@@ -4,6 +4,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/u
 
 export default function CompletingAsCard({ familyMembers, activeCompletingAs, onSelect, selfMember }) {
   const [open, setOpen] = useState(false);
+  const uniqueMembers = Array.from(new Map(familyMembers.map(m => [m.id, m])).values());
 
   const colorMap = {
     blue: "bg-blue-500",
@@ -68,7 +69,7 @@ export default function CompletingAsCard({ familyMembers, activeCompletingAs, on
             )}
 
             {/* Family members */}
-            {familyMembers.map(m => (
+            {uniqueMembers.map(m => (
               <button
                 key={m.id}
                 onClick={() => { onSelect(m); setOpen(false); }}

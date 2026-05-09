@@ -95,8 +95,7 @@ export default function Tasks() {
 
   useEffect(() => {
     base44.entities.FamilyMember.list().then(async (members) => {
-      const uniqueMembers = Array.from(new Map(members.map(m => [m.id, m])).values());
-      setFamilyMembers(uniqueMembers);
+      setFamilyMembers(members);
       // Auto-select the family member linked to the current user
       const me = await base44.auth.me();
       if (me?.email) {
@@ -533,7 +532,7 @@ export default function Tasks() {
       <CompleteAsSheet
         open={!!completeAsSheet}
         onOpenChange={(open) => { if (!open) setCompleteAsSheet(null); }}
-        familyMembers={familyMembers}
+        familyMembers={Array.from(new Map(familyMembers.map(m => [m.id, m])).values())}
         onSelect={(member) => {
           const task = completeAsSheet;
           setCompleteAsSheet(null);
