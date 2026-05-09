@@ -1,6 +1,7 @@
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
 export default function CompleteAsSheet({ open, onOpenChange, familyMembers, onSelect }) {
+  const uniqueMembers = Array.from(new Map(familyMembers.map(m => [m.id, m])).values());
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent>
@@ -8,7 +9,7 @@ export default function CompleteAsSheet({ open, onOpenChange, familyMembers, onS
           <DrawerTitle className="font-heading">Who completed this?</DrawerTitle>
         </DrawerHeader>
         <div className="px-4 pb-8 space-y-2">
-          {familyMembers.map(m => (
+          {uniqueMembers.map(m => (
             <button
               key={m.id}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-border hover:bg-muted/50 active:scale-95 transition-all"
