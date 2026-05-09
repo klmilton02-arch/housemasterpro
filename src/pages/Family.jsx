@@ -468,10 +468,32 @@ async function handleCreateFamily() {
           <div className="bg-card border border-border rounded-lg divide-y divide-border">
             {familyUsers.map(u => {
               const linked = familyMembers.find(m => m.linked_user_id === u.id);
+              const isMe = u.id === user?.id;
               return (
                 <div key={u.id} className="px-4 py-3 space-y-1">
-                  <p className="font-medium text-sm">{u.full_name}</p>
-                  <p className="text-xs text-muted-foreground">{u.email}</p>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="font-medium text-sm">{u.full_name}</p>
+                      <p className="text-xs text-muted-foreground">{u.email}</p>
+                    </div>
+                    {!isMe && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={saving}
+                        onClick={async () => {
+                          if (!window.confirm(`Remove ${u.full_name} from this family?`)) return;
+                          setSaving(true);
+                          await base44.functions.invoke('removeUserFromFamily', { user_id: u.id });
+                          setSaving(false);
+                          loadData();
+                        }}
+                        className="text-destructive hover:bg-destructive/10 shrink-0"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    )}
+                  </div>
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">{u.role}</span>
                     {linked ? (
