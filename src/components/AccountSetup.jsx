@@ -1,10 +1,22 @@
 import { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { Users, User, ArrowRight, Copy, Check } from "lucide-react";
+import { Users, User, ArrowRight, Copy, Check, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+
+function SignOutButton() {
+  return (
+    <button
+      onClick={() => base44.auth.logout("/")}
+      className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors absolute top-4 right-4"
+    >
+      <LogOut className="w-3.5 h-3.5" />
+      Sign Out
+    </button>
+  );
+}
 
 function generateCode() {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -72,7 +84,8 @@ export default function AccountSetup({ currentUser, onDone, initialStep = "choos
 
   if (step === "choose") {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center py-12 px-4">
+      <div className="relative min-h-[60vh] flex flex-col items-center justify-center py-12 px-4">
+        <SignOutButton />
         <div className="max-w-md w-full text-center mb-8">
           <h1 className="font-heading text-3xl font-bold mb-2">Welcome to FamilySync</h1>
           <p className="text-muted-foreground">How would you like to use this app?</p>
@@ -106,7 +119,8 @@ export default function AccountSetup({ currentUser, onDone, initialStep = "choos
 
   if (step === "family-choice") {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center py-12 px-4">
+      <div className="relative min-h-[60vh] flex flex-col items-center justify-center py-12 px-4">
+        <SignOutButton />
         <div className="max-w-sm w-full">
           <button onClick={() => setStep("choose")} className="text-sm text-muted-foreground mb-6 hover:text-foreground transition-colors">← Back</button>
           <h2 className="font-heading text-2xl font-bold mb-6">Join or Create a Family</h2>
@@ -139,7 +153,8 @@ export default function AccountSetup({ currentUser, onDone, initialStep = "choos
 
   if (step === "create-family") {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center py-12 px-4">
+      <div className="relative min-h-[60vh] flex flex-col items-center justify-center py-12 px-4">
+        <SignOutButton />
         <div className="max-w-sm w-full">
           <button onClick={() => setStep("family-choice")} className="text-sm text-muted-foreground mb-6 hover:text-foreground transition-colors">← Back</button>
           <h2 className="font-heading text-2xl font-bold mb-2">Name your family</h2>
@@ -161,7 +176,8 @@ export default function AccountSetup({ currentUser, onDone, initialStep = "choos
 
   if (step === "join-family") {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center py-12 px-4">
+      <div className="relative min-h-[60vh] flex flex-col items-center justify-center py-12 px-4">
+        <SignOutButton />
         <div className="max-w-sm w-full">
           <button onClick={() => setStep("family-choice")} className="text-sm text-muted-foreground mb-6 hover:text-foreground transition-colors">← Back</button>
           <h2 className="font-heading text-2xl font-bold mb-2">Enter invite code</h2>
