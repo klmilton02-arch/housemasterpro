@@ -190,8 +190,8 @@ export default function DashboardPresetBrowser({ onTaskAdded }) {
               <p className="text-sm text-muted-foreground text-center py-4">No presets match your search.</p>
             ) : (
               <div className="overflow-x-auto">
-              <TableHeader sortBy={sortBy} sortDir={sortDir} onSort={handleSort} />
-              <div className="max-h-96 overflow-y-auto mt-1">
+               <TableHeader sortBy={sortBy} sortDir={sortDir} onSort={handleSort} />
+               <div className="max-h-[60vh] overflow-y-auto mt-1">
                 {sorted.map(p => (
                   <PresetRow key={p.id} p={p} onAdd={handleAdd} />
                 ))}
