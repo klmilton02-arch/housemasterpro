@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { useQueryClient } from "@tanstack/react-query";
 import { Trophy, Zap, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import StreakCircle from "../components/StreakCircle";
@@ -21,8 +22,12 @@ export default function Leaderboard() {
   const [users, setUsers] = useState([]);
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
+    // Clear React Query cache to force fresh fetch
+    queryClient.invalidateQueries();
+    
     Promise.all([
       base44.entities.GamificationProfile.list("-total_xp", 100),
       base44.entities.FamilyMember.list(),
@@ -38,7 +43,7 @@ export default function Leaderboard() {
       }
       setLoading(false);
     });
-  }, []);
+  }, [queryClient]);
 
   const getMember = (id) => members.find(m => m.id === id);
 
