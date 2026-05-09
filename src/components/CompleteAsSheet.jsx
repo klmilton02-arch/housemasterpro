@@ -1,7 +1,7 @@
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
 export default function CompleteAsSheet({ open, onOpenChange, familyMembers, onSelect }) {
-  const uniqueMembers = Array.from(new Map(familyMembers.map(m => [m.id, m])).values());
+  const uniqueMembers = Array.from(new Map(familyMembers.map(m => [m.name.toLowerCase(), m])).values());
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent>
