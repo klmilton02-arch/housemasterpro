@@ -53,12 +53,12 @@ export default function Family() {
       if (me?.family_group_id) {
         try {
           const [membersRes, fgRes, usersRes] = await Promise.all([
-            base44.entities.FamilyMember.filter({ family_group_id: me.family_group_id }),
+            base44.functions.invoke('getFamilyMembers', {}),
             base44.entities.FamilyGroup.get(me.family_group_id),
             base44.functions.invoke('getFamilyAppUsers', {}),
           ]);
           setFamilyUsers(usersRes.data.users || [me]);
-          setFamilyMembers(membersRes);
+          setFamilyMembers(membersRes.data.members || []);
           setFamilyGroup(fgRes);
 
         } catch (err) {
@@ -111,12 +111,12 @@ async function handleCreateFamily() {
       setUser(me);
       if (me?.family_group_id) {
         const [membersRes, fgRes, usersRes] = await Promise.all([
-          base44.entities.FamilyMember.filter({ family_group_id: me.family_group_id }),
+          base44.functions.invoke('getFamilyMembers', {}),
           base44.entities.FamilyGroup.get(me.family_group_id),
           base44.functions.invoke('getFamilyAppUsers', {}),
         ]);
         setFamilyUsers(usersRes.data.users || [me]);
-        setFamilyMembers(membersRes);
+        setFamilyMembers(membersRes.data.members || []);
         setFamilyGroup(fgRes);
       }
     } catch (err) {

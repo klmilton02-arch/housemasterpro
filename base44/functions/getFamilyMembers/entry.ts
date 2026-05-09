@@ -6,15 +6,14 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
 
     if (!user || !user.family_group_id) {
-      return Response.json({ users: [] });
+      return Response.json({ members: [] });
     }
 
-    // Get all users in the same family group
-    const allUsers = await base44.asServiceRole.entities.User.filter({ 
-      family_group_id: user.family_group_id 
+    const members = await base44.asServiceRole.entities.FamilyMember.filter({
+      family_group_id: user.family_group_id,
     });
 
-    return Response.json({ users: allUsers });
+    return Response.json({ members });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
