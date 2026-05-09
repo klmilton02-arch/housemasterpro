@@ -387,11 +387,11 @@ async function handleCreateFamily() {
                   </div>
 
                   {/* Linked account */}
-                  {linkedUser ? (
+                  {(linkedUser || member.linked_user_email) ? (
                     <div className="flex items-center justify-between bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md px-3 py-2">
                       <div>
-                        <p className="text-xs font-medium text-green-800 dark:text-green-300">{linkedUser.full_name}</p>
-                        <p className="text-xs text-green-600 dark:text-green-400">{linkedUser.email}</p>
+                        <p className="text-xs font-medium text-green-800 dark:text-green-300">{linkedUser?.full_name || member.linked_user_email}</p>
+                        <p className="text-xs text-green-600 dark:text-green-400">{linkedUser?.email || member.linked_user_email}</p>
                       </div>
                       <Button
                         variant="ghost"
@@ -503,6 +503,7 @@ async function handleCreateFamily() {
                     ) : (
                       <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">No member linked</span>
                     )}
+
                   </div>
                 </div>
               );
