@@ -185,10 +185,10 @@ export default function AccountSetup({ currentUser, onDone, initialStep = "choos
           <div className="space-y-4">
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Invite Code</Label>
-              <Input value={joinCode} onChange={e => setJoinCode(e.target.value.toUpperCase())} placeholder="e.g., AB12CD" className="mt-1 font-mono tracking-widest text-center text-lg uppercase" maxLength={6} />
+              <Input value={joinCode} onChange={e => setJoinCode(e.target.value.toUpperCase())} placeholder="e.g., AB12CD" className="mt-1 font-mono tracking-widest text-center text-lg uppercase" />
               {error && <p className="text-xs text-destructive mt-1">{error}</p>}
             </div>
-            <Button className="w-full" onClick={handleJoinFamily} disabled={loading || joinCode.length < 6}>
+            <Button className="w-full" onClick={handleJoinFamily} disabled={loading || !joinCode.trim()}>
               {loading ? "Joining..." : "Join Family"}
             </Button>
           </div>
