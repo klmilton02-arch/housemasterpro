@@ -168,55 +168,57 @@ export default function Presets() {
             ]}
           />
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          <MobileSelect
-            value={roomFilter}
-            onValueChange={setRoomFilter}
-            title="Filter by Room"
-            triggerClassName="w-full h-12"
-            options={[{ value: "all", label: "All Rooms" }, ...displayRooms.map(r => ({ value: r, label: r }))]}
-          />
-          <MobileSelect
-            value={taskTypeFilter}
-            onValueChange={setTaskTypeFilter}
-            title="Filter by Type"
-            triggerClassName="w-full h-12"
-            options={[
-              { value: "all", label: "All Types" },
-              { value: "Cleaning", label: "Cleaning" },
-              { value: "Maintenance", label: "Maintenance" },
-              { value: "Bills", label: "Bills" },
-              { value: "Personal", label: "Personal" },
-            ]}
-          />
-          <MobileSelect
-            value={difficultyFilter}
-            onValueChange={setDifficultyFilter}
-            title="Filter by Difficulty"
-            triggerClassName="w-full h-12"
-            options={[
-              { value: "all", label: "All Difficulties" },
-              { value: "Trivial", label: "Trivial" },
-              { value: "Easy", label: "Easy" },
-              { value: "Medium", label: "Medium" },
-              { value: "Hard", label: "Hard" },
-              { value: "Very Hard", label: "Very Hard" },
-            ]}
-          />
-          <MobileSelect
-            value={frequencyFilter}
-            onValueChange={setFrequencyFilter}
-            title="Filter by Frequency"
-            triggerClassName="w-full h-12"
-            options={[
-              { value: "all", label: "All Frequencies" },
-              { value: "daily", label: "Daily" },
-              { value: "weekly", label: "Weekly" },
-              { value: "monthly", label: "Monthly" },
-              { value: "quarterly", label: "Quarterly" },
-              { value: "yearly", label: "Yearly" },
-            ]}
-          />
+        <div className="overflow-y-auto max-h-64">
+          <div className="grid grid-cols-2 gap-3 pr-2">
+            <MobileSelect
+              value={roomFilter}
+              onValueChange={setRoomFilter}
+              title="Filter by Room"
+              triggerClassName="w-full h-12"
+              options={[{ value: "all", label: "All Rooms" }, ...displayRooms.map(r => ({ value: r, label: r }))]}
+            />
+            <MobileSelect
+              value={taskTypeFilter}
+              onValueChange={setTaskTypeFilter}
+              title="Filter by Type"
+              triggerClassName="w-full h-12"
+              options={[
+                { value: "all", label: "All Types" },
+                { value: "Cleaning", label: "Cleaning" },
+                { value: "Maintenance", label: "Maintenance" },
+                { value: "Bills", label: "Bills" },
+                { value: "Personal", label: "Personal" },
+              ]}
+            />
+            <MobileSelect
+              value={difficultyFilter}
+              onValueChange={setDifficultyFilter}
+              title="Filter by Difficulty"
+              triggerClassName="w-full h-12"
+              options={[
+                { value: "all", label: "All Difficulties" },
+                { value: "Trivial", label: "Trivial" },
+                { value: "Easy", label: "Easy" },
+                { value: "Medium", label: "Medium" },
+                { value: "Hard", label: "Hard" },
+                { value: "Very Hard", label: "Very Hard" },
+              ]}
+            />
+            <MobileSelect
+              value={frequencyFilter}
+              onValueChange={setFrequencyFilter}
+              title="Filter by Frequency"
+              triggerClassName="w-full h-12"
+              options={[
+                { value: "all", label: "All Frequencies" },
+                { value: "daily", label: "Daily" },
+                { value: "weekly", label: "Weekly" },
+                { value: "monthly", label: "Monthly" },
+                { value: "quarterly", label: "Quarterly" },
+                { value: "yearly", label: "Yearly" },
+              ]}
+            />
+          </div>
         </div>
         {(roomFilter !== "all" || taskTypeFilter !== "all" || difficultyFilter !== "all" || frequencyFilter !== "all") && (
           <Button
