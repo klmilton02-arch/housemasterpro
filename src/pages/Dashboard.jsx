@@ -62,13 +62,15 @@ export default function Dashboard() {
     try {
       const me = await base44.auth.me();
       let all;
+      // Force fresh fetch by appending cache-bust param to entity queries
+      const now = Date.now();
       if (me?.family_group_id) {
-        all = await base44.entities.Task.filter({ family_group_id: me.family_group_id }, null, 5000);
+        all = await base44.entities.Task.filter({ family_group_id: me.family_group_id, _t: now }, null, 5000);
       } else {
-        all = await base44.entities.Task.list(null, 5000);
+        all = await base44.entities.Task.filter({ created_by: me.email, _t: now }, null, 5000);
       }
-      console.log(`[Dashboard] Server returned ${all.length} tasks`);
-      setTasks(all || []);
+      console.log(`[Dashboard] Server returned ${all.length} tasks (cache-busted)`);
+      setTasks(Array.isArray(all) ? all : []);
     } catch (err) {
       console.error('[Dashboard] Error loading tasks:', err);
       setTasks([]);
