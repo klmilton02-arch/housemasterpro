@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQueryClient } from "@tanstack/react-query";
-import { Trophy, Zap, Sparkles } from "lucide-react";
+import { Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import StreakCircle from "../components/StreakCircle";
 
@@ -19,35 +18,31 @@ const medals = ["🥇", "🥈", "🥉"];
 export default function Leaderboard() {
   const [profiles, setProfiles] = useState([]);
   const [members, setMembers] = useState([]);
-  const [users, setUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const queryClient = useQueryClient();
 
   useEffect(() => {
-    // Call backend function to bypass client-side caching
-    base44.functions.invoke('getLeaderboardProfiles', {}).then((res) => {
-      const { profiles, members, users } = res.data;
+    Promise.all([
+      base44.auth.me(),
+      base44.functions.invoke('getLeaderboardProfiles', {}),
+    ]).then(([user, res]) => {
+      const { profiles, members } = res.data;
+      setCurrentUser(user);
       setProfiles(profiles);
       setMembers(members);
-      setUsers(users || []);
-      
-      base44.auth.me().then(user => {
-        if (user) {
-          // Match by user ID (family_member_id), linked user, or name
-          const myMember = members.find(m => m.linked_user_id === user.id || m.linked_user_email === user.email);
-          const myProfile = profiles.find(prof =>
-            prof.family_member_id === user.id ||
-            (myMember && (prof.family_member_id === myMember.id || prof.family_member_name === myMember.name))
-          );
-          setUserProfile(myProfile);
-        }
-        setLoading(false);
-      });
+
+      if (user) {
+        const myMember = members.find(m => m.linked_user_id === user.id || m.linked_user_email === user.email);
+        const myProfile = profiles.find(p =>
+          p.family_member_id === user.id ||
+          (myMember && (p.family_member_id === myMember.id || p.family_member_name === myMember.name))
+        );
+        setUserProfile(myProfile);
+      }
+      setLoading(false);
     });
   }, []);
-
-  const getMember = (id) => members.find(m => m.id === id);
 
   if (loading) {
     return (
@@ -83,28 +78,35 @@ export default function Leaderboard() {
       <h2 className="font-heading text-2xl font-bold">Leaderboard</h2>
 
       {(() => {
-        // Get current user's family group from any user in the list who shares the group
-        const familyGroupId = members[0]?.family_group_id || profiles[0]?.family_group_id;
-        
-        // Show all family members from the family group
-        const allEntries = members
-          .filter(m => m.family_group_id === familyGroupId)
-          .map(m => {
-            // Match profile by: family_member_id == member.id, OR family_member_id == linked_user_id, OR name match
-            const profile = profiles.find(p =>
-              p.family_member_id === m.id ||
-              (m.linked_user_id && p.family_member_id === m.linked_user_id) ||
-              p.family_member_name === m.name
-            );
-            return {
-              id: m.id,
-              name: m.name,
-              avatar_color: m.avatar_color || "blue",
-              total_xp: profile?.total_xp || 0,
-              level: profile?.level || 1,
-            };
-          })
-          .sort((a, b) => b.total_xp - a.total_xp);
+        const isSolo = !currentUser?.family_group_id;
+
+        // Solo: show only the current user
+        // Family: show all family members
+        const allEntries = isSolo
+          ? [{
+              id: currentUser?.id,
+              name: currentUser?.full_name || "You",
+              avatar_color: "blue",
+              total_xp: userProfile?.total_xp || 0,
+              level: userProfile?.level || 1,
+            }]
+          : members
+              .filter(m => m.family_group_id === currentUser.family_group_id)
+              .map(m => {
+                const profile = profiles.find(p =>
+                  p.family_member_id === m.id ||
+                  (m.linked_user_id && p.family_member_id === m.linked_user_id) ||
+                  p.family_member_name === m.name
+                );
+                return {
+                  id: m.id,
+                  name: m.name,
+                  avatar_color: m.avatar_color || "blue",
+                  total_xp: profile?.total_xp || 0,
+                  level: profile?.level || 1,
+                };
+              })
+              .sort((a, b) => b.total_xp - a.total_xp);
 
         if (allEntries.length === 0) return (
           <div className="bg-card border border-border rounded-lg p-6 text-center">
