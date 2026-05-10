@@ -9,12 +9,12 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get all pending tasks for this user/family using service role
+    // Get ALL tasks (any status) for this user/family using service role
     let tasks;
     if (user.family_group_id) {
-      tasks = await base44.asServiceRole.entities.Task.filter({ family_group_id: user.family_group_id, status: 'Pending' }, null, 1000);
+      tasks = await base44.asServiceRole.entities.Task.filter({ family_group_id: user.family_group_id }, null, 1000);
     } else {
-      tasks = await base44.asServiceRole.entities.Task.filter({ created_by: user.email, status: 'Pending' }, null, 1000);
+      tasks = await base44.asServiceRole.entities.Task.filter({ created_by: user.email }, null, 1000);
     }
 
     // Delete in batches of 50 to avoid rate limits
