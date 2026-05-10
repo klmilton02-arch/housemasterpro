@@ -21,6 +21,7 @@ const DialogOverlay = React.forwardRef(({ className, ...props }, ref) => (
       "fixed inset-0 z-50 bg-black/80  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
+    onPointerDown={(e) => e.stopPropagation()}
     {...props} />
 ))
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
