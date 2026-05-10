@@ -62,11 +62,12 @@ export default function Dashboard() {
     const me = await base44.auth.me();
     let all;
     if (me?.family_group_id) {
-      all = await base44.entities.Task.filter({ family_group_id: me.family_group_id });
+      all = await base44.entities.Task.filter({ family_group_id: me.family_group_id }, null, 5000);
     } else {
       // No family group — list all tasks the RLS allows (which is all tasks owned by this user)
-      all = await base44.entities.Task.list();
+      all = await base44.entities.Task.list(null, 5000);
     }
+    console.log(`[Dashboard] Loaded ${all.length} tasks`);
     setTasks(all);
     setLoading(false);
   }, []);
