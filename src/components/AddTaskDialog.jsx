@@ -298,13 +298,13 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto" onPointerDownCapture={(e) => e.stopPropagation()} onInteractOutside={(e) => e.preventDefault()} aria-describedby="add-task-description">
+      <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto" aria-describedby="add-task-description">
         <DialogHeader>
           <DialogTitle className="font-heading text-lg">Add Home Task</DialogTitle>
           <p id="add-task-description" className="hidden">Add a new home task by selecting presets or creating a custom task</p>
         </DialogHeader>
 
-        <Tabs value={tab} onValueChange={setTab} className="mt-2">
+        <Tabs value={tab} onValueChange={setTab} className="mt-2" onPointerDownCapture={(e) => e.stopPropagation()}>
           <TabsList className="w-full">
             <TabsTrigger value="preset" className="flex-1 text-xs">Preset</TabsTrigger>
             <TabsTrigger value="custom" className="flex-1 text-xs">Custom</TabsTrigger>
