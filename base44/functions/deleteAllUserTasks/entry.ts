@@ -9,24 +9,29 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get all tasks
-    const allTasks = await base44.entities.Task.list();
+    // Query with explicit family_group_id filter
+    const filter = user.family_group_id 
+      ? { family_group_id: user.family_group_id }
+      : { created_by: user.email };
 
-    let deleted = 0;
+    const tasks = await base44.asServiceRole.entities.Task.filter(filter, null, 2000);
     
-    // Delete sequentially with delays to avoid rate limit
-    for (const task of allTasks) {
-      try {
-        await base44.entities.Task.delete(task.id);
-        deleted++;
-      } catch (e) {
-        // Skip failures
+    console.log(`Found ${tasks.length} tasks to delete`);
+
+    // Delete in batches
+    let deleted = 0;
+    const batchSize = 100;
+    for (let i = 0; i < tasks.length; i += batchSize) {
+      const batch = tasks.slice(i, i + batchSize);
+      await Promise.all(batch.map(task => base44.asServiceRole.entities.Task.delete(task.id)));
+      deleted += batch.length;
+      console.log(`Deleted ${deleted}/${tasks.length}`);
+      if (i + batchSize < tasks.length) {
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
-      // Small delay between deletes
-      await new Promise(resolve => setTimeout(resolve, 50));
     }
 
-    return Response.json({ success: true, deleted, message: `Deleted ${deleted} tasks` });
+    return Response.json({ deleted, total: tasks.length });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
