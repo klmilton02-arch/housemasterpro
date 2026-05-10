@@ -504,18 +504,19 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
             </div>
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Category</Label>
-              <Select value={customCategory} onValueChange={setCustomCategory}>
-                <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Cleaning">Cleaning</SelectItem>
-                  <SelectItem value="Maintenance">Maintenance</SelectItem>
-                  <SelectItem value="Bills">Bills</SelectItem>
-                  <SelectItem value="Personal">Personal</SelectItem>
-                  <SelectItem value="Garden">Garden</SelectItem>
-                </SelectContent>
-              </Select>
+              <MobileSelect
+                value={customCategory}
+                onValueChange={setCustomCategory}
+                title="Select Category"
+                triggerClassName="mt-1"
+                options={[
+                  { value: "Cleaning", label: "Cleaning" },
+                  { value: "Maintenance", label: "Maintenance" },
+                  { value: "Bills", label: "Bills" },
+                  { value: "Personal", label: "Personal" },
+                  { value: "Garden", label: "Garden" },
+                ]}
+              />
             </div>
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Priority</Label>
