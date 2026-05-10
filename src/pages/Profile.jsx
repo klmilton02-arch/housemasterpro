@@ -83,10 +83,29 @@ export default function Profile() {
   async function handleSaveName() {
     if (!editName.trim()) return;
     setSavingName(true);
-    await base44.auth.updateMe({ full_name: editName.trim() });
-    setUser(prev => ({ ...prev, full_name: editName.trim() }));
+    const newName = editName.trim();
+    await base44.auth.updateMe({ full_name: newName });
+    setUser(prev => ({ ...prev, full_name: newName }));
+
+    // Also update linked FamilyMember and GamificationProfile
+    try {
+      const me = await base44.auth.me();
+      const members = await base44.entities.FamilyMember.filter({ linked_user_email: me.email });
+      for (const member of members) {
+        await base44.entities.FamilyMember.update(member.id, { name: newName });
+        // Update matching GamificationProfile
+        const gProfiles = await base44.entities.GamificationProfile.filter({ family_member_id: member.id });
+        for (const gp of gProfiles) {
+          await base44.entities.GamificationProfile.update(gp.id, { family_member_name: newName });
+        }
+      }
+    } catch (e) {
+      // Silently ignore if no linked member found
+    }
+
     setSavingName(false);
     setEditOpen(false);
+    toast.success("Name updated!");
   }
 
   async function handleSaveStartDates() {
@@ -341,11 +360,12 @@ export default function Profile() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label className="text-xs font-medium text-muted-foreground">Display Name</Label>
-              <Input value={editName} onChange={e => setEditName(e.target.value)} placeholder="Your name" className="mt-1" />
+              <Label className="text-xs font-medium text-muted-foreground">Your Name</Label>
+              <Input value={editName} onChange={e => setEditName(e.target.value)} placeholder="e.g. Scarlett, Kelly, Tom" className="mt-1" onKeyDown={e => e.key === "Enter" && handleSaveName()} />
+              <p className="text-xs text-muted-foreground mt-1">This is the name shown on the leaderboard and tasks.</p>
             </div>
             <Button className="w-full" onClick={handleSaveName} disabled={savingName || !editName.trim()}>
-              {savingName ? "Saving..." : "Save Changes"}
+              {savingName ? "Saving..." : "Save Name"}
             </Button>
           </div>
         </DialogContent>
