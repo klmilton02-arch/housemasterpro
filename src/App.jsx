@@ -112,12 +112,17 @@ const AuthenticatedApp = () => {
           </motion.div>
         } />
         
-
+        {/* Post-signup family join */}
+        <Route path="/join-family" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+            <JoinFamilyOnSignup />
+          </motion.div>
+        } />
 
         {/* Protected routes */}
         <Route element={<Layout />}>
           {[{ path: "/dashboard", el: <Dashboard /> }, { path: "/tasks", el: <Tasks /> }, { path: "/needs-attention", el: <NeedsAttention /> }, { path: "/presets", el: <Presets /> }, { path: "/home-setup", el: <HomeSetup /> }, { path: "/profile", el: <Profile /> },
-          { path: "/join-family", el: <JoinFamilyOnSignup /> }, { path: "/family", el: <Family /> }, { path: "/cats", el: <CatShelter /> }, { path: "/leaderboard", el: <Leaderboard /> }, { path: "/calendar", el: <CalendarPage /> }, { path: "/task-start-dates", el: <TaskStartDates /> }, { path: "/privacy", el: <Privacy /> }, { path: "/support", el: <Support /> }, { path: "/faq", el: <FAQ /> }, { path: "*", el: <PageNotFound /> }].map(({ path, el }) => (
+          { path: "/family", el: <Family /> }, { path: "/cats", el: <CatShelter /> }, { path: "/leaderboard", el: <Leaderboard /> }, { path: "/calendar", el: <CalendarPage /> }, { path: "/task-start-dates", el: <TaskStartDates /> }, { path: "/privacy", el: <Privacy /> }, { path: "/support", el: <Support /> }, { path: "/faq", el: <FAQ /> }, { path: "*", el: <PageNotFound /> }].map(({ path, el }) => (
             <Route key={path} path={path} element={
               <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
                 {el}
