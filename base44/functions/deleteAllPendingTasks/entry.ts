@@ -9,19 +9,27 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get all pending tasks for this user/family
+    // Get all pending tasks for this user/family using service role
     let tasks;
     if (user.family_group_id) {
-      tasks = await base44.entities.Task.filter({ family_group_id: user.family_group_id, status: 'Pending' }, null, 1000);
+      tasks = await base44.asServiceRole.entities.Task.filter({ family_group_id: user.family_group_id, status: 'Pending' }, null, 1000);
     } else {
-      tasks = await base44.entities.Task.filter({ created_by: user.email, status: 'Pending' }, null, 1000);
+      tasks = await base44.asServiceRole.entities.Task.filter({ created_by: user.email, status: 'Pending' }, null, 1000);
     }
 
-    // Delete all pending tasks
-    const deletePromises = tasks.map(task => base44.entities.Task.delete(task.id));
-    await Promise.all(deletePromises);
+    // Delete in batches of 50 to avoid rate limits
+    let deleted = 0;
+    const batchSize = 50;
+    for (let i = 0; i < tasks.length; i += batchSize) {
+      const batch = tasks.slice(i, i + batchSize);
+      await Promise.all(batch.map(task => base44.asServiceRole.entities.Task.delete(task.id)));
+      deleted += batch.length;
+      if (i + batchSize < tasks.length) {
+        await new Promise(resolve => setTimeout(resolve, 50));
+      }
+    }
 
-    return Response.json({ deleted: tasks.length, message: `Deleted ${tasks.length} pending tasks` });
+    return Response.json({ deleted, message: `Deleted ${deleted} pending tasks` });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
