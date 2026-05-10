@@ -297,8 +297,11 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
+    <Dialog open={open} onOpenChange={(newOpen) => {
+      if (newOpen === false) return; // Prevent closing
+      onOpenChange(newOpen);
+    }}>
+      <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-heading text-lg">Add Home Task</DialogTitle>
         </DialogHeader>
