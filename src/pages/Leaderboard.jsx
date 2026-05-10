@@ -79,7 +79,7 @@ export default function Leaderboard() {
         const isSolo = !currentUser?.family_group_id || currentUser?.account_type === 'solo';
 
         // Solo: show only the current user
-        // Family: show all family members
+        // Family: show all profiles directly (already filtered by family in backend)
         const allEntries = isSolo
           ? [{
               id: currentUser?.id,
@@ -88,20 +88,19 @@ export default function Leaderboard() {
               total_xp: userProfile?.total_xp || 0,
               level: userProfile?.level || 1,
             }]
-          : members
-              .filter(m => m.family_group_id === currentUser.family_group_id)
-              .map(m => {
-                const profile = profiles.find(p =>
-                  p.family_member_id === m.id ||
-                  (m.linked_user_id && p.family_member_id === m.linked_user_id) ||
-                  p.family_member_name === m.name
+          : profiles
+              .map(p => {
+                const member = members.find(m =>
+                  m.id === p.family_member_id ||
+                  (m.linked_user_id && m.linked_user_id === p.family_member_id) ||
+                  m.name === p.family_member_name
                 );
                 return {
-                  id: m.id,
-                  name: m.name,
-                  avatar_color: m.avatar_color || "blue",
-                  total_xp: profile?.total_xp || 0,
-                  level: profile?.level || 1,
+                  id: p.id,
+                  name: p.family_member_name,
+                  avatar_color: member?.avatar_color || "blue",
+                  total_xp: p.total_xp || 0,
+                  level: p.level || 1,
                 };
               })
               .sort((a, b) => b.total_xp - a.total_xp);
