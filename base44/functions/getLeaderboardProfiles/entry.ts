@@ -9,29 +9,22 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get full user record from DB to get family_group_id and account_type
-    const userRecords = await base44.asServiceRole.entities.User.filter({ email: user.email });
-    const rawUser = userRecords[0];
-    // Flatten data fields onto top level for easy access
-    const fullUser = rawUser ? { ...rawUser, ...(rawUser.data || {}) } : null;
-    const familyGroupId = fullUser?.family_group_id;
-    const accountType = fullUser?.account_type;
+    const familyGroupId = user.family_group_id;
+    const accountType = user.account_type;
 
     // Solo user: return just their own profile
     if (!familyGroupId || accountType === 'solo') {
       const soloProfiles = await base44.asServiceRole.entities.GamificationProfile.filter({ family_member_id: user.id });
-      return Response.json({ profiles: soloProfiles, members: [], users: [], solo: true, currentUser: fullUser });
+      return Response.json({ profiles: soloProfiles, members: [], users: [], solo: true, currentUser: user });
     }
 
-    // Family user: fetch members + profiles for the family group
-    const [members, profiles] = await Promise.all([
+    // Family user: fetch members + all profiles, then filter by family
+    const [members, allProfiles] = await Promise.all([
       base44.asServiceRole.entities.FamilyMember.filter({ family_group_id: familyGroupId }),
-      base44.asServiceRole.entities.GamificationProfile.filter({ family_group_id: familyGroupId }),
+      base44.asServiceRole.entities.GamificationProfile.filter({}),
     ]);
 
-    // Also include profiles matched by member id in case family_group_id isn't set on profile
     const memberIds = members.map(m => m.id);
-    const allProfiles = await base44.asServiceRole.entities.GamificationProfile.filter({});
     const familyProfiles = allProfiles.filter(p =>
       p.family_group_id === familyGroupId ||
       memberIds.includes(p.family_member_id) ||
@@ -43,7 +36,7 @@ Deno.serve(async (req) => {
       members,
       users: [],
       solo: false,
-      currentUser: fullUser
+      currentUser: user
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
