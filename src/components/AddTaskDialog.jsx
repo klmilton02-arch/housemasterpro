@@ -306,8 +306,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
         <Tabs value={tab} onValueChange={setTab} className="mt-2" onClick={(e) => e.stopPropagation()}>
           <TabsList className="w-full" onPointerDown={(e) => e.stopPropagation()}>
-            <TabsTrigger value="preset" className="flex-1 text-xs">Preset</TabsTrigger>
-            <TabsTrigger value="custom" className="flex-1 text-xs">Custom</TabsTrigger>
+            <TabsTrigger value="preset" className="flex-1 text-xs" onPointerDown={(e) => e.stopPropagation()}>Preset</TabsTrigger>
+            <TabsTrigger value="custom" className="flex-1 text-xs" onPointerDown={(e) => e.stopPropagation()}>Custom</TabsTrigger>
           </TabsList>
 
           <TabsContent value="preset" className="space-y-4 mt-4">
