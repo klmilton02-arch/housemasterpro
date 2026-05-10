@@ -304,13 +304,13 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
           <p id="add-task-description" className="hidden">Add a new home task by selecting presets or creating a custom task</p>
         </DialogHeader>
 
-        <Tabs value={tab} onValueChange={setTab} className="mt-2" onClick={(e) => e.stopPropagation()}>
-          <TabsList className="w-full" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
-            <TabsTrigger value="preset" className="flex-1 text-xs" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>Preset</TabsTrigger>
-            <TabsTrigger value="custom" className="flex-1 text-xs" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>Custom</TabsTrigger>
+        <Tabs value={tab} onValueChange={setTab} className="mt-2">
+          <TabsList className="w-full">
+            <TabsTrigger value="preset" className="flex-1 text-xs">Preset</TabsTrigger>
+            <TabsTrigger value="custom" className="flex-1 text-xs">Custom</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="preset" className="space-y-4 mt-4" onPointerDown={(e) => e.stopPropagation()}>
+          <TabsContent value="preset" className="space-y-4 mt-4">
             {initialPreset ? (
               // Launched from a specific preset card — show it directly, no list
               <div className="bg-muted/50 border border-border rounded-lg px-4 py-3">
@@ -498,7 +498,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
             </Button>
           </TabsContent>
 
-          <TabsContent value="custom" className="space-y-4 mt-4" onPointerDown={(e) => e.stopPropagation()}>
+          <TabsContent value="custom" className="space-y-4 mt-4">
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Task Name</Label>
               <Input value={customName} onChange={e => setCustomName(e.target.value)} placeholder="e.g., Deep clean kitchen" className="mt-1" />
