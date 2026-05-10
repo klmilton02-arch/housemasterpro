@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Zap } from "lucide-react";
+
 import { Link } from "react-router-dom";
 import StreakCircle from "../components/StreakCircle";
 
@@ -23,19 +24,16 @@ export default function Leaderboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      base44.auth.me(),
-      base44.functions.invoke('getLeaderboardProfiles', {}),
-    ]).then(([user, res]) => {
-      const { profiles, members } = res.data;
-      setCurrentUser(user);
+    base44.functions.invoke('getLeaderboardProfiles', {}).then((res) => {
+      const { profiles, members, currentUser: fullUser } = res.data;
+      setCurrentUser(fullUser);
       setProfiles(profiles);
       setMembers(members);
 
-      if (user) {
-        const myMember = members.find(m => m.linked_user_id === user.id || m.linked_user_email === user.email);
+      if (fullUser) {
+        const myMember = members.find(m => m.linked_user_id === fullUser.id || m.linked_user_email === fullUser.email);
         const myProfile = profiles.find(p =>
-          p.family_member_id === user.id ||
+          p.family_member_id === fullUser.id ||
           (myMember && (p.family_member_id === myMember.id || p.family_member_name === myMember.name))
         );
         setUserProfile(myProfile);
@@ -78,7 +76,7 @@ export default function Leaderboard() {
       <h2 className="font-heading text-2xl font-bold">Leaderboard</h2>
 
       {(() => {
-        const isSolo = !currentUser?.family_group_id;
+        const isSolo = !currentUser?.family_group_id || currentUser?.account_type === 'solo';
 
         // Solo: show only the current user
         // Family: show all family members

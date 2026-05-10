@@ -9,31 +9,39 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get family group ID from current user
-    const currentUser = await base44.asServiceRole.entities.User.filter({ email: user.email });
-    const familyGroupId = currentUser[0]?.family_group_id;
+    // Get full user record from DB to get family_group_id and account_type
+    const userRecords = await base44.asServiceRole.entities.User.filter({ email: user.email });
+    const fullUser = userRecords[0];
+    const familyGroupId = fullUser?.family_group_id;
+    const accountType = fullUser?.account_type;
 
-    if (!familyGroupId) {
-      return Response.json({ profiles: [], members: [], users: [] });
+    // Solo user: return just their own profile
+    if (!familyGroupId || accountType === 'solo') {
+      const soloProfiles = await base44.asServiceRole.entities.GamificationProfile.filter({ family_member_id: user.id });
+      return Response.json({ profiles: soloProfiles, members: [], users: [], solo: true, currentUser: fullUser });
     }
 
-    // Fetch fresh data
-    const [members, profiles, allUsers] = await Promise.all([
+    // Family user: fetch members + profiles for the family group
+    const [members, profiles] = await Promise.all([
       base44.asServiceRole.entities.FamilyMember.filter({ family_group_id: familyGroupId }),
-      base44.asServiceRole.entities.GamificationProfile.filter({}),
-      base44.asServiceRole.entities.User.list()
+      base44.asServiceRole.entities.GamificationProfile.filter({ family_group_id: familyGroupId }),
     ]);
 
-    // Filter profiles for this family group only
-    const familyProfiles = profiles.filter(p => {
-      const member = members.find(m => m.id === p.family_member_id);
-      return member && member.family_group_id === familyGroupId;
-    });
+    // Also include profiles matched by member id in case family_group_id isn't set on profile
+    const memberIds = members.map(m => m.id);
+    const allProfiles = await base44.asServiceRole.entities.GamificationProfile.filter({});
+    const familyProfiles = allProfiles.filter(p =>
+      p.family_group_id === familyGroupId ||
+      memberIds.includes(p.family_member_id) ||
+      members.some(m => m.linked_user_id && p.family_member_id === m.linked_user_id)
+    );
 
     return Response.json({
       profiles: familyProfiles,
       members,
-      users: allUsers || []
+      users: [],
+      solo: false,
+      currentUser: fullUser
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
