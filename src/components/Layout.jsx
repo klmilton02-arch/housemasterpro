@@ -1,9 +1,12 @@
+import { useState, useEffect } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { LayoutDashboard, ListChecks, Home, User, Zap } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import MobileHeader from "./MobileHeader";
 import { useBlastMode } from "@/lib/BlastModeContext";
+import AccountSetup from "./AccountSetup";
+import { base44 } from "@/api/base44Client";
 
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard, iconColor: "text-black dark:text-white" },
@@ -18,6 +21,30 @@ export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isActive, timeLeft, duration } = useBlastMode();
+  const [needsSetup, setNeedsSetup] = useState(null); // null = loading
+
+  useEffect(() => {
+    base44.auth.me().then(user => {
+      // Show setup if user has no account_type configured yet
+      setNeedsSetup(!user?.account_type);
+    }).catch(() => setNeedsSetup(false));
+  }, []);
+
+  if (needsSetup === null) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-muted border-t-primary rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (needsSetup) {
+    return (
+      <div className="min-h-screen bg-background">
+        <AccountSetup onDone={() => setNeedsSetup(false)} />
+      </div>
+    );
+  }
 
   const blastMins = Math.floor(timeLeft / 60);
   const blastSecs = String(timeLeft % 60).padStart(2, "0");
