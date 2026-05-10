@@ -20,7 +20,13 @@ export default function JoinFamilyOnSignup() {
       setInviteCode(codeFromUrl.toUpperCase());
     }
 
-    base44.auth.me().then(user => {
+    base44.auth.isAuthenticated().then(async (authed) => {
+      if (!authed) {
+        // Not logged in — redirect to login, then come back here with the code
+        base44.auth.redirectToLogin(window.location.pathname + window.location.search);
+        return;
+      }
+      const user = await base44.auth.me();
       if (user?.family_group_id) {
         navigate("/dashboard", { replace: true });
       }
