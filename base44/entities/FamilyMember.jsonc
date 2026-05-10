@@ -43,7 +43,19 @@
   ],
   "rls": {
     "create": {
-      "data.family_group_id": "{{user.family_group_id}}"
+      "$or": [
+        {
+          "data.family_group_id": "{{user.family_group_id}}"
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     },
     "read": {
       "$or": [
@@ -58,19 +70,22 @@
     "update": {
       "$or": [
         {
-          "data.linked_user_id": "{{user.id}}"
+          "data.family_group_id": "{{user.family_group_id}}"
         },
         {
-          "user_condition": {
-            "role": "admin"
-          }
+          "created_by": "{{user.email}}"
         }
       ]
     },
     "delete": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "data.family_group_id": "{{user.family_group_id}}"
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
     }
   }
 }

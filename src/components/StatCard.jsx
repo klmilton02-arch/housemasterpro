@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default function StatCard({ icon: Icon, label, value, color, onClick, labelRight, smallLabel, labelOnTop, large, bigText }) {
+export default function StatCard({ icon: Icon, label, value, color, onClick, labelRight, smallLabel, labelOnTop, large, bigText, textSize }) {
   return (
     <div
       className={cn(
@@ -15,8 +15,8 @@ export default function StatCard({ icon: Icon, label, value, color, onClick, lab
       </div>
       {labelRight ? (
         <div className="min-w-0 flex items-center gap-2 w-full">
-          <p className={`font-heading font-bold text-foreground leading-snug text-left break-words ${bigText ? "text-base" : "text-xs"}`}>{value}</p>
-          {label ? <p className={`font-medium text-foreground/70 leading-snug text-left break-words ${bigText ? "text-base" : "text-xs"}`}>{label}</p> : null}
+          <p className={`font-heading font-bold text-foreground leading-snug text-left break-words ${textSize || (bigText ? "text-base" : "text-xs")}`}>{value}</p>
+          {label ? <p className={`font-medium text-foreground/70 leading-snug text-left break-words ${textSize || (bigText ? "text-base" : "text-xs")}`}>{label}</p> : null}
         </div>
       ) : labelOnTop ? (
         <div className="min-w-0 flex flex-col items-start justify-center flex-1 text-left">
