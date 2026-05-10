@@ -28,7 +28,7 @@ Deno.serve(async (req) => {
     if (display_name && display_name.trim()) {
       updateData.full_name = display_name.trim();
     }
-    await base44.auth.updateMe(updateData);
+    await base44.asServiceRole.entities.User.update(user.id, updateData);
     
     // Check if a FamilyMember already exists for this user
     const existingMember = await base44.asServiceRole.entities.FamilyMember.filter({
