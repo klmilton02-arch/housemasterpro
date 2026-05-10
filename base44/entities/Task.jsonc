@@ -140,40 +140,88 @@
     "create": {
       "$or": [
         {
-          "data.family_group_id": "{{user.family_group_id}}"
+          "data.category": "Personal"
         },
         {
-          "created_by": "{{user.email}}"
+          "data.family_group_id": "{{user.family_group_id}}"
         }
       ]
     },
     "read": {
       "$or": [
         {
-          "data.family_group_id": "{{user.family_group_id}}"
+          "$and": [
+            {
+              "data.category": "Personal"
+            },
+            {
+              "created_by": "{{user.email}}"
+            }
+          ]
         },
         {
-          "created_by": "{{user.email}}"
+          "$and": [
+            {
+              "data.category": {
+                "$ne": "Personal"
+              }
+            },
+            {
+              "data.family_group_id": "{{user.family_group_id}}"
+            }
+          ]
         }
       ]
     },
     "update": {
       "$or": [
         {
-          "data.family_group_id": "{{user.family_group_id}}"
+          "$and": [
+            {
+              "data.category": "Personal"
+            },
+            {
+              "created_by": "{{user.email}}"
+            }
+          ]
         },
         {
-          "created_by": "{{user.email}}"
+          "$and": [
+            {
+              "data.category": {
+                "$ne": "Personal"
+              }
+            },
+            {
+              "data.family_group_id": "{{user.family_group_id}}"
+            }
+          ]
         }
       ]
     },
     "delete": {
       "$or": [
         {
-          "data.family_group_id": "{{user.family_group_id}}"
+          "$and": [
+            {
+              "data.category": "Personal"
+            },
+            {
+              "created_by": "{{user.email}}"
+            }
+          ]
         },
         {
-          "created_by": "{{user.email}}"
+          "$and": [
+            {
+              "data.category": {
+                "$ne": "Personal"
+              }
+            },
+            {
+              "data.family_group_id": "{{user.family_group_id}}"
+            }
+          ]
         }
       ]
     }

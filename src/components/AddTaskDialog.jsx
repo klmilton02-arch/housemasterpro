@@ -648,7 +648,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
           </TabsContent>
           </Tabs>
 
-        <div className={`space-y-4 mt-4 pt-4 border-t border-border ${tab === "todo" ? "hidden" : ""}`}>
+        <div className={`space-y-4 mt-4 pt-4 border-t border-border ${(tab === "todo" || tab === "scan") ? "hidden" : ""}`}>
           {/* Bill day-of-month option */}
           {((tab === "preset" && [...selectedPresets].map(id => presets.find(p => p.id === id)).some(p => p?.task_type === "Bills")) || (tab === "custom" && customCategory === "Bills")) && (
             <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 space-y-2">
