@@ -305,10 +305,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
         <Tabs value={tab} onValueChange={setTab} className="mt-2">
           <TabsList className="w-full">
-            <TabsTrigger value="preset" className="flex-1 text-xs">From Preset</TabsTrigger>
+            <TabsTrigger value="preset" className="flex-1 text-xs">Preset</TabsTrigger>
             <TabsTrigger value="custom" className="flex-1 text-xs">Custom</TabsTrigger>
-            <TabsTrigger value="todo" className="flex-1 text-xs">To-Do</TabsTrigger>
-            <TabsTrigger value="scan" className="flex-1 text-xs">Scan tasks and appointments</TabsTrigger>
           </TabsList>
 
           <TabsContent value="preset" className="space-y-4 mt-4">
@@ -450,7 +448,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
             )}
           </TabsContent>
 
-          <TabsContent value="todo" className="space-y-4 mt-4">
+          <TabsContent value="todo" className="space-y-4 mt-4 hidden">
             <p className="text-xs text-muted-foreground">One-time personal tasks that don't repeat — great for to-do lists and errands.</p>
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Task Name</Label>
@@ -566,7 +564,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
              </div>
           </TabsContent>
 
-          <TabsContent value="scan" className="space-y-4 mt-4">
+          <TabsContent value="scan" className="space-y-4 mt-4 hidden">
             <div className="space-y-3">
               <div>
                 <Label className="text-xs font-medium text-muted-foreground">Scan Type</Label>
