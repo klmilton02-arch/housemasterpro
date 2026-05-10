@@ -390,8 +390,8 @@ async function handleCreateFamily() {
                   {(linkedUser || member.linked_user_email) ? (
                     <div className="flex items-center justify-between bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md px-3 py-2">
                       <div>
-                        <p className="text-xs font-medium text-green-800 dark:text-green-300">{linkedUser?.full_name || member.linked_user_email}</p>
-                        <p className="text-xs text-green-600 dark:text-green-400">{linkedUser?.email || member.linked_user_email}</p>
+                        <p className="text-xs font-medium text-green-800 dark:text-green-300">{linkedUser?.email || member.linked_user_email}</p>
+                        {linkedUser?.full_name && <p className="text-xs text-green-600 dark:text-green-400">{linkedUser.full_name}</p>}
                       </div>
                       <Button
                         variant="ghost"
