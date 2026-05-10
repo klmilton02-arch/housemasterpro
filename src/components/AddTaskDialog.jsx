@@ -303,7 +303,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
           <DialogTitle className="font-heading text-lg">Add Home Task</DialogTitle>
         </DialogHeader>
 
-        <Tabs value={tab} onValueChange={setTab} className="mt-2">
+        <Tabs value={tab} onValueChange={setTab} className="mt-2" onClick={(e) => e.stopPropagation()}>
           <TabsList className="w-full">
             <TabsTrigger value="preset" className="flex-1 text-xs">Preset</TabsTrigger>
             <TabsTrigger value="custom" className="flex-1 text-xs">Custom</TabsTrigger>
