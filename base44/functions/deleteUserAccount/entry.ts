@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
       familyGroupId ? deleteAll('FamilyGroup', { owner_email: userEmail }) : Promise.resolve(),
     ]);
 
-    return Response.json({ success: true, message: 'Account data deleted' });
+    return Response.json({ success: true, message: 'Account data deleted', logout: true });
   } catch (error) {
     console.error('Failed to delete account data:', error);
     return Response.json({ error: error.message || 'Failed to delete account' }, { status: 500 });
