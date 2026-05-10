@@ -47,6 +47,13 @@ Deno.serve(async (req) => {
       familyGroupId ? deleteAll('FamilyGroup', { owner_email: userEmail }) : Promise.resolve(),
     ]);
 
+    // Delete the User record itself
+    try {
+      await base44.asServiceRole.entities.User.delete(userId);
+    } catch (err) {
+      console.log('Note: User record deletion (User entity is platform-managed):', err.message);
+    }
+
     return Response.json({ success: true, message: 'Account data deleted', logout: true });
   } catch (error) {
     console.error('Failed to delete account data:', error);
