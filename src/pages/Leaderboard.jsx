@@ -34,7 +34,12 @@ export default function Leaderboard() {
       
       base44.auth.me().then(user => {
         if (user) {
-          const myProfile = profiles.find(prof => prof.family_member_name === user.full_name);
+          // Match by user ID (family_member_id), linked user, or name
+          const myMember = members.find(m => m.linked_user_id === user.id || m.linked_user_email === user.email);
+          const myProfile = profiles.find(prof =>
+            prof.family_member_id === user.id ||
+            (myMember && (prof.family_member_id === myMember.id || prof.family_member_name === myMember.name))
+          );
           setUserProfile(myProfile);
         }
         setLoading(false);
@@ -78,15 +83,19 @@ export default function Leaderboard() {
       <h2 className="font-heading text-2xl font-bold">Leaderboard</h2>
 
       {(() => {
-        // Get current user's family group
-        const currentUser = users.find(u => u.email === userProfile?.created_by);
-        const familyGroupId = currentUser?.family_group_id;
+        // Get current user's family group from any user in the list who shares the group
+        const familyGroupId = members[0]?.family_group_id || profiles[0]?.family_group_id;
         
         // Show all family members from the family group
         const allEntries = members
           .filter(m => m.family_group_id === familyGroupId)
           .map(m => {
-            const profile = profiles.find(p => p.family_member_id === m.id);
+            // Match profile by: family_member_id == member.id, OR family_member_id == linked_user_id, OR name match
+            const profile = profiles.find(p =>
+              p.family_member_id === m.id ||
+              (m.linked_user_id && p.family_member_id === m.linked_user_id) ||
+              p.family_member_name === m.name
+            );
             return {
               id: m.id,
               name: m.name,

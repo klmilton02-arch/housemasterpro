@@ -88,7 +88,16 @@
   ],
   "rls": {
     "create": {
-      "data.family_member_id": "{{user.id}}"
+      "$or": [
+        {
+          "data.family_member_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     },
     "read": {
       "$or": [
@@ -109,11 +118,16 @@
           "data.family_member_id": "{{user.id}}"
         },
         {
-          "created_by": "{{user.email}}"
-        },
-        {
           "user_condition": {
             "role": "admin"
+          }
+        },
+        {
+          "data.family_group_id": {
+            "$in": [
+              "{{user.family_group_id}}",
+              "owner_family_group_id"
+            ]
           }
         }
       ]
@@ -124,11 +138,16 @@
           "data.family_member_id": "{{user.id}}"
         },
         {
-          "created_by": "{{user.email}}"
-        },
-        {
           "user_condition": {
             "role": "admin"
+          }
+        },
+        {
+          "data.family_group_id": {
+            "$in": [
+              "{{user.family_group_id}}",
+              "owner_family_group_id"
+            ]
           }
         }
       ]
