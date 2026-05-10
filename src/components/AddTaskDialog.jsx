@@ -317,13 +317,14 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
             <div className="w-6 h-6 border-3 border-muted border-t-primary rounded-full animate-spin"></div>
           </div>
         ) : (
-        <Tabs value={tab} onValueChange={setTab} className="mt-2" onPointerDownCapture={(e) => e.stopPropagation()}>
-          <TabsList className="w-full">
-            <TabsTrigger value="preset" className="flex-1 text-xs">Preset</TabsTrigger>
-            <TabsTrigger value="custom" className="flex-1 text-xs">Custom</TabsTrigger>
-          </TabsList>
+          <>
+            <Tabs value={tab} onValueChange={setTab} className="mt-2" onPointerDownCapture={(e) => e.stopPropagation()}>
+              <TabsList className="w-full">
+                <TabsTrigger value="preset" className="flex-1 text-xs">Preset</TabsTrigger>
+                <TabsTrigger value="custom" className="flex-1 text-xs">Custom</TabsTrigger>
+              </TabsList>
 
-          <TabsContent value="preset" className="space-y-4 mt-4">
+              <TabsContent value="preset" className="space-y-4 mt-4">
             {initialPreset ? (
               // Launched from a specific preset card — show it directly, no list
               <div className="bg-muted/50 border border-border rounded-lg px-4 py-3">
@@ -658,10 +659,10 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                 onChange={(e) => handleScanFile(e.target.files?.[0])}
               />
             </div>
-          </TabsContent>
-          </Tabs>
+              </TabsContent>
+            </Tabs>
 
-          <div className={`space-y-4 mt-4 pt-4 border-t border-border ${(tab !== "preset" && tab !== "custom") ? "hidden" : ""}`}>
+            <div className={`space-y-4 mt-4 pt-4 border-t border-border ${(tab !== "preset" && tab !== "custom") ? "hidden" : ""}`}>
           {/* Bill day-of-month option */}
           {((tab === "preset" && [...selectedPresets].map(id => presets.find(p => p.id === id)).some(p => p?.task_type === "Bills")) || (tab === "custom" && customCategory === "Bills")) && (
             <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 space-y-2">
@@ -753,8 +754,9 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
             >
               {loading ? "Adding..." : "Add & Continue"}
             </Button>
-          </div>
-          </div>
+            </div>
+            </div>
+          </>
         )}
       </DialogContent>
     </Dialog>
