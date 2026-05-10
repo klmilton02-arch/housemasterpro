@@ -73,6 +73,10 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
       ]).then(([p, f]) => {
         setPresets(p);
         setFamilyMembers(f);
+      }).catch(err => {
+        console.error("Failed to load presets/family members:", err);
+        setPresets([]);
+        setFamilyMembers([]);
       });
 
       if (initialPreset) {
