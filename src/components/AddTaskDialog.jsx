@@ -15,6 +15,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   const [presets, setPresets] = useState([]);
   const [familyMembers, setFamilyMembers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [dialogLoading, setDialogLoading] = useState(false);
   const [tab, setTab] = useState("preset");
 
   // To-do form
@@ -67,16 +68,19 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
   useEffect(() => {
     if (open) {
+      setDialogLoading(true);
       Promise.all([
-        base44.entities.PresetTask.list(),
-        base44.entities.FamilyMember.list(),
+        base44.entities.PresetTask.list().catch(() => []),
+        base44.entities.FamilyMember.list().catch(() => []),
       ]).then(([p, f]) => {
-        setPresets(p);
-        setFamilyMembers(f);
+        setPresets(p || []);
+        setFamilyMembers(f || []);
+        setDialogLoading(false);
       }).catch(err => {
         console.error("Failed to load presets/family members:", err);
         setPresets([]);
         setFamilyMembers([]);
+        setDialogLoading(false);
       });
 
       if (initialPreset) {
@@ -308,6 +312,11 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
           <p id="add-task-description" className="hidden">Add a new home task by selecting presets or creating a custom task</p>
         </DialogHeader>
 
+        {dialogLoading ? (
+          <div className="flex items-center justify-center py-8">
+            <div className="w-6 h-6 border-3 border-muted border-t-primary rounded-full animate-spin"></div>
+          </div>
+        ) : (
         <Tabs value={tab} onValueChange={setTab} className="mt-2" onPointerDownCapture={(e) => e.stopPropagation()}>
           <TabsList className="w-full">
             <TabsTrigger value="preset" className="flex-1 text-xs">Preset</TabsTrigger>
@@ -652,7 +661,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
           </TabsContent>
           </Tabs>
 
-        <div className={`space-y-4 mt-4 pt-4 border-t border-border ${(tab !== "preset" && tab !== "custom") ? "hidden" : ""}`}>
+          <div className={`space-y-4 mt-4 pt-4 border-t border-border ${(tab !== "preset" && tab !== "custom") ? "hidden" : ""}`}>
           {/* Bill day-of-month option */}
           {((tab === "preset" && [...selectedPresets].map(id => presets.find(p => p.id === id)).some(p => p?.task_type === "Bills")) || (tab === "custom" && customCategory === "Bills")) && (
             <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 space-y-2">
@@ -745,7 +754,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
               {loading ? "Adding..." : "Add & Continue"}
             </Button>
           </div>
-        </div>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
