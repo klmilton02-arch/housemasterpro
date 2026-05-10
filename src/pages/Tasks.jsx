@@ -63,10 +63,11 @@ export default function Tasks() {
     const me = await base44.auth.me();
     let all;
     if (me?.family_group_id) {
-      all = await base44.entities.Task.filter({ family_group_id: me.family_group_id }, "-created_date", 500);
+      all = await base44.entities.Task.filter({ family_group_id: me.family_group_id }, "-created_date", 5000);
     } else {
-      all = await base44.entities.Task.filter({ created_by: me?.email }, "-created_date", 500);
+      all = await base44.entities.Task.filter({ created_by: me?.email }, "-created_date", 5000);
     }
+    console.log(`[Tasks] Loaded ${all.length} tasks for user`);
     setTasks(all);
     setLoading(false);
   }, []);
