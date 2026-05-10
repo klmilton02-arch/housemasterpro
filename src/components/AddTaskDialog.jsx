@@ -305,12 +305,12 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
         </DialogHeader>
 
         <Tabs value={tab} onValueChange={setTab} className="mt-2" onClick={(e) => e.stopPropagation()}>
-          <TabsList className="w-full" onPointerDown={(e) => e.stopPropagation()}>
-            <TabsTrigger value="preset" className="flex-1 text-xs" onPointerDown={(e) => e.stopPropagation()}>Preset</TabsTrigger>
-            <TabsTrigger value="custom" className="flex-1 text-xs" onPointerDown={(e) => e.stopPropagation()}>Custom</TabsTrigger>
+          <TabsList className="w-full" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
+            <TabsTrigger value="preset" className="flex-1 text-xs" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>Preset</TabsTrigger>
+            <TabsTrigger value="custom" className="flex-1 text-xs" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>Custom</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="preset" className="space-y-4 mt-4">
+          <TabsContent value="preset" className="space-y-4 mt-4" onPointerDown={(e) => e.stopPropagation()}>
             {initialPreset ? (
               // Launched from a specific preset card — show it directly, no list
               <div className="bg-muted/50 border border-border rounded-lg px-4 py-3">
@@ -498,7 +498,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
             </Button>
           </TabsContent>
 
-          <TabsContent value="custom" className="space-y-4 mt-4">
+          <TabsContent value="custom" className="space-y-4 mt-4" onPointerDown={(e) => e.stopPropagation()}>
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Task Name</Label>
               <Input value={customName} onChange={e => setCustomName(e.target.value)} placeholder="e.g., Deep clean kitchen" className="mt-1" />
