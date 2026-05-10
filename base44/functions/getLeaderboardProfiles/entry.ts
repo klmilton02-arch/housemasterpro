@@ -11,7 +11,9 @@ Deno.serve(async (req) => {
 
     // Get full user record from DB to get family_group_id and account_type
     const userRecords = await base44.asServiceRole.entities.User.filter({ email: user.email });
-    const fullUser = userRecords[0];
+    const rawUser = userRecords[0];
+    // Flatten data fields onto top level for easy access
+    const fullUser = rawUser ? { ...rawUser, ...(rawUser.data || {}) } : null;
     const familyGroupId = fullUser?.family_group_id;
     const accountType = fullUser?.account_type;
 
