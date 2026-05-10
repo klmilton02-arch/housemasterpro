@@ -12,7 +12,14 @@
     },
     "category": {
       "type": "string",
-      "title": "Category"
+      "title": "Category",
+      "enum": [
+        "Cleaning",
+        "Maintenance",
+        "Bills",
+        "Personal",
+        "Garden"
+      ]
     },
     "room": {
       "type": "string",
@@ -132,6 +139,7 @@
   },
   "required": [
     "name",
+    "category",
     "frequency_days",
     "next_due_date",
     "status"
@@ -140,10 +148,26 @@
     "create": {
       "$or": [
         {
-          "data.category": "Personal"
+          "$and": [
+            {
+              "data.category": "Personal"
+            },
+            {
+              "created_by": "{{user.email}}"
+            }
+          ]
         },
         {
-          "data.family_group_id": "{{user.family_group_id}}"
+          "$and": [
+            {
+              "data.category": {
+                "$ne": "Personal"
+              }
+            },
+            {
+              "data.family_group_id": "{{user.family_group_id}}"
+            }
+          ]
         }
       ]
     },
