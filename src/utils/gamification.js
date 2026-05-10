@@ -95,8 +95,12 @@ export async function revokePoints(task, wasBlastRunning = false) {
 
   const pointsToRevoke = getTaskPoints(task) * (wasBlastRunning ? 2 : 1);
 
-  const profiles = await base44.entities.GamificationProfile.filter({ family_member_id: memberId });
-  const profile = profiles[0];
+  let profileResults = await base44.entities.GamificationProfile.filter({ family_member_id: memberId });
+  let profile = profileResults[0];
+  if (!profile && memberName) {
+    const byName = await base44.entities.GamificationProfile.filter({ family_member_name: memberName });
+    if (byName.length > 0) profile = byName[0];
+  }
   if (!profile) return;
 
   const newXP = Math.max(0, (profile.total_xp || 0) - pointsToRevoke);
@@ -138,9 +142,15 @@ export async function awardPoints(task, isBlastRunning = false) {
   let basePoints = getTaskPoints(task);
   const blastMultiplier = isBlastRunning ? 2 : 1;
 
-  // Find or create profile
-  const profiles = await base44.entities.GamificationProfile.filter({ family_member_id: memberId });
-  let profile = profiles[0];
+  // Find profile — try by member ID first, then by name as fallback
+  let profileResults = await base44.entities.GamificationProfile.filter({ family_member_id: memberId });
+  let profile = profileResults[0];
+
+  // Fallback: match by name if member ID didn't find anything
+  if (!profile && memberName) {
+    const byName = await base44.entities.GamificationProfile.filter({ family_member_name: memberName });
+    if (byName.length > 0) profile = byName[0];
+  }
 
   if (!profile) {
     try {
