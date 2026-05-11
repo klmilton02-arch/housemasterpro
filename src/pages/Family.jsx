@@ -47,7 +47,9 @@ export default function Family() {
 
   const loadData = useCallback(async () => {
     try {
-      const me = await base44.auth.me();
+      // Use fresh DB data (not cached token) to get current family_group_id
+      const freshRes = await base44.functions.invoke('getMyFreshUser', {});
+      const me = freshRes.data?.user || await base44.auth.me();
       setUser(me);
 
       if (me?.family_group_id) {
@@ -106,8 +108,8 @@ async function handleCreateFamily() {
       console.log("Join result:", result);
       setInviteCode("");
       // Refresh user data and refetch to ensure family_group_id is updated
-      const me = await base44.auth.me();
-      console.log("Updated user:", me);
+      const freshRes = await base44.functions.invoke('getMyFreshUser', {});
+      const me = freshRes.data?.user || await base44.auth.me();
       setUser(me);
       if (me?.family_group_id) {
         const [membersRes, fgRes, usersRes] = await Promise.all([
