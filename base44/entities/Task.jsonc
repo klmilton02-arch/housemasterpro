@@ -148,24 +148,17 @@
     "create": {
       "$or": [
         {
-          "$and": [
-            {
-              "data.category": "Personal"
-            },
-            {
-              "created_by": "{{user.email}}"
-            }
-          ]
+          "created_by": "{{user.email}}"
         },
         {
           "$and": [
             {
-              "data.category": {
-                "$ne": "Personal"
-              }
+              "data.family_group_id": "{{user.family_group_id}}"
             },
             {
-              "data.family_group_id": "{{user.family_group_id}}"
+              "data.family_group_id": {
+                "$exists": true
+              }
             }
           ]
         }
@@ -174,24 +167,17 @@
     "read": {
       "$or": [
         {
-          "$and": [
-            {
-              "data.category": "Personal"
-            },
-            {
-              "created_by": "{{user.email}}"
-            }
-          ]
+          "created_by": "{{user.email}}"
         },
         {
           "$and": [
             {
-              "data.category": {
-                "$ne": "Personal"
-              }
+              "data.family_group_id": "{{user.family_group_id}}"
             },
             {
-              "data.family_group_id": "{{user.family_group_id}}"
+              "data.family_group_id": {
+                "$exists": true
+              }
             }
           ]
         }
@@ -200,24 +186,17 @@
     "update": {
       "$or": [
         {
-          "$and": [
-            {
-              "data.category": "Personal"
-            },
-            {
-              "created_by": "{{user.email}}"
-            }
-          ]
+          "created_by": "{{user.email}}"
         },
         {
           "$and": [
             {
-              "data.category": {
-                "$ne": "Personal"
-              }
+              "data.family_group_id": "{{user.family_group_id}}"
             },
             {
-              "data.family_group_id": "{{user.family_group_id}}"
+              "data.family_group_id": {
+                "$exists": true
+              }
             }
           ]
         }
@@ -226,24 +205,17 @@
     "delete": {
       "$or": [
         {
-          "$and": [
-            {
-              "data.category": "Personal"
-            },
-            {
-              "created_by": "{{user.email}}"
-            }
-          ]
+          "created_by": "{{user.email}}"
         },
         {
           "$and": [
             {
-              "data.category": {
-                "$ne": "Personal"
-              }
+              "data.family_group_id": "{{user.family_group_id}}"
             },
             {
-              "data.family_group_id": "{{user.family_group_id}}"
+              "data.family_group_id": {
+                "$exists": true
+              }
             }
           ]
         }

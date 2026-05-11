@@ -194,8 +194,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
       }
     } else {
       // Create custom task
-      // If user has no family group, non-Personal tasks can't be stored — force Personal
-      const effectiveCategory = !hasFamily && customCategory !== "Personal" ? "Personal" : customCategory;
+      const effectiveCategory = customCategory;
       const freqDays = freqValue ? toDays(freqValue, freqUnit) : 30;
       let customNextDue = startDate;
       if (effectiveCategory === "Bills" && useBillDay) {
