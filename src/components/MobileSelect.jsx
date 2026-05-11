@@ -32,15 +32,19 @@ export default function MobileSelect({ value, onValueChange, options = [], place
 
   const selectedLabel = options.find(o => o.value === value)?.label ?? placeholder ?? "Select…";
 
+  const EMPTY_SENTINEL = "__empty__";
+  const toInternal = (v) => v === "" ? EMPTY_SENTINEL : v;
+  const fromInternal = (v) => v === EMPTY_SENTINEL ? "" : v;
+
   if (!isMobile || forceSelect) {
     return (
-      <Select value={value} onValueChange={onValueChange}>
+      <Select value={toInternal(value)} onValueChange={(v) => onValueChange(fromInternal(v))}>
         <SelectTrigger className={triggerClassName}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
           {options.map(o => (
-            <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+            <SelectItem key={o.value} value={toInternal(o.value)}>{o.label}</SelectItem>
           ))}
         </SelectContent>
       </Select>
