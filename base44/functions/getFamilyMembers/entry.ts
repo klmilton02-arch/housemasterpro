@@ -17,16 +17,12 @@ Deno.serve(async (req) => {
       familyGroupId = ownedGroup?.id || null;
     }
 
-    if (!familyGroupId) return Response.json({ members: [], debug: 'no familyGroupId' });
+    if (!familyGroupId) return Response.json({ members: [] });
 
-    const allMembers = await base44.asServiceRole.entities.FamilyMember.list();
-    // Return first member's structure to debug
-    return Response.json({ 
-      familyGroupId, 
-      totalMembers: allMembers.length,
-      sampleMember: allMembers[0],
-      sampleKeys: allMembers[0] ? Object.keys(allMembers[0]) : []
-    });
+    // Use user-scoped list (respects RLS, user can see their family's members)
+    const members = await base44.entities.FamilyMember.list();
+
+    return Response.json({ members });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
