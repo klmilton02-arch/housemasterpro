@@ -110,6 +110,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     setLoading(true);
     const me = await base44.auth.me();
     const family_group_id = me?.family_group_id || null;
+    const hasFamily = !!family_group_id;
     const member = familyMembers.find(m => m.id === assignedTo);
 
     const getRoomFromCategory = (cat) => {
@@ -193,9 +194,11 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
       }
     } else {
       // Create custom task
+      // If user has no family group, non-Personal tasks can't be stored — force Personal
+      const effectiveCategory = !hasFamily && customCategory !== "Personal" ? "Personal" : customCategory;
       const freqDays = freqValue ? toDays(freqValue, freqUnit) : 30;
       let customNextDue = startDate;
-      if (customCategory === "Bills" && useBillDay) {
+      if (effectiveCategory === "Bills" && useBillDay) {
         const day = parseInt(billDayOfMonth) || 1;
         const today = new Date();
         let candidate = new Date(today.getFullYear(), today.getMonth(), day);
@@ -205,7 +208,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
       await base44.entities.Task.create({
         name: customName,
-        category: customCategory,
+        category: effectiveCategory,
         room: customRoom || undefined,
         priority: customPriority,
         difficulty: "Easy",
@@ -216,10 +219,10 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
         assigned_to_name: member?.name || undefined,
         start_date: startDate,
         next_due_date: customNextDue,
-        bill_day_of_month: (customCategory === "Bills" && useBillDay) ? parseInt(billDayOfMonth) : undefined,
+        bill_day_of_month: (effectiveCategory === "Bills" && useBillDay) ? parseInt(billDayOfMonth) : undefined,
         status: "Pending",
         overdue_grace_days: 3,
-        family_group_id,
+        family_group_id: family_group_id || undefined,
       });
     }
 
