@@ -165,7 +165,10 @@ export default function HomeSetup() {
       }
 
       // Create all tasks using bulkCreate to avoid rate limit
-      const taskData = tasksToCreate.map(t => {
+      // Users without a family group can only create Personal tasks — filter out non-Personal if no family_group_id
+      const taskData = tasksToCreate
+        .filter(t => family_group_id || t.task_type === "Personal")
+        .map(t => {
          // Spread out by frequency_days to avoid inundating on day 1
          const dueDate = new Date();
          dueDate.setDate(dueDate.getDate() + t.frequency_days);
@@ -179,7 +182,7 @@ export default function HomeSetup() {
            next_due_date: nextDueDate,
            status: "Pending",
            overdue_grace_days: 3,
-           family_group_id,
+           family_group_id: family_group_id || undefined,
          };
        });
 
