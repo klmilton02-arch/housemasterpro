@@ -53,22 +53,13 @@ export default function Family() {
       setUser(me);
 
       if (me?.family_group_id) {
-        try {
-          const [membersRes, fgRes, usersRes] = await Promise.all([
-            base44.functions.invoke('getFamilyMembers', {}),
-            base44.entities.FamilyGroup.get(me.family_group_id),
-            base44.functions.invoke('getFamilyAppUsers', {}),
-          ]);
-          setFamilyUsers(usersRes.data.users || [me]);
-          setFamilyMembers(membersRes.data.members || []);
-          setFamilyGroup(fgRes);
-
-        } catch (err) {
-          // Family group doesn't exist - clear the user's family_group_id
-          console.error("Failed to load family data:", err);
-          await base44.auth.updateMe({ family_group_id: null });
-          setFamilyGroup(null);
-        }
+        const [membersRes, usersRes] = await Promise.all([
+          base44.functions.invoke('getFamilyMembers', {}),
+          base44.functions.invoke('getFamilyAppUsers', {}),
+        ]);
+        setFamilyUsers(usersRes.data.users || [me]);
+        setFamilyMembers(membersRes.data.members || []);
+        setFamilyGroup(freshRes.data?.familyGroup || null);
       }
     } catch (err) {
       console.error("Failed to load family data:", err);
