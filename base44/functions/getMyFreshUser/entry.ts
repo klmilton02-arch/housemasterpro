@@ -6,8 +6,8 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    // Fetch fresh user data from DB (not cached token)
-    const freshUsers = await base44.asServiceRole.entities.User.filter({ id: user.id });
+    // Fetch fresh user data from DB by email (not cached token)
+    const freshUsers = await base44.asServiceRole.entities.User.filter({ email: user.email });
     const freshUser = freshUsers?.[0] || user;
 
     return Response.json({ user: freshUser });

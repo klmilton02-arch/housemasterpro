@@ -8,12 +8,15 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    await base44.asServiceRole.entities.User.update('69dbef90b0bb680f2754a0d4', {
+    // Use updateMe to set family_group_id on the current user's own record
+    await base44.auth.updateMe({
       family_group_id: '69fe68f208158b6c527b6e16',
       account_type: 'family'
     });
 
-    return Response.json({ success: true, message: 'klmilton02@gmail.com family_group_id fixed' });
+    // Verify by fetching fresh
+    const updated = await base44.auth.me();
+    return Response.json({ success: true, user: updated });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
