@@ -338,10 +338,11 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                    <div>
                      <Label className="text-xs font-medium text-muted-foreground">Type</Label>
                      <MobileSelect
-                       value={categoryFilter}
-                       onValueChange={setCategoryFilter}
-                       title="Filter by Type"
-                       triggerClassName="mt-1"
+                     value={categoryFilter}
+                     onValueChange={setCategoryFilter}
+                     title="Filter by Type"
+                     triggerClassName="mt-1"
+                     forceSelect
                        options={[
                          { value: "all", label: "All Types" },
                          ...categories.map(c => ({ value: c, label: c })),
@@ -356,6 +357,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                          onValueChange={setRoomFilter}
                          title="Filter by Room"
                          triggerClassName="mt-1"
+                         forceSelect
                          options={[
                            { value: "all", label: "All Rooms" },
                            ...rooms.map(r => ({ value: r, label: r }))
@@ -476,6 +478,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                 onValueChange={setTodoPriority}
                 title="Select Priority"
                 triggerClassName="mt-1"
+                forceSelect
                 options={[
                   { value: "High", label: "🔴 High" },
                   { value: "Medium", label: "🟡 Medium" },
@@ -499,6 +502,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                   onValueChange={setAssignedTo}
                   title="Assign to"
                   triggerClassName="mt-1"
+                  forceSelect
                   options={[{ value: "", label: "Unassigned" }, ...familyMembers.map(m => ({ value: m.id, label: m.name }))]}
                 />
               </div>
@@ -524,6 +528,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                 onValueChange={setCustomCategory}
                 title="Select Category"
                 triggerClassName="mt-1"
+                forceSelect
                 options={[
                   { value: "Cleaning", label: "Cleaning" },
                   { value: "Maintenance", label: "Maintenance" },
@@ -540,6 +545,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                 onValueChange={setCustomPriority}
                 title="Select Priority"
                 triggerClassName="mt-1"
+                forceSelect
                 options={[
                   { value: "High", label: "🔴 High" },
                   { value: "Medium", label: "🟡 Medium" },
@@ -555,6 +561,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                  onValueChange={setCustomRoom}
                  title="Select Room"
                  triggerClassName="mt-1"
+                 forceSelect
                  options={[
                    { value: "", label: "No room" },
                    { value: "Bedroom", label: "Bedroom (General)" },
@@ -684,6 +691,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                     onValueChange={setBillDayOfMonth}
                     title="Day of Month"
                     triggerClassName="w-24"
+                    forceSelect
                     options={Array.from({ length: 28 }, (_, i) => ({ value: String(i + 1), label: String(i + 1) }))}
                   />
                   <span className="text-xs text-muted-foreground">of each month</span>
@@ -718,6 +726,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                   onValueChange={setFreqUnit}
                   title="Frequency Unit"
                   triggerClassName="w-28"
+                  forceSelect
                   options={[
                     { value: "days", label: "Days" },
                     { value: "weeks", label: "Weeks" },

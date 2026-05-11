@@ -26,13 +26,13 @@ function useIsMobile() {
  *   triggerClassName?: string
  *   title?: string  — header shown inside the drawer
  */
-export default function MobileSelect({ value, onValueChange, options = [], placeholder, triggerClassName, title }) {
+export default function MobileSelect({ value, onValueChange, options = [], placeholder, triggerClassName, title, forceSelect = false }) {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
 
   const selectedLabel = options.find(o => o.value === value)?.label ?? placeholder ?? "Select…";
 
-  if (!isMobile) {
+  if (!isMobile || forceSelect) {
     return (
       <Select value={value} onValueChange={onValueChange}>
         <SelectTrigger className={triggerClassName}>
@@ -61,8 +61,8 @@ export default function MobileSelect({ value, onValueChange, options = [], place
         <span className="truncate">{selectedLabel}</span>
         <svg className="h-4 w-4 opacity-50 shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
       </button>
-      <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerContent className="flex flex-col max-h-[90vh]">
+      <Drawer open={open} onOpenChange={setOpen} modal={false}>
+        <DrawerContent className="flex flex-col max-h-[90vh]" onPointerDownOutside={(e) => e.preventDefault()} onInteractOutside={(e) => e.preventDefault()}>
           {title && (
             <DrawerHeader>
               <DrawerTitle>{title}</DrawerTitle>
