@@ -65,9 +65,9 @@ export default function Dashboard() {
       // Force fresh fetch by appending cache-bust param to entity queries
       const now = Date.now();
       if (me?.family_group_id) {
-        all = await base44.entities.Task.filter({ family_group_id: me.family_group_id, _t: now }, null, 5000);
+        all = await base44.entities.Task.filter({ family_group_id: me.family_group_id }, null, 5000);
       } else {
-        all = await base44.entities.Task.filter({ created_by: me.email, _t: now }, null, 5000);
+        all = await base44.entities.Task.filter({ created_by: me.email }, null, 5000);
       }
       console.log(`[Dashboard] Server returned ${all.length} tasks (cache-busted)`);
       setTasks(Array.isArray(all) ? all : []);
