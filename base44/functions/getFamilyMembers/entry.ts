@@ -6,25 +6,27 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ members: [] });
 
-    // Get fresh user data
     const allUsers = await base44.asServiceRole.entities.User.list();
     const freshUser = allUsers.find(u => u.email === user.email) || user;
 
-    // Determine family_group_id: from user record or owned family group
-    let familyGroupId = freshUser.family_group_id;
+    let familyGroupId = freshUser.family_group_id || null;
+
     if (!familyGroupId) {
       const allGroups = await base44.asServiceRole.entities.FamilyGroup.list();
       const ownedGroup = allGroups.find(g => g.owner_email === user.email);
       familyGroupId = ownedGroup?.id || null;
     }
 
-    if (!familyGroupId) return Response.json({ members: [] });
+    if (!familyGroupId) return Response.json({ members: [], debug: 'no familyGroupId' });
 
-    const members = await base44.asServiceRole.entities.FamilyMember.filter({
-      family_group_id: familyGroupId,
+    const allMembers = await base44.asServiceRole.entities.FamilyMember.list();
+    // Return first member's structure to debug
+    return Response.json({ 
+      familyGroupId, 
+      totalMembers: allMembers.length,
+      sampleMember: allMembers[0],
+      sampleKeys: allMembers[0] ? Object.keys(allMembers[0]) : []
     });
-
-    return Response.json({ members });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
