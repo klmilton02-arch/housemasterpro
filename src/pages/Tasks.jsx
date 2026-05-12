@@ -293,12 +293,13 @@ export default function Tasks() {
 
     if (assignedFilter === "assigned" && !t.assigned_to) return false;
     if (assignedFilter === "unassigned" && t.assigned_to) return false;
-    // Personal tasks: show if created by user or assigned to self, otherwise filter out
+    // Personal tasks: only show to creator or assigned member; all others are shared
     if (t.category === "Personal") {
       const isCreatedByUser = t.created_by === currentUserEmail;
       const isAssignedToSelf = selfMember && t.assigned_to === selfMember.id;
       if (!isCreatedByUser && !isAssignedToSelf) return false;
     }
+    // If filtering by member, only apply to personal tasks
     if (selectedMemberId && t.category === "Personal" && t.assigned_to !== selectedMemberId) return false;
     if (roomFilter !== "all" && t.room !== roomFilter) return false;
     return true;
