@@ -22,8 +22,31 @@ Deno.serve(async (req) => {
     if (!familyGroup) {
       familyGroup = allGroups.find(g => g.owner_email === user.email) || null;
       if (familyGroup) {
-        // Patch the freshUser object so the rest of the app works
         freshUser.family_group_id = familyGroup.id;
+      }
+    }
+
+    // Fallback: if still no family group, check if any FamilyMember has this user's email as linked_user_email
+    if (!familyGroup) {
+      const allMembers = await base44.asServiceRole.entities.FamilyMember.list();
+      const matchingMember = allMembers.find(
+        m => m.linked_user_email?.toLowerCase() === freshUser.email?.toLowerCase()
+      );
+      if (matchingMember?.family_group_id) {
+        familyGroup = allGroups.find(g => g.id === matchingMember.family_group_id) || null;
+        if (familyGroup) {
+          freshUser.family_group_id = familyGroup.id;
+          freshUser.account_type = 'family';
+          // Persist this so future logins are instant
+          await base44.asServiceRole.entities.User.update(freshUser.id, {
+            family_group_id: familyGroup.id,
+            account_type: 'family',
+          });
+          // Also store their user ID on the member record
+          await base44.asServiceRole.entities.FamilyMember.update(matchingMember.id, {
+            linked_user_id: freshUser.id,
+          });
+        }
       }
     }
 
