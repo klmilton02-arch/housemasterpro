@@ -275,7 +275,9 @@ export default function Tasks() {
 
     if (assignedFilter === "assigned" && !t.assigned_to) return false;
     if (assignedFilter === "unassigned" && t.assigned_to) return false;
-    if (selectedMemberId && t.assigned_to !== selectedMemberId) return false;
+    // Personal tasks are private — only show if assigned to the selected member
+    // All other categories are shared with the whole family
+    if (selectedMemberId && t.category === "Personal" && t.assigned_to !== selectedMemberId) return false;
     if (roomFilter !== "all" && t.room !== roomFilter) return false;
     return true;
   }).sort((a, b) => {
