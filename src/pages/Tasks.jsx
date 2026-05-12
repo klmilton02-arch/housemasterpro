@@ -62,15 +62,10 @@ export default function Tasks() {
   const loadTasks = useCallback(async () => {
     const res = await base44.functions.invoke('getMyFreshUser', {});
     const me = res.data?.user;
-    // Use family_group_id from user OR from the returned familyGroup (handles stale tokens)
     const fgId = me?.family_group_id || res.data?.familyGroup?.id || null;
-    let all;
-    if (fgId) {
-      all = await base44.entities.Task.filter({ family_group_id: fgId }, "-created_date", 5000);
-    } else {
-      all = await base44.entities.Task.filter({ created_by: me?.email }, "-created_date", 5000);
-    }
-    setTasks(all);
+    // Use backend function to bypass stale token RLS issues
+    const tasksRes = await base44.functions.invoke('getFamilyTasks', { family_group_id: fgId });
+    setTasks(tasksRes.data?.tasks || []);
     setLoading(false);
   }, []);
 
