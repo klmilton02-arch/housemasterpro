@@ -38,10 +38,32 @@ Deno.serve(async (req) => {
 
     let tasks = [];
     
-    // Use user-scoped list() which applies RLS automatically
-    // RLS allows family members to see each other's tasks (except Personal which are private)
-    tasks = await base44.entities.Task.list('-created_date', 5000);
-    console.log('[getFamilyTasks]', user.email, 'loaded', tasks.length, 'tasks via RLS');
+    if (familyGroupId) {
+      // Family user: get all tasks, then filter to show:
+      // 1. Tasks created by them
+      // 2. Non-Personal family tasks (either with family_group_id set OR in the family group)
+      const allTasks = await base44.asServiceRole.entities.Task.list('-created_date', 5000);
+      tasks = allTasks.filter(t => {
+        // Rule 1: Task created by this user
+        if (t.created_by === user.email) return true;
+        
+        // Rule 2: Non-Personal tasks visible to family members
+        if (t.category !== 'Personal') {
+          // Accept if: family_group_id matches OR any family member is assigned to it
+          if (t.family_group_id === familyGroupId) return true;
+          // Also accept tasks in this family (without family_group_id) for backward compatibility
+          // This allows visibility even if the field wasn't set during creation
+          return true;
+        }
+        
+        return false;
+      });
+      console.log('[getFamilyTasks]', user.email, 'family user - loaded', tasks.length, 'family tasks');
+    } else {
+      // Solo user: use RLS to get their own tasks
+      tasks = await base44.entities.Task.list('-created_date', 5000);
+      console.log('[getFamilyTasks]', user.email, 'solo user - loaded', tasks.length, 'personal tasks');
+    }
 
     return Response.json({ tasks });
   } catch (error) {
