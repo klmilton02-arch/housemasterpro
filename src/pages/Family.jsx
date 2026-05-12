@@ -379,6 +379,13 @@ async function handleCreateFamily() {
                     </div>
                   </div>
 
+                  {/* Linked email display */}
+                  {member.linked_user_email && (
+                    <p className="text-xs text-muted-foreground">
+                      Linked to: <span className="font-medium">{member.linked_user_email}</span>
+                    </p>
+                  )}
+
                   {/* Linked account */}
                   {(linkedUser || member.linked_user_email) ? (
                     <div className="flex items-center justify-between bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md px-3 py-2">
