@@ -108,7 +108,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
   async function handleSubmit() {
     setLoading(true);
-    const me = await base44.auth.me();
+    const meRes = await base44.functions.invoke('getMyFreshUser', {});
+    const me = meRes.data?.user;
     const family_group_id = me?.family_group_id || null;
     const hasFamily = !!family_group_id;
     const member = familyMembers.find(m => m.id === assignedTo);
@@ -258,9 +259,10 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
       if (!extracted) throw new Error('No data extracted');
 
       // If it's a task list, create multiple to-dos
-      if (scanType === "task_list" && Array.isArray(extracted)) {
-        const me = await base44.auth.me();
-        const family_group_id = me?.family_group_id || null;
+       if (scanType === "task_list" && Array.isArray(extracted)) {
+         const meRes = await base44.functions.invoke('getMyFreshUser', {});
+         const me = meRes.data?.user;
+         const family_group_id = me?.family_group_id || null;
         
         for (const item of extracted) {
           await base44.entities.Task.create({
@@ -278,7 +280,8 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
         }
       } else if (scanType === "appointment" && typeof extracted === 'object') {
         // For appointments, create a single personal task
-        const me = await base44.auth.me();
+        const meRes = await base44.functions.invoke('getMyFreshUser', {});
+        const me = meRes.data?.user;
         const family_group_id = me?.family_group_id || null;
         
         await base44.entities.Task.create({
