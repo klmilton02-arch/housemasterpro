@@ -276,8 +276,14 @@ export default function Tasks() {
 
     if (assignedFilter === "assigned" && !t.assigned_to) return false;
     if (assignedFilter === "unassigned" && t.assigned_to) return false;
-    // Personal tasks are private — only show if assigned to the selected member
+    // Personal tasks are private — only show to the member they're assigned to
     // All other categories are shared with the whole family
+    if (t.category === "Personal") {
+      if (selfMember) {
+        if (t.assigned_to !== selfMember.id) return false;
+      }
+      // If no selfMember linked, fall through and show all personal tasks (solo user)
+    }
     if (selectedMemberId && t.category === "Personal" && t.assigned_to !== selectedMemberId) return false;
     if (roomFilter !== "all" && t.room !== roomFilter) return false;
     return true;
