@@ -53,9 +53,10 @@ export default function Family() {
       setUser(me);
 
       if (me?.family_group_id) {
+        // Pass family_group_id explicitly so backend doesn't rely on stale auth token
         const [membersRes, usersRes] = await Promise.all([
-          base44.functions.invoke('getFamilyMembers', {}),
-          base44.functions.invoke('getFamilyAppUsers', {}),
+          base44.functions.invoke('getFamilyMembers', { family_group_id: me.family_group_id }),
+          base44.functions.invoke('getFamilyAppUsers', { family_group_id: me.family_group_id }),
         ]);
         setFamilyUsers(usersRes.data.users || [me]);
         setFamilyMembers(membersRes.data.members || []);
@@ -104,9 +105,9 @@ async function handleCreateFamily() {
       setUser(me);
       if (me?.family_group_id) {
         const [membersRes, fgRes, usersRes] = await Promise.all([
-          base44.functions.invoke('getFamilyMembers', {}),
+          base44.functions.invoke('getFamilyMembers', { family_group_id: me.family_group_id }),
           base44.entities.FamilyGroup.get(me.family_group_id),
-          base44.functions.invoke('getFamilyAppUsers', {}),
+          base44.functions.invoke('getFamilyAppUsers', { family_group_id: me.family_group_id }),
         ]);
         setFamilyUsers(usersRes.data.users || [me]);
         setFamilyMembers(membersRes.data.members || []);
