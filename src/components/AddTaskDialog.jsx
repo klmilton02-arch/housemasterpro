@@ -759,15 +759,15 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
             <Button
               className="flex-1"
               onClick={handleSubmit}
-              disabled={loading || (tab === "preset" && selectedPresets.size === 0) || (tab === "custom" && !customName)}
+              disabled={loading || (tab === "preset" && selectedPresets.size === 0) || (tab === "custom" && !customName) || (tab === "todo" && !todoName.trim())}
             >
-              {loading ? "Adding..." : "Add Task"}
+              {loading ? "Adding..." : tab === "todo" ? "Add To-Do" : "Add Task"}
             </Button>
             <Button
               variant="outline"
               className="flex-1"
               onClick={handleSubmit}
-              disabled={loading || (tab === "preset" && selectedPresets.size === 0) || (tab === "custom" && !customName)}
+              disabled={loading || (tab === "preset" && selectedPresets.size === 0) || (tab === "custom" && !customName) || (tab === "todo" && !todoName.trim())}
             >
               {loading ? "Adding..." : "Add & Continue"}
             </Button>
