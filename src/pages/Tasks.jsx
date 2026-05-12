@@ -297,7 +297,10 @@ export default function Tasks() {
     if (t.category === "Personal") {
       const isCreatedByUser = t.created_by === currentUserEmail;
       const isAssignedToSelf = selfMember && t.assigned_to === selfMember.id;
-      if (!isCreatedByUser && !isAssignedToSelf) return false;
+      if (!isCreatedByUser && !isAssignedToSelf) {
+        console.log('[Tasks filter] hide Personal task:', t.name, 't.created_by=', t.created_by, 'currentUserEmail=', currentUserEmail, 'isCreatedByUser=', isCreatedByUser);
+        return false;
+      }
     }
     // If filtering by member, only apply to personal tasks
     if (selectedMemberId && t.category === "Personal" && t.assigned_to !== selectedMemberId) return false;

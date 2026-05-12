@@ -125,7 +125,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     };
 
     if (tab === "todo") {
-      await base44.entities.Task.create({
+      const personalTask = {
         name: todoName,
         category: "Personal",
         priority: todoPriority,
@@ -139,7 +139,10 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
         status: "Pending",
         overdue_grace_days: 999,
         family_group_id,
-      });
+      };
+      console.log('[AddTaskDialog] Creating Personal task:', personalTask);
+      await base44.entities.Task.create(personalTask);
+      console.log('[AddTaskDialog] Personal task created, calling onTaskAdded');
       setTodoName("");
       setTodoPriority("Medium");
       setTodoDueDate(format(new Date(), "yyyy-MM-dd"));

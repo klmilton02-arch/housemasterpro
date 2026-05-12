@@ -43,12 +43,19 @@ Deno.serve(async (req) => {
       // 1. Tasks created by them
       // 2. Non-Personal family tasks with matching family_group_id
       const allTasks = await base44.asServiceRole.entities.Task.list('-created_date', 5000);
+      console.log('[getFamilyTasks] total tasks in db:', allTasks.length);
+      const personalTasks = allTasks.filter(t => t.category === 'Personal' && t.created_by === user.email);
+      console.log('[getFamilyTasks] personal tasks created by', user.email, ':', personalTasks.length, personalTasks.map(t => t.name));
       tasks = allTasks.filter(t => {
         // Rule 1: Task created by this user
-        if (t.created_by === user.email) return true;
+        if (t.created_by === user.email) {
+          console.log('[getFamilyTasks] include task (created by user):', t.name, 'category:', t.category);
+          return true;
+        }
         
         // Rule 2: Non-Personal tasks visible to family members (must have matching family_group_id)
         if (t.category !== 'Personal' && t.family_group_id === familyGroupId) {
+          console.log('[getFamilyTasks] include task (shared family):', t.name);
           return true;
         }
         
