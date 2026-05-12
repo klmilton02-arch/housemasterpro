@@ -6,26 +6,40 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ members: [] });
 
-    // Always check fresh DB user for family_group_id (token can be stale for non-owners)
-    const allUsers = await base44.asServiceRole.entities.User.list();
-    const freshUser = allUsers.find(u => u.email === user.email) || user;
-    const familyGroupId = freshUser.family_group_id || null;
+    let familyGroupId = user.family_group_id || null;
 
+    // Refresh family_group_id from DB in case token is stale
     if (!familyGroupId) {
-      // Check if user owns a group
-      const allGroups = await base44.asServiceRole.entities.FamilyGroup.list();
-      const ownedGroup = allGroups.find(g => g.owner_email === user.email);
-      if (!ownedGroup) return Response.json({ members: [] });
+      const allUsers = await base44.asServiceRole.entities.User.list();
+      const freshUser = allUsers.find(u => u.email === user.email);
+      familyGroupId = freshUser?.family_group_id || null;
     }
 
-    // Use user-scoped list — RLS allows reading own family's members
-    // But if token is stale, we need to use a fresh token workaround:
-    // Fetch all members via service role but from the list (no filter, then filter in JS)
-    const allMembers = await base44.asServiceRole.entities.FamilyMember.list('-created_date', 200);
-    const members = allMembers.filter(m => m.family_group_id === familyGroupId);
+    // Fall back to checking group ownership
+    if (!familyGroupId) {
+      const allGroups = await base44.asServiceRole.entities.FamilyGroup.list();
+      const ownedGroup = allGroups.find(g => g.owner_email === user.email);
+      if (ownedGroup) familyGroupId = ownedGroup.id;
+    }
+
+    if (!familyGroupId) return Response.json({ members: [] });
+
+    // Try user-scoped first (RLS allows reading own family's members when token has correct family_group_id)
+    let members = [];
+    try {
+      members = await base44.entities.FamilyMember.list('-created_date', 100);
+      members = members.filter(m => m.family_group_id === familyGroupId);
+    } catch (_) {}
+
+    // Fallback: service role fetch + JS filter
+    if (members.length === 0) {
+      const all = await base44.asServiceRole.entities.FamilyMember.list('-created_date', 500);
+      members = all.filter(m => m.family_group_id === familyGroupId);
+    }
 
     return Response.json({ members });
   } catch (error) {
+    console.error('[getFamilyMembers] error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
