@@ -8,8 +8,20 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const profiles = await base44.asServiceRole.entities.GamificationProfile.filter({
-      family_member_name: user.full_name
+    const body = await req.json().catch(() => ({}));
+    const targetName = body.name || user.full_name;
+    const targetId = body.id || user.id;
+
+    // Get all profiles and find matches
+    const allProfiles = await base44.asServiceRole.entities.GamificationProfile.list('-created_date', 5000);
+    const targetNameLower = targetName?.toLowerCase() || '';
+    const profiles = allProfiles.filter(p => {
+      const profileNameLower = p.family_member_name?.toLowerCase() || '';
+      // Match if exact or if profile name contains target name parts
+      return profileNameLower === targetNameLower || 
+             targetNameLower.includes(profileNameLower) ||
+             profileNameLower.includes(targetNameLower) ||
+             p.family_member_id === targetId;
     });
 
     let updated = 0;
