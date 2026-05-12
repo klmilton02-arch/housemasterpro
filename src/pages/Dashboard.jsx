@@ -60,14 +60,8 @@ export default function Dashboard() {
 
   const loadTasks = useCallback(async () => {
     try {
-      const res = await base44.functions.invoke('getMyFreshUser', {});
-      const me = res.data?.user;
-      let all;
-      if (me?.family_group_id) {
-        all = await base44.entities.Task.filter({ family_group_id: me.family_group_id }, null, 5000);
-      } else {
-        all = await base44.entities.Task.filter({ created_by: me?.email }, null, 5000);
-      }
+      const tasksRes = await base44.functions.invoke('getFamilyTasks', {});
+      const all = tasksRes.data?.tasks || [];
       console.log(`[Dashboard] Server returned ${all.length} tasks`);
       setTasks(Array.isArray(all) ? all : []);
     } catch (err) {
