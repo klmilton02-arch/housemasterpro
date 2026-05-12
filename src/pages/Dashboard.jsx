@@ -60,16 +60,15 @@ export default function Dashboard() {
 
   const loadTasks = useCallback(async () => {
     try {
-      const me = await base44.auth.me();
+      const res = await base44.functions.invoke('getMyFreshUser', {});
+      const me = res.data?.user;
       let all;
-      // Force fresh fetch by appending cache-bust param to entity queries
-      const now = Date.now();
       if (me?.family_group_id) {
         all = await base44.entities.Task.filter({ family_group_id: me.family_group_id }, null, 5000);
       } else {
-        all = await base44.entities.Task.filter({ created_by: me.email }, null, 5000);
+        all = await base44.entities.Task.filter({ created_by: me?.email }, null, 5000);
       }
-      console.log(`[Dashboard] Server returned ${all.length} tasks (cache-busted)`);
+      console.log(`[Dashboard] Server returned ${all.length} tasks`);
       setTasks(Array.isArray(all) ? all : []);
     } catch (err) {
       console.error('[Dashboard] Error loading tasks:', err);

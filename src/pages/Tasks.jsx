@@ -60,7 +60,8 @@ export default function Tasks() {
   const handleTouchEnd = () => {};
 
   const loadTasks = useCallback(async () => {
-    const me = await base44.auth.me();
+    const res = await base44.functions.invoke('getMyFreshUser', {});
+    const me = res.data?.user;
     let all;
     if (me?.family_group_id) {
       all = await base44.entities.Task.filter({ family_group_id: me.family_group_id }, "-created_date", 5000);
@@ -95,11 +96,11 @@ export default function Tasks() {
   }, [tasks]);
 
   useEffect(() => {
-    base44.entities.FamilyMember.list().then(async (members) => {
+    base44.functions.invoke('getMyFreshUser', {}).then(async (res) => {
+      const me = res.data?.user;
+      const members = await base44.entities.FamilyMember.list();
       const uniqueMembers = Array.from(new Map(members.map(m => [m.name.toLowerCase().trim(), m])).values());
       setFamilyMembers(uniqueMembers);
-      // Auto-select the family member linked to the current user
-      const me = await base44.auth.me();
       if (me?.email) {
         const linked = members.find(m => m.linked_user_email === me.email);
         if (linked) {
