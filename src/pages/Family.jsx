@@ -50,13 +50,16 @@ export default function Family() {
       // Use fresh DB data (not cached token) to get current family_group_id
       const freshRes = await base44.functions.invoke('getMyFreshUser', {});
       const me = freshRes.data?.user || await base44.auth.me();
+      // Use family_group_id from fresh DB user OR from the returned familyGroup
+      const fgId = me?.family_group_id || freshRes.data?.familyGroup?.id || null;
+      if (fgId && me) me.family_group_id = fgId;
       setUser(me);
 
-      if (me?.family_group_id) {
+      if (fgId) {
         // Pass family_group_id explicitly so backend doesn't rely on stale auth token
         const [membersRes, usersRes] = await Promise.all([
-          base44.functions.invoke('getFamilyMembers', { family_group_id: me.family_group_id }),
-          base44.functions.invoke('getFamilyAppUsers', { family_group_id: me.family_group_id }),
+          base44.functions.invoke('getFamilyMembers', { family_group_id: fgId }),
+          base44.functions.invoke('getFamilyAppUsers', { family_group_id: fgId }),
         ]);
         setFamilyUsers(usersRes.data.users || [me]);
         setFamilyMembers(membersRes.data.members || []);
