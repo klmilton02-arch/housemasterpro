@@ -31,12 +31,18 @@ export default function Leaderboard() {
       setMembers(members);
 
       if (fullUser) {
-        const myMember = members.find(m => m.linked_user_id === fullUser.id || m.linked_user_email === fullUser.email);
-        const myProfile = profiles.find(p =>
-          p.family_member_id === fullUser.id ||
-          (myMember && (p.family_member_id === myMember.id || p.family_member_name === myMember.name))
+        const myMember = members.find(m =>
+          m.linked_user_id === fullUser.id ||
+          m.linked_user_email === fullUser.email
         );
-        setUserProfile(myProfile);
+        // Find best profile: by member ID first, then by linked_user_id, then by name
+        const myProfiles = profiles.filter(p =>
+          (myMember && p.family_member_id === myMember.id) ||
+          p.family_member_id === fullUser.id ||
+          (myMember && p.family_member_name?.toLowerCase() === myMember.name?.toLowerCase())
+        );
+        const best = myProfiles.sort((a, b) => (b.total_xp || 0) - (a.total_xp || 0))[0];
+        setUserProfile(best);
       }
       setLoading(false);
     });
@@ -79,7 +85,7 @@ export default function Leaderboard() {
         const isSolo = !currentUser?.family_group_id || currentUser?.account_type === 'solo';
 
         // Solo: show only the current user
-        // Family: show all profiles directly (already filtered by family in backend)
+        // Family: one entry per FamilyMember, using the best matching profile
         const allEntries = isSolo
           ? [{
               id: currentUser?.id,
@@ -88,22 +94,22 @@ export default function Leaderboard() {
               total_xp: userProfile?.total_xp || 0,
               level: userProfile?.level || 1,
             }]
-          : profiles
-              .map(p => {
-                const member = members.find(m =>
-                  m.id === p.family_member_id ||
-                  (m.linked_user_id && m.linked_user_id === p.family_member_id) ||
-                  m.name === p.family_member_name
-                );
-                return {
-                  id: p.id,
-                  name: p.family_member_name,
-                  avatar_color: member?.avatar_color || "blue",
-                  total_xp: p.total_xp || 0,
-                  level: p.level || 1,
-                };
-              })
-              .sort((a, b) => b.total_xp - a.total_xp);
+          : members.map(member => {
+              // Find the best profile for this member (highest XP)
+              const memberProfiles = profiles.filter(p =>
+                p.family_member_id === member.id ||
+                p.family_member_id === member.linked_user_id ||
+                p.family_member_name?.toLowerCase() === member.name?.toLowerCase()
+              );
+              const bestProfile = memberProfiles.sort((a, b) => (b.total_xp || 0) - (a.total_xp || 0))[0];
+              return {
+                id: member.id,
+                name: member.name,
+                avatar_color: member.avatar_color || "blue",
+                total_xp: bestProfile?.total_xp || 0,
+                level: bestProfile?.level || 1,
+              };
+            }).sort((a, b) => b.total_xp - a.total_xp);
 
         if (allEntries.length === 0) return (
           <div className="bg-card border border-border rounded-lg p-6 text-center">
