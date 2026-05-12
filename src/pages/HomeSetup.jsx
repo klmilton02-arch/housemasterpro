@@ -89,7 +89,8 @@ export default function HomeSetup() {
   async function generateTasks() {
     setGenerating(true);
     try {
-      const me = await base44.auth.me();
+      const meRes = await base44.functions.invoke('getMyFreshUser', {});
+      const me = meRes.data?.user;
       const family_group_id = me?.family_group_id || null;
 
       // Save config first
