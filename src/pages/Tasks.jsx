@@ -62,13 +62,14 @@ export default function Tasks() {
   const loadTasks = useCallback(async () => {
     const res = await base44.functions.invoke('getMyFreshUser', {});
     const me = res.data?.user;
+    // Use family_group_id from user OR from the returned familyGroup (handles stale tokens)
+    const fgId = me?.family_group_id || res.data?.familyGroup?.id || null;
     let all;
-    if (me?.family_group_id) {
-      all = await base44.entities.Task.filter({ family_group_id: me.family_group_id }, "-created_date", 5000);
+    if (fgId) {
+      all = await base44.entities.Task.filter({ family_group_id: fgId }, "-created_date", 5000);
     } else {
       all = await base44.entities.Task.filter({ created_by: me?.email }, "-created_date", 5000);
     }
-    console.log(`[Tasks] Loaded ${all.length} tasks for user`);
     setTasks(all);
     setLoading(false);
   }, []);
@@ -98,7 +99,13 @@ export default function Tasks() {
   useEffect(() => {
     base44.functions.invoke('getMyFreshUser', {}).then(async (res) => {
       const me = res.data?.user;
-      const members = await base44.entities.FamilyMember.list();
+      const fgId = me?.family_group_id || res.data?.familyGroup?.id || null;
+      let members = [];
+      if (fgId) {
+        members = await base44.entities.FamilyMember.filter({ family_group_id: fgId }, "-created_date", 200);
+      } else {
+        members = await base44.entities.FamilyMember.list();
+      }
       const uniqueMembers = Array.from(new Map(members.map(m => [m.name.toLowerCase().trim(), m])).values());
       setFamilyMembers(uniqueMembers);
       if (me?.email) {
