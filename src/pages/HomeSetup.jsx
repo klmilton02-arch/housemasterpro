@@ -190,9 +190,8 @@ export default function HomeSetup() {
         return;
       }
 
-      const created = await base44.entities.Task.bulkCreate(taskData);
-      console.log('[HomeSetup] bulkCreate result:', created);
-      setGenerated(created.length);
+      const result = await base44.functions.invoke('generateHomeSetupTasks', { taskData });
+      setGenerated(result.data?.created || 0);
       } catch (error) {
       console.error("Generate tasks error:", error);
       alert(`Error generating tasks: ${error.message || JSON.stringify(error)}`);
