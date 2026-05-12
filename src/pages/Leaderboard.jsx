@@ -25,7 +25,8 @@ export default function Leaderboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    base44.functions.invoke('getLeaderboardProfiles', {}).then((res) => {
+    // Force fresh data every time page loads
+    base44.functions.invoke('getLeaderboardProfiles', {}, { skipCache: true }).then((res) => {
       const { profiles, members, currentUser: fullUser } = res.data;
       setCurrentUser(fullUser);
       setProfiles(profiles);
