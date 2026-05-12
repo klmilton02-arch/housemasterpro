@@ -58,15 +58,7 @@ export default function Family() {
           base44.functions.invoke('getFamilyAppUsers', {}),
         ]);
         setFamilyUsers(usersRes.data.users || [me]);
-        // If backend returns empty, fall back to direct entity read via user-scoped SDK
-        let members = membersRes.data.members || [];
-        if (members.length === 0) {
-          try {
-            const directMembers = await base44.entities.FamilyMember.list('-created_date', 100);
-            members = directMembers.filter(m => m.family_group_id === me.family_group_id);
-          } catch (_) {}
-        }
-        setFamilyMembers(members);
+        setFamilyMembers(membersRes.data.members || []);
         setFamilyGroup(freshRes.data?.familyGroup || null);
       }
     } catch (err) {
