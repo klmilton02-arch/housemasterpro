@@ -64,13 +64,16 @@ export default function Tasks() {
     try {
       const res = await base44.functions.invoke('getMyFreshUser', {});
       const me = res.data?.user;
+      console.log('[loadTasks] user email:', me?.email, 'family_group_id:', me?.family_group_id);
       setCurrentUserEmail(me?.email || null);
       const fgId = me?.family_group_id || res.data?.familyGroup?.id || null;
       // Use backend function to bypass stale token RLS issues
       const tasksRes = await base44.functions.invoke('getFamilyTasks', { family_group_id: fgId });
-      setTasks(tasksRes.data?.tasks || []);
+      const loadedTasks = tasksRes.data?.tasks || [];
+      console.log('[loadTasks] loaded', loadedTasks.length, 'tasks');
+      setTasks(loadedTasks);
     } catch (err) {
-      console.error('[loadTasks] error:', err);
+      console.error('[loadTasks] error:', err?.message || err);
       setTasks([]);
     } finally {
       setLoading(false);
@@ -298,7 +301,6 @@ export default function Tasks() {
       const isCreatedByUser = t.created_by === currentUserEmail;
       const isAssignedToSelf = selfMember && t.assigned_to === selfMember.id;
       if (!isCreatedByUser && !isAssignedToSelf) {
-        console.log('[Tasks filter] hide Personal task:', t.name, 't.created_by=', t.created_by, 'currentUserEmail=', currentUserEmail, 'isCreatedByUser=', isCreatedByUser);
         return false;
       }
     }
