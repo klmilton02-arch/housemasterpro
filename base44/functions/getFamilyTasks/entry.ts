@@ -38,17 +38,14 @@ Deno.serve(async (req) => {
 
     let tasks;
     if (familyGroupId) {
-      // Family user — fetch all tasks for the family group
-      // Use user-scoped filter with RLS applied (like Dashboard does)
-      tasks = await base44.entities.Task.filter({ family_group_id: familyGroupId }, '-created_date', 5000);
-      console.log('[getFamilyTasks] found', tasks?.length, 'tasks for family:', familyGroupId);
+      // Family user — fetch ALL tasks and let RLS filter them
+      // Note: Some users have RLS visibility issues with filter(), so use list() instead
+      tasks = await base44.entities.Task.list('-created_date', 5000);
+      console.log('[getFamilyTasks] list returned', tasks?.length, 'tasks (RLS-filtered for', user.email, ')');
     } else {
       // Solo user — return tasks created by them
-      tasks = await base44.entities.Task.filter(
-        { created_by: user.email },
-        '-created_date',
-        5000
-      );
+      tasks = await base44.entities.Task.list('-created_date', 5000);
+      tasks = tasks.filter(t => t.created_by === user.email);
       console.log('[getFamilyTasks] solo user, found', tasks?.length, 'tasks');
     }
 
