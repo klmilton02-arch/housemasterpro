@@ -125,16 +125,23 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     };
 
     if (tab === "todo") {
-      const personalTaskRes = await base44.functions.invoke('addPersonalTask', {
+      const personalTask = {
         name: todoName,
+        category: "Personal",
         priority: todoPriority,
+        difficulty: "Easy",
+        frequency_days: 9999,
         description: todoDescription,
         assigned_to: assignedTo || undefined,
         assigned_to_name: member?.name || undefined,
         start_date: todoDueDate,
         next_due_date: todoDueDate,
-      });
-      console.log('[AddTaskDialog] Personal task created:', personalTaskRes.data?.task?.name);
+        status: "Pending",
+        overdue_grace_days: 999,
+      };
+      console.log('[AddTaskDialog] Creating Personal task:', personalTask);
+      await base44.entities.Task.create(personalTask);
+      console.log('[AddTaskDialog] Personal task created successfully');
       setTodoName("");
       setTodoPriority("Medium");
       setTodoDueDate(format(new Date(), "yyyy-MM-dd"));
