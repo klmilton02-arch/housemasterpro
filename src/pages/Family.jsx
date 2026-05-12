@@ -57,13 +57,15 @@ export default function Family() {
 
       if (fgId) {
         // Pass family_group_id explicitly so backend doesn't rely on stale auth token
-        const [membersRes, usersRes] = await Promise.all([
+        const [membersRes, usersRes, groups] = await Promise.all([
           base44.functions.invoke('getFamilyMembers', { family_group_id: fgId }),
           base44.functions.invoke('getFamilyAppUsers', { family_group_id: fgId }),
+          base44.entities.FamilyGroup.filter({ id: fgId }),
         ]);
         setFamilyUsers(usersRes.data.users || [me]);
         setFamilyMembers(membersRes.data.members || []);
-        setFamilyGroup(freshRes.data?.familyGroup || null);
+        // Use returned familyGroup OR fetch it directly (handles non-owner members)
+        setFamilyGroup(freshRes.data?.familyGroup || groups?.[0] || null);
       }
     } catch (err) {
       console.error("Failed to load family data:", err);
