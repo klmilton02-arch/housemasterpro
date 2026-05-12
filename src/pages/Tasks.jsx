@@ -53,6 +53,7 @@ export default function Tasks() {
   const [activeCompletingAs, setActiveCompletingAs] = useState(null); // globally selected member
   const [selfMember, setSelfMember] = useState(null); // the family member linked to the logged-in user
   const [scanDialogOpen, setScanDialogOpen] = useState(false);
+  const [currentUserEmail, setCurrentUserEmail] = useState(null);
   const { isActive: blastActive } = useBlastMode();
   const { largeIcons } = useLargeIcons();
   // Swipe navigation disabled on Tasks — conflicts with vertical scrolling
@@ -60,13 +61,20 @@ export default function Tasks() {
   const handleTouchEnd = () => {};
 
   const loadTasks = useCallback(async () => {
-    const res = await base44.functions.invoke('getMyFreshUser', {});
-    const me = res.data?.user;
-    const fgId = me?.family_group_id || res.data?.familyGroup?.id || null;
-    // Use backend function to bypass stale token RLS issues
-    const tasksRes = await base44.functions.invoke('getFamilyTasks', { family_group_id: fgId });
-    setTasks(tasksRes.data?.tasks || []);
-    setLoading(false);
+    try {
+      const res = await base44.functions.invoke('getMyFreshUser', {});
+      const me = res.data?.user;
+      setCurrentUserEmail(me?.email || null);
+      const fgId = me?.family_group_id || res.data?.familyGroup?.id || null;
+      // Use backend function to bypass stale token RLS issues
+      const tasksRes = await base44.functions.invoke('getFamilyTasks', { family_group_id: fgId });
+      setTasks(tasksRes.data?.tasks || []);
+    } catch (err) {
+      console.error('[loadTasks] error:', err);
+      setTasks([]);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { loadTasks(); }, [loadTasks]);
@@ -96,10 +104,17 @@ export default function Tasks() {
       const me = res.data?.user;
       const fgId = me?.family_group_id || res.data?.familyGroup?.id || null;
       let members = [];
-      if (fgId) {
-        members = await base44.entities.FamilyMember.filter({ family_group_id: fgId }, "-created_date", 200);
-      } else {
-        members = await base44.entities.FamilyMember.list();
+      try {
+        if (fgId) {
+          members = await base44.entities.FamilyMember.filter({ family_group_id: fgId }, "-created_date", 200);
+        } else {
+          members = await base44.entities.FamilyMember.list();
+        }
+      } catch (err) {
+        console.error('[familyMembers] error:', err);
+        // Use getFamilyMembers backend function as fallback
+        const membersRes = await base44.functions.invoke('getFamilyMembers', { family_group_id: fgId });
+        members = membersRes.data?.members || [];
       }
       const uniqueMembers = Array.from(new Map(members.map(m => [m.name.toLowerCase().trim(), m])).values());
       setFamilyMembers(uniqueMembers);
@@ -278,13 +293,11 @@ export default function Tasks() {
 
     if (assignedFilter === "assigned" && !t.assigned_to) return false;
     if (assignedFilter === "unassigned" && t.assigned_to) return false;
-    // Personal tasks are private — only show to the member they're assigned to
-    // All other categories are shared with the whole family
+    // Personal tasks: show if created by user or assigned to self, otherwise filter out
     if (t.category === "Personal") {
-      if (selfMember) {
-        if (t.assigned_to !== selfMember.id) return false;
-      }
-      // If no selfMember linked, fall through and show all personal tasks (solo user)
+      const isCreatedByUser = t.created_by === currentUserEmail;
+      const isAssignedToSelf = selfMember && t.assigned_to === selfMember.id;
+      if (!isCreatedByUser && !isAssignedToSelf) return false;
     }
     if (selectedMemberId && t.category === "Personal" && t.assigned_to !== selectedMemberId) return false;
     if (roomFilter !== "all" && t.room !== roomFilter) return false;
