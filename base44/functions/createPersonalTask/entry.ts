@@ -29,6 +29,7 @@ Deno.serve(async (req) => {
       next_due_date: next_due_date || new Date().toISOString().split('T')[0],
       status: 'Pending',
       overdue_grace_days: 999,
+      family_group_id: user.family_group_id || undefined,
     });
 
     console.log('[createPersonalTask] created task:', task.id);
