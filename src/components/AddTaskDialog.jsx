@@ -126,17 +126,21 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
     if (tab === "todo") {
       try {
-        console.log('[AddTaskDialog] Creating Personal task via backend:', { name: todoName, priority: todoPriority });
-        const res = await base44.functions.invoke('createPersonalTask', {
+        await base44.entities.Task.create({
           name: todoName,
+          category: "Personal",
           priority: todoPriority,
-          description: todoDescription,
+          description: todoDescription || undefined,
           assigned_to: assignedTo || undefined,
           assigned_to_name: member?.name || undefined,
           start_date: todoDueDate,
           next_due_date: todoDueDate,
+          status: "Pending",
+          frequency_days: 9999,
+          difficulty: "Easy",
+          overdue_grace_days: 999,
+          family_group_id,
         });
-        console.log('[AddTaskDialog] Personal task created successfully:', res.data?.task?.id);
         setTodoName("");
         setTodoPriority("Medium");
         setTodoDueDate(format(new Date(), "yyyy-MM-dd"));
@@ -147,7 +151,6 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
         alert(`Failed to create task: ${err?.message || 'Unknown error'}`);
       }
       setLoading(false);
-      console.log('[AddTaskDialog] calling onTaskAdded callback');
       onTaskAdded?.();
       return;
     } else if (tab === "preset") {
