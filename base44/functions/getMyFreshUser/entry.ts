@@ -14,7 +14,7 @@ Deno.serve(async (req) => {
     let familyGroup = null;
     const allGroups = await base44.asServiceRole.entities.FamilyGroup.list();
 
-    if (freshUser.family_group_id) {
+    if (freshUser.family_group_id && freshUser.family_group_id.trim()) {
       familyGroup = allGroups.find(g => g.id === freshUser.family_group_id) || null;
     }
 
