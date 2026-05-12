@@ -4,6 +4,7 @@ import { Zap } from "lucide-react";
 
 import { Link } from "react-router-dom";
 import StreakCircle from "../components/StreakCircle";
+import RewardProgress from "../components/RewardProgress";
 
 const colorMap = {
   blue: "bg-blue-200 text-blue-700",
@@ -130,31 +131,36 @@ export default function Leaderboard() {
               const bgColor = i === 0 ? "bg-amber-50 border-amber-200" : i === 1 ? "bg-slate-50 border-slate-200" : i === 2 ? "bg-orange-50 border-orange-200" : "bg-card border-border";
 
               return (
-                <div
-                  key={p.id}
-                  className={`flex items-center gap-4 px-5 py-4 rounded-xl border ${bgColor}`}
-                >
-                  <div className="w-10 text-center shrink-0">
-                    {isMedal
-                      ? <span className="text-2xl">{medals[i]}</span>
-                      : <span className="text-sm font-semibold text-muted-foreground">#{i + 1}</span>
-                    }
-                  </div>
+               <div
+                 key={p.id}
+                 className={`flex items-center gap-4 px-5 py-4 rounded-xl border ${bgColor}`}
+               >
+                 <div className="w-10 text-center shrink-0">
+                   {isMedal
+                     ? <span className="text-2xl">{medals[i]}</span>
+                     : <span className="text-sm font-semibold text-muted-foreground">#{i + 1}</span>
+                   }
+                 </div>
 
-                  <div className={`w-12 h-12 rounded-full ${colorMap[color] || "bg-blue-200 text-blue-700"} flex items-center justify-center font-bold text-lg shrink-0`}>
-                    {p.name?.[0]?.toUpperCase() || "?"}
-                  </div>
+                 <div className={`w-12 h-12 rounded-full ${colorMap[color] || "bg-blue-200 text-blue-700"} flex items-center justify-center font-bold text-lg shrink-0`}>
+                   {p.name?.[0]?.toUpperCase() || "?"}
+                 </div>
 
-                  <div className="flex-1 min-w-0">
-                    <p className="font-heading font-bold text-lg text-foreground truncate">{p.name}</p>
-                    <p className="text-sm text-muted-foreground">Level {p.level}</p>
-                  </div>
+                 <div className="flex-1 min-w-0">
+                   <p className="font-heading font-bold text-lg text-foreground truncate">{p.name}</p>
+                   <RewardProgress level={p.level} />
+                 </div>
 
-                  <div className="text-right shrink-0">
-                    <p className="font-heading font-bold text-2xl text-amber-600">{p.total_xp}</p>
-                    <p className="text-xs text-muted-foreground">XP</p>
-                  </div>
-                </div>
+                 <div className="flex flex-col items-end gap-2 shrink-0">
+                   <div className="text-right">
+                     <p className="font-heading font-bold text-2xl text-amber-600">{p.total_xp}</p>
+                     <p className="text-xs text-muted-foreground">XP</p>
+                   </div>
+                   <Link to="/cats" className="bg-pink-100 text-pink-800 rounded px-2 py-1 text-xs font-semibold hover:bg-pink-200 transition-colors">
+                     🐱
+                   </Link>
+                 </div>
+               </div>
               );
             })}
           </div>
