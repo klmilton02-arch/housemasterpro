@@ -26,9 +26,17 @@ Deno.serve(async (req) => {
 
     if (!familyGroupId) return Response.json({ members: [] });
 
-    // Use service role to bypass RLS and get all family members
-    const allMembers = await base44.asServiceRole.entities.FamilyMember.list('-created_date', 500);
-    const members = allMembers.filter(m => m.family_group_id === familyGroupId);
+    // Try user-scoped first (works when user has correct family_group_id in token)
+    // If that fails or returns nothing, use service role as fallback
+    let members = [];
+    try {
+      const all = await base44.entities.FamilyMember.filter({ family_group_id: familyGroupId }, '-created_date', 200);
+      members = all;
+    } catch (_) {
+      // User-scoped failed, try service role
+      const allSR = await base44.asServiceRole.entities.FamilyMember.list('-created_date', 500);
+      members = allSR.filter(m => m.family_group_id === familyGroupId);
+    }
 
     return Response.json({ members });
   } catch (error) {
