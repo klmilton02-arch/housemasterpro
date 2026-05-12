@@ -59,10 +59,8 @@ Deno.serve(async (req) => {
       return Response.json({ profiles: soloProfiles, members: [], users: [], solo: true, currentUser: freshUser });
     }
 
-    // For family: fetch via user-scoped calls (RLS allows family group reads when token has correct family_group_id)
-    // For users with stale tokens (like Scarlett), we patched the DB above but need to get data another way.
-    // Strategy: fetch all members/profiles using user-scoped call (works for Kelly), 
-    // then also try service role as fallback, filter by familyGroupId in JS.
+    // For family: fetch all data and filter by family_group_id in JS
+    // Don't rely on RLS for GamificationProfile since user tokens may be stale
     let members = [];
     let allProfiles = [];
 
@@ -73,7 +71,7 @@ Deno.serve(async (req) => {
       ]);
     } catch (_) {}
 
-    // If user-scoped returned nothing (stale token), try service role
+    // If user-scoped returned nothing, use service role
     if (members.length === 0) {
       const srMembers = await base44.asServiceRole.entities.FamilyMember.list('-created_date', 500);
       members = srMembers.filter(m => m.family_group_id === familyGroupId);
@@ -83,7 +81,8 @@ Deno.serve(async (req) => {
 
     const memberIds = new Set(members.map(m => m.id));
 
-    if (allProfiles.length === 0) {
+    // Always use service role for profiles to bypass RLS (ensures all family members see each other's XP)
+    if (allProfiles.length === 0 || allProfiles.every(p => !p.family_group_id)) {
       const srProfiles = await base44.asServiceRole.entities.GamificationProfile.list('-total_xp', 500);
       allProfiles = srProfiles.filter(p => p.family_group_id === familyGroupId || memberIds.has(p.family_member_id));
     } else {
