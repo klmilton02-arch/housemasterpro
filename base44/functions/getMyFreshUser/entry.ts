@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
     if (!familyGroup) {
       const allMembers = await base44.asServiceRole.entities.FamilyMember.list();
       const matchingMember = allMembers.find(
-        m => m.linked_user_email?.toLowerCase() === freshUser.email?.toLowerCase()
+        m => m.linked_user_email?.toLowerCase().trim() === freshUser.email?.toLowerCase().trim()
       );
       if (matchingMember?.family_group_id) {
         familyGroup = allGroups.find(g => g.id === matchingMember.family_group_id) || null;
@@ -42,10 +42,12 @@ Deno.serve(async (req) => {
             family_group_id: familyGroup.id,
             account_type: 'family',
           });
-          // Also store their user ID on the member record
-          await base44.asServiceRole.entities.FamilyMember.update(matchingMember.id, {
-            linked_user_id: freshUser.id,
-          });
+          // Also store their user ID on the member record if not already set
+          if (!matchingMember.linked_user_id) {
+            await base44.asServiceRole.entities.FamilyMember.update(matchingMember.id, {
+              linked_user_id: freshUser.id,
+            });
+          }
         }
       }
     }
