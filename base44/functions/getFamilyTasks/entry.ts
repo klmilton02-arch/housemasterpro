@@ -36,13 +36,14 @@ Deno.serve(async (req) => {
 
     console.log('[getFamilyTasks] final familyGroupId:', familyGroupId);
 
-    let tasks;
+    let tasks = [];
+    
     // Use user-scoped list() which applies RLS automatically
-    // RLS will show tasks created by user OR family tasks (if in family group)
+    // RLS allows family members to see each other's tasks (except Personal which are private)
     tasks = await base44.entities.Task.list('-created_date', 5000);
-    console.log('[getFamilyTasks]', user.email, 'loaded', tasks?.length, 'tasks (family_group_id:', familyGroupId + ')');
+    console.log('[getFamilyTasks]', user.email, 'loaded', tasks.length, 'tasks via RLS');
 
-    return Response.json({ tasks: tasks || [] });
+    return Response.json({ tasks });
   } catch (error) {
     console.error('[getFamilyTasks] error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
