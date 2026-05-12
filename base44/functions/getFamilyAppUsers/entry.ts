@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
 
     if (!familyGroupId) return Response.json({ users: [] });
 
-    const familyUsers = allUsers.filter(u => u.family_group_id === familyGroupId || u.email === user.email);
+    const familyUsers = allUsers.filter(u => u.family_group_id === familyGroupId);
 
     return Response.json({ users: familyUsers });
   } catch (error) {

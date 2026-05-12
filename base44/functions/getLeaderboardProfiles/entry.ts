@@ -25,10 +25,10 @@ Deno.serve(async (req) => {
       return Response.json({ profiles: soloProfiles, members: [], users: [], solo: true, currentUser: user });
     }
 
-    // Family user: use user-scoped API (respects RLS, returns accessible records)
+    // Family user: use service role with explicit filter so stale tokens don't break RLS
     const [members, allProfiles] = await Promise.all([
-      base44.entities.FamilyMember.list(),
-      base44.entities.GamificationProfile.list(),
+      base44.asServiceRole.entities.FamilyMember.filter({ family_group_id: familyGroupId }),
+      base44.asServiceRole.entities.GamificationProfile.filter({ family_group_id: familyGroupId }),
     ]);
 
     // Dedupe profiles: one per family_member_id, keeping the one with most XP

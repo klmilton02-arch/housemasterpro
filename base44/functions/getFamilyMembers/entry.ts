@@ -6,6 +6,7 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ members: [] });
 
+    // Always use fresh DB user to get the real family_group_id (token can be stale)
     const allUsers = await base44.asServiceRole.entities.User.list();
     const freshUser = allUsers.find(u => u.email === user.email) || user;
 
@@ -19,8 +20,8 @@ Deno.serve(async (req) => {
 
     if (!familyGroupId) return Response.json({ members: [] });
 
-    // Use user-scoped list (respects RLS, user can see their family's members)
-    const members = await base44.entities.FamilyMember.list();
+    // Use service role with explicit filter so stale auth tokens don't break RLS
+    const members = await base44.asServiceRole.entities.FamilyMember.filter({ family_group_id: familyGroupId });
 
     return Response.json({ members });
   } catch (error) {
