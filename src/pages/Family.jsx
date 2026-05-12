@@ -460,13 +460,14 @@ async function handleCreateFamily() {
           <h2 className="font-heading font-semibold text-xs text-muted-foreground uppercase tracking-wide">App Users</h2>
           <div className="bg-card border border-border rounded-lg divide-y divide-border">
             {familyUsers.map(u => {
-              const linked = familyMembers.find(m => m.linked_user_id === u.id);
+              const linked = familyMembers.find(m => m.linked_user_id === u.id || m.linked_user_email === u.email);
               const isMe = u.id === user?.id;
+              const displayName = linked?.name || u.full_name;
               return (
                 <div key={u.id} className="px-4 py-3 space-y-1">
                   <div className="flex items-center justify-between gap-2">
                     <div className="min-w-0">
-                      <p className="font-medium text-sm">{u.full_name}</p>
+                      <p className="font-medium text-sm">{displayName}</p>
                       <p className="text-xs text-muted-foreground">{u.email}</p>
                     </div>
                     {!isMe && (
