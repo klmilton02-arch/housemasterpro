@@ -125,29 +125,29 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     };
 
     if (tab === "todo") {
-      const personalTask = {
-        name: todoName,
-        category: "Personal",
-        priority: todoPriority,
-        difficulty: "Easy",
-        frequency_days: 9999,
-        description: todoDescription,
-        assigned_to: assignedTo || undefined,
-        assigned_to_name: member?.name || undefined,
-        start_date: todoDueDate,
-        next_due_date: todoDueDate,
-        status: "Pending",
-        overdue_grace_days: 999,
-      };
-      console.log('[AddTaskDialog] Creating Personal task:', personalTask);
-      await base44.entities.Task.create(personalTask);
-      console.log('[AddTaskDialog] Personal task created successfully');
-      setTodoName("");
-      setTodoPriority("Medium");
-      setTodoDueDate(format(new Date(), "yyyy-MM-dd"));
-      setTodoDescription("");
-      setAssignedTo("");
+      try {
+        console.log('[AddTaskDialog] Creating Personal task via backend:', { name: todoName, priority: todoPriority });
+        const res = await base44.functions.invoke('createPersonalTask', {
+          name: todoName,
+          priority: todoPriority,
+          description: todoDescription,
+          assigned_to: assignedTo || undefined,
+          assigned_to_name: member?.name || undefined,
+          start_date: todoDueDate,
+          next_due_date: todoDueDate,
+        });
+        console.log('[AddTaskDialog] Personal task created successfully:', res.data?.task?.id);
+        setTodoName("");
+        setTodoPriority("Medium");
+        setTodoDueDate(format(new Date(), "yyyy-MM-dd"));
+        setTodoDescription("");
+        setAssignedTo("");
+      } catch (err) {
+        console.error('[AddTaskDialog] Failed to create Personal task:', err?.message || err);
+        alert(`Failed to create task: ${err?.message || 'Unknown error'}`);
+      }
       setLoading(false);
+      console.log('[AddTaskDialog] calling onTaskAdded callback');
       onTaskAdded?.();
       return;
     } else if (tab === "preset") {
