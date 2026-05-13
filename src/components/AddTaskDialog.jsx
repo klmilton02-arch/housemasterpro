@@ -108,10 +108,6 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
   async function handleSubmit() {
     setLoading(true);
-    const meRes = await base44.functions.invoke('getMyFreshUser', {});
-    const me = meRes.data?.user;
-    const family_group_id = me?.family_group_id || null;
-    const hasFamily = !!family_group_id;
     const member = familyMembers.find(m => m.id === assignedTo);
 
     const getRoomFromCategory = (cat) => {
@@ -169,7 +165,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
         const freqDays = freqValue ? toDays(freqValue, freqUnit) : preset.frequency_days;
 
-        await base44.entities.Task.create({
+        await base44.functions.invoke('createFamilyTask', {
           name: isStreaming && streamingServiceName.trim()
             ? `Streaming Services (${streamingServiceName.trim()})`
             : isPhone && phoneBillType
@@ -190,7 +186,6 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
           bill_day_of_month: (isBill && useBillDay) ? parseInt(billDayOfMonth) : undefined,
           status: "Pending",
           overdue_grace_days: 3,
-          family_group_id,
         });
       }
     } else {
@@ -218,7 +213,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
           next_due_date: customNextDue,
         });
       } else {
-        await base44.entities.Task.create({
+        await base44.functions.invoke('createFamilyTask', {
           name: customName,
           category: effectiveCategory,
           room: customRoom || undefined,
@@ -234,7 +229,6 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
           bill_day_of_month: (effectiveCategory === "Bills" && useBillDay) ? parseInt(billDayOfMonth) : undefined,
           status: "Pending",
           overdue_grace_days: 3,
-          family_group_id: family_group_id || undefined,
         });
       }
     }
