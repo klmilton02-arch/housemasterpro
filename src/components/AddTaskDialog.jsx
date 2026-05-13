@@ -206,24 +206,37 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
         customNextDue = format(candidate, "yyyy-MM-dd");
       }
 
-      await base44.entities.Task.create({
-        name: customName,
-        category: effectiveCategory,
-        room: customRoom || undefined,
-        priority: customPriority,
-        difficulty: "Easy",
-        frequency_days: freqDays,
-        frequency_miles: freqUnit === "miles" ? (parseInt(freqValue) || undefined) : undefined,
-        description: customDescription,
-        assigned_to: assignedTo || undefined,
-        assigned_to_name: member?.name || undefined,
-        start_date: startDate,
-        next_due_date: customNextDue,
-        bill_day_of_month: (effectiveCategory === "Bills" && useBillDay) ? parseInt(billDayOfMonth) : undefined,
-        status: "Pending",
-        overdue_grace_days: 3,
-        family_group_id: family_group_id || undefined,
-      });
+      if (effectiveCategory === "Personal") {
+        // Route through createPersonalTask so personal_owner_email is set correctly
+        await base44.functions.invoke('createPersonalTask', {
+          name: customName,
+          priority: customPriority,
+          description: customDescription || undefined,
+          assigned_to: assignedTo || undefined,
+          assigned_to_name: member?.name || undefined,
+          start_date: startDate,
+          next_due_date: customNextDue,
+        });
+      } else {
+        await base44.entities.Task.create({
+          name: customName,
+          category: effectiveCategory,
+          room: customRoom || undefined,
+          priority: customPriority,
+          difficulty: "Easy",
+          frequency_days: freqDays,
+          frequency_miles: freqUnit === "miles" ? (parseInt(freqValue) || undefined) : undefined,
+          description: customDescription,
+          assigned_to: assignedTo || undefined,
+          assigned_to_name: member?.name || undefined,
+          start_date: startDate,
+          next_due_date: customNextDue,
+          bill_day_of_month: (effectiveCategory === "Bills" && useBillDay) ? parseInt(billDayOfMonth) : undefined,
+          status: "Pending",
+          overdue_grace_days: 3,
+          family_group_id: family_group_id || undefined,
+        });
+      }
     }
 
     setLoading(false);
