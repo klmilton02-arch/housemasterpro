@@ -135,6 +135,11 @@
       "type": "boolean",
       "title": "Completed With Blast Mode",
       "default": false
+    },
+    "personal_owner_email": {
+      "type": "string",
+      "title": "Personal Task Owner Email",
+      "description": "For personal tasks created via service role: stores the owning user's email"
     }
   },
   "required": [

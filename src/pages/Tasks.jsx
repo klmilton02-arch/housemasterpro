@@ -296,11 +296,10 @@ export default function Tasks() {
 
     if (assignedFilter === "assigned" && !t.assigned_to) return false;
     if (assignedFilter === "unassigned" && t.assigned_to) return false;
-    // Personal tasks: only show to creator
+    // Personal tasks: only show to creator (by email or personal_owner_email)
     if (t.category === "Personal") {
-      if (t.created_by !== currentUserEmail) {
-        return false;
-      }
+      const isOwner = t.created_by === currentUserEmail || t.personal_owner_email === currentUserEmail;
+      if (!isOwner) return false;
     }
     // If filtering by member, only apply to personal tasks
     if (selectedMemberId && t.category === "Personal" && t.assigned_to !== selectedMemberId) return false;

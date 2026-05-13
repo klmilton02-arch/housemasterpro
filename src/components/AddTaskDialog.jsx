@@ -126,20 +126,15 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
     if (tab === "todo") {
       try {
-        await base44.entities.Task.create({
+        // Use backend function so the server-side fresh token is used for RLS
+        await base44.functions.invoke('createPersonalTask', {
           name: todoName,
-          category: "Personal",
           priority: todoPriority,
           description: todoDescription || undefined,
           assigned_to: assignedTo || undefined,
           assigned_to_name: member?.name || undefined,
           start_date: todoDueDate,
           next_due_date: todoDueDate,
-          status: "Pending",
-          frequency_days: 9999,
-          difficulty: "Easy",
-          overdue_grace_days: 999,
-          family_group_id,
         });
         setTodoName("");
         setTodoPriority("Medium");

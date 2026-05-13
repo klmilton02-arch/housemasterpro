@@ -47,15 +47,19 @@ Deno.serve(async (req) => {
       const personalTasks = allTasks.filter(t => t.category === 'Personal' && t.created_by === user.email);
       console.log('[getFamilyTasks] personal tasks created by', user.email, ':', personalTasks.length, personalTasks.map(t => t.name));
       tasks = allTasks.filter(t => {
-        // Rule 1: Task created by this user
+        // Rule 1: Task created by this user (standard tasks)
         if (t.created_by === user.email) {
-          console.log('[getFamilyTasks] include task (created by user):', t.name, 'category:', t.category);
+          return true;
+        }
+
+        // Rule 1b: Personal tasks with personal_owner_email set to this user
+        // (created via service role by createPersonalTask function)
+        if (t.category === 'Personal' && t.personal_owner_email === user.email) {
           return true;
         }
         
         // Rule 2: Non-Personal tasks visible to family members (must have matching family_group_id)
         if (t.category !== 'Personal' && t.family_group_id === familyGroupId) {
-          console.log('[getFamilyTasks] include task (shared family):', t.name);
           return true;
         }
         
