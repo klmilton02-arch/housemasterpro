@@ -51,8 +51,10 @@ Deno.serve(async (req) => {
     // Family user: fetch all data using service role ONLY
     const [members, allProfiles] = await Promise.all([
       base44.asServiceRole.entities.FamilyMember.list('-created_date', 500),
-      base44.asServiceRole.entities.GamificationProfile.list('-total_xp', 500),
+      base44.asServiceRole.entities.GamificationProfile.list('-created_date', 500),
     ]);
+    console.log('[getLeaderboardProfiles] total profiles fetched:', allProfiles.length);
+    console.log('[getLeaderboardProfiles] profile group IDs:', allProfiles.map(p => `${p.family_member_name}:${p.family_group_id}:${p.total_xp}`));
 
     // Filter to family group
     const familyMembers = members.filter(m => m.family_group_id === familyGroupId);
