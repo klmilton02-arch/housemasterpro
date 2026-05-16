@@ -58,10 +58,7 @@ export default function Leaderboard() {
     );
   }
 
-  const isFamilyUser = currentUser && (
-    currentUser.email === 'Thomasdugger1@gmail.com' ||
-    currentUser.email === 'kellymilton02@gmail.com'
-  );
+  const isFamilyUser = currentUser && members.length > 0;
 
   return (
     <div className="space-y-6 max-w-sm md:max-w-2xl mx-auto px-4 sm:px-4 pt-6">
@@ -89,7 +86,7 @@ export default function Leaderboard() {
       <h2 className="font-heading text-2xl font-bold">{isFamilyUser ? 'Family Leaderboard' : 'Leaderboard'}</h2>
 
       {(() => {
-        const isSolo = !isFamilyUser && (!currentUser?.family_group_id || currentUser?.account_type === 'solo');
+        const isSolo = !isFamilyUser;
 
         // Solo: show only the current user
         // Family: one entry per FamilyMember, using the best matching profile
