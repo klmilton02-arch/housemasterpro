@@ -187,13 +187,16 @@ export default function Tasks() {
         }
       });
 
-      base44.entities.Task.update(task.id, {
-        status: "Completed",
-        last_completed_date: todayStr,
-        next_due_date: nextDueStr,
-        streak: newStreak,
-        completed_with_blast: blastActive,
-        completed_by_name: completedByName,
+      base44.functions.invoke('completeTask', {
+        task_id: task.id,
+        updates: {
+          status: "Completed",
+          last_completed_date: todayStr,
+          next_due_date: nextDueStr,
+          streak: newStreak,
+          completed_with_blast: blastActive,
+          completed_by_name: completedByName,
+        }
       });
 
       // After 2.5s pause: move task to bottom of list
@@ -211,7 +214,7 @@ export default function Tasks() {
       setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: "Pending" } : t));
       const wasBlastRunning = task.completed_with_blast || false;
       revokePoints(task, wasBlastRunning);
-      await base44.entities.Task.update(task.id, { status: "Pending" });
+      await base44.functions.invoke('completeTask', { task_id: task.id, updates: { status: "Pending" } });
       loadTasks();
     }
   }
@@ -250,10 +253,13 @@ export default function Tasks() {
         nextDue.setDate(nextDue.getDate() + task.frequency_days);
         nextDueStr = nextDue.toISOString().split("T")[0];
       }
-      return base44.entities.Task.update(task.id, {
-        status: "Completed",
-        last_completed_date: today.toISOString().split("T")[0],
-        next_due_date: nextDueStr,
+      return base44.functions.invoke('completeTask', {
+        task_id: task.id,
+        updates: {
+          status: "Completed",
+          last_completed_date: today.toISOString().split("T")[0],
+          next_due_date: nextDueStr,
+        }
       });
     }));
     setBatchMode(false);
