@@ -124,9 +124,6 @@
           "user_condition": {
             "role": "admin"
           }
-        },
-        {
-          "data.family_group_id": "{{user.family_group_id}}"
         }
       ]
     },
@@ -142,9 +139,6 @@
           "user_condition": {
             "role": "admin"
           }
-        },
-        {
-          "data.family_group_id": "{{user.family_group_id}}"
         }
       ]
     }
