@@ -9,15 +9,15 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Always use fresh DB user
+    // Always use fresh DB user (case-insensitive email match)
     const allUsers = await base44.asServiceRole.entities.User.list();
-    const freshUser = allUsers.find(u => u.email === user.email) || user;
+    const freshUser = allUsers.find(u => u.email?.toLowerCase() === user.email?.toLowerCase()) || user;
     let familyGroupId = freshUser.family_group_id || null;
 
-    // Check if user owns a group
+    // Check if user owns a group (case-insensitive email match)
     if (!familyGroupId) {
       const allGroups = await base44.asServiceRole.entities.FamilyGroup.list();
-      const ownedGroup = allGroups.find(g => g.owner_email === user.email);
+      const ownedGroup = allGroups.find(g => g.owner_email?.toLowerCase() === user.email?.toLowerCase());
       familyGroupId = ownedGroup?.id || null;
     }
 

@@ -35,7 +35,7 @@ export default function Leaderboard() {
       if (fullUser) {
         const myMember = members.find(m =>
           m.linked_user_id === fullUser.id ||
-          m.linked_user_email === fullUser.email
+          m.linked_user_email?.toLowerCase() === fullUser.email?.toLowerCase()
         );
         // Find best profile: by member ID first, then by linked_user_id, then by name
         const myProfiles = profiles.filter(p =>
