@@ -58,20 +58,27 @@ Deno.serve(async (req) => {
     const familyMembers = members.filter(m => m.family_group_id === familyGroupId);
     const memberIds = new Set(familyMembers.map(m => m.id));
 
-    // Filter profiles: MUST have the correct family_group_id AND a matching member ID
-    const familyProfiles = allProfiles.filter(p => 
-      p.family_group_id === familyGroupId && memberIds.has(p.family_member_id)
+    // Filter profiles: match by family_group_id AND (member ID or member name)
+    const memberNames = new Set(familyMembers.map(m => m.name?.toLowerCase()));
+    const familyProfiles = allProfiles.filter(p =>
+      p.family_group_id === familyGroupId &&
+      (memberIds.has(p.family_member_id) || memberNames.has(p.family_member_name?.toLowerCase()))
     );
 
-    // Dedupe: one profile per family_member_id, keeping the one with most XP
+    // Dedupe: one profile per member name, keeping highest XP
     const profileMap = {};
     for (const p of familyProfiles) {
-      const key = p.family_member_id;
+      const key = p.family_member_name?.toLowerCase() || p.family_member_id;
       if (!profileMap[key] || (p.total_xp || 0) > (profileMap[key].total_xp || 0)) {
         profileMap[key] = p;
       }
     }
-    const profiles = Object.values(profileMap);
+
+    // Re-map profiles to use correct member IDs from FamilyMember records
+    const profiles = Object.values(profileMap).map(p => {
+      const matchedMember = familyMembers.find(m => m.name?.toLowerCase() === p.family_member_name?.toLowerCase());
+      return matchedMember ? { ...p, family_member_id: matchedMember.id } : p;
+    });
 
     return Response.json({
       profiles,
