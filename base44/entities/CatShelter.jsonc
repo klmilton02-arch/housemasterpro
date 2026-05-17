@@ -70,8 +70,7 @@
     }
   },
   "required": [
-    "user_id",
-    "cat_name"
+    "user_id"
   ],
   "rls": {
     "create": {

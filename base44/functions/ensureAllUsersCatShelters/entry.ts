@@ -25,13 +25,6 @@ Deno.serve(async (req) => {
           user_id: u.id,
           user_name: u.full_name || u.email,
           family_group_id: u.family_group_id || undefined,
-          cat_name: `${u.full_name || 'User'}'s Cat`,
-          cat_fur: 'orange',
-          collar: 'none',
-          toy: 'none',
-          accessory: 'none',
-          health: 100,
-          is_home: true,
         });
         created++;
       } else {
