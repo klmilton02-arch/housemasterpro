@@ -592,12 +592,11 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
                 triggerClassName="mt-1"
                 forceSelect
                 options={[
-                  { value: "Cleaning", label: "Cleaning" },
-                  { value: "Maintenance", label: "Maintenance" },
-                  { value: "Bills", label: "Bills" },
-                  { value: "Personal", label: "Personal" },
-                  { value: "Garden", label: "Garden" },
-                ]}
+                   { value: "Cleaning", label: "Cleaning" },
+                   { value: "Maintenance", label: "Maintenance" },
+                   { value: "Bills", label: "Bills" },
+                   { value: "Garden", label: "Garden" },
+                 ]}
               />
             </div>
             <div>
