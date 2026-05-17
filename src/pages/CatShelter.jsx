@@ -252,8 +252,8 @@ export default function CatShelter() {
       const me = await base44.auth.me();
       if (!me) return;
       const [profiles, allCats, allTasks] = await Promise.all([
-        base44.entities.GamificationProfile.filter({ family_member_name: me.full_name }),
-        base44.entities.CatShelter.filter({ family_member_name: me.full_name }),
+        base44.entities.GamificationProfile.filter({ user_id: me.id }),
+        base44.entities.CatShelter.filter({ user_id: me.id }),
         base44.entities.Task.list(),
       ]);
 
@@ -295,9 +295,9 @@ export default function CatShelter() {
     const me = await base44.auth.me();
     if (!me || !profile) return;
     const newCat = await base44.entities.CatShelter.create({
-      family_member_id: profile.family_member_id || me.id,
-      family_member_name: me.full_name,
-      family_group_id: me.family_group_id || "",
+      user_id: me.id,
+      user_name: me.full_name,
+      family_group_id: me.family_group_id || undefined,
       cat_name: `Cat ${cats.length + 1}`,
       cat_fur: "orange",
       collar: "none",

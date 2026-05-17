@@ -5,7 +5,7 @@ import { format, parseISO, addDays } from "date-fns";
 import { Pencil, Trash2, Calendar, Clock, X, Users } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useState, useEffect } from "react";
-import { awardPointsForMember } from "@/utils/gamification";
+import { awardPoints } from "@/utils/gamification";
 
 export default function TaskDetailModal({ task, open, onOpenChange, onModify, onDelete, onChangeDueDate, onComplete }) {
   const [dueDateInput, setDueDateInput] = useState(task?.next_due_date || "");

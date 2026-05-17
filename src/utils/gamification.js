@@ -102,21 +102,11 @@ export async function revokePoints(task, wasBlastRunning = false) {
   });
 }
 
-// Award points to a specific family member (used when completing on behalf of someone)
-export async function awardPointsForMember(task, member) {
-  return awardPoints({ ...task, assigned_to: member.id, assigned_to_name: member.name }, false);
-}
-
 export async function awardPoints(task, isBlastRunning = false) {
-  let memberId = task.assigned_to;
-  let memberName = task.assigned_to_name;
-
   const me = await base44.auth.me();
-  if (!memberId || !memberName) {
-    if (!me) return null;
-    memberId = me.id;
-    memberName = me.full_name;
-  }
+  if (!me) return null;
+  const userId = me.id;
+  const userName = me.full_name;
 
   const today = new Date();
   const todayStr = today.toISOString().split("T")[0];
@@ -131,20 +121,21 @@ export async function awardPoints(task, isBlastRunning = false) {
   let basePoints = getTaskPoints(task);
   const blastMultiplier = isBlastRunning ? 2 : 1;
 
-  // Find profile — try by member ID first, then by name as fallback
-  let profileResults = await base44.entities.GamificationProfile.filter({ family_member_id: memberId });
+  // Find profile by user_id
+  const profileResults = await base44.entities.GamificationProfile.filter({ user_id: userId });
   let profile = profileResults[0];
 
-  // Fallback: match by name if member ID didn't find anything
-  if (!profile && memberName) {
-    const byName = await base44.entities.GamificationProfile.filter({ family_member_name: memberName });
-    if (byName.length > 0) profile = byName[0];
-  }
-
   if (!profile) {
-    // Never auto-create profiles — profiles must be explicitly set up.
-    // If no profile found, skip silently.
-    return null;
+    // Auto-create profile for this user
+    profile = await base44.entities.GamificationProfile.create({
+      user_id: userId,
+      user_name: userName,
+      family_group_id: me.family_group_id || undefined,
+      total_xp: 0,
+      level: 1,
+      badges: [],
+      total_completions: 0,
+    });
   }
 
   // --- Streak bonuses ---
@@ -222,12 +213,13 @@ export async function awardPoints(task, isBlastRunning = false) {
     bill_completions: updatedProfile.bill_completions,
     cleaning_streak: updatedProfile.cleaning_streak,
     last_cleaning_date: updatedProfile.last_cleaning_date,
-    family_member_name: memberName,
+    user_name: userName,
+    family_group_id: me.family_group_id || profile.family_group_id || undefined,
   });
 
   await base44.entities.CompletionHistory.create({
-    family_member_id: memberId,
-    family_member_name: memberName,
+    family_member_id: userId,
+    family_member_name: userName,
     task_id: task.id,
     task_name: task.name,
     points_earned: totalPoints + badgeBonusXP,

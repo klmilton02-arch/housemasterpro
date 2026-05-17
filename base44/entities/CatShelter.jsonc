@@ -2,13 +2,13 @@
   "name": "CatShelter",
   "type": "object",
   "properties": {
-    "family_member_id": {
+    "user_id": {
       "type": "string",
-      "title": "Family Member ID"
+      "title": "User ID"
     },
-    "family_member_name": {
+    "user_name": {
       "type": "string",
-      "title": "Family Member Name"
+      "title": "User Name"
     },
     "family_group_id": {
       "type": "string",
@@ -70,48 +70,58 @@
     }
   },
   "required": [
-    "family_member_id",
-    "family_member_name",
+    "user_id",
     "cat_name"
   ],
   "rls": {
     "create": {
       "$or": [
         {
-          "data.family_group_id": "{{user.family_group_id}}"
+          "data.user_id": "{{user.id}}"
         },
         {
-          "created_by": "{{user.email}}"
+          "user_condition": {
+            "role": "admin"
+          }
         }
       ]
     },
     "read": {
       "$or": [
         {
+          "data.user_id": "{{user.id}}"
+        },
+        {
           "data.family_group_id": "{{user.family_group_id}}"
         },
         {
-          "created_by": "{{user.email}}"
+          "user_condition": {
+            "role": "admin"
+          }
         }
       ]
     },
     "update": {
       "$or": [
         {
-          "data.family_group_id": "{{user.family_group_id}}"
+          "data.user_id": "{{user.id}}"
         },
         {
-          "created_by": "{{user.email}}"
+          "user_condition": {
+            "role": "admin"
+          }
         }
       ]
     },
     "delete": {
       "$or": [
         {
-          "data.family_group_id": "{{user.family_group_id}}"
+          "data.user_id": "{{user.id}}"
         },
         {
-          "created_by": "{{user.email}}"
+          "user_condition": {
+            "role": "admin"
+          }
         }
       ]
     }
