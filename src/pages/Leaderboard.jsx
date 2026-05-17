@@ -40,7 +40,7 @@ export default function Leaderboard() {
   const entries = profiles
     .map((p, i) => ({
       id: p.user_id,
-      name: p.user_name || "Unknown",
+      name: p.family_member_name || "Unknown",
       avatarColor: AVATAR_COLORS[i % AVATAR_COLORS.length],
       total_xp: p.total_xp || 0,
       level: p.level || 1,
