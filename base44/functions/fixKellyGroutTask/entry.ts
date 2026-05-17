@@ -30,11 +30,14 @@ Deno.serve(async (req) => {
 
     const task = tasks[0];
 
-    // Mark as completed
+    // Get Scarlett's info
+    const scarlett = allUsers.find(u => u.email === 'kellymilton02@gmail.com');
+
+    // Mark as completed (by Scarlett, for Kelly's task)
     await base44.asServiceRole.entities.Task.update(task.id, {
       status: 'Completed',
       last_completed_date: new Date().toISOString().split('T')[0],
-      completed_by_name: kelly.full_name,
+      completed_by_name: scarlett ? scarlett.full_name : 'Scarlett',
     });
 
     return Response.json({
