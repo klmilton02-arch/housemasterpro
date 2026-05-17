@@ -129,7 +129,7 @@ export async function awardPoints(task, isBlastRunning = false) {
     // Auto-create profile for this user
     profile = await base44.entities.GamificationProfile.create({
       user_id: userId,
-      user_name: userName,
+      user_name: me.full_name || userName,
       family_group_id: me.family_group_id || undefined,
       total_xp: 0,
       level: 1,
@@ -213,7 +213,8 @@ export async function awardPoints(task, isBlastRunning = false) {
     bill_completions: updatedProfile.bill_completions,
     cleaning_streak: updatedProfile.cleaning_streak,
     last_cleaning_date: updatedProfile.last_cleaning_date,
-    user_name: userName,
+    // Preserve existing user_name so display names (Kelly/Tom/Scarlett) aren't overwritten by full_name
+    user_name: profile.user_name || userName,
     family_group_id: me.family_group_id || profile.family_group_id || undefined,
   });
 
