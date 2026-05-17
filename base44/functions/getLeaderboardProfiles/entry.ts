@@ -9,7 +9,9 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const familyGroupId = user.family_group_id || null;
+    // Always fetch fresh user data to ensure family_group_id is current
+    const freshUser = await base44.asServiceRole.entities.User.get(user.id);
+    const familyGroupId = freshUser?.family_group_id || null;
 
     // Get profiles — if in a family, get all family profiles; otherwise just own
     let profiles = [];
@@ -20,8 +22,8 @@ Deno.serve(async (req) => {
       const allUsers = await base44.asServiceRole.entities.User.list('-created_date', 200);
       familyUsers = allUsers.filter(u => u.family_group_id === familyGroupId);
 
-      // Get all gamification profiles for this family group
-      profiles = await base44.entities.GamificationProfile.filter({ family_group_id: familyGroupId }, '-total_xp', 100);
+      // Get all gamification profiles for this family group (service role to bypass RLS)
+      profiles = await base44.asServiceRole.entities.GamificationProfile.filter({ family_group_id: familyGroupId }, '-total_xp', 100);
 
       // Also ensure current user's own profile is included (in case family_group_id was recently set)
       const myProfile = profiles.find(p => p.user_id === user.id);
