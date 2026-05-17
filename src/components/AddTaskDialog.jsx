@@ -344,7 +344,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
               <TabsList className="w-full">
                 <TabsTrigger value="preset" className="flex-1 text-xs">Preset</TabsTrigger>
                 <TabsTrigger value="custom" className="flex-1 text-xs">Custom</TabsTrigger>
-                <TabsTrigger value="todo" className="flex-1 text-xs">To-Do</TabsTrigger>
+                <TabsTrigger value="todo" className="flex-1 text-xs">Personal Task</TabsTrigger>
               </TabsList>
 
               <TabsContent value="preset" className="space-y-4 mt-4">
@@ -489,7 +489,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
           </TabsContent>
 
           <TabsContent value="todo" className="space-y-4 mt-4">
-            <p className="text-xs text-muted-foreground">One-time personal tasks that don't repeat — great for to-do lists and errands.</p>
+            <p className="text-xs text-muted-foreground">Create personal tasks that are unique to you. Set them as one-time or repeating.</p>
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Task Name</Label>
               <Input value={todoName} onChange={e => setTodoName(e.target.value)} placeholder="e.g., Call the dentist" className="mt-1" />
@@ -574,7 +574,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
               onClick={handleSubmit}
               disabled={loading || !todoName.trim()}
             >
-              {loading ? "Adding..." : "Add To-Do"}
+              {loading ? "Adding..." : "Add Personal Task"}
             </Button>
           </TabsContent>
 
@@ -819,7 +819,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
               onClick={handleSubmit}
               disabled={loading || (tab === "preset" && selectedPresets.size === 0) || (tab === "custom" && !customName) || (tab === "todo" && !todoName.trim())}
             >
-              {loading ? "Adding..." : tab === "todo" ? "Add To-Do" : "Add Task"}
+              {loading ? "Adding..." : tab === "todo" ? "Add Personal Task" : "Add Task"}
             </Button>
             <Button
               variant="outline"
