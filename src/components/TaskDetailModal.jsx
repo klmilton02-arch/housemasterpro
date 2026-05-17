@@ -82,8 +82,8 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
       assigned_to_name: member.name,
       completed_by_name: member.name,
     });
-    // Award XP to the selected member
-    try { await awardPointsForMember(task, member); } catch (e) { /* non-fatal */ }
+    // Award XP to the current user
+    try { await awardPoints(task, false); } catch (e) { /* non-fatal */ }
     setCompletingAs(null);
     setCompleteAsOpen(false);
     onComplete?.(task);
