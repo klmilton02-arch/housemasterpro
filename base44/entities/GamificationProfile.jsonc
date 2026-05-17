@@ -2,17 +2,17 @@
   "name": "GamificationProfile",
   "type": "object",
   "properties": {
+    "user_id": {
+      "type": "string",
+      "title": "User ID"
+    },
+    "user_name": {
+      "type": "string",
+      "title": "User Name"
+    },
     "family_group_id": {
       "type": "string",
       "title": "Family Group ID"
-    },
-    "family_member_id": {
-      "type": "string",
-      "title": "Family Member ID"
-    },
-    "family_member_name": {
-      "type": "string",
-      "title": "Family Member Name"
     },
     "total_xp": {
       "type": "number",
@@ -83,14 +83,13 @@
     }
   },
   "required": [
-    "family_member_id",
-    "family_member_name"
+    "user_id"
   ],
   "rls": {
     "create": {
       "$or": [
         {
-          "data.family_group_id": "{{user.family_group_id}}"
+          "data.user_id": "{{user.id}}"
         },
         {
           "user_condition": {
@@ -101,6 +100,9 @@
     },
     "read": {
       "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
         {
           "data.family_group_id": "{{user.family_group_id}}"
         },
@@ -114,7 +116,7 @@
     "update": {
       "$or": [
         {
-          "data.family_group_id": "{{user.family_group_id}}"
+          "data.user_id": "{{user.id}}"
         },
         {
           "user_condition": {
@@ -126,7 +128,7 @@
     "delete": {
       "$or": [
         {
-          "data.family_group_id": "{{user.family_group_id}}"
+          "data.user_id": "{{user.id}}"
         },
         {
           "user_condition": {

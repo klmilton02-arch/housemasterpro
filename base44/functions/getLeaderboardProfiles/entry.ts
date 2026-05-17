@@ -9,23 +9,36 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const familyGroupId = user.family_group_id;
+    const familyGroupId = user.family_group_id || null;
 
-    if (!familyGroupId) {
-      return Response.json({ profiles: [], members: [], solo: true, currentUser: user });
+    // Get profiles — if in a family, get all family profiles; otherwise just own
+    let profiles = [];
+    let familyUsers = [];
+
+    if (familyGroupId) {
+      // Get all users in the same family group (service role needed to list users)
+      const allUsers = await base44.asServiceRole.entities.User.list('-created_date', 200);
+      familyUsers = allUsers.filter(u => u.family_group_id === familyGroupId);
+
+      // Get all gamification profiles for this family group
+      profiles = await base44.entities.GamificationProfile.filter({ family_group_id: familyGroupId }, '-total_xp', 100);
+
+      // Also ensure current user's own profile is included (in case family_group_id was recently set)
+      const myProfile = profiles.find(p => p.user_id === user.id);
+      if (!myProfile) {
+        const ownProfiles = await base44.entities.GamificationProfile.filter({ user_id: user.id });
+        if (ownProfiles[0]) profiles.push(ownProfiles[0]);
+      }
+    } else {
+      // Solo user — just their own profile
+      profiles = await base44.entities.GamificationProfile.filter({ user_id: user.id });
     }
-
-    // Both queries can now use user-scoped access since RLS is family_group_id based
-    const [members, profiles] = await Promise.all([
-      base44.asServiceRole.entities.FamilyMember.filter({ family_group_id: familyGroupId }),
-      base44.entities.GamificationProfile.filter({ family_group_id: familyGroupId }, '-total_xp', 100)
-    ]);
 
     return Response.json({
       profiles,
-      members,
-      solo: false,
-      currentUser: { ...user, family_group_id: familyGroupId }
+      familyUsers,
+      currentUser: user,
+      solo: !familyGroupId,
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
