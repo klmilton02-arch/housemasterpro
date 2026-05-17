@@ -14,6 +14,7 @@ import { Camera, Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initialPreset = null }) {
   const [presets, setPresets] = useState([]);
   const [familyMembers, setFamilyMembers] = useState([]);
+  const [homeSetup, setHomeSetup] = useState(null);
   const [loading, setLoading] = useState(false);
   const [dialogLoading, setDialogLoading] = useState(false);
   const [tab, setTab] = useState("preset");
@@ -72,14 +73,17 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
       Promise.all([
         base44.entities.PresetTask.list().catch(() => []),
         base44.entities.FamilyMember.list().catch(() => []),
-      ]).then(([p, f]) => {
+        base44.entities.HomeSetup.list().catch(() => []),
+      ]).then(([p, f, h]) => {
         setPresets(p || []);
         setFamilyMembers(f || []);
+        setHomeSetup(h?.[0] || null);
         setDialogLoading(false);
       }).catch(err => {
-        console.error("Failed to load presets/family members:", err);
+        console.error("Failed to load presets/family members/homesetup:", err);
         setPresets([]);
         setFamilyMembers([]);
+        setHomeSetup(null);
         setDialogLoading(false);
       });
 
@@ -570,30 +574,34 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
             <div>
                <Label className="text-xs font-medium text-muted-foreground">Room (Optional)</Label>
                <MobileSelect
-                 value={customRoom}
-                 onValueChange={setCustomRoom}
-                 title="Select Room"
-                 triggerClassName="mt-1"
-                 forceSelect
-                 options={[
-                   { value: "", label: "No room" },
-                   { value: "Bedroom", label: "Bedroom (General)" },
-                   { value: "Bedroom 1", label: "Bedroom 1" },
-                   { value: "Bedroom 2", label: "Bedroom 2" },
-                   { value: "Bedroom 3", label: "Bedroom 3" },
-                   { value: "Bedroom 4", label: "Bedroom 4" },
-                   { value: "Bedroom 5", label: "Bedroom 5" },
-                   { value: "Bathroom", label: "Bathroom" },
-                   { value: "Half Bath", label: "Half Bath" },
-                   { value: "Kitchen", label: "Kitchen" },
-                   { value: "Living Room", label: "Living Room" },
-                   { value: "Dining Room", label: "Dining Room" },
-                   { value: "Garage", label: "Garage" },
-                   { value: "Laundry Room", label: "Laundry Room" },
-                   { value: "Mixed Use Room", label: "Mixed Use Room" },
-                 ]}
-               />
-             </div>
+                  value={customRoom}
+                  onValueChange={setCustomRoom}
+                  title="Select Room"
+                  triggerClassName="mt-1"
+                  forceSelect
+                  options={(() => {
+                    const opts = [
+                      { value: "", label: "No room" },
+                      { value: "Bedroom", label: "Bedroom (General)" },
+                    ];
+                    const bedrooms = homeSetup?.bedrooms || 0;
+                    for (let i = 1; i <= bedrooms; i++) {
+                      opts.push({ value: `Bedroom ${i}`, label: `Bedroom ${i}` });
+                    }
+                    opts.push(
+                      { value: "Bathroom", label: "Bathroom" },
+                      { value: "Half Bath", label: "Half Bath" },
+                      { value: "Kitchen", label: "Kitchen" },
+                      { value: "Living Room", label: "Living Room" },
+                    );
+                    if (homeSetup?.has_dining_room) opts.push({ value: "Dining Room", label: "Dining Room" });
+                    if (homeSetup?.has_garage) opts.push({ value: "Garage", label: "Garage" });
+                    if (homeSetup?.has_laundry_room) opts.push({ value: "Laundry Room", label: "Laundry Room" });
+                    if (homeSetup?.has_mixed_use) opts.push({ value: "Mixed Use Room", label: "Mixed Use Room" });
+                    return opts;
+                  })()}
+                />
+              </div>
              <div>
                <Label className="text-xs font-medium text-muted-foreground">Description</Label>
                <Input value={customDescription} onChange={e => setCustomDescription(e.target.value)} placeholder="Optional description" className="mt-1" />
