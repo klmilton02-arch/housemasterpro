@@ -106,7 +106,10 @@ export async function awardPoints(task, isBlastRunning = false) {
   const me = await base44.auth.me();
   if (!me) return null;
   const userId = me.id;
-  const userName = me.full_name;
+
+  // Get the display name from the linked FamilyMember record
+  const members = await base44.entities.FamilyMember.filter({ linked_user_id: userId });
+  const userName = members[0]?.name || me.full_name;
 
   const today = new Date();
   const todayStr = today.toISOString().split("T")[0];
@@ -129,7 +132,7 @@ export async function awardPoints(task, isBlastRunning = false) {
     // Auto-create profile for this user
     profile = await base44.entities.GamificationProfile.create({
       user_id: userId,
-      user_name: me.full_name || userName,
+      family_member_name: userName,
       family_group_id: me.family_group_id || undefined,
       total_xp: 0,
       level: 1,
@@ -213,14 +216,13 @@ export async function awardPoints(task, isBlastRunning = false) {
     bill_completions: updatedProfile.bill_completions,
     cleaning_streak: updatedProfile.cleaning_streak,
     last_cleaning_date: updatedProfile.last_cleaning_date,
-    // Preserve existing user_name so display names (Kelly/Tom/Scarlett) aren't overwritten by full_name
-    user_name: profile.user_name || userName,
+    family_member_name: profile.family_member_name || userName,
     family_group_id: me.family_group_id || profile.family_group_id || undefined,
   });
 
   await base44.entities.CompletionHistory.create({
     family_member_id: userId,
-    family_member_name: userName,
+    family_member_name: userName, // already resolved from FamilyMember
     task_id: task.id,
     task_name: task.name,
     points_earned: totalPoints + badgeBonusXP,

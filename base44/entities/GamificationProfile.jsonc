@@ -6,9 +6,9 @@
       "type": "string",
       "title": "User ID"
     },
-    "user_name": {
+    "family_member_name": {
       "type": "string",
-      "title": "User Name"
+      "title": "Name"
     },
     "family_group_id": {
       "type": "string",
