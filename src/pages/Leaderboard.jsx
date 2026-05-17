@@ -26,8 +26,9 @@ export default function Leaderboard() {
 
   useEffect(() => {
     // Force fresh data every time page loads
-    base44.functions.invoke('getLeaderboardProfiles', {}, { skipCache: true }).then((res) => {
+    base44.functions.invoke('getLeaderboardProfiles', {}).then((res) => {
       const { profiles, members, currentUser: fullUser } = res.data;
+
       setCurrentUser(fullUser);
       setProfiles(profiles);
       setMembers(members);
@@ -83,9 +84,20 @@ export default function Leaderboard() {
       {(() => {
         const isSolo = !isFamilyUser;
 
-        // Solo: show only the current user
-        // Family: one entry per FamilyMember, using the best matching profile
-        const allEntries = isSolo
+        // Build entries: if we have family profiles, use them directly (sorted by XP)
+        // Otherwise fall back to solo view
+        const allEntries = (profiles.length > 0)
+          ? profiles.map(profile => {
+              const member = members.find(m => m.id === profile.family_member_id);
+              return {
+                id: profile.family_member_id || profile.id,
+                name: profile.family_member_name,
+                avatar_color: member?.avatar_color || "blue",
+                total_xp: profile.total_xp || 0,
+                level: profile.level || 1,
+              };
+            }).sort((a, b) => b.total_xp - a.total_xp)
+          : isSolo
           ? [{
               id: currentUser?.id,
               name: currentUser?.full_name || "You",
@@ -93,17 +105,7 @@ export default function Leaderboard() {
               total_xp: userProfile?.total_xp || 0,
               level: userProfile?.level || 1,
             }]
-          : members.map(member => {
-            // Find profile strictly by member ID only
-            const bestProfile = profiles.find(p => p.family_member_id === member.id);
-              return {
-                id: member.id,
-                name: member.name,
-                avatar_color: member.avatar_color || "blue",
-                total_xp: bestProfile?.total_xp || 0,
-                level: bestProfile?.level || 1,
-              };
-            }).sort((a, b) => b.total_xp - a.total_xp);
+          : [];
 
         if (allEntries.length === 0) return (
           <div className="bg-card border border-border rounded-lg p-6 text-center">
