@@ -153,28 +153,9 @@ export async function awardPoints(task, isBlastRunning = false) {
   }
 
   if (!profile) {
-    try {
-      profile = await base44.entities.GamificationProfile.create({
-        family_member_id: memberId,
-        family_member_name: memberName,
-        family_group_id: me?.family_group_id || null,
-        total_xp: 0,
-        level: 1,
-        badges: [],
-        total_completions: 0,
-        deep_cleaning_completions: 0,
-        overdue_completions: 0,
-        maintenance_completions: 0,
-        bill_completions: 0,
-        cleaning_streak: 0,
-        last_cleaning_date: null,
-        bill_months_ontime: 0,
-        all_rounder_weeks: 0,
-      });
-    } catch (e) {
-      // Permission denied — gamification unavailable for this user, skip silently
-      return null;
-    }
+    // Never auto-create profiles — profiles must be explicitly set up.
+    // If no profile found, skip silently.
+    return null;
   }
 
   // --- Streak bonuses ---
