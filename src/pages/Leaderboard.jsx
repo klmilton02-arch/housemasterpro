@@ -37,13 +37,8 @@ export default function Leaderboard() {
           m.linked_user_id === fullUser.id ||
           m.linked_user_email?.toLowerCase() === fullUser.email?.toLowerCase()
         );
-        // Find best profile: by member ID first, then by linked_user_id, then by name
-        const myProfiles = profiles.filter(p =>
-          (myMember && p.family_member_id === myMember.id) ||
-          p.family_member_id === fullUser.id ||
-          (myMember && p.family_member_name?.toLowerCase() === myMember.name?.toLowerCase())
-        );
-        const best = myProfiles.sort((a, b) => (b.total_xp || 0) - (a.total_xp || 0))[0];
+        // Find profile strictly by member ID
+        const best = myMember ? profiles.find(p => p.family_member_id === myMember.id) : null;
         setUserProfile(best);
       }
       setLoading(false);
@@ -99,13 +94,8 @@ export default function Leaderboard() {
               level: userProfile?.level || 1,
             }]
           : members.map(member => {
-              // Find the best profile for this member (highest XP)
-              const memberProfiles = profiles.filter(p =>
-                p.family_member_id === member.id ||
-                p.family_member_id === member.linked_user_id ||
-                p.family_member_name?.toLowerCase() === member.name?.toLowerCase()
-              );
-              const bestProfile = memberProfiles.sort((a, b) => (b.total_xp || 0) - (a.total_xp || 0))[0];
+            // Find profile strictly by member ID only
+            const bestProfile = profiles.find(p => p.family_member_id === member.id);
               return {
                 id: member.id,
                 name: member.name,
