@@ -24,6 +24,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
   const [todoPriority, setTodoPriority] = useState("Medium");
   const [todoDueDate, setTodoDueDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [todoDescription, setTodoDescription] = useState("");
+  const [todoIsRecurring, setTodoIsRecurring] = useState(false);
 
   // Preset form
   const [selectedPresets, setSelectedPresets] = useState(new Set());
@@ -125,29 +126,34 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
     };
 
     if (tab === "todo") {
-      try {
-        // Use backend function so the server-side fresh token is used for RLS
-        await base44.functions.invoke('createPersonalTask', {
-          name: todoName,
-          priority: todoPriority,
-          description: todoDescription || undefined,
-          assigned_to: assignedTo || undefined,
-          assigned_to_name: member?.name || undefined,
-          start_date: todoDueDate,
-          next_due_date: todoDueDate,
-        });
-        setTodoName("");
-        setTodoPriority("Medium");
-        setTodoDueDate(format(new Date(), "yyyy-MM-dd"));
-        setTodoDescription("");
-        setAssignedTo("");
-      } catch (err) {
-        console.error('[AddTaskDialog] Failed to create Personal task:', err?.message || err);
-        alert(`Failed to create task: ${err?.message || 'Unknown error'}`);
-      }
-      setLoading(false);
-      onTaskAdded?.();
-      return;
+       try {
+         const freqDays = todoIsRecurring ? toDays(freqValue || "1", freqUnit) : 9999;
+         // Use backend function so the server-side fresh token is used for RLS
+         await base44.functions.invoke('createPersonalTask', {
+           name: todoName,
+           priority: todoPriority,
+           description: todoDescription || undefined,
+           assigned_to: assignedTo || undefined,
+           assigned_to_name: member?.name || undefined,
+           start_date: todoDueDate,
+           next_due_date: todoDueDate,
+           frequency_days: freqDays,
+         });
+         setTodoName("");
+         setTodoPriority("Medium");
+         setTodoDueDate(format(new Date(), "yyyy-MM-dd"));
+         setTodoDescription("");
+         setAssignedTo("");
+         setTodoIsRecurring(false);
+         setFreqValue("");
+         setFreqUnit("days");
+       } catch (err) {
+         console.error('[AddTaskDialog] Failed to create Personal task:', err?.message || err);
+         alert(`Failed to create task: ${err?.message || 'Unknown error'}`);
+       }
+       setLoading(false);
+       onTaskAdded?.();
+       return;
     } else if (tab === "preset") {
       // Create tasks for all selected presets
       const selectedPresetObjs = presets.filter(p => selectedPresets.has(p.id));
@@ -508,10 +514,49 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
               <Input type="date" value={todoDueDate} onChange={e => setTodoDueDate(e.target.value)} className="mt-1" />
             </div>
             <div>
-              <Label className="text-xs font-medium text-muted-foreground">Notes (optional)</Label>
-              <Input value={todoDescription} onChange={e => setTodoDescription(e.target.value)} placeholder="Any extra details" className="mt-1" />
-            </div>
-            {familyMembers.length > 0 && (
+               <Label className="text-xs font-medium text-muted-foreground">Notes (optional)</Label>
+               <Input value={todoDescription} onChange={e => setTodoDescription(e.target.value)} placeholder="Any extra details" className="mt-1" />
+             </div>
+             <div className="flex items-center gap-2">
+               <button
+                 type="button"
+                 onClick={() => setTodoIsRecurring(r => !r)}
+                 className={`w-9 h-5 rounded-full transition-colors flex items-center ${todoIsRecurring ? "bg-primary justify-end" : "bg-muted justify-start"}`}
+               >
+                 <span className="w-4 h-4 rounded-full bg-white shadow mx-0.5 block" />
+               </button>
+               <span className="text-sm font-medium text-foreground">Repeating task</span>
+             </div>
+             {todoIsRecurring && (
+               <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 space-y-2">
+                 <div>
+                   <Label className="text-xs font-medium text-muted-foreground">Frequency</Label>
+                   <div className="flex gap-2 mt-1">
+                     <Input
+                       type="number"
+                       min="1"
+                       value={freqValue}
+                       onChange={e => setFreqValue(e.target.value)}
+                       placeholder="e.g., 2"
+                       className="flex-1"
+                     />
+                     <MobileSelect
+                       value={freqUnit}
+                       onValueChange={setFreqUnit}
+                       title="Frequency Unit"
+                       triggerClassName="w-28"
+                       forceSelect
+                       options={[
+                         { value: "days", label: "Days" },
+                         { value: "weeks", label: "Weeks" },
+                         { value: "months", label: "Months" },
+                       ]}
+                     />
+                   </div>
+                 </div>
+               </div>
+             )}
+             {familyMembers.length > 0 && (
               <div>
                 <Label className="text-xs font-medium text-muted-foreground">Assign to (optional)</Label>
                 <MobileSelect
