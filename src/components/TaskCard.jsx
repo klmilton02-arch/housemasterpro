@@ -71,7 +71,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
   async function saveName() {
     const trimmed = name.trim();
     if (!trimmed || trimmed === task.name) { setEditing(false); setName(task.name); return; }
-    await base44.entities.Task.update(task.id, { name: trimmed });
+    await base44.functions.invoke('completeTask', { task_id: task.id, updates: { name: trimmed } });
     setEditing(false);
     onRenamed?.();
   }

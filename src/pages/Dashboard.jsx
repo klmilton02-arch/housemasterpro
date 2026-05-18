@@ -157,12 +157,15 @@ export default function Dashboard() {
     confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
 
     // Do DB write + gamification in background
-    base44.entities.Task.update(task.id, {
-      status: "Completed",
-      last_completed_date: todayStr,
-      next_due_date: calcNextDueDate(task),
-      streak: newStreak,
-      completed_with_blast: isBlastActive,
+    base44.functions.invoke('completeTask', {
+      task_id: task.id,
+      updates: {
+        status: "Completed",
+        last_completed_date: todayStr,
+        next_due_date: calcNextDueDate(task),
+        streak: newStreak,
+        completed_with_blast: isBlastActive,
+      }
     });
     awardPoints(task, isBlastActive).then(result => {
       if (result) {
@@ -189,7 +192,7 @@ export default function Dashboard() {
 
     const updated = { ...task, status: "Pending", next_due_date: revertedDue };
     setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
-    await base44.entities.Task.update(task.id, { status: "Pending", next_due_date: revertedDue, completed_with_blast: false });
+    await base44.functions.invoke('completeTask', { task_id: task.id, updates: { status: "Pending", next_due_date: revertedDue, completed_with_blast: false } });
     await revokePoints(task, task.completed_with_blast === true);
     setRevokedPoints(getTaskPoints(task) * (task.completed_with_blast ? 2 : 1));
     loadTasks();
@@ -197,7 +200,7 @@ export default function Dashboard() {
 
   async function handleChangeDueDate(task, newDate) {
     if (!newDate) return;
-    await base44.entities.Task.update(task.id, { next_due_date: newDate });
+    await base44.functions.invoke('completeTask', { task_id: task.id, updates: { next_due_date: newDate } });
     loadTasks();
   }
 

@@ -74,13 +74,16 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
       nextDue.setDate(nextDue.getDate() + task.frequency_days);
       nextDueStr = nextDue.toISOString().split("T")[0];
     }
-    await base44.entities.Task.update(task.id, {
-      status: "Completed",
-      last_completed_date: todayStr,
-      next_due_date: nextDueStr,
-      assigned_to: member.id,
-      assigned_to_name: member.name,
-      completed_by_name: member.name,
+    await base44.functions.invoke('completeTask', {
+      task_id: task.id,
+      updates: {
+        status: "Completed",
+        last_completed_date: todayStr,
+        next_due_date: nextDueStr,
+        assigned_to: member.id,
+        assigned_to_name: member.name,
+        completed_by_name: member.name,
+      }
     });
     // Award XP to the current user
     try { await awardPoints(task, false); } catch (e) { /* non-fatal */ }

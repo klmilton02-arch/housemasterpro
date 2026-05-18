@@ -226,7 +226,7 @@ export default function Tasks() {
 
   async function handleChangeDueDate(task, newDate) {
     if (!newDate) return;
-    await base44.entities.Task.update(task.id, { next_due_date: newDate });
+    await base44.functions.invoke('completeTask', { task_id: task.id, updates: { next_due_date: newDate } });
     loadTasks();
   }
 
