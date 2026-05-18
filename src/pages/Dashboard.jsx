@@ -157,7 +157,7 @@ export default function Dashboard() {
     confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
 
     // Do DB write + gamification in background
-    base44.functions.invoke('completeTask', {
+    const completePromise = base44.functions.invoke('completeTask', {
       task_id: task.id,
       updates: {
         status: "Completed",
@@ -177,11 +177,11 @@ export default function Dashboard() {
       }
     });
 
-    // After pause, reload tasks and clear just-completed
-    setTimeout(() => {
+    // Wait for DB write to finish, then reload tasks and clear just-completed
+    completePromise.finally(() => {
       setJustCompletedIds(prev => { const n = new Set(prev); n.delete(task.id); return n; });
       loadTasks();
-    }, 2000);
+    });
   }
 
   async function handleUncomplete(task) {
