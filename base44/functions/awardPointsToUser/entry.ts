@@ -27,15 +27,26 @@ Deno.serve(async (req) => {
 
     if (!task) return Response.json({ error: 'task is required' }, { status: 400 });
 
-    // Resolve the target user ID — if not provided, look up by email
+    // Resolve the target user ID from the FamilyMember's linked_user_id (passed directly)
+    // or fall back to finding GamificationProfile by family_member_name
     let userId = target_user_id;
     let userName = target_name;
 
+    // If no userId but we have an email, look up the FamilyMember with that linked_user_email
+    // to get their linked_user_id
     if (!userId && target_user_email) {
-      const users = await base44.asServiceRole.entities.User.filter({ email: target_user_email });
-      if (users.length > 0) {
-        userId = users[0].id;
-        if (!userName) userName = users[0].full_name;
+      const members = await base44.asServiceRole.entities.FamilyMember.filter({ linked_user_email: target_user_email });
+      if (members.length > 0 && members[0].linked_user_id) {
+        userId = members[0].linked_user_id;
+        if (!userName) userName = members[0].name;
+      }
+    }
+
+    // Last resort: find profile by family_member_name
+    if (!userId && userName) {
+      const profiles = await base44.asServiceRole.entities.GamificationProfile.filter({ family_member_name: userName });
+      if (profiles.length > 0 && profiles[0].user_id) {
+        userId = profiles[0].user_id;
       }
     }
 
