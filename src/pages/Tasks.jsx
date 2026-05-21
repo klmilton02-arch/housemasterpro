@@ -177,15 +177,26 @@ export default function Tasks() {
       setReward({ totalPoints: immediatePoints, blastBonus: blastActive });
 
       // Award points + DB write in background
-      // If completing as a specific member, override the task's assigned fields
-      const taskForPoints = completedByMember
-        ? { ...task, assigned_to: completedByMember.id, assigned_to_name: completedByMember.name }
-        : task;
-      awardPoints(taskForPoints, blastActive).then(result => {
-        if (result && (result.leveledUp || result.newBadges?.length > 0)) {
-          setReward(result);
-        }
-      });
+      // If completing as a member who has a linked user account, award XP to THAT user's profile
+      if (completedByMember?.linked_user_email) {
+        base44.functions.invoke('awardPointsToUser', {
+          target_user_email: completedByMember.linked_user_email,
+          target_name: completedByMember.name,
+          task,
+          isBlastRunning: blastActive,
+          family_group_id: task.family_group_id,
+        });
+      } else {
+        // Award to the currently logged-in user
+        const taskForPoints = completedByMember
+          ? { ...task, assigned_to: completedByMember.id, assigned_to_name: completedByMember.name }
+          : task;
+        awardPoints(taskForPoints, blastActive).then(result => {
+          if (result && (result.leveledUp || result.newBadges?.length > 0)) {
+            setReward(result);
+          }
+        });
+      }
 
       base44.functions.invoke('completeTask', {
         task_id: task.id,

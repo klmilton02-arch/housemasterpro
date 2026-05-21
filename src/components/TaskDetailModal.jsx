@@ -85,8 +85,20 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
         completed_by_name: member.name,
       }
     });
-    // Award XP to the current user
-    try { await awardPoints(task, false); } catch (e) { /* non-fatal */ }
+    // Award XP to the linked user account if available, otherwise award to current user
+    try {
+      if (member.linked_user_email) {
+        await base44.functions.invoke('awardPointsToUser', {
+          target_user_email: member.linked_user_email,
+          target_name: member.name,
+          task,
+          isBlastRunning: false,
+          family_group_id: task.family_group_id,
+        });
+      } else {
+        await awardPoints(task, false);
+      }
+    } catch (e) { /* non-fatal */ }
     setCompletingAs(null);
     setCompleteAsOpen(false);
     onComplete?.(task);
