@@ -32,22 +32,23 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Delete in batches
+    // Delete sequentially in small batches with generous pauses to avoid rate limits
     let deleted = 0;
-    const batchSize = 50;
+    const batchSize = 5;
     
     for (let i = 0; i < allTasks.length; i += batchSize) {
       const batch = allTasks.slice(i, i + batchSize);
-      const results = await Promise.allSettled(
-        batch.map(t => base44.asServiceRole.entities.Task.delete(t.id))
-      );
-      
-      const succeeded = results.filter(r => r.status === 'fulfilled').length;
-      deleted += succeeded;
-      console.log(`Batch ${Math.floor(i / batchSize) + 1}: deleted ${succeeded}/${batch.length}`);
-      
+      for (const t of batch) {
+        try {
+          await base44.asServiceRole.entities.Task.delete(t.id);
+          deleted++;
+        } catch (e) {
+          console.log(`Failed to delete ${t.id}: ${e.message}`);
+        }
+      }
+      console.log(`Progress: ${deleted}/${allTasks.length}`);
       if (i + batchSize < allTasks.length) {
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
 
