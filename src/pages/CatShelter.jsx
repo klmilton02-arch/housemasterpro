@@ -407,12 +407,22 @@ export default function CatShelter() {
     );
   }
 
-  if (!profile) {
+  const CAT_XP_THRESHOLD = 50;
+  const currentXP = profile?.total_xp || 0;
+
+  if (!profile || currentXP < CAT_XP_THRESHOLD) {
     return (
       <div className="max-w-xs mx-auto px-1 pt-6 text-center space-y-4">
-        <p className="text-5xl">🐱</p>
-        <p className="font-heading font-bold text-lg">No cats yet!</p>
-        <p className="text-sm text-muted-foreground">Complete tasks to earn XP and adopt your first cat.</p>
+        <p className="text-5xl">🔒</p>
+        <p className="font-heading font-bold text-lg">Cat Shelter Locked</p>
+        <p className="text-sm text-muted-foreground">Earn <strong>{CAT_XP_THRESHOLD} XP</strong> by completing tasks to unlock your first cat!</p>
+        <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
+          <div
+            className="bg-pink-400 h-3 rounded-full transition-all"
+            style={{ width: `${Math.min(100, (currentXP / CAT_XP_THRESHOLD) * 100)}%` }}
+          />
+        </div>
+        <p className="text-sm font-semibold text-pink-600">{currentXP} / {CAT_XP_THRESHOLD} XP</p>
       </div>
     );
   }

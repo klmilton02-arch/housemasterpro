@@ -68,9 +68,15 @@ export default function Leaderboard() {
             </div>
             <StreakCircle streak={myProfile.cleaning_streak || 0} size="sm" />
           </div>
-          <Link to="/cats" className="bg-pink-100 text-pink-800 rounded-lg px-3 py-1.5 text-sm font-semibold hover:bg-pink-200 transition-colors flex items-center gap-1.5 shrink-0">
-            🐱 My Cats
-          </Link>
+          {(myProfile?.total_xp || 0) >= 50 ? (
+            <Link to="/cats" className="bg-pink-100 text-pink-800 rounded-lg px-3 py-1.5 text-sm font-semibold hover:bg-pink-200 transition-colors flex items-center gap-1.5 shrink-0">
+              🐱 My Cats
+            </Link>
+          ) : (
+            <div className="bg-muted text-muted-foreground rounded-lg px-3 py-1.5 text-sm font-semibold flex items-center gap-1.5 shrink-0" title={`Need 50 XP to unlock cats (${myProfile?.total_xp || 0}/50)`}>
+              🔒 Cats ({myProfile?.total_xp || 0}/50 XP)
+            </div>
+          )}
         </div>
       )}
 
@@ -110,9 +116,13 @@ export default function Leaderboard() {
                     <p className="font-heading font-bold text-2xl text-amber-600">{p.total_xp}</p>
                     <p className="text-xs text-muted-foreground">XP</p>
                   </div>
-                  <Link to="/cats" className="bg-pink-100 text-pink-800 rounded px-2 py-1 text-xs font-semibold hover:bg-pink-200 transition-colors">
-                    🐱
-                  </Link>
+                  {p.total_xp >= 50 ? (
+                    <Link to="/cats" className="bg-pink-100 text-pink-800 rounded px-2 py-1 text-xs font-semibold hover:bg-pink-200 transition-colors">
+                      🐱
+                    </Link>
+                  ) : (
+                    <span className="bg-muted text-muted-foreground rounded px-2 py-1 text-xs font-semibold" title={`${p.total_xp}/50 XP to unlock`}>🔒</span>
+                  )}
                 </div>
               </div>
             );
