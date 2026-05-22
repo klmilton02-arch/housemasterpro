@@ -68,14 +68,17 @@ export default function RoomView({ tasks, categoryFilter = "all", onComplete, on
     if (!newName || newName === oldRoom) { setEditingRoom(null); return; }
     setRenamingRoom(oldRoom);
     setEditingRoom(null);
-    // Bulk update all tasks in this room
-    const roomTaskList = tasks.filter(t => t.room === oldRoom);
-    await Promise.all(roomTaskList.map(t =>
-      base44.entities.Task.update(t.id, {
-        room: newName,
-        name: t.name.startsWith(oldRoom + " –") ? t.name.replace(oldRoom + " –", newName + " –") : t.name,
-      })
-    ));
+    try {
+      const meRes = await base44.functions.invoke('getMyFreshUser', {});
+      const me = meRes.data?.user;
+      await base44.functions.invoke('renameRoom', {
+        old_room: oldRoom,
+        new_room: newName,
+        family_group_id: me?.family_group_id || null,
+      });
+    } catch (err) {
+      console.error('renameRoom failed:', err);
+    }
     setRenamingRoom(null);
     onRoomRenamed?.();
   }
