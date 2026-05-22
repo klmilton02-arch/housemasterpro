@@ -18,18 +18,8 @@ Deno.serve(async (req) => {
       return Response.json({ skipped: true, reason: 'no task or due date' });
     }
 
-    // Skip completed tasks — remove their calendar event if one exists
-    if (task.status === 'Completed') {
-      if (task.calendar_event_id) {
-        const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlecalendar');
-        await fetch(
-          `https://www.googleapis.com/calendar/v3/calendars/primary/events/${task.calendar_event_id}`,
-          { method: 'DELETE', headers: { Authorization: `Bearer ${accessToken}` } }
-        );
-        await base44.asServiceRole.entities.Task.update(task.id, { calendar_event_id: null });
-      }
-      return Response.json({ skipped: true, reason: 'task completed' });
-    }
+    // For completed tasks: update the calendar event to show the NEXT due date instead of deleting it
+    // This way the next occurrence appears on the calendar automatically
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlecalendar');
     const headers = {
@@ -42,6 +32,7 @@ Deno.serve(async (req) => {
       task.assigned_to_name ? `Assigned to: ${task.assigned_to_name}` : '',
       task.category ? `Category: ${task.category}` : '',
       task.frequency_days ? `Repeats every ${task.frequency_days} days` : '',
+      task.status === 'Completed' ? `Last completed: ${task.last_completed_date || 'today'}` : '',
     ].filter(Boolean).join('\n');
 
     const eventBody = {
