@@ -127,7 +127,7 @@ export default function AddTaskDialog({ open, onOpenChange, onTaskAdded, initial
 
     if (tab === "todo") {
        try {
-         const freqDays = todoIsRecurring ? toDays(freqValue || "1", freqUnit) : 9999;
+         const freqDays = todoIsRecurring ? toDays(freqValue || "1", freqUnit) : 1;
          // Use backend function so the server-side fresh token is used for RLS
          await base44.functions.invoke('createPersonalTask', {
            name: todoName,
