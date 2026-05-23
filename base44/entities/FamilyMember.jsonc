@@ -80,10 +80,12 @@
     "delete": {
       "$or": [
         {
-          "data.family_group_id": "{{user.family_group_id}}"
+          "created_by": "{{user.email}}"
         },
         {
-          "created_by": "{{user.email}}"
+          "user_condition": {
+            "role": "admin"
+          }
         }
       ]
     }
