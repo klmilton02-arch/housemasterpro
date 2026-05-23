@@ -27,10 +27,12 @@ Deno.serve(async (req) => {
       t.personal_owner_email === user.email
     );
 
-    // Bulk update room field
-    await Promise.all(tasksToUpdate.map(t =>
-      base44.asServiceRole.entities.Task.update(t.id, { room: new_room })
-    ));
+    // Bulk update room field (and category if it also matches the old room name)
+    await Promise.all(tasksToUpdate.map(t => {
+      const updates = { room: new_room };
+      if (t.category === old_room) updates.category = new_room;
+      return base44.asServiceRole.entities.Task.update(t.id, updates);
+    }));
 
     return Response.json({ success: true, updated: tasksToUpdate.length });
   } catch (error) {
