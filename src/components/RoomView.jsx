@@ -20,7 +20,7 @@ function getRoomIcon(room) {
   if (room.startsWith("Kitchen")) return "🍳";
   if (room.startsWith("Bathroom")) return "🚿";
   if (room.startsWith("Half Bath")) return "🪥";
-  if (room.startsWith("Bedroom")) return "🛏️";
+  if (room.startsWith("Bedroom") || room.toLowerCase().includes("bedroom") || room.toLowerCase().includes("master")) return "🛏️";
   if (room.startsWith("Living")) return "🛋️";
   if (room.startsWith("Dining")) return "🍽️";
   if (room.startsWith("Garage")) return "🚗";
