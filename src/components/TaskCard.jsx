@@ -150,6 +150,9 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
                 </span>
               );
             })()}
+            {task.room && !visuallyCompleted && (
+              <span className="text-xs text-muted-foreground">· {task.room}</span>
+            )}
             {task.assigned_to_name && !visuallyCompleted && (
               <span className="text-xs text-muted-foreground">· {task.assigned_to_name}</span>
             )}
