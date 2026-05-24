@@ -3,6 +3,7 @@
   "scopes": [
     "https://www.googleapis.com/auth/calendar.events",
     "openid",
-    "https://www.googleapis.com/auth/userinfo.email"
+    "https://www.googleapis.com/auth/userinfo.email",
+    "email"
   ]
 }
