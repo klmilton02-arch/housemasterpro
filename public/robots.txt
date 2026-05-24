@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
-Sitemap: https://homelifefocus.online/sitemap.xml
+Sitemap: https://homelifefocus.online/functions/sitemap
