@@ -53,7 +53,7 @@ function DarkModeSync() {
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
-  const publicPaths = ['/', '/landing', '/encryption', '/digital-services-act', '/copyright'];
+  const publicPaths = ['/', '/landing', '/encryption', '/digital-services-act', '/copyright', '/age-suitability'];
   const isPublicPath = publicPaths.some(p => window.location.pathname === p || window.location.pathname.startsWith(p + '/'));
 
   // Redirect to login in an effect (not during render) to avoid infinite loops
@@ -117,6 +117,7 @@ const AuthenticatedApp = () => {
             <AgeSuitability />
           </motion.div>
         } />
+
         
         {/* Post-signup family join */}
         <Route path="/join-family" element={
