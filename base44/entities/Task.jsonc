@@ -175,6 +175,9 @@
           "created_by": "{{user.email}}"
         },
         {
+          "data.personal_owner_email": "{{user.email}}"
+        },
+        {
           "$and": [
             {
               "data.family_group_id": "{{user.family_group_id}}"
@@ -185,16 +188,9 @@
               }
             },
             {
-              "$or": [
-                {
-                  "data.category": {
-                    "$ne": "Personal"
-                  }
-                },
-                {
-                  "created_by": "{{user.email}}"
-                }
-              ]
+              "data.category": {
+                "$ne": "Personal"
+              }
             }
           ]
         }
@@ -206,6 +202,9 @@
           "created_by": "{{user.email}}"
         },
         {
+          "data.personal_owner_email": "{{user.email}}"
+        },
+        {
           "$and": [
             {
               "data.family_group_id": "{{user.family_group_id}}"
@@ -213,6 +212,11 @@
             {
               "data.family_group_id": {
                 "$exists": true
+              }
+            },
+            {
+              "data.category": {
+                "$ne": "Personal"
               }
             }
           ]
@@ -223,6 +227,9 @@
       "$or": [
         {
           "created_by": "{{user.email}}"
+        },
+        {
+          "data.personal_owner_email": "{{user.email}}"
         },
         {
           "$and": [

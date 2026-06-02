@@ -24,5 +24,8 @@
       "type": "string",
       "title": "Family Group ID"
     }
-  }
+  },
+  "required": [
+    "family_group_id"
+  ]
 }
