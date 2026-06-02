@@ -30,6 +30,7 @@ import CalendarPage from './pages/Calendar';
 import TaskStartDates from './pages/TaskStartDates';
 import JoinFamilyOnSignup from './pages/JoinFamilyOnSignup';
 import AgeSuitability from './pages/AgeSuitability';
+import Accessibility from './pages/Accessibility';
 
 
 
@@ -115,6 +116,11 @@ const AuthenticatedApp = () => {
         <Route path="/age-suitability" element={
           <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
             <AgeSuitability />
+          </motion.div>
+        } />
+        <Route path="/accessibility" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+            <Accessibility />
           </motion.div>
         } />
 
