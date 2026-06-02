@@ -43,6 +43,12 @@ Deno.serve(async (req) => {
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
+  <url>
+    <loc>https://homelifefocus.online/age-suitability</loc>
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>`;
 
   return new Response(sitemap, {
