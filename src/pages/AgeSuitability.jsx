@@ -27,13 +27,13 @@ export default function AgeSuitability() {
         {/* Rating Badge */}
         <div className="bg-primary/5 border border-primary/20 rounded-xl p-6 mb-10 flex items-center gap-6">
           <div className="text-center">
-            <div className="text-5xl font-heading font-bold text-primary">4+</div>
+            <div className="text-5xl font-heading font-bold text-primary">13+</div>
             <div className="text-xs text-muted-foreground mt-1">Apple App Store</div>
           </div>
           <div>
-            <h2 className="font-heading font-semibold text-foreground text-lg mb-1">Rated 4+ (Ages 4 and Up)</h2>
+            <h2 className="font-heading font-semibold text-foreground text-lg mb-1">Rated 13+ (Ages 13 and Up)</h2>
             <p className="text-muted-foreground text-sm">
-              HomeLifeFocus contains no objectionable content. It is designed for the entire family and is suitable for all ages.
+              HomeLifeFocus connects to external services (Google Calendar and Google Tasks) which results in a 13+ rating. The app contains no objectionable content and is appropriate for family use under parental supervision.
             </p>
           </div>
         </div>
