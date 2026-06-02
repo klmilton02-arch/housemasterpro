@@ -1,35 +1,28 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
 Deno.serve(async (req) => {
   try {
+    const body = await req.clone().json().catch(() => ({}));
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
+
     if (!user) return Response.json({ members: [] });
 
-    const body = await req.json().catch(() => ({}));
-    
-    // Use passed family_group_id if provided (most reliable), otherwise resolve from token
     let familyGroupId = body.family_group_id || user.family_group_id || null;
 
-    // If still no family_group_id, check if user owns a group or is linked via a member record
+    // If no family_group_id on token, look it up from FamilyGroup (owned)
     if (!familyGroupId) {
-      const allGroups = await base44.asServiceRole.entities.FamilyGroup.list();
-      const ownedGroup = allGroups.find(g => g.owner_email === user.email);
-      if (ownedGroup) {
-        familyGroupId = ownedGroup.id;
-      } else {
-        const allMembers = await base44.asServiceRole.entities.FamilyMember.list('-created_date', 500);
-        const match = allMembers.find(m => m.linked_user_email?.toLowerCase() === user.email?.toLowerCase());
-        if (match?.family_group_id) familyGroupId = match.family_group_id;
-      }
+      const groups = await base44.asServiceRole.entities.FamilyGroup.list();
+      const owned = groups.find(g => g.owner_email === user.email);
+      if (owned) familyGroupId = owned.id;
     }
 
     if (!familyGroupId) return Response.json({ members: [] });
 
-    // Always use service role to avoid token staleness issues
-    const allSR = await base44.asServiceRole.entities.FamilyMember.list('-created_date', 500);
-    const members = allSR.filter(m => m.family_group_id === familyGroupId);
+    // Read using user's own token - RLS allows family members with matching family_group_id
+    const members = await base44.entities.FamilyMember.filter({ family_group_id: familyGroupId }, '-created_date', 200);
 
+    console.log(`[getFamilyMembers] user=${user.email} fgId=${familyGroupId} found=${members.length}`);
     return Response.json({ members });
   } catch (error) {
     console.error('[getFamilyMembers] error:', error.message);
