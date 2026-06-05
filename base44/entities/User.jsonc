@@ -17,15 +17,12 @@
       "enum": [
         "solo",
         "family"
-      ],
-      "default": null
+      ]
     },
     "family_group_id": {
       "type": "string",
       "title": "Family Group ID"
     }
   },
-  "required": [
-    "family_group_id"
-  ]
+  "required": []
 }
