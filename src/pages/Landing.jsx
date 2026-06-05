@@ -254,6 +254,7 @@ export default function Landing() {
         <div className="flex justify-center gap-6 mb-3">
           <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
           <Link to="/support" className="hover:text-foreground transition-colors">Support</Link>
+          <Link to="/faq" className="hover:text-foreground transition-colors">FAQ</Link>
           <button onClick={handleSignIn} className="hover:text-foreground transition-colors" disabled={signingIn}>{signingIn ? "Redirecting..." : "Sign In"}</button>
         </div>
         <p>© {new Date().getFullYear()} HomeLifeFocus. All rights reserved.</p>

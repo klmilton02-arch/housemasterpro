@@ -54,7 +54,7 @@ function DarkModeSync() {
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
-  const publicPaths = ['/', '/landing', '/encryption', '/digital-services-act', '/copyright', '/age-suitability', '/accessibility'];
+  const publicPaths = ['/', '/landing', '/encryption', '/digital-services-act', '/copyright', '/age-suitability', '/accessibility', '/faq'];
   const isPublicPath = publicPaths.some(p => window.location.pathname === p || window.location.pathname.startsWith(p + '/'));
 
   // Redirect to login in an effect (not during render) to avoid infinite loops
@@ -117,6 +117,11 @@ const AuthenticatedApp = () => {
         <Route path="/accessibility" element={
           <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
             <Accessibility />
+          </motion.div>
+        } />
+        <Route path="/faq" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+            <FAQ />
           </motion.div>
         } />
 
