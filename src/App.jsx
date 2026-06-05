@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { AnimatePresence, motion } from 'framer-motion';
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -88,11 +88,7 @@ const AuthenticatedApp = () => {
     <AnimatePresence mode="wait">
       <Routes>
         {/* Public routes - no auth required */}
-        <Route path="/" element={
-          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
-            <Landing />
-          </motion.div>
-        } />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/landing" element={
           <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
             <Landing />
