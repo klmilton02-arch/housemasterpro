@@ -61,7 +61,8 @@ function DarkModeSync() {
 const RootRedirect = () => {
   const { isLoadingAuth, isLoadingPublicSettings, isAuthenticated } = useAuth();
   if (isLoadingAuth || isLoadingPublicSettings) return null;
-  return <Navigate to={isAuthenticated ? '/dashboard' : '/landing'} replace />;
+  if (isAuthenticated) return <Navigate to="/dashboard" replace />;
+  return <Navigate to="/landing" replace />;
 };
 
 const AuthenticatedApp = () => {
