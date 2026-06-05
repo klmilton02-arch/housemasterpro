@@ -87,7 +87,7 @@ export default function AccountSetup({ currentUser, onDone, initialStep = "choos
       <div className="relative min-h-[60vh] flex flex-col items-center justify-center py-12 px-4">
         <SignOutButton />
         <div className="max-w-md w-full text-center mb-8">
-          <h1 className="font-heading text-3xl font-bold mb-2">Welcome to FamilySync</h1>
+          <h1 className="font-heading text-3xl font-bold mb-2">Welcome to HomeLifeFocus</h1>
           <p className="text-muted-foreground">How would you like to use this app?</p>
         </div>
         <div className="grid sm:grid-cols-2 gap-4 max-w-md w-full">
