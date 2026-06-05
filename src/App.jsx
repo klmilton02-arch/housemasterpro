@@ -51,6 +51,12 @@ function DarkModeSync() {
   return null;
 }
 
+const RootRedirect = () => {
+  const { isLoadingAuth, isLoadingPublicSettings, isAuthenticated } = useAuth();
+  if (isLoadingAuth || isLoadingPublicSettings) return null;
+  return <Navigate to={isAuthenticated ? '/dashboard' : '/landing'} replace />;
+};
+
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
@@ -88,7 +94,7 @@ const AuthenticatedApp = () => {
     <AnimatePresence mode="wait">
       <Routes>
         {/* Public routes - no auth required */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<RootRedirect />} />
         <Route path="/landing" element={
           <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
             <Landing />
