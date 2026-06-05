@@ -158,10 +158,10 @@
         {
           "$and": [
             {
-              "data.family_group_id": "{{user.family_group_id}}"
+              "family_group_id": "{{user.family_group_id}}"
             },
             {
-              "data.family_group_id": {
+              "family_group_id": {
                 "$exists": true
               }
             }
@@ -180,15 +180,15 @@
         {
           "$and": [
             {
-              "data.family_group_id": "{{user.family_group_id}}"
+              "family_group_id": "{{user.family_group_id}}"
             },
             {
-              "data.family_group_id": {
+              "family_group_id": {
                 "$exists": true
               }
             },
             {
-              "data.category": {
+              "category": {
                 "$ne": "Personal"
               }
             }
@@ -207,15 +207,15 @@
         {
           "$and": [
             {
-              "data.family_group_id": "{{user.family_group_id}}"
+              "family_group_id": "{{user.family_group_id}}"
             },
             {
-              "data.family_group_id": {
+              "family_group_id": {
                 "$exists": true
               }
             },
             {
-              "data.category": {
+              "category": {
                 "$ne": "Personal"
               }
             }
@@ -234,10 +234,10 @@
         {
           "$and": [
             {
-              "data.family_group_id": "{{user.family_group_id}}"
+              "family_group_id": "{{user.family_group_id}}"
             },
             {
-              "data.family_group_id": {
+              "family_group_id": {
                 "$exists": true
               }
             }

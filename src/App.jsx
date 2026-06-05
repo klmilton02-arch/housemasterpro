@@ -31,6 +31,8 @@ import TaskStartDates from './pages/TaskStartDates';
 import JoinFamilyOnSignup from './pages/JoinFamilyOnSignup';
 import AgeSuitability from './pages/AgeSuitability';
 import Accessibility from './pages/Accessibility';
+import About from './pages/About';
+import Contact from './pages/Contact';
 
 
 
@@ -60,7 +62,7 @@ const RootRedirect = () => {
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
-  const publicPaths = ['/', '/landing', '/encryption', '/digital-services-act', '/copyright', '/age-suitability', '/accessibility', '/faq'];
+  const publicPaths = ['/', '/landing', '/encryption', '/digital-services-act', '/copyright', '/age-suitability', '/accessibility', '/faq', '/about', '/contact'];
   const isPublicPath = publicPaths.some(p => window.location.pathname === p || window.location.pathname.startsWith(p + '/'));
 
   // Redirect to login in an effect (not during render) to avoid infinite loops
@@ -128,6 +130,16 @@ const AuthenticatedApp = () => {
         <Route path="/faq" element={
           <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
             <FAQ />
+          </motion.div>
+        } />
+        <Route path="/about" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+            <About />
+          </motion.div>
+        } />
+        <Route path="/contact" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+            <Contact />
           </motion.div>
         } />
 
