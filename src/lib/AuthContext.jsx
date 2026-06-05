@@ -100,12 +100,9 @@ export const AuthProvider = ({ children }) => {
 
   const navigateToLogin = () => {
     const pathname = window.location.pathname;
-    // Always show landing page for unauthenticated users instead of platform login
-    if (pathname !== '/landing') {
-      window.location.replace('/landing');
-      return;
+    if (pathname !== '/login') {
+      window.location.replace('/login');
     }
-    base44.auth.redirectToLogin(window.location.origin + '/dashboard');
   };
 
   return (
