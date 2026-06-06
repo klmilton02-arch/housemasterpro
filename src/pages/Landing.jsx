@@ -77,11 +77,7 @@ export default function Landing() {
             <p className="text-muted-foreground text-base mb-6">
               Create recurring tasks for every room in your home — cleaning, maintenance, bills, and more. Assign them to family members, get overdue alerts, earn XP for completing them, and sync everything to Google Calendar.
             </p>
-            <div className="flex flex-wrap justify-center lg:justify-start gap-x-5 gap-y-2 text-sm text-muted-foreground">
-              {["✅ Recurring schedules", "🏠 Organized by room", "👨‍👩‍👧 Family assignments", "🏆 XP & badges", "📅 Google Calendar sync"].map(item => (
-                <span key={item}>{item}</span>
-              ))}
-            </div>
+
           </div>
 
           {/* Right: Sign In Card */}
