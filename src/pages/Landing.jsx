@@ -23,7 +23,7 @@ const FEATURES = [
   {
     icon: <Calendar className="w-6 h-6 text-primary" />,
     title: "Google Calendar Sync",
-    desc: "Sync tasks directly to your Google Calendar so nothing slips through the cracks.",
+    desc: "Sync tasks directly to your Google Calendar.",
   },
   {
     icon: <Bell className="w-6 h-6 text-primary" />,
