@@ -93,7 +93,7 @@ export default function Landing() {
             </span>
 
             <p className="text-foreground text-lg font-medium mb-3">
-              HomeLifeFocus is a household task manager for families.
+              HomeLifeFocus is the only household task and chore manager you will need.
             </p>
             <p className="text-muted-foreground text-base mb-6">
               Create recurring tasks for every room in your home — cleaning, maintenance, bills, and more. Assign them to family members, get overdue alerts, earn XP for completing them, and sync everything to Google Calendar.
