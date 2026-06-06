@@ -63,7 +63,7 @@ export default function Landing() {
       </nav>
 
       {/* Hero */}
-      <section className="px-6 pt-3 lg:pt-8 pb-16 max-w-6xl mx-auto">
+      <section className="px-6 pt-3 lg:pt-8 pb-4 lg:pb-16 max-w-6xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12">
           {/* Left: Description */}
           <div className="flex-1 text-center lg:text-left">
@@ -150,7 +150,7 @@ export default function Landing() {
       </section>
 
       {/* Features — mobile/tablet only */}
-      <section id="features" className="lg:hidden py-16 px-6 max-w-5xl mx-auto">
+      <section id="features" className="lg:hidden pt-4 pb-12 px-6 max-w-5xl mx-auto">
         <h2 className="font-heading text-3xl font-bold text-center mb-10">Everything your home needs</h2>
         <div className="grid grid-cols-1 gap-6">
           {FEATURES.map(f => (
