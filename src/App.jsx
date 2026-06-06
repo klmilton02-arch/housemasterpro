@@ -154,6 +154,11 @@ const AuthenticatedApp = () => {
             <Privacy />
           </motion.div>
         } />
+        <Route path="/support" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+            <Support />
+          </motion.div>
+        } />
 
         {/* Auth routes */}
         <Route path="/login" element={<Login />} />
