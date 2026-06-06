@@ -26,17 +26,6 @@ export default function About() {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-xl p-6 space-y-2">
-        <h2 className="font-heading font-semibold text-lg">Quick Facts</h2>
-        <ul className="space-y-1 text-sm text-muted-foreground list-disc list-inside">
-          <li>200+ preset household tasks ready to use</li>
-          <li>Supports unlimited family members</li>
-          <li>Gamified XP, levels, badges, and leaderboards</li>
-          <li>Google Calendar sync built in</li>
-          <li>Free to get started — no credit card required</li>
-        </ul>
-      </div>
-
       <div className="text-sm text-muted-foreground flex gap-4">
         <Link to="/faq" className="hover:text-foreground transition-colors">FAQ</Link>
         <Link to="/contact" className="hover:text-foreground transition-colors">Contact</Link>
