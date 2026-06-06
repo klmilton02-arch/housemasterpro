@@ -52,7 +52,7 @@ export default function Landing() {
     <div className="min-h-screen bg-background text-foreground font-body">
 
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto">
+      <nav className="flex items-center justify-between px-6 pt-4 pb-1 max-w-5xl mx-auto">
         <div className="flex items-center gap-2">
           <Home className="w-6 h-6 text-primary" />
           <span className="font-heading font-bold text-lg">HomeLifeFocus</span>
