@@ -135,8 +135,8 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Stats — mobile/tablet only */}
-      <section className="lg:hidden bg-primary/5 border-y border-border py-10 px-6">
+      {/* Stats — mobile/tablet only — hidden */}
+      <section className="hidden bg-primary/5 border-y border-border py-10 px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
           {[
             { value: "200+", label: "Preset Tasks" },
