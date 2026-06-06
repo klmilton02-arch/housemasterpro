@@ -1,4 +1,4 @@
-import { Mail, MessageCircle, HelpCircle } from "lucide-react";
+import { Mail, MessageCircle, HelpCircle, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -19,9 +19,9 @@ export default function Support() {
             <p className="text-sm text-muted-foreground mb-4">
               Send us an email with any questions or issues. We typically respond within 24 hours.
             </p>
-            <a href="mailto:support@housemasterpro.com">
+            <a href="mailto:klmilton02@gmail.com">
               <Button variant="default" className="w-full">
-                support@housemasterpro.com
+                klmilton02@gmail.com
               </Button>
             </a>
           </div>
@@ -43,20 +43,20 @@ export default function Support() {
           </div>
         </div>
 
-        {/* Feedback */}
+        {/* Phone Support */}
         <div className="bg-card border border-border rounded-xl p-6 mt-6">
-          <div className="flex items-center gap-3 mb-4">
-            <MessageCircle className="w-6 h-6 text-primary" />
-            <h2 className="text-xl font-heading font-semibold">Send Feedback</h2>
-          </div>
-          <p className="text-sm text-muted-foreground mb-4">
-            Have a suggestion or found a bug? We'd love to hear from you. Your feedback helps us improve HouseMasterPro.
-          </p>
-          <a href="mailto:feedback@housemasterpro.com">
-            <Button variant="outline" className="w-full">
-              feedback@housemasterpro.com
-            </Button>
-          </a>
+        <div className="flex items-center gap-3 mb-4">
+          <Phone className="w-6 h-6 text-primary" />
+          <h2 className="text-xl font-heading font-semibold">Phone Support</h2>
+        </div>
+        <p className="text-sm text-muted-foreground mb-4">
+          Call us directly. We're available to help with your questions.
+        </p>
+        <a href="tel:6467521304">
+          <Button variant="outline" className="w-full">
+            646-752-1304
+          </Button>
+        </a>
         </div>
       </div>
     </div>
