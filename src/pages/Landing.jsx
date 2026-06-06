@@ -78,6 +78,20 @@ export default function Landing() {
               Create recurring tasks for every room in your home — cleaning, maintenance, bills, and more. Assign them to family members, get overdue alerts, earn XP for completing them, and sync everything to Google Calendar.
             </p>
 
+            {/* Stats — desktop only, 3 columns under the badge */}
+            <div className="hidden lg:grid grid-cols-3 gap-3">
+              {[
+                { value: "200+", label: "Preset Tasks" },
+                { value: "5 min", label: "Setup Time" },
+                { value: "Solo or Family", label: "Join as Solo or Family" },
+              ].map(stat => (
+                <div key={stat.label} className="bg-card border border-border rounded-xl p-4 text-center">
+                  <p className="font-heading text-2xl font-bold text-primary">{stat.value}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+
           </div>
 
           {/* Right: Sign In Card */}
@@ -105,8 +119,8 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="bg-primary/5 border-y border-border py-10 px-6">
+      {/* Stats — mobile/tablet only */}
+      <section className="lg:hidden bg-primary/5 border-y border-border py-10 px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
           {[
             { value: "200+", label: "Preset Tasks" },
