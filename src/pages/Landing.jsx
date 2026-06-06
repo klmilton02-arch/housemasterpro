@@ -161,38 +161,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Quick Actions */}
-      <section className="py-16 px-6 max-w-5xl mx-auto">
-        <h2 className="font-heading text-3xl font-bold text-center mb-2">Get started</h2>
-        <p className="text-muted-foreground text-center mb-10">Access all features in one place.</p>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Tasks Card - takes full width, side-by-side layout */}
-          <div key="tasks" className="sm:col-span-2 lg:col-span-1 bg-card border border-border rounded-xl p-5 hover:shadow-md transition-shadow flex flex-col h-full">
-            <div className="flex items-center gap-3 flex-1">
-              <div className="flex-1">
-                <h3 className="font-heading font-semibold mb-1">Tasks</h3>
-                <p className="text-sm text-muted-foreground">Manage and track all your household tasks with smart scheduling.</p>
-              </div>
-              <CheckCircle2 className="w-8 h-8 text-primary flex-shrink-0" />
-            </div>
-          </div>
 
-          {/* Other action cards */}
-          {[
-            { icon: <Home className="w-6 h-6 text-primary" />, title: "Home Setup", desc: "Configure your home layout and rooms for personalized task management." },
-            { icon: <Users className="w-6 h-6 text-primary" />, title: "Family", desc: "Manage family members and assign tasks to keep everyone on track." },
-            { icon: <Trophy className="w-6 h-6 text-primary" />, title: "Leaderboard", desc: "Track progress and see who's earning the most XP this month." },
-            { icon: <Calendar className="w-6 h-6 text-primary" />, title: "Presets", desc: "Browse hundreds of pre-built tasks ready to add to your list." },
-            { icon: <Sparkles className="w-6 h-6 text-primary" />, title: "Sync Calendar", desc: "Keep tasks in sync with your Google Calendar automatically." },
-          ].map(item => (
-            <div key={item.title} className="bg-card border border-border rounded-xl p-5 hover:shadow-md transition-shadow flex flex-col h-full">
-              <div className="mb-3">{item.icon}</div>
-              <h3 className="font-heading font-semibold mb-1">{item.title}</h3>
-              <p className="text-sm text-muted-foreground flex-1">{item.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
 
        {/* CTA / Waitlist */}
        <section className="bg-primary/5 border-y border-border py-16 px-6">
