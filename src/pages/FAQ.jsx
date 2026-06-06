@@ -12,7 +12,7 @@ const faqs = [
       },
       {
         q: "How do I get started?",
-        a: "After signing in, start by setting up your home in the Home Setup section — add your rooms (bedrooms, bathrooms, kitchen, etc.). Then add tasks either from our built-in presets or create custom ones. You can assign tasks to family members and set how often they should repeat."
+        a: "When signing in choose Solo or Family. If you chose Family, you can join a pre-existing family or create your own family."
       },
       {
         q: "Can my whole family use the app?",
