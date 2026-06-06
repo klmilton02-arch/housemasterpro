@@ -16,7 +16,7 @@ const faqs = [
       },
       {
         q: "How do I set up my home?",
-        a: "If you are a solo user or if you are the first member of a family, start by setting up your home in the Home Setup section — add your rooms (bedrooms, bathrooms, kitchen, etc.). Then add tasks either from our built-in presets or create custom ones. You can assign tasks to family members and set how often they should repeat."
+        a: "If you are a solo user or if you are the first member of a family, you can set up your home. You can chose the number of bedrooms and bathrooms and you can add additional rooms including Living Room and Office."
       },
       {
         q: "Can my whole family use the app?",
