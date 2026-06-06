@@ -7,7 +7,11 @@ export default function Support() {
     <div className="space-y-6 max-w-xs mx-auto px-1 pt-2 pb-10 md:pt-6 md:pb-8">
       <div>
         <h1 className="text-4xl font-heading font-bold mb-4">Support Center</h1>
-        <p className="text-lg text-muted-foreground mb-12">We're here to help. Get in touch with us.</p>
+        <p className="text-lg text-muted-foreground mb-2">For technical support, call or email:</p>
+        <div className="flex flex-col sm:flex-row gap-4 mb-12">
+          <a href="tel:6467521304" className="text-primary font-medium hover:underline">646-752-1304</a>
+          <a href="mailto:klmilton02@gmail.com" className="text-primary font-medium hover:underline">klmilton02@gmail.com</a>
+        </div>
 
         <div className="grid gap-6 md:grid-cols-2">
           {/* Email Support */}
