@@ -26,11 +26,12 @@ export default function About() {
         </div>
       </div>
 
-      <div className="text-sm text-muted-foreground flex gap-4">
-        <Link to="/faq" className="hover:text-foreground transition-colors">FAQ</Link>
+      <div className="text-sm text-muted-foreground flex gap-4 flex-wrap">
+        <Link to="/landing" className="hover:text-foreground transition-colors">Home</Link>
         <Link to="/contact" className="hover:text-foreground transition-colors">Contact</Link>
         <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-        <Link to="/landing" className="hover:text-foreground transition-colors">Back to Home</Link>
+        <Link to="/encryption" className="hover:text-foreground transition-colors">Encryption</Link>
+        <Link to="/faq" className="hover:text-foreground transition-colors">FAQ</Link>
       </div>
     </div>
   );
