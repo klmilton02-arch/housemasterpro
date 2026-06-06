@@ -38,12 +38,6 @@ const FEATURES = [
   },
 ];
 
-const TESTIMONIALS = [
-  { name: "Sarah M.", text: "We finally stopped arguing about who does what. HouseMasterPro keeps our whole family on track.", stars: 5 },
-  { name: "James T.", text: "The gamification is genius — my kids actually compete to finish their chores first.", stars: 5 },
-  { name: "Priya K.", text: "Love that it syncs to my calendar. I never miss a maintenance task anymore.", stars: 5 },
-];
-
 export default function Landing() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -165,24 +159,6 @@ export default function Landing() {
               <div className="mb-3">{f.icon}</div>
               <h3 className="font-heading font-semibold mb-1">{f.title}</h3>
               <p className="text-sm text-muted-foreground">{f.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-16 px-6 max-w-5xl mx-auto">
-        <h2 className="font-heading text-3xl font-bold text-center mb-10">Families love it</h2>
-        <div className="grid sm:grid-cols-3 gap-6">
-          {TESTIMONIALS.map(t => (
-            <div key={t.name} className="bg-blue-600 border border-blue-500 rounded-xl p-5">
-              <div className="flex gap-0.5 mb-3">
-                {Array.from({ length: t.stars }).map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                ))}
-              </div>
-              <p className="text-sm text-white mb-4">"{t.text}"</p>
-              <p className="text-xs font-semibold text-blue-200">— {t.name}</p>
             </div>
           ))}
         </div>
