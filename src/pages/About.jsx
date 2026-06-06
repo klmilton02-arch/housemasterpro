@@ -32,6 +32,7 @@ export default function About() {
         <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
         <Link to="/encryption" className="hover:text-foreground transition-colors">Encryption</Link>
         <Link to="/faq" className="hover:text-foreground transition-colors">FAQ</Link>
+        <Link to="/support" className="hover:text-foreground transition-colors">Support</Link>
       </div>
     </div>
   );
