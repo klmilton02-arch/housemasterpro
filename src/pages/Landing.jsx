@@ -156,10 +156,12 @@ export default function Landing() {
         <h2 className="font-heading text-3xl font-bold text-center mb-10">Everything your home needs</h2>
         <div className="grid grid-cols-1 gap-6">
           {FEATURES.map(f => (
-            <div key={f.title} className="bg-card border border-border rounded-xl p-5 hover:shadow-md transition-shadow">
-              <div className="mb-3">{f.icon}</div>
-              <h3 className="font-heading font-semibold mb-1">{f.title}</h3>
-              <p className="text-sm text-muted-foreground">{f.desc}</p>
+            <div key={f.title} className="bg-card border border-border rounded-xl p-3 sm:p-3 hover:shadow-md transition-shadow sm:flex sm:items-start sm:gap-3">
+              <div className="mb-2 sm:mb-0 sm:shrink-0">{f.icon}</div>
+              <div>
+                <h3 className="font-heading font-semibold mb-0.5 text-sm sm:text-sm">{f.title}</h3>
+                <p className="text-xs text-muted-foreground">{f.desc}</p>
+              </div>
             </div>
           ))}
         </div>
