@@ -111,7 +111,7 @@ export default function Landing() {
 
       {/* Stats */}
       <section className="bg-primary/5 border-y border-border py-10 px-6">
-        <div className="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
           {[
             { value: "200+", label: "Preset Tasks" },
             { value: "5 min", label: "Setup Time" },
