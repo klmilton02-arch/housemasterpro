@@ -154,7 +154,7 @@ export default function Landing() {
       {/* Features — mobile/tablet only */}
       <section id="features" className="lg:hidden py-16 px-6 max-w-5xl mx-auto">
         <h2 className="font-heading text-3xl font-bold text-center mb-10">Everything your home needs</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           {FEATURES.map(f => (
             <div key={f.title} className="bg-card border border-border rounded-xl p-5 hover:shadow-md transition-shadow">
               <div className="mb-3">{f.icon}</div>
