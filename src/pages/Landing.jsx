@@ -64,7 +64,7 @@ export default function Landing() {
 
       {/* Hero */}
       <section className="px-6 pt-3 lg:pt-0 pb-16 max-w-6xl mx-auto">
-        <div className="flex flex-col lg:flex-row items-center gap-12">
+        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12">
           {/* Left: Description */}
           <div className="flex-1 text-center lg:text-left">
             <span className="inline-block text-xs font-semibold uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full mb-2">
