@@ -68,7 +68,7 @@ const RootRedirect = () => {
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
-  const publicPaths = ['/', '/landing', '/login', '/register', '/forgot-password', '/reset-password', '/encryption', '/digital-services-act', '/copyright', '/age-suitability', '/accessibility', '/faq', '/about', '/contact'];
+  const publicPaths = ['/', '/landing', '/login', '/register', '/forgot-password', '/reset-password', '/encryption', '/digital-services-act', '/copyright', '/age-suitability', '/accessibility', '/faq', '/about', '/contact', '/privacy'];
   const isPublicPath = publicPaths.some(p => window.location.pathname === p || window.location.pathname.startsWith(p + '/'));
 
   // Redirect to login in an effect (not during render) to avoid infinite loops
@@ -148,6 +148,11 @@ const AuthenticatedApp = () => {
             <Contact />
           </motion.div>
         } />
+        <Route path="/privacy" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+            <Privacy />
+          </motion.div>
+        } />
 
         {/* Auth routes */}
         <Route path="/login" element={<Login />} />
@@ -166,7 +171,7 @@ const AuthenticatedApp = () => {
         <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
           <Route element={<Layout />}>
             {[{ path: "/dashboard", el: <Dashboard /> }, { path: "/tasks", el: <Tasks /> }, { path: "/needs-attention", el: <NeedsAttention /> }, { path: "/presets", el: <Presets /> }, { path: "/home-setup", el: <HomeSetup /> }, { path: "/profile", el: <Profile /> },
-            { path: "/family", el: <Family /> }, { path: "/cats", el: <CatShelter /> }, { path: "/leaderboard", el: <Leaderboard /> }, { path: "/calendar", el: <CalendarPage /> }, { path: "/task-start-dates", el: <TaskStartDates /> }, { path: "/privacy", el: <Privacy /> }, { path: "/support", el: <Support /> }, { path: "*", el: <PageNotFound /> }].map(({ path, el }) => (
+            { path: "/family", el: <Family /> }, { path: "/cats", el: <CatShelter /> }, { path: "/leaderboard", el: <Leaderboard /> }, { path: "/calendar", el: <CalendarPage /> }, { path: "/task-start-dates", el: <TaskStartDates /> }, { path: "/support", el: <Support /> }, { path: "*", el: <PageNotFound /> }].map(({ path, el }) => (
               <Route key={path} path={path} element={
                 <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
                   {el}
