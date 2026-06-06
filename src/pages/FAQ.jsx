@@ -145,12 +145,17 @@ function FAQItem({ q, a }) {
 export default function FAQ() {
   return (
     <div className="max-w-2xl mx-auto px-4 pt-6 pb-16 space-y-8">
-      <div>
-        <div className="flex items-center gap-2 mb-2">
-          <HelpCircle className="w-6 h-6 text-primary" />
-          <h1 className="font-heading text-3xl font-bold">Frequently Asked Questions</h1>
+      <div className="flex items-center justify-between">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-2">
+            <HelpCircle className="w-6 h-6 text-primary" />
+            <h1 className="font-heading text-3xl font-bold">Frequently Asked Questions</h1>
+          </div>
+          <p className="text-muted-foreground">Everything you need to know about HomeLifeFocus.</p>
         </div>
-        <p className="text-muted-foreground">Everything you need to know about HomeLifeFocus.</p>
+        <Link to="/landing" className="text-primary hover:underline font-medium text-sm whitespace-nowrap ml-4">
+          Back to Home
+        </Link>
       </div>
 
       {faqs.map(section => (
