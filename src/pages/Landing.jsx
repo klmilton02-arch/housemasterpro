@@ -163,28 +163,7 @@ export default function Landing() {
 
 
 
-       {/* CTA / Waitlist */}
-       <section className="bg-primary/5 border-y border-border py-16 px-6">
-        <div className="max-w-md mx-auto text-center">
-          <h2 className="font-heading text-3xl font-bold mb-2">Ready to take control?</h2>
-          <p className="text-muted-foreground mb-6">Join the waitlist and be among the first to get access.</p>
-          {submitted ? (
-            <div className="bg-card border border-border rounded-xl p-6">
-              <CheckCircle2 className="w-10 h-10 text-green-500 mx-auto mb-2" />
-              <p className="font-semibold">You're on the list!</p>
-              <p className="text-sm text-muted-foreground mt-1">We'll be in touch soon.</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <Input placeholder="Your name" value={name} onChange={e => setName(e.target.value)} />
-              <Input type="email" placeholder="Your email" value={email} onChange={e => setEmail(e.target.value)} required />
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Joining..." : "Join the Waitlist"}
-              </Button>
-            </form>
-          )}
-        </div>
-      </section>
+
 
       {/* Footer */}
       <footer className="py-8 px-6 text-center text-sm text-muted-foreground">
