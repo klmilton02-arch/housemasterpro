@@ -12,19 +12,16 @@ export default function About() {
         <h1 className="font-heading text-3xl font-bold mb-4">About HomeLifeFocus</h1>
         <div className="space-y-4 text-muted-foreground leading-relaxed">
           <p>
-            HomeLifeFocus is a household task management app designed to help families, couples, and housemates stay on top of everything it takes to run a home — from weekly cleaning and monthly maintenance to recurring bills and personal to-dos.
+            HomeLifeFocus is a household task management app designed to help individuals, couples, housemates, and families manage home maintenance and chores. Additionally, users can create personal task lists in order to track and remember anything – even things unrelated to home maintenance and chores.
           </p>
           <p>
-            We built HomeLifeFocus because managing a home is genuinely hard work, and most task apps weren't built with households in mind. With HomeLifeFocus, you can set up every room in your home, add recurring tasks with custom frequencies, and assign them to specific family members so everyone knows what they're responsible for.
+            I built HomeLifeFocus because I live in a 2600 square foot home with a total of 6 people and remaining abreast of household tasks was overwhelming and difficult to manage. I wanted an app that would enable households to work together. Also, I received an owner's manual for my house which included recommended maintenance tasks. I've lived in numerous houses and apartments over the years, and have never cleaned light fixtures, nor have I ever done anything with vent registers or window tracks.
           </p>
           <p>
-            What makes HomeLifeFocus different is its built-in gamification system. Every completed task earns XP, unlocks badges, and moves you up the family leaderboard — turning chores into something the whole household actually wants to participate in. You can even adopt and care for virtual cats as a reward for staying on top of your tasks.
+            Furthermore, the thought of "cleaning the house" was generally overwhelming to me. I had a vague idea that carpets should be cleaned at some point, but wasn't sure what that point was.
           </p>
           <p>
-            The app also syncs with Google Calendar so your tasks show up alongside the rest of your schedule, and it includes a library of 200+ preset tasks to get you started in minutes.
-          </p>
-          <p>
-            HomeLifeFocus is built and maintained by a small, independent team passionate about helping people feel less overwhelmed at home. We're always improving the app based on real user feedback.
+            I wasn't able to find an app that had an exhaustive list of potential chores and maintenance tasks with recommended frequencies, divided by room. There were apps with presets, but I wanted a more detailed list. I was also not able to find an app that offered preset household related chores and tasks in addition to personal tasks and chores.
           </p>
         </div>
       </div>
