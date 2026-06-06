@@ -92,6 +92,9 @@ export default function Landing() {
               ))}
             </div>
 
+            {/* "Everything your home needs" heading — desktop only, below stats */}
+            <h2 className="hidden lg:block font-heading text-2xl font-bold mt-8">Everything your home needs</h2>
+
           </div>
 
           {/* Right: Sign In Card */}
@@ -121,7 +124,6 @@ export default function Landing() {
 
       {/* Features — desktop only, full width 5 columns below hero */}
       <section className="hidden lg:block px-6 pb-12 max-w-6xl mx-auto">
-        <h2 className="font-heading text-2xl font-bold mb-6">Everything your home needs</h2>
         <div className="grid grid-cols-5 gap-4">
           {FEATURES.map(f => (
             <div key={f.title} className="bg-card border border-border rounded-xl p-4 hover:shadow-md transition-shadow">
