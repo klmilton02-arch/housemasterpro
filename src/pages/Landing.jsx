@@ -92,6 +92,20 @@ export default function Landing() {
               ))}
             </div>
 
+            {/* Features — desktop only, below stats */}
+            <div className="hidden lg:block mt-8">
+              <h2 className="font-heading text-2xl font-bold mb-6">Everything your home needs</h2>
+              <div className="grid grid-cols-3 gap-4">
+                {FEATURES.map(f => (
+                  <div key={f.title} className="bg-card border border-border rounded-xl p-4 hover:shadow-md transition-shadow">
+                    <div className="mb-2">{f.icon}</div>
+                    <h3 className="font-heading font-semibold text-sm mb-1">{f.title}</h3>
+                    <p className="text-xs text-muted-foreground">{f.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
           </div>
 
           {/* Right: Sign In Card */}
@@ -114,19 +128,6 @@ export default function Landing() {
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
-          {/* Features — desktop only, full-width 5-col below hero */}
-          <div className="hidden lg:block w-full mt-8">
-            <h2 className="font-heading text-2xl font-bold mb-5">Everything your home needs</h2>
-            <div className="grid grid-cols-5 gap-4">
-              {FEATURES.map(f => (
-                <div key={f.title} className="bg-card border border-border rounded-xl p-4 hover:shadow-md transition-shadow">
-                  <div className="mb-2">{f.icon}</div>
-                  <h3 className="font-heading font-semibold text-sm mb-1">{f.title}</h3>
-                  <p className="text-xs text-muted-foreground">{f.desc}</p>
-                </div>
-              ))}
             </div>
           </div>
         </div>
