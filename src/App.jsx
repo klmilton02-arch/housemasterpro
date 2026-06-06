@@ -62,6 +62,8 @@ function DarkModeSync() {
 const RootRedirect = () => {
   const { isLoadingAuth, isLoadingPublicSettings, isAuthenticated } = useAuth();
   if (isLoadingAuth || isLoadingPublicSettings) return null;
+  // Allow demo mode to skip auth redirect
+  if (import.meta.env.VITE_DEMO_MODE === 'true') return <Navigate to="/dashboard" replace />;
   if (isAuthenticated) return <Navigate to="/dashboard" replace />;
   return <Navigate to="/landing" replace />;
 };
@@ -169,7 +171,7 @@ const AuthenticatedApp = () => {
         } />
 
         {/* Protected routes */}
-        <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
+        <Route element={import.meta.env.VITE_DEMO_MODE === 'true' ? <Layout /> : <ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
           <Route element={<Layout />}>
             {[{ path: "/dashboard", el: <Dashboard /> }, { path: "/tasks", el: <Tasks /> }, { path: "/needs-attention", el: <NeedsAttention /> }, { path: "/presets", el: <Presets /> }, { path: "/home-setup", el: <HomeSetup /> }, { path: "/profile", el: <Profile /> },
             { path: "/family", el: <Family /> }, { path: "/cats", el: <CatShelter /> }, { path: "/leaderboard", el: <Leaderboard /> }, { path: "/calendar", el: <CalendarPage /> }, { path: "/task-start-dates", el: <TaskStartDates /> }, { path: "/support", el: <Support /> }, { path: "/admin/activity", el: <AdminActivity /> }, { path: "*", el: <PageNotFound /> }].map(({ path, el }) => (
