@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Link, useNavigate } from "react-router-dom";
-import { CheckCircle2, Home, Users, Trophy, Calendar, Sparkles, Bell } from "lucide-react";
+import { CheckCircle2, Home, Users, Trophy, Calendar, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const FEATURES = [
@@ -25,11 +25,7 @@ const FEATURES = [
     title: "Google Calendar Sync",
     desc: "Sync tasks directly to your Google Calendar.",
   },
-  {
-    icon: <Bell className="w-6 h-6 text-primary" />,
-    title: "Modifiable Pending Task Alerts",
-    desc: "Use reminders to determine which tasks need to be completed today. You can also adjust or simply shut off reminders so that you can enjoy your device without unnecessary pop-ups. The experience is yours.",
-  },
+
   {
     icon: <Sparkles className="w-6 h-6 text-primary" />,
     title: "Preset Task Library",
