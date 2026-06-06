@@ -91,9 +91,7 @@ export default function Landing() {
             <span className="inline-block text-xs font-semibold uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full mb-4">
               Home management, reimagined
             </span>
-            <h1 className="font-heading text-4xl sm:text-5xl font-bold leading-tight mb-4">
-              Never forget a chore,<br />bill, or home task again
-            </h1>
+
             <p className="text-foreground text-lg font-medium mb-3">
               HomeLifeFocus is a household task manager for families.
             </p>
