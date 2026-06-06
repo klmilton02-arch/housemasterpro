@@ -18,7 +18,7 @@ const FEATURES = [
   {
     icon: <Trophy className="w-6 h-6 text-primary" />,
     title: "Gamification & Rewards",
-    desc: "Earn XP, level up, unlock badges, and race your family on the leaderboard. Chores are actually fun.",
+    desc: "Earn XP, level up, unlock badges, and follow your progress as a Solo user. Compete with other members of your household as part of a family!",
   },
   {
     icon: <Calendar className="w-6 h-6 text-primary" />,
