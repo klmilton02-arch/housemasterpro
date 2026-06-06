@@ -12,7 +12,7 @@ const faqs = [
       },
       {
         q: "How do I get started?",
-        a: "When signing in choose Solo or Family. If you chose Family, you can join a pre-existing family or create your own family."
+        a: "When signing in choose Solo or Family. If you chose Family, you can join a pre-existing family or create your own family. If you are a solo user or if you are the first member of a family, you can set up your home by picking the number of bedrooms and adding additional rooms including office and living room. The app will provide pre-existing task lists for each room."
       },
       {
         q: "How do I set up my home?",
