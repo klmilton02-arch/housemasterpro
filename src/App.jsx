@@ -38,6 +38,7 @@ import AgeSuitability from './pages/AgeSuitability';
 import Accessibility from './pages/Accessibility';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import AdminActivity from './pages/AdminActivity';
 
 
 
@@ -171,7 +172,7 @@ const AuthenticatedApp = () => {
         <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
           <Route element={<Layout />}>
             {[{ path: "/dashboard", el: <Dashboard /> }, { path: "/tasks", el: <Tasks /> }, { path: "/needs-attention", el: <NeedsAttention /> }, { path: "/presets", el: <Presets /> }, { path: "/home-setup", el: <HomeSetup /> }, { path: "/profile", el: <Profile /> },
-            { path: "/family", el: <Family /> }, { path: "/cats", el: <CatShelter /> }, { path: "/leaderboard", el: <Leaderboard /> }, { path: "/calendar", el: <CalendarPage /> }, { path: "/task-start-dates", el: <TaskStartDates /> }, { path: "/support", el: <Support /> }, { path: "*", el: <PageNotFound /> }].map(({ path, el }) => (
+            { path: "/family", el: <Family /> }, { path: "/cats", el: <CatShelter /> }, { path: "/leaderboard", el: <Leaderboard /> }, { path: "/calendar", el: <CalendarPage /> }, { path: "/task-start-dates", el: <TaskStartDates /> }, { path: "/support", el: <Support /> }, { path: "/admin/activity", el: <AdminActivity /> }, { path: "*", el: <PageNotFound /> }].map(({ path, el }) => (
               <Route key={path} path={path} element={
                 <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
                   {el}
