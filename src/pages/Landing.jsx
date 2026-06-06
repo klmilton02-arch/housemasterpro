@@ -115,7 +115,7 @@ export default function Landing() {
           {[
             { value: "200+", label: "Preset Tasks" },
             { value: "5 min", label: "Setup Time" },
-            { value: "∞", label: "Family Members" },
+            { value: "Solo or Family", label: "Join as a Solo User or as a Family" },
           ].map(stat => (
             <div key={stat.label} className="bg-card border border-border rounded-xl p-4">
               <p className="font-heading text-3xl font-bold text-primary">{stat.value}</p>
