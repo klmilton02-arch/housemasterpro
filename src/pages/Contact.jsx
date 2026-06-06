@@ -17,7 +17,7 @@ export default function Contact() {
     if (!email || !message) return;
     setSending(true);
     await base44.integrations.Core.SendEmail({
-      to: "housemasterpro@gmail.com",
+      to: "klmilton02@gmail.com",
       subject: `Contact Form: ${name || email}`,
       body: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
     });
@@ -41,8 +41,8 @@ export default function Contact() {
         <Mail className="w-5 h-5 text-primary mt-0.5 shrink-0" />
         <div>
           <p className="font-medium text-sm">Email us directly</p>
-          <a href="mailto:housemasterpro@gmail.com" className="text-primary text-sm hover:underline">
-            housemasterpro@gmail.com
+          <a href="mailto:klmilton02@gmail.com" className="text-primary text-sm hover:underline">
+            klmilton02@gmail.com
           </a>
           <p className="text-xs text-muted-foreground mt-1">We typically respond within 1–2 business days.</p>
         </div>
