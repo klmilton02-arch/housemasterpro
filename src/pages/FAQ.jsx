@@ -8,7 +8,7 @@ const faqs = [
     items: [
       {
         q: "What is HomeLifeFocus?",
-        a: "HomeLifeFocus is a family household task management app that helps you organize, schedule, and track all your home maintenance and cleaning tasks. It includes gamification features like XP, levels, and badges to keep the whole family motivated."
+        a: "HomeLifeFocus is a household task management app that helps to organize, schedule, and track home maintenance and cleaning tasks. Keep track of home chores as a solo user or compete with other family members or housemates. The app includes gamification features including XP, levels, and badges."
       },
       {
         q: "How do I get started?",
