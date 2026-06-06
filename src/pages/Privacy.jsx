@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function Privacy() {
   return (
     <div className="space-y-6 max-w-xs md:max-w-2xl mx-auto px-1 pt-2 pb-10 md:pt-6 md:pb-8">
@@ -121,6 +123,11 @@ export default function Privacy() {
               Email: support@housemasterpro.com
             </p>
           </section>
+        </div>
+
+        <div className="text-sm text-muted-foreground flex gap-4 pt-4">
+          <Link to="/landing" className="hover:text-foreground transition-colors">Back to Home</Link>
+          <Link to="/login" className="hover:text-foreground transition-colors">Sign In</Link>
         </div>
       </div>
     </div>
