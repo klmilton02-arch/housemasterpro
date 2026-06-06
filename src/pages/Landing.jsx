@@ -67,7 +67,7 @@ export default function Landing() {
         <div className="flex flex-col lg:flex-row items-center gap-12">
           {/* Left: Description */}
           <div className="flex-1 text-center lg:text-left">
-            <span className="inline-block text-xs font-semibold uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full mb-4">
+            <span className="inline-block text-xs font-semibold uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full mb-2">
               Home management, reimagined
             </span>
 
