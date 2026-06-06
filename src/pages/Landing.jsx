@@ -98,7 +98,7 @@ export default function Landing() {
           </div>
 
           {/* Right: Sign In Card */}
-          <div className="w-full lg:w-80 shrink-0">
+          <div className="w-full lg:w-80 shrink-0 -mt-6 lg:mt-0">
             <div className="bg-card border border-border rounded-2xl p-7 shadow-lg text-center">
               <div className="flex items-center justify-center gap-2 mb-1">
                 <Home className="w-5 h-5 text-primary" />
