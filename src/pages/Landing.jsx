@@ -66,7 +66,7 @@ export default function Landing() {
       <section className="px-6 pt-3 lg:pt-8 pb-4 lg:pb-16 max-w-6xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12">
           {/* Left: Description */}
-          <div className="flex-1 text-center lg:text-left">
+          <div className="flex-1 text-left lg:text-left">
             <span className="inline-block text-xs font-semibold uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full mb-2">
               Home management, reimagined
             </span>
@@ -151,7 +151,7 @@ export default function Landing() {
 
       {/* Features — mobile/tablet only */}
       <section id="features" className="lg:hidden pt-4 pb-12 px-6 max-w-5xl mx-auto">
-        <h2 className="font-heading text-3xl font-bold text-center mb-10">Everything your home needs</h2>
+        <h2 className="font-heading text-3xl font-bold text-left mb-10">Everything your home needs</h2>
         <div className="grid grid-cols-1 gap-6">
           {FEATURES.map(f => (
             <div key={f.title} className="bg-card border border-border rounded-xl p-3 sm:p-3 hover:shadow-md transition-shadow sm:flex sm:items-start sm:gap-3">
