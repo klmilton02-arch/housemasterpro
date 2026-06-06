@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Link, useNavigate } from "react-router-dom";
-import { CheckCircle2, Home, Users, Trophy, Calendar, Sparkles, Bell, ChevronRight, Star } from "lucide-react";
+import { CheckCircle2, Home, Users, Trophy, Calendar, Sparkles, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 const FEATURES = [
   {
@@ -39,10 +38,6 @@ const FEATURES = [
 ];
 
 export default function Landing() {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [signingIn, setSigningIn] = useState(false);
   const navigate = useNavigate();
 
@@ -56,18 +51,6 @@ export default function Landing() {
     window.location.href = "/login";
   };
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!email) return;
-    setLoading(true);
-    await base44.integrations.Core.SendEmail({
-      to: "housemasterpro@gmail.com",
-      subject: "New Beta Signup",
-      body: `Name: ${name}\nEmail: ${email}`,
-    });
-    setSubmitted(true);
-    setLoading(false);
-  }
 
   return (
     <div className="min-h-screen bg-background text-foreground font-body">
