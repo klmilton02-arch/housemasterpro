@@ -15,6 +15,10 @@ const faqs = [
         a: "When signing in choose Solo or Family. If you chose Family, you can join a pre-existing family or create your own family."
       },
       {
+        q: "How do I set up my home?",
+        a: "If you are a solo user or if you are the first member of a family, start by setting up your home in the Home Setup section — add your rooms (bedrooms, bathrooms, kitchen, etc.). Then add tasks either from our built-in presets or create custom ones. You can assign tasks to family members and set how often they should repeat."
+      },
+      {
         q: "Can my whole family use the app?",
         a: "Yes! HomeLifeFocus is built for families. You can add family members in the Family section and assign tasks to specific people. Each family member gets their own gamification profile, tracking their XP, level, and badges."
       },
