@@ -12,35 +12,46 @@ const faqs = [
       },
       {
         q: "How do I get started?",
-        a: "When signing in choose Solo or Family. If you chose Family, you can join a pre-existing family or create your own family. If you are a solo user or if you are the first member of a family, you can set up your home by picking the number of bedrooms and adding additional rooms including office and living room. The app will provide pre-existing task lists for each room."
+        a: "When signing in for the first time, choose Solo or Family. The Solo setting enables one person to manage household chores and maintenance tasks. If you pick Family, you can either join an existing Family or you can start your own. If you start with a Solo account you can join a family later."
       },
       {
-        q: "How do I set up my home?",
-        a: "If you are a solo user or if you are the first member of a family, you can set up your home. You can chose the number of bedrooms and bathrooms and you can add additional rooms including Living Room and Office."
+        q: "What is the difference between Solo and Family?",
+        a: "Solo enables one person to organize household maintenance tasks and chores. A Solo user can earn XP and badges. There is also a Cat Shelter for each player — when a player has reached sufficient XP, he or she can adopt one or more cats. When chores or household maintenance tasks are neglected, one or more of the cats may run away. A family account is similar. In this case, each member of a family or household has the same list of chores and household maintenance tasks. Once one person in a family or household checks off a particular chore or maintenance task, said chore or maintenance task is 'completed' on everyone's list. As part of a family, you can compete with others to earn the most XP."
       },
       {
-        q: "Can my whole family use the app?",
-        a: "Yes! HomeLifeFocus is built for families. You can add family members in the Family section and assign tasks to specific people. Each family member gets their own gamification profile, tracking their XP, level, and badges."
+        q: "How does household set up work?",
+        a: "There are a number of available room types, including bedroom, living room, dining room, mixed use room, office, full bathroom, and half bathroom. In addition, you can add an attic, basement, and/or garage. You can chose any number of bedrooms or bathrooms and check off other room types within your house or apartment. After this, HomeLifeFocus will generate a list of chores and household maintenance tasks for individual rooms. There are certain tasks designated 'whole house.' These tasks are not unique to any particular room — for instance, tasks surrounding outdoor drainage are not designated to a particular room or part of the house."
       },
       {
-        q: "Is HomeLifeFocus free to use?",
-        a: "HomeLifeFocus offers a free tier to get started. Premium features may be available as the platform grows. Check the app for the latest pricing information."
-      },
-    ]
-  },
-  {
-    category: "Tasks & Scheduling",
-    items: [
-      {
-        q: "How do recurring tasks work?",
-        a: "When you add a task, you set a frequency (e.g., every 7 days, every month). Once a task is marked as completed, the next due date is automatically calculated based on that frequency. The task reappears on your list when it's time to do it again."
+        q: "Can I create my own tasks?",
+        a: "Absolutely, you can pick tasks or chores from a preset list. You click Add Task then you can add a preset task, or, you can create your own custom task. If you click Preset or Custom, any tasks generated will be added to the whole family task list (or, if you are a Solo user, said tasks will be added to your list). You can also add Personal tasks. These tasks will be added to your personal list and not shared between family members. For instance, you may want a reminder to check your personal email daily. If you add this as a personal task, this will wind up on your personal task list, even if you are a member of a family."
       },
       {
-        q: "What are task presets?",
-        a: "Presets are a library of common household tasks (vacuuming, washing dishes, changing filters, paying bills, etc.) that are pre-configured with suggested frequencies and difficulty levels. You can add them to your task list with one tap and adjust the settings as needed."
+        q: "How do preset tasks work?",
+        a: "Presets are a library of common household tasks (vacuuming, washing dishes, changing filters, paying bills, etc.) that are pre-configured with suggested frequencies and difficulty levels. Many of the presets will be added automatically based on household set-up. You can pick additional preset tasks through the Add Task button on the Tasks portion of the App."
       },
       {
-        q: "Can I assign tasks to specific family members?",
+        q: "Which tasks will wind up on the family list versus your own personal list?",
+        a: "If you are a Solo user this is a moot point — all the tasks will be on your list. If you are part of a family, then from Add Task, Preset or Custom tasks will be added to the whole family list. Personal tasks will be added to your personal list, not the shared family list."
+      },
+      {
+        q: "The app generated multiple Living Room tasks. Carpet cleaning is on the list of tasks but I don't have carpets in my living room. What can I do?",
+        a: "You can delete the task from the task list. The task will disappear from the Family List. You can do this for any task that is irrelevant to you or your household."
+      },
+      {
+        q: "What is Blast Mode?",
+        a: "Blast Mode sets off a 30 minute timer. Any task done within that 30 minutes earns double XP."
+      },
+      {
+        q: "I don't know how to do certain tasks, such as Cleaning Vent Registers. What do I do?",
+        a: "If there is a task that you are not comfortable completing yourself, you can engage a professional."
+      },
+      {
+        q: "I tried to perform a task and now I have damaged my home. Is the App creator responsible for this?",
+        a: "No, the app creator is not responsible for damage to your home sustained while performing a chore or maintenance task."
+      },
+      {
+        q: "Can I assign tasks to a particular family member?",
         a: "Yes! When adding or editing a task, you can assign it to any family member. You can also filter the task list by family member to see who is responsible for what."
       },
       {
@@ -51,55 +62,23 @@ const faqs = [
         q: "What is the Calendar view?",
         a: "The Calendar view shows all your tasks plotted by their due dates on a monthly calendar. Tasks are color-coded — blue for upcoming, red for overdue, and green for completed — so you can see your schedule at a glance."
       },
-      {
-        q: "What are subtasks?",
-        a: "Subtasks let you break a larger task into smaller steps. Tap on any task to open its detail view, where you can add, check off, and remove subtasks. This is great for multi-step jobs like 'Deep Clean Kitchen.'"
-      },
-      {
-        q: "How do I track bills with HomeLifeFocus?",
-        a: "Use the 'Bills' filter on the Tasks page to view all tasks in the 'Bill Schedules' category. You can add recurring bill reminders (e.g., rent due monthly, insurance due yearly) as tasks so nothing slips through the cracks."
-      },
     ]
   },
   {
     category: "Gamification & Rewards",
     items: [
       {
-        q: "How does the XP and leveling system work?",
-        a: "Every time you complete a task you earn XP (experience points). The amount of XP depends on the task's difficulty — harder tasks earn more XP. As you accumulate XP, you level up. Your level and XP are shown on the Rewards (Leaderboard) page and your Profile."
-      },
-      {
-        q: "What are badges?",
-        a: "Badges are achievements you unlock by hitting milestones, such as completing your first task, maintaining a streak, completing overdue tasks, or finishing deep-cleaning jobs. Earned badges are displayed on your Profile page."
-      },
-      {
-        q: "What is Blast Mode?",
-        a: "Blast Mode is a timed power-up session where all XP earned is doubled. Activate it when you want to knock out a bunch of tasks quickly and earn maximum rewards. A countdown timer is shown across the top of the app while it's active."
-      },
-      {
-        q: "What is a streak?",
-        a: "Streaks track how consistently you complete daily tasks. If you complete a daily task within its window each day, your streak grows. Maintaining a long streak can contribute to badge unlocks and bonus XP."
-      },
-      {
-        q: "What is the Leaderboard?",
-        a: "The Leaderboard (Rewards page) shows a ranking of family members by total XP earned. It's a fun way to see who's been the most active contributor to keeping the home in great shape."
+        q: "The Leaderboard (Rewards page) shows a ranking of family members by total XP earned. It's a fun way to see who's been the most active contributor to keeping the home in great shape. If you are a Solo user, you can also earn XP and badges, but, will not be part of a leaderboard.",
+        a: "The Leaderboard (Rewards page) shows a ranking of family members by total XP earned. It's a fun way to see who's been the most active contributor to keeping the home in great shape. If you are a Solo user, you can also earn XP and badges, but will not be part of a leaderboard."
       },
     ]
   },
   {
-    category: "Google Tasks Integration",
+    category: "Google Calendar Integration",
     items: [
       {
-        q: "Can I sync my tasks with Google Tasks?",
-        a: "Yes! HomeLifeFocus supports syncing with Google Tasks. Go to your Profile page and connect your Google account. Once connected, your upcoming maintenance tasks will sync to a dedicated 'HomeLifeFocus' list in Google Tasks."
-      },
-      {
-        q: "How do I connect Google Tasks?",
-        a: "Navigate to your Profile page and tap 'Connect Google Tasks.' You'll be redirected to sign in with your Google account and grant permission. Once authorized, you can tap 'Sync to Google Tasks' to push your upcoming tasks."
-      },
-      {
-        q: "Which tasks get synced to Google Tasks?",
-        a: "Only incomplete maintenance tasks with due dates within the next 30 days are synced to keep your Google Tasks list focused and relevant."
+        q: "How do I determine start dates?",
+        a: "You have the option of picking a particular start date. When you pick a start date, then all the tasks are due on the start date by default. You can defer or postpone certain tasks. If you have a monthly task, due on the start date, you can defer to the next month, or to any other date. Once that task is completed the next due date will be a month from the date of completion. If you do not pick a start date, all daily tasks will be due the day after you set up the app, weekly tasks will be due a week from the date of app set-up, etc. Tasks are added to your Google calendar automatically."
       },
     ]
   },
@@ -111,12 +90,8 @@ const faqs = [
         a: "HomeLifeFocus takes privacy seriously. Your data is stored securely and is only accessible to you and members of your family group. We do not sell your personal data to third parties. For full details, see our Privacy Policy."
       },
       {
-        q: "Can I delete my account and data?",
-        a: "Yes. If you wish to delete your account and all associated data, please contact us at support@housemasterpro.com and we will process your request promptly."
-      },
-      {
-        q: "How do I sign out?",
-        a: "Go to your Profile page and tap the 'Sign Out' button at the bottom of the page."
+        q: "Can I delete my account?",
+        a: "Yes. If you wish to delete your account and all associated data, go to Profile and then Delete My Account."
       },
     ]
   },
