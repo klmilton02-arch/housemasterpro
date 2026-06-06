@@ -168,18 +168,16 @@ const AuthenticatedApp = () => {
           </motion.div>
         } />
 
-        {/* Protected routes */}
-        <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
-          <Route element={<Layout />}>
-            {[{ path: "/dashboard", el: <Dashboard /> }, { path: "/tasks", el: <Tasks /> }, { path: "/needs-attention", el: <NeedsAttention /> }, { path: "/presets", el: <Presets /> }, { path: "/home-setup", el: <HomeSetup /> }, { path: "/profile", el: <Profile /> },
-            { path: "/family", el: <Family /> }, { path: "/cats", el: <CatShelter /> }, { path: "/leaderboard", el: <Leaderboard /> }, { path: "/calendar", el: <CalendarPage /> }, { path: "/task-start-dates", el: <TaskStartDates /> }, { path: "/support", el: <Support /> }, { path: "/admin/activity", el: <AdminActivity /> }, { path: "*", el: <PageNotFound /> }].map(({ path, el }) => (
-              <Route key={path} path={path} element={
-                <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                  {el}
-                </motion.div>
-              } />
-            ))}
-          </Route>
+        {/* Public routes */}
+        <Route element={<Layout />}>
+          {[{ path: "/dashboard", el: <Dashboard /> }, { path: "/tasks", el: <Tasks /> }, { path: "/needs-attention", el: <NeedsAttention /> }, { path: "/presets", el: <Presets /> }, { path: "/home-setup", el: <HomeSetup /> }, { path: "/profile", el: <Profile /> },
+          { path: "/family", el: <Family /> }, { path: "/cats", el: <CatShelter /> }, { path: "/leaderboard", el: <Leaderboard /> }, { path: "/calendar", el: <CalendarPage /> }, { path: "/task-start-dates", el: <TaskStartDates /> }, { path: "/support", el: <Support /> }, { path: "/admin/activity", el: <AdminActivity /> }, { path: "*", el: <PageNotFound /> }].map(({ path, el }) => (
+            <Route key={path} path={path} element={
+              <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+                {el}
+              </motion.div>
+            } />
+          ))}
         </Route>
       </Routes>
     </AnimatePresence>
