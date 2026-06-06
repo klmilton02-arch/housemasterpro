@@ -63,7 +63,7 @@ export default function Landing() {
       </nav>
 
       {/* Hero */}
-      <section className="px-6 pt-3 lg:pt-0 pb-16 max-w-6xl mx-auto">
+      <section className="px-6 pt-3 lg:pt-8 pb-16 max-w-6xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12">
           {/* Left: Description */}
           <div className="flex-1 text-center lg:text-left">
