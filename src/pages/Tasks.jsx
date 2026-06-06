@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { useAuth } from "@/lib/AuthContext";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
@@ -30,7 +29,6 @@ import ScanAppointmentDialog from "../components/ScanAppointmentDialog";
 
 export default function Tasks() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -413,19 +411,15 @@ export default function Tasks() {
     <div className="space-y-2 md:space-y-6 w-full md:max-w-5xl md:mx-auto px-2 pt-6" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <h1 className="font-heading text-3xl font-bold md:hidden">Tasks</h1>
 
-      {isAuthenticated && (
-        <Button onClick={() => setScanDialogOpen(true)} className="w-full gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600">
-          <Camera className="w-4 h-4" />
-          Scan Tasks, Bills, Appointment Reminders
-        </Button>
-      )}
+      <Button onClick={() => setScanDialogOpen(true)} className="w-full gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600">
+        <Camera className="w-4 h-4" />
+        Scan Tasks, Bills, Appointment Reminders
+      </Button>
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
-         {isAuthenticated && (
-           <button onClick={() => setDialogOpen(true)} className="w-full h-full">
-             <StatCard large={largeIcons} labelRight icon={Plus} value="Add New Task" label="" color="bg-blue-100 text-blue-600" textSize="text-lg" />
-           </button>
-         )}
+         <button onClick={() => setDialogOpen(true)} className="w-full h-full">
+           <StatCard large={largeIcons} labelRight icon={Plus} value="Add New Task" label="" color="bg-blue-100 text-blue-600" textSize="text-lg" />
+         </button>
          <button onClick={() => navigate("/presets")} className="w-full h-full">
            <StatCard large={largeIcons} labelRight icon={CheckCircle} value="Browse Presets" label="" color="bg-purple-100 text-purple-600" textSize="text-lg" />
          </button>
@@ -526,7 +520,7 @@ export default function Tasks() {
                 <div className="space-y-3">
                   {groupTasks.map(task => (
                     <div key={task.id} className="relative group w-full flex items-center gap-2">
-                      {batchMode && isAuthenticated && (
+                      {batchMode && (
                         <button
                           onClick={() => toggleSelect(task.id)}
                           className={`shrink-0 h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all ${
@@ -538,10 +532,10 @@ export default function Tasks() {
                           {selectedIds.has(task.id) && <CheckSquare className="w-3 h-3 text-white" />}
                         </button>
                       )}
-                      <div className="flex-1 min-w-0" onClick={batchMode && isAuthenticated ? () => toggleSelect(task.id) : undefined}>
-                        <TaskCard task={task} onComplete={batchMode || !isAuthenticated ? undefined : handleComplete} onViewDetails={batchMode ? undefined : setSelectedTask} isInJustCompleted={justCompleted.has(task.id)} />
+                      <div className="flex-1 min-w-0" onClick={batchMode ? () => toggleSelect(task.id) : undefined}>
+                        <TaskCard task={task} onComplete={batchMode ? undefined : handleComplete} onViewDetails={batchMode ? undefined : setSelectedTask} isInJustCompleted={justCompleted.has(task.id)} />
                       </div>
-                      {!batchMode && isAuthenticated && (
+                      {!batchMode && (
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <button className="absolute top-10 right-2 p-1 rounded-lg bg-card/80 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 text-muted-foreground hover:text-red-500">

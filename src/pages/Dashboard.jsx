@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { useAuth } from "@/lib/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
@@ -33,7 +32,6 @@ import ScanAppointmentDialog from "../components/ScanAppointmentDialog";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
   const { isActive: isBlastActive, startBlast, stopBlast, timeLeft } = useBlastMode();
 
   const blastDisplay = isBlastActive
@@ -253,7 +251,7 @@ export default function Dashboard() {
           <Link to="/tasks" className="block">
             <StatCard large={largeIcons} icon={ListChecks} label="Create, organize, and schedule tasks" color="bg-slate-100 text-slate-600" />
           </Link>
-          <StatCard large={largeIcons} labelRight icon={Flame} label="Blast Mode" value={blastDisplay} color={isBlastActive ? "bg-orange-500 text-white" : "bg-orange-100 text-orange-600"} onClick={() => isAuthenticated && (isBlastActive ? setBlastOptionsOpen(true) : startBlast(30))} bigText />
+          <StatCard large={largeIcons} labelRight icon={Flame} label="Blast Mode" value={blastDisplay} color={isBlastActive ? "bg-orange-500 text-white" : "bg-orange-100 text-orange-600"} onClick={() => isBlastActive ? setBlastOptionsOpen(true) : startBlast(30)} bigText />
           <Link to="/calendar" className="block">
             <StatCard large={largeIcons} labelRight icon={CalendarDays} label="Calendar" value="View" color="bg-purple-100 text-purple-600" bigText />
           </Link>
@@ -293,12 +291,10 @@ export default function Dashboard() {
         <DashboardPresetBrowser onTaskAdded={loadTasks} />
       </div>
 
-      {isAuthenticated && (
-        <Button onClick={() => setScanDialogOpen(true)} className="w-full gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600">
-          <Camera className="w-4 h-4" />
-          Scan Tasks, Bills, Appointment Reminders
-        </Button>
-      )}
+      <Button onClick={() => setScanDialogOpen(true)} className="w-full gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600">
+        <Camera className="w-4 h-4" />
+        Scan Tasks, Bills, Appointment Reminders
+      </Button>
 
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
