@@ -194,12 +194,12 @@ export default function Layout() {
                 }
               }}
               className={cn(
-                "flex-1 flex flex-col items-center justify-center py-3 gap-1 select-none transition-colors",
+                "flex-1 flex flex-row items-center justify-center py-3 gap-2 select-none transition-colors",
                 isActive ? "text-primary" : "text-muted-foreground"
               )}
             >
-              <Icon className={cn("w-5 h-5", iconColor)} />
-              <span className="text-xs font-medium leading-tight text-center text-black dark:text-white">{label}</span>
+              <Icon className={cn("w-5 h-5 shrink-0", iconColor)} />
+              <span className="text-sm font-medium leading-tight text-black dark:text-white">{label}</span>
             </Link>
           );
         })}
