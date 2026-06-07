@@ -54,7 +54,7 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex w-64 flex-col border-r border-border bg-card fixed inset-y-0 left-0 z-30">
+      <aside className="hidden lg:flex w-64 flex-col border-r border-border bg-card fixed inset-y-0 left-0 z-30">
         <div className="p-6 border-b border-border" style={{ paddingTop: 'calc(1.5rem + env(safe-area-inset-top))' }}>
           <div className="flex items-center gap-2">
             <Home className="w-5 h-5 text-primary" />
@@ -105,7 +105,7 @@ export default function Layout() {
       {/* Global Blast Mode Banner */}
       {isActive && (
         <div
-          className="fixed left-0 right-0 z-50 md:left-64 flex items-center justify-center gap-2 text-sm font-bold py-1.5 shadow-md overflow-hidden"
+          className="fixed left-0 right-0 z-50 lg:left-64 flex items-center justify-center gap-2 text-sm font-bold py-1.5 shadow-md overflow-hidden"
           style={{ top: 'calc(3rem + env(safe-area-inset-top))', background: '#fde68a' }}
         >
           {/* Fill bar growing left-to-right */}
@@ -121,15 +121,15 @@ export default function Layout() {
       )}
 
       {/* Main content */}
-      <main className="flex-1 md:ml-64 md:pt-0 md:pb-8" style={{ paddingTop: 'calc(3.5rem + env(safe-area-inset-top))', paddingBottom: 'calc(7rem + env(safe-area-inset-bottom))' }}>
+      <main className="flex-1 lg:ml-64 md:pt-0 md:pb-8" style={{ paddingTop: 'calc(3.5rem + env(safe-area-inset-top))', paddingBottom: 'calc(7rem + env(safe-area-inset-bottom))' }}>
         <div className="w-full max-w-sm mx-auto md:pb-8">
           <Outlet />
         </div>
       </main>
 
-      {/* Mobile Bottom Tab Bar */}
+      {/* Mobile Bottom Tab Bar (mobile only, scrollable) */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-40 overflow-x-auto"
+        className="sm:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-40 overflow-x-auto"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         <div className="flex min-w-max">
@@ -170,6 +170,39 @@ export default function Layout() {
           <span className="text-[10px] font-medium leading-tight text-center text-black dark:text-white">Profile</span>
         </Link>
         </div>
+      </nav>
+
+      {/* Tablet Bottom Tab Bar (tablet only, full-width spread) */}
+      <nav
+        className="hidden sm:flex md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-40"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      >
+        {[...navItems, { path: "/profile", label: "Profile", icon: User, iconColor: "text-black dark:text-white" }].map(({ path, label, icon: Icon, iconColor }) => {
+          const isActive = path === "/" ? location.pathname === "/" : location.pathname.startsWith(path);
+          return (
+            <Link
+              key={path}
+              to={path}
+              onClick={e => {
+                if (isActive) {
+                  e.preventDefault();
+                  if (location.pathname !== path) {
+                    navigate(path, { replace: true });
+                  } else {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }
+                }
+              }}
+              className={cn(
+                "flex-1 flex flex-col items-center justify-center py-3 gap-1 select-none transition-colors",
+                isActive ? "text-primary" : "text-muted-foreground"
+              )}
+            >
+              <Icon className={cn("w-5 h-5", iconColor)} />
+              <span className="text-xs font-medium leading-tight text-center text-black dark:text-white">{label}</span>
+            </Link>
+          );
+        })}
       </nav>
     </div>
   );
