@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import usePullToRefresh from "@/hooks/usePullToRefresh";
 import { base44 } from "@/api/base44Client";
-import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, ChevronDown, ChevronUp, Zap, Flame, CalendarDays, Camera } from "lucide-react";
+import { ListChecks, AlertTriangle, Clock, CheckCircle, Plus, ChevronDown, ChevronUp, Zap, Flame, CalendarDays } from "lucide-react";
 import { useLargeIcons } from "@/lib/LargeIconsContext";
 import { differenceInDays, parseISO } from "date-fns";
 import confetti from "canvas-confetti";
@@ -28,7 +28,6 @@ import DashboardPresetBrowser from "../components/DashboardPresetBrowser";
 import RevokePointsToast from "../components/RevokePointsToast";
 import BlastModeOptionsDialog from "../components/BlastModeOptionsDialog";
 import YesterdayTasksDialog from "../components/YesterdayTasksDialog";
-import ScanAppointmentDialog from "../components/ScanAppointmentDialog";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -55,7 +54,6 @@ export default function Dashboard() {
   const [justCompletedIds, setJustCompletedIds] = useState(new Set());
   const [drawerTaskIds, setDrawerTaskIds] = useState(null); // ordered list of task ids for the drawer
   const [yesterdayTasks, setYesterdayTasks] = useState(null); // null = not checked yet
-  const [scanDialogOpen, setScanDialogOpen] = useState(false);
   const { largeIcons } = useLargeIcons();
 
   const loadTasks = useCallback(async () => {
@@ -291,11 +289,6 @@ export default function Dashboard() {
         <DashboardPresetBrowser onTaskAdded={loadTasks} />
       </div>
 
-      <Button onClick={() => setScanDialogOpen(true)} className="w-full gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600">
-        <Camera className="w-4 h-4" />
-        Scan Tasks, Bills, Appointment Reminders
-      </Button>
-
       <AddTaskDialog open={dialogOpen} onOpenChange={setDialogOpen} onTaskAdded={loadTasks} />
       <PointsToast reward={reward} onDismiss={() => setReward(null)} />
       <RevokePointsToast points={revokedPoints} onDismiss={() => setRevokedPoints(null)} />
@@ -327,8 +320,6 @@ export default function Dashboard() {
       />
       <EditTaskDialog task={editingTask} open={!!editingTask} onOpenChange={(open) => { if (!open) setEditingTask(null); }} onTaskUpdated={loadTasks} />
       
-      <ScanAppointmentDialog open={scanDialogOpen} onOpenChange={setScanDialogOpen} onTaskCreated={loadTasks} />
-
       <Drawer open={!!taskListModal} onOpenChange={(open) => { if (!open) { setTaskListModal(null); setDrawerTaskIds(null); setJustCompletedIds(new Set()); } }}>
         <DrawerContent className="max-h-[85vh]">
           <DrawerHeader>
