@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { base44 } from "@/api/base44Client";
+import PublicFooter from "@/components/PublicFooter";
 import { Link, useNavigate } from "react-router-dom";
 import { CheckCircle2, Home, Users, Trophy, Calendar, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -177,21 +178,7 @@ export default function Landing() {
 
 
 
-      {/* Footer */}
-      <footer className="py-8 px-6 text-center text-sm text-muted-foreground">
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <Home className="w-4 h-4 text-black dark:text-white" />
-          <span className="font-heading font-semibold text-foreground">HomeLifeFocus</span>
-        </div>
-        <div className="flex justify-center gap-6 mb-3">
-          <Link to="/about" className="hover:text-foreground transition-colors">About</Link>
-          <Link to="/contact" className="hover:text-foreground transition-colors">Contact</Link>
-          <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-          <Link to="/faq" className="hover:text-foreground transition-colors">FAQ</Link>
-          <button onClick={handleSignIn} className="hover:text-foreground transition-colors" disabled={signingIn}>{signingIn ? "Redirecting..." : "Sign In"}</button>
-        </div>
-        <p>© {new Date().getFullYear()} HomeLifeFocus. All rights reserved.</p>
-      </footer>
+      <PublicFooter />
     </div>
   );
 }
