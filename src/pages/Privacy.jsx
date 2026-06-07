@@ -3,7 +3,7 @@ import PublicFooter from "@/components/PublicFooter";
 
 export default function Privacy() {
   return (
-    <div className="space-y-6 max-w-xs md:max-w-2xl mx-auto px-1 pt-2 pb-10 md:pt-6 md:pb-8">
+    <div className="space-y-6 max-w-xs md:max-w-4xl mx-auto px-1 pt-2 pb-10 md:pt-6 md:pb-8">
       <div>
         <h1 className="text-4xl font-heading font-bold mb-8">Privacy Policy</h1>
         <p className="text-muted-foreground mb-6"><strong>Effective Date:</strong> April 12, 2026</p>
