@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function AuthLayout({ icon: Icon, title, subtitle, footer, children }) {
   return (
@@ -17,6 +18,13 @@ export default function AuthLayout({ icon: Icon, title, subtitle, footer, childr
         {footer && (
           <p className="text-center text-sm text-muted-foreground mt-6">{footer}</p>
         )}
+        <div className="flex justify-center gap-5 mt-6 flex-wrap text-xs text-muted-foreground">
+          <Link to="/landing" className="hover:text-foreground transition-colors">Home</Link>
+          <Link to="/about" className="hover:text-foreground transition-colors">About</Link>
+          <Link to="/contact" className="hover:text-foreground transition-colors">Contact</Link>
+          <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
+          <Link to="/faq" className="hover:text-foreground transition-colors">FAQ</Link>
+        </div>
       </div>
     </div>
   );
