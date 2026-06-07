@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import PublicFooter from "@/components/PublicFooter";
 
 const faqs = [
   {
@@ -146,10 +147,11 @@ export default function FAQ() {
 
       <div className="bg-card border border-border rounded-xl p-6 text-center">
         <p className="text-sm text-muted-foreground mb-3">Still have questions? We're happy to help.</p>
-        <a href="mailto:support@housemasterpro.com" className="text-primary font-medium text-sm hover:underline">
-          support@housemasterpro.com
+        <a href="mailto:klmilton02@gmail.com" className="text-primary font-medium text-sm hover:underline">
+          klmilton02@gmail.com
         </a>
       </div>
+      <PublicFooter />
     </div>
   );
 }

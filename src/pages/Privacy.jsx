@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import PublicFooter from "@/components/PublicFooter";
 
 export default function Privacy() {
   return (
@@ -125,10 +126,7 @@ export default function Privacy() {
           </section>
         </div>
 
-        <div className="text-sm text-muted-foreground flex gap-4 pt-4">
-          <Link to="/landing" className="hover:text-foreground transition-colors">Back to Home</Link>
-          <Link to="/login" className="hover:text-foreground transition-colors">Sign In</Link>
-        </div>
+        <PublicFooter />
       </div>
     </div>
   );

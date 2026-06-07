@@ -1,5 +1,6 @@
 import { Home } from "lucide-react";
 import { Link } from "react-router-dom";
+import PublicFooter from "@/components/PublicFooter";
 
 export default function About() {
   return (
@@ -26,14 +27,7 @@ export default function About() {
         </div>
       </div>
 
-      <div className="text-sm text-muted-foreground flex gap-4 flex-wrap">
-        <Link to="/landing" className="hover:text-foreground transition-colors">Home</Link>
-        <Link to="/contact" className="hover:text-foreground transition-colors">Contact</Link>
-        <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-        <Link to="/encryption" className="hover:text-foreground transition-colors">Encryption</Link>
-        <Link to="/faq" className="hover:text-foreground transition-colors">FAQ</Link>
-        <Link to="/support" className="hover:text-foreground transition-colors">Support</Link>
-      </div>
+      <PublicFooter />
     </div>
   );
 }

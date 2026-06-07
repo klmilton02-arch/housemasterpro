@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Mail, MessageSquare, Home } from "lucide-react";
 import { Link } from "react-router-dom";
+import PublicFooter from "@/components/PublicFooter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { base44 } from "@/api/base44Client";
@@ -78,11 +79,7 @@ export default function Contact() {
         )}
       </div>
 
-      <div className="text-sm text-muted-foreground flex gap-4">
-        <Link to="/about" className="hover:text-foreground transition-colors">About</Link>
-        <Link to="/faq" className="hover:text-foreground transition-colors">FAQ</Link>
-        <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-      </div>
+      <PublicFooter />
     </div>
   );
 }
