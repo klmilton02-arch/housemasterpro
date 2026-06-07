@@ -73,7 +73,7 @@ export default function Landing() {
 
 
             <p className="text-muted-foreground text-base mb-6">
-              Create recurring tasks for every room in your home — cleaning, maintenance, bills, and more. Assign them to family members, get overdue alerts, earn XP for completing them, and sync everything to Google Calendar.
+              Create recurring tasks for every room in your home so that you don't lose track of cleaning chores and maintenance.
             </p>
 
             {/* Stats — desktop only, 3 columns under the badge */}
