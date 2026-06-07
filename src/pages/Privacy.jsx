@@ -1,9 +1,17 @@
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import PublicFooter from "@/components/PublicFooter";
 
 export default function Privacy() {
   return (
     <div className="space-y-6 max-w-xs md:max-w-4xl mx-auto px-1 pt-2 pb-10 md:pt-6 md:pb-8">
+      <Helmet>
+        <title>Privacy Policy – HomeLifeFocus</title>
+        <meta name="description" content="Read the HomeLifeFocus Privacy Policy to understand how we collect, use, and protect your personal information." />
+        <meta property="og:title" content="Privacy Policy – HomeLifeFocus" />
+        <meta property="og:description" content="Read the HomeLifeFocus Privacy Policy to understand how we collect, use, and protect your personal information." />
+        <meta property="og:url" content="https://homelifefocus.online/privacy" />
+      </Helmet>
       <div>
         <h1 className="text-4xl font-heading font-bold mb-8">Privacy Policy</h1>
         <p className="text-muted-foreground mb-6"><strong>Effective Date:</strong> April 12, 2026</p>

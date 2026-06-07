@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Mail, MessageSquare, Home } from "lucide-react";
 import { Link } from "react-router-dom";
 import PublicFooter from "@/components/PublicFooter";
@@ -28,6 +29,13 @@ export default function Contact() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 pt-6 pb-16 space-y-8">
+      <Helmet>
+        <title>Contact Us – HomeLifeFocus</title>
+        <meta name="description" content="Get in touch with the HomeLifeFocus team. We'd love to hear your questions, feedback, or suggestions." />
+        <meta property="og:title" content="Contact Us – HomeLifeFocus" />
+        <meta property="og:description" content="Get in touch with the HomeLifeFocus team. We'd love to hear your questions, feedback, or suggestions." />
+        <meta property="og:url" content="https://homelifefocus.online/contact" />
+      </Helmet>
       <div>
         <div className="flex items-center gap-2 mb-2">
           <Home className="w-6 h-6 text-primary" />

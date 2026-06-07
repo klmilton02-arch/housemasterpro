@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import PublicFooter from "@/components/PublicFooter";
@@ -121,6 +122,13 @@ function FAQItem({ q, a }) {
 export default function FAQ() {
   return (
     <div className="max-w-2xl mx-auto px-4 pt-6 pb-16 space-y-8">
+      <Helmet>
+        <title>FAQ – HomeLifeFocus Help & Support</title>
+        <meta name="description" content="Find answers to common questions about HomeLifeFocus — setup, gamification, Google Calendar integration, family accounts, and more." />
+        <meta property="og:title" content="FAQ – HomeLifeFocus Help & Support" />
+        <meta property="og:description" content="Find answers to common questions about HomeLifeFocus — setup, gamification, Google Calendar integration, family accounts, and more." />
+        <meta property="og:url" content="https://homelifefocus.online/faq" />
+      </Helmet>
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">

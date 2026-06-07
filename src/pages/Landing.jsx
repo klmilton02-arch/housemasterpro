@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { base44 } from "@/api/base44Client";
 import { Link, useNavigate } from "react-router-dom";
 import { CheckCircle2, Home, Users, Trophy, Calendar, Sparkles } from "lucide-react";
@@ -50,6 +51,13 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-background text-foreground font-body">
+      <Helmet>
+        <title>HomeLifeFocus – Family Home Task & Chore Management</title>
+        <meta name="description" content="HomeLifeFocus helps families manage home tasks, chores, and maintenance schedules with gamification, streaks, and a family leaderboard. Free to get started." />
+        <meta property="og:title" content="HomeLifeFocus – Family Home Task & Chore Management" />
+        <meta property="og:description" content="HomeLifeFocus helps families manage home tasks, chores, and maintenance schedules with gamification, streaks, and a family leaderboard." />
+        <meta property="og:url" content="https://homelifefocus.online/" />
+      </Helmet>
 
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 pt-4 pb-3 lg:pb-0 max-w-6xl mx-auto">
