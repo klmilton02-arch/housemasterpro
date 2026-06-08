@@ -183,14 +183,14 @@ export default function Dashboard() {
   }
 
   async function handleUncomplete(task) {
-    // Revert task to Pending and undo the next_due_date advancement
+    // Revert next_due_date back one cycle (undo the advancement done on completion)
     const prevDue = new Date(task.next_due_date);
     prevDue.setDate(prevDue.getDate() - task.frequency_days);
     const revertedDue = prevDue.toISOString().split("T")[0];
 
-    const updated = { ...task, status: "Pending", next_due_date: revertedDue };
+    const updated = { ...task, status: "Pending", next_due_date: revertedDue, last_completed_date: null };
     setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
-    await base44.functions.invoke('completeTask', { task_id: task.id, updates: { status: "Pending", next_due_date: revertedDue, completed_with_blast: false } });
+    await base44.functions.invoke('completeTask', { task_id: task.id, updates: { status: "Pending", next_due_date: revertedDue, last_completed_date: null, completed_with_blast: false } });
     await revokePoints(task, task.completed_with_blast === true);
     setRevokedPoints(getTaskPoints(task) * (task.completed_with_blast ? 2 : 1));
     loadTasks();

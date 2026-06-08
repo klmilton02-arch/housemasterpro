@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
 Deno.serve(async (req) => {
   try {
@@ -15,8 +15,15 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'task_id and updates are required' }, { status: 400 });
     }
 
-    // Use service role to bypass RLS — task may have been created by service role
-    const updated = await base44.asServiceRole.entities.Task.update(task_id, updates);
+    // If this is a completion (status = Completed) and a new next_due_date is set,
+    // immediately set status back to Pending so the task reappears in the pending list.
+    // We keep last_completed_date, streak, completed_by_name etc. but reset status.
+    let finalUpdates = { ...updates };
+    if (updates.status === 'Completed' && updates.next_due_date) {
+      finalUpdates.status = 'Pending';
+    }
+
+    const updated = await base44.asServiceRole.entities.Task.update(task_id, finalUpdates);
 
     return Response.json({ task: updated });
   } catch (error) {

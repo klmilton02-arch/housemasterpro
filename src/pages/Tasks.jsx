@@ -210,10 +210,10 @@ export default function Tasks() {
         }
       });
 
-      // After 2.5s pause: move task to bottom of list
+      // After 2.5s pause: update task with new due date (stays Pending, moves to bottom of visible list)
       setTimeout(() => {
         setTasks(prev => {
-          const updated = prev.map(t => t.id === task.id ? { ...t, status: "Completed", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak, completed_with_blast: blastActive } : t);
+          const updated = prev.map(t => t.id === task.id ? { ...t, status: "Pending", last_completed_date: todayStr, next_due_date: nextDueStr, streak: newStreak, completed_with_blast: blastActive } : t);
           return updated;
         });
       }, 2500);
