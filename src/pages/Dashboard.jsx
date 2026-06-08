@@ -208,7 +208,8 @@ export default function Dashboard() {
   });
   const dueSoonTasks = tasks.filter(t => getStatusInfo(t).label === "Due Soon");
   const pendingTasks = tasks.filter(t => t.status !== "Completed");
-  const completedTasks = tasks.filter(t => getStatusInfo(t).label === "Completed");
+  const todayStr = new Date().toISOString().split("T")[0];
+  const completedTasks = tasks.filter(t => t.last_completed_date === todayStr);
   const dueTasks = tasks.filter(t => {
     if (t.status === "Completed") return false;
     const today = new Date(); today.setHours(0,0,0,0);

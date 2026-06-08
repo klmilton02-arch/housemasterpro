@@ -307,8 +307,8 @@ export default function Tasks() {
     const status = getStatusInfo(t);
     if (statusFilter === "overdue" && status.label !== "Overdue" && status.label !== "Past Due") return false;
     if (statusFilter === "due_soon" && status.label !== "Due Soon") return false;
-    if (statusFilter === "completed" && status.label !== "Completed") return false;
-    if (statusFilter === "pending" && status.label === "Completed") return false;
+    if (statusFilter === "completed" && t.last_completed_date !== completedTodayStr) return false;
+    if (statusFilter === "pending" && t.last_completed_date === completedTodayStr) return false;
     if (categoryFilter !== "all" && t.category !== categoryFilter && !(categoryFilter === "Personal" && t.category === "To-Do")) return false;
 
     if (assignedFilter === "assigned" && !t.assigned_to) return false;
@@ -401,7 +401,8 @@ export default function Tasks() {
     return differenceInDays(due, today) < 0 && t.status !== "Completed";
   }).length;
 
-  const completedCount = tasks.filter(t => t.status === "Completed").length;
+  const completedTodayStr = new Date().toISOString().split("T")[0];
+  const completedCount = tasks.filter(t => t.last_completed_date === completedTodayStr).length;
   const dueTasks = tasks.filter(t => {
     const s = getStatusInfo(t);
     return (s.label === "Overdue" || s.label === "Past Due" || s.label === "Due Soon" || s.label === "Upcoming") && t.status !== "Completed";
