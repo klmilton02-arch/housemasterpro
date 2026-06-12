@@ -81,8 +81,14 @@ export default function Landing() {
             </span>
 
 
-            <p className="text-muted-foreground text-base mb-6">
+            <p className="text-muted-foreground text-base mb-2">
               Create recurring tasks for every room in your home so that you don't lose track of cleaning chores and maintenance.
+            </p>
+            <p className="text-muted-foreground text-base mb-2">
+              This app builds task lists that include typical cleaning chores <em>and</em> required maintenance tasks. When did you last examine your vent registers or clean the grease hood in your kitchen?
+            </p>
+            <p className="text-muted-foreground text-base mb-6">
+              HomeLifeFocus helps you keep track of all of these things — with a library of 200+ presets covering every room, so setup takes minutes.
             </p>
 
             {/* Stats — desktop only, 3 columns under the badge */}
