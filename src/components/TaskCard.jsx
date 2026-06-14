@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Check, Clock, AlertTriangle, Calendar, Pencil, Flame, ChevronRight, Zap, ArrowUp, ArrowRight, ArrowDown } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
+import { haptics } from "@/lib/haptics";
 import { format, differenceInDays, parseISO } from "date-fns";
 
 const PRIORITY_CONFIG = {
@@ -97,7 +98,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
   return (
     <div
       className={cn("border rounded-lg px-3 py-3 hover:shadow-md transition-all group w-full cursor-pointer", cardBg)}
-      onClick={() => onViewDetails?.(task)}
+      onClick={() => { haptics.light(); onViewDetails?.(task); }}
     >
       <div className="flex items-start justify-between gap-2 w-full">
         <div className="flex-1 min-w-0 flex flex-col gap-1.5">
@@ -173,7 +174,7 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
                 : "border-muted-foreground/40 hover:border-primary bg-transparent"
             )}
             onPointerDown={e => { e.stopPropagation(); e.preventDefault(); }}
-            onPointerUp={e => { e.stopPropagation(); e.preventDefault(); onComplete?.(task); }}
+            onPointerUp={e => { e.stopPropagation(); e.preventDefault(); haptics.success(); onComplete?.(task); }}
             title={visuallyCompleted ? "Mark incomplete" : "Mark complete"}
           >
             <Check className={cn("w-4 h-4 transition-opacity pointer-events-none", visuallyCompleted ? "text-white opacity-100" : "opacity-0")} />

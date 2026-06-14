@@ -6,6 +6,7 @@ import { Pencil, Trash2, Calendar, Clock, X, Users } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useState, useEffect } from "react";
 import { awardPoints } from "@/utils/gamification";
+import { haptics } from "@/lib/haptics";
 
 export default function TaskDetailModal({ task, open, onOpenChange, onModify, onDelete, onChangeDueDate, onComplete }) {
   const [dueDateInput, setDueDateInput] = useState(task?.next_due_date || "");
@@ -38,6 +39,7 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
       // Task already deleted or not found — treat as success
       console.warn('Task delete warning:', err.message);
     }
+    haptics.error();
     onDelete?.(task);
     setDeleteDialogOpen(false);
     onOpenChange(false);
@@ -54,6 +56,7 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
     if (!task?.id) return;
     const newDate = addDays(parseISO(task.next_due_date), daysToAdd);
     const newDateStr = newDate.toISOString().split("T")[0];
+    haptics.medium();
     await onChangeDueDate?.(task, newDateStr);
     onOpenChange(false);
   }
@@ -99,6 +102,7 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
         await awardPoints(task, false);
       }
     } catch (e) { /* non-fatal */ }
+    haptics.success();
     setCompletingAs(null);
     setCompleteAsOpen(false);
     onComplete?.(task);
@@ -189,6 +193,7 @@ export default function TaskDetailModal({ task, open, onOpenChange, onModify, on
               <Button
                 className="flex-1 gap-2 bg-blue-200 hover:bg-blue-300 text-blue-900"
                 onClick={() => {
+                  haptics.light();
                   onModify?.(task);
                   onOpenChange(false);
                 }}
