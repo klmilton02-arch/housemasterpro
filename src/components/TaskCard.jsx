@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Check, Clock, AlertTriangle, Calendar, Pencil, Flame, ChevronRight, Zap, ArrowUp, ArrowRight, ArrowDown } from "lucide-react";
+import { Check, Clock, AlertTriangle, Calendar, Pencil, Flame, ChevronRight, Zap, ArrowUp, ArrowRight, ArrowDown, Share2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
 import { haptics } from "@/lib/haptics";
@@ -179,6 +179,23 @@ export default function TaskCard({ task, onComplete, onRenamed, onViewDetails, i
           >
             <Check className={cn("w-4 h-4 transition-opacity pointer-events-none", visuallyCompleted ? "text-white opacity-100" : "opacity-0")} />
           </button>
+          {navigator.share && (
+            <button
+              onClick={e => {
+                e.stopPropagation();
+                haptics.light();
+                navigator.share({
+                  title: task.name,
+                  text: `Task: ${task.name}${task.next_due_date ? ` — Due ${task.next_due_date}` : ''}${task.category ? ` (${task.category})` : ''}`,
+                  url: window.location.href,
+                }).catch(() => {});
+              }}
+              className="p-1 rounded hover:bg-muted opacity-0 group-hover:opacity-100 transition-opacity"
+              title="Share task"
+            >
+              <Share2 className="w-4 h-4 text-muted-foreground" />
+            </button>
+          )}
           {onViewDetails && (
             <button
               onClick={e => { e.stopPropagation(); onViewDetails(task); }}

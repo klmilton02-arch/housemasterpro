@@ -7,6 +7,7 @@ import MobileHeader from "./MobileHeader";
 import { useBlastMode } from "@/lib/BlastModeContext";
 import AccountSetup from "./AccountSetup";
 import { base44 } from "@/api/base44Client";
+import NotificationPermissionBanner from "./NotificationPermissionBanner";
 
 const navItems = [
   { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard, iconColor: "text-black dark:text-white" },
@@ -171,6 +172,8 @@ export default function Layout() {
         </Link>
         </div>
       </nav>
+
+      <NotificationPermissionBanner />
 
       {/* Tablet Bottom Tab Bar (tablet only, full-width spread) */}
       <nav
