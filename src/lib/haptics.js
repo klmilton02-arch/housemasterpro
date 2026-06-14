@@ -1,33 +1,38 @@
 // Haptic feedback utility
-// Uses Vibration API on Android, AudioContext impulse on iOS (triggers Taptic Engine)
+// Uses Vibration API on Android, AudioContext click on iOS (triggers Taptic Engine)
+// IMPORTANT: Must be called synchronously inside a user gesture handler (onClick/onPointerUp)
+// Do NOT call inside setTimeout, async callbacks, or useEffect — iOS will block it.
 
-function iosHaptic(type = 'light') {
+let _audioCtx = null;
+
+function getAudioContext() {
+  if (!_audioCtx || _audioCtx.state === 'closed') {
+    _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (_audioCtx.state === 'suspended') {
+    _audioCtx.resume();
+  }
+  return _audioCtx;
+}
+
+function iosClick(durationSeconds = 0.02) {
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-    oscillator.connect(gainNode);
-    gainNode.connect(ctx.destination);
-
-    // Different frequencies/durations for different feedback types
-    const configs = {
-      light:   { freq: 200, duration: 0.02, gain: 0.1 },
-      medium:  { freq: 150, duration: 0.04, gain: 0.2 },
-      heavy:   { freq: 100, duration: 0.06, gain: 0.3 },
-      success: { freq: 300, duration: 0.03, gain: 0.15 },
-      error:   { freq: 80,  duration: 0.08, gain: 0.3 },
-    };
-    const c = configs[type] || configs.light;
-
-    gainNode.gain.setValueAtTime(c.gain, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + c.duration);
-    oscillator.frequency.setValueAtTime(c.freq, ctx.currentTime);
-    oscillator.start(ctx.currentTime);
-    oscillator.stop(ctx.currentTime + c.duration);
-
-    oscillator.onended = () => ctx.close();
+    const ctx = getAudioContext();
+    const buffer = ctx.createBuffer(1, ctx.sampleRate * durationSeconds, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    // White noise burst — inaudible at low gain but triggers Taptic Engine
+    for (let i = 0; i < data.length; i++) {
+      data[i] = (Math.random() * 2 - 1);
+    }
+    const source = ctx.createBufferSource();
+    const gain = ctx.createGain();
+    source.buffer = buffer;
+    gain.gain.setValueAtTime(0.00001, ctx.currentTime);
+    source.connect(gain);
+    gain.connect(ctx.destination);
+    source.start(ctx.currentTime);
   } catch (e) {
-    // Silently fail if AudioContext not available
+    // Silently fail
   }
 }
 
@@ -41,18 +46,18 @@ function vibrate(pattern) {
 
 export const haptics = {
   light: () => {
-    if (!vibrate(10)) iosHaptic('light');
+    if (!vibrate(10)) iosClick(0.015);
   },
   medium: () => {
-    if (!vibrate(20)) iosHaptic('medium');
+    if (!vibrate(25)) iosClick(0.03);
   },
   heavy: () => {
-    if (!vibrate(40)) iosHaptic('heavy');
+    if (!vibrate(50)) iosClick(0.05);
   },
   success: () => {
-    if (!vibrate([15, 50, 30])) iosHaptic('success');
+    if (!vibrate([15, 40, 20])) iosClick(0.02);
   },
   error: () => {
-    if (!vibrate([30, 30, 30])) iosHaptic('error');
+    if (!vibrate([30, 30, 60])) iosClick(0.06);
   },
 };
