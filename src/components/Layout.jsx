@@ -8,6 +8,7 @@ import { useBlastMode } from "@/lib/BlastModeContext";
 import AccountSetup from "./AccountSetup";
 import { base44 } from "@/api/base44Client";
 import NotificationPermissionBanner from "./NotificationPermissionBanner";
+import { haptics } from "@/lib/haptics";
 
 const navItems = [
   { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard, iconColor: "text-black dark:text-white" },
@@ -141,6 +142,7 @@ export default function Layout() {
               key={path}
               to={path}
               onClick={e => {
+                haptics.light();
                 if (isActive) {
                   e.preventDefault();
                   if (location.pathname !== path) {
@@ -162,6 +164,7 @@ export default function Layout() {
         })}
         <Link
           to="/profile"
+          onClick={() => haptics.light()}
           className={cn(
             "w-20 flex flex-col items-center justify-center py-2 gap-0.5 select-none transition-colors",
             location.pathname === "/profile" ? "text-primary" : "text-muted-foreground"
@@ -187,6 +190,7 @@ export default function Layout() {
               key={path}
               to={path}
               onClick={e => {
+                haptics.light();
                 if (isActive) {
                   e.preventDefault();
                   if (location.pathname !== path) {
